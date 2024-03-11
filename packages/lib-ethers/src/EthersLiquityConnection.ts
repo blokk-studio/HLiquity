@@ -13,6 +13,7 @@ import mainnet from "../deployments/mainnet.json";
 import hedera from "../deployments/hedera.json";
 import hederaPreviewnet from "../deployments/hederaPreviewnet.json";
 import hederaLocalTestnet from "../deployments/hederaLocalTestnet.json";
+import hederaTestnet from "../deployments/hederaTestnet.json";
 
 import { EthersProvider, EthersSigner } from "./types";
 
@@ -38,6 +39,7 @@ const deployments: {
   [hedera.chainId]: hedera,
   [hederaLocalTestnet.chainId]: hederaLocalTestnet,
   [hederaPreviewnet.chainId]: hederaPreviewnet,
+  [hederaTestnet.chainId]: hederaTestnet,
 
   ...(dev !== null ? { [dev.chainId]: dev } : {})
 };
