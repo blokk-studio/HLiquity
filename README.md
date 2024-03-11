@@ -1,4 +1,8 @@
-# Liquity: Decentralized Borrowing Protocol
+# HLiquity: Decentralized Borrowing Protocol on hedera based on Liquity
+
+> This fork only implements changes to the front-end that are necessary to work with the Hedera contracts of [HLiquity](https://github.com/SwisscoastAG/HLiquity). The only packages that are guaranteed to be up-to-date and functional are [`dev-frontend`](/packages/dev-frontend) and [`lib-ethers`](packages/lib-ethers).
+
+---
 
 [<img alt="DeFiSafety Badge" width="96px" align="right" src="images/defisafety-badge.png" />](https://www.defisafety.com/app/pqrs/376)
 
