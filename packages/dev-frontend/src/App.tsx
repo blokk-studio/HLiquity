@@ -1,6 +1,5 @@
 import React from "react";
 import { createClient, WagmiConfig } from "wagmi";
-import { mainnet, goerli, sepolia, localhost } from "wagmi/chains";
 import { ConnectKitProvider } from "connectkit";
 import { Flex, Heading, ThemeProvider, Paragraph, Link } from "theme-ui";
 
@@ -16,6 +15,7 @@ import { DisposableWalletProvider } from "./testUtils/DisposableWalletProvider";
 import { LiquityFrontend } from "./LiquityFrontend";
 import { AppLoader } from "./components/AppLoader";
 import { useAsyncValue } from "./hooks/AsyncValue";
+import { mainnet as hederaMainnet, testnet as hederaTestnet, previewnet as hederaPreviewnet } from "./hedera";
 
 const isDemoMode = import.meta.env.VITE_APP_DEMO_MODE === "true";
 
@@ -80,27 +80,30 @@ const UnsupportedNetworkFallback: React.FC = () => (
 
 const App = () => {
   const config = useAsyncValue(getConfig);
+
+  if(!config.loaded) {
+    return <ThemeProvider theme={theme} />
+  }
+
+  // TODO: no deployments on previewnet and mainnet yet
+  // eslint-disable-next-line no-constant-condition
+  const chains = (isDemoMode || import.meta.env.MODE === "test" || config.value.testnetOnly /* TODO: no deployments on previewnet and mainnet yet */ || true)
+    ? [hederaTestnet]
+    : [hederaTestnet, hederaPreviewnet, hederaMainnet]
   const loader = <AppLoader />;
+  const client = createClient(
+    getDefaultClient({
+      appName: "Liquity",
+      chains,
+      walletConnectProjectId: config.value.walletConnectProjectId,
+      infuraId: config.value.infuraApiKey,
+      alchemyId: config.value.alchemyApiKey,
+    })
+  )
 
   return (
     <ThemeProvider theme={theme}>
-      {config.loaded && (
-        <WagmiConfig
-          client={createClient(
-            getDefaultClient({
-              appName: "Liquity",
-              chains:
-                isDemoMode || import.meta.env.MODE === "test"
-                  ? [localhost]
-                  : config.value.testnetOnly
-                  ? [goerli, sepolia]
-                  : [mainnet, goerli, sepolia],
-              walletConnectProjectId: config.value.walletConnectProjectId,
-              infuraId: config.value.infuraApiKey,
-              alchemyId: config.value.alchemyApiKey
-            })
-          )}
-        >
+        <WagmiConfig client={client}>
           <ConnectKitProvider options={{ hideBalance: true }}>
             <WalletConnector loader={loader}>
               <LiquityProvider
@@ -115,7 +118,6 @@ const App = () => {
             </WalletConnector>
           </ConnectKitProvider>
         </WagmiConfig>
-      )}
     </ThemeProvider>
   );
 };
