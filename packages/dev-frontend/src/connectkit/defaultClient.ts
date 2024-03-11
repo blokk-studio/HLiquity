@@ -39,6 +39,7 @@ import { alchemyProvider } from "../wagmi/alchemyProvider";
 import { infuraProvider } from "wagmi/providers/infura";
 import { jsonRpcProvider } from "wagmi/providers/jsonRpc";
 import { publicProvider } from "wagmi/providers/public";
+import { getHederaHashioChainProviderFunction } from "../hashgraph/HederaHashioProvider";
 
 let globalAppName: string;
 let globalAppIcon: string;
@@ -190,6 +191,7 @@ const defaultClient = ({
       stallTimeout
     })
   );
+  providers.push(getHederaHashioChainProviderFunction());
   providers.push(publicProvider());
 
   const {
