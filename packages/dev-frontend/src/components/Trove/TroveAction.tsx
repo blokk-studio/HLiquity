@@ -21,19 +21,28 @@ export const TroveAction: React.FC<TroveActionProps> = ({
 }) => {
   const { liquity } = useLiquity();
 
+  // TODO: fix?
+  borrowingFeeDecayToleranceMinutes;
+
   const [sendTransaction] = useTransactionFunction(
     transactionId,
     change.type === "creation"
-      ? liquity.send.openTrove.bind(liquity.send, change.params, {
-          maxBorrowingRate,
-          borrowingFeeDecayToleranceMinutes
-        })
+      ? liquity.send.openTrove.bind(liquity.send, change.params,
+        maxBorrowingRate,
+        // TODO: fix?
+        // {
+        //   borrowingFeeDecayToleranceMinutes
+        // }
+        )
       : change.type === "closure"
       ? liquity.send.closeTrove.bind(liquity.send)
-      : liquity.send.adjustTrove.bind(liquity.send, change.params, {
-          maxBorrowingRate,
-          borrowingFeeDecayToleranceMinutes
-        })
+      : liquity.send.adjustTrove.bind(liquity.send, change.params,
+        maxBorrowingRate,
+        // TODO: fix?
+        // {
+        //   borrowingFeeDecayToleranceMinutes
+        // }
+        )
   );
 
   return <Button onClick={sendTransaction}>{children}</Button>;

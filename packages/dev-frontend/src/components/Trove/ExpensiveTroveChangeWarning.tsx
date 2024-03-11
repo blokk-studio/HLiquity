@@ -26,6 +26,8 @@ export const ExpensiveTroveChangeWarning: React.FC<ExpensiveTroveChangeWarningPa
   setGasEstimationState
 }) => {
   const { liquity } = useLiquity();
+  // TODO: fix?
+  borrowingFeeDecayToleranceMinutes;
 
   useEffect(() => {
     if (troveChange && troveChange.type !== "closure") {
@@ -35,14 +37,20 @@ export const ExpensiveTroveChangeWarning: React.FC<ExpensiveTroveChangeWarningPa
 
       const timeoutId = setTimeout(async () => {
         const populatedTx = await (troveChange.type === "creation"
-          ? liquity.populate.openTrove(troveChange.params, {
-              maxBorrowingRate,
-              borrowingFeeDecayToleranceMinutes
-            })
-          : liquity.populate.adjustTrove(troveChange.params, {
-              maxBorrowingRate,
-              borrowingFeeDecayToleranceMinutes
-            }));
+          ? liquity.populate.openTrove(troveChange.params,
+            maxBorrowingRate,
+            // TODO: fix?
+            // {
+            //   borrowingFeeDecayToleranceMinutes,
+            // }
+            )
+          : liquity.populate.adjustTrove(troveChange.params,
+            maxBorrowingRate,
+            // TODO: fix?
+            // {
+            //   borrowingFeeDecayToleranceMinutes
+            // }
+            ));
 
         if (!cancelled) {
           setGasEstimationState({ type: "complete", populatedTx });
@@ -66,7 +74,8 @@ export const ExpensiveTroveChangeWarning: React.FC<ExpensiveTroveChangeWarningPa
   if (
     troveChange &&
     gasEstimationState.type === "complete" &&
-    gasEstimationState.populatedTx.gasHeadroom !== undefined &&
+    'gasHeadroom' in gasEstimationState.populatedTx &&
+    typeof gasEstimationState.populatedTx.gasHeadroom === 'number' &&
     gasEstimationState.populatedTx.gasHeadroom >= 200000
   ) {
     return troveChange.type === "creation" ? (

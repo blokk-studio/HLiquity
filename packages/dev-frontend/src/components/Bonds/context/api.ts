@@ -28,7 +28,7 @@ import type {
   BondClaimedEvent
 } from "@liquity/chicken-bonds/lusd/types/ChickenBondManager";
 import { Decimal } from "@liquity/lib-base";
-import type { LUSDToken } from "@liquity/lib-ethers/dist/types";
+import type { DCHFToken as LUSDToken } from "@liquity/lib-ethers/dist/types";
 import type { ProtocolInfo, Bond, BondStatus, Stats, Maybe, BLusdLpRewards } from "./transitions";
 import {
   numberify,
@@ -646,11 +646,18 @@ const erc20From = (tokenAddress: string, signerOrProvider: Signer | providers.Pr
 const getLpToken = async (pool: CurveCryptoSwap2ETH) =>
   erc20From(await pool.token(), pool.signer ?? pool.provider);
 
-const getTokenBalance = async (account: string, token: ERC20): Promise<Decimal> => {
+const getTokenBalance = async (
+  account: string,
+  // token: ERC20 // TODO: what type do we need here?
+  token: Pick<ERC20, "balanceOf">
+): Promise<Decimal> => {
   return decimalify(await token.balanceOf(account));
 };
 
-const getTokenTotalSupply = async (token: ERC20): Promise<Decimal> => {
+const getTokenTotalSupply = async (
+  // token: ERC20 // TODO: what type do we need here?
+  token: Pick<ERC20, "totalSupply">
+): Promise<Decimal> => {
   return decimalify(await token.totalSupply());
 };
 
@@ -659,12 +666,17 @@ const isInfiniteBondApproved = async (
   lusdToken: LUSDToken,
   chickenBondManager: ChickenBondManager
 ): Promise<boolean> => {
-  const allowance = await lusdToken.allowance(account, chickenBondManager.address);
+  // TODO: hedera alternative to erc20.allowance
+  account;
+  lusdToken;
+  chickenBondManager;
+  return false;
+  // const allowance = await lusdToken.allowance(account, chickenBondManager.address);
 
   // Unlike bLUSD, LUSD doesn't explicitly handle infinite approvals, therefore the allowance will
   // start to decrease from 2**64.
   // However, it is practically impossible that it would decrease below 2**63.
-  return allowance.gt(constants.MaxInt256);
+  // return allowance.gt(constants.MaxInt256);
 };
 
 const approveInfiniteBond = async (
@@ -889,25 +901,34 @@ const isTokenApprovedWithBLusdAmm = async (
   if (bLusdAmmAddress === null) {
     throw new Error("isTokenApprovedWithBLusdAmm() failed: a dependency is null");
   }
+  // TODO: hedera alternative to erc20.allowance
+  account;
+  token;
+  return false;
 
-  const allowance = await token.allowance(account, bLusdAmmAddress);
+  // const allowance = await token.allowance(account, bLusdAmmAddress);
 
   // Unlike bLUSD, LUSD doesn't explicitly handle infinite approvals, therefore the allowance will
   // start to decrease from 2**64.
   // However, it is practically impossible that it would decrease below 2**63.
-  return allowance.gt(constants.MaxInt256);
+  // return allowance.gt(constants.MaxInt256);
 };
 
 const isTokenApprovedWithBLusdAmmMainnet = async (
   account: string,
   token: LUSDToken | BLUSDToken
 ): Promise<boolean> => {
-  const allowance = await token.allowance(account, CURVE_REGISTRY_SWAPS_ADDRESS);
+  // TODO: hedera alternative to erc20.allowance
+  account;
+  token;
+  return false;
+
+  // const allowance = await token.allowance(account, CURVE_REGISTRY_SWAPS_ADDRESS);
 
   // Unlike bLUSD, LUSD doesn't explicitly handle infinite approvals, therefore the allowance will
   // start to decrease from 2**64.
   // However, it is practically impossible that it would decrease below 2**63.
-  return allowance.gt(constants.MaxInt256);
+  // return allowance.gt(constants.MaxInt256);
 };
 
 const isTokenApprovedWithAmmZapper = async (
@@ -918,8 +939,13 @@ const isTokenApprovedWithAmmZapper = async (
   if (ammZapperAddress === null) {
     throw new Error("isTokenApprovedWithAmmZapper() failed: a dependency is null");
   }
-  const allowance = await token.allowance(account, ammZapperAddress);
-  return allowance.gt(constants.MaxInt256);
+  // TODO: hedera alternative to erc20.allowance
+  account;
+  token;
+  return false;
+
+  // const allowance = await token.allowance(account, ammZapperAddress);
+  // return allowance.gt(constants.MaxInt256);
 };
 
 const approveTokenWithBLusdAmm = async (
