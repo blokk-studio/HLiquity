@@ -17,6 +17,7 @@ export default defineConfig({
       "@liquity/lib-base",
       "@liquity/lib-react"
     ],
+    force: true,
     esbuildOptions: {
       plugins: [NodeModulesPolyfillPlugin()]
     }
