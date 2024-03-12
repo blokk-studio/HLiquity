@@ -100,7 +100,7 @@
       {
         "indexed": false,
         "internalType": "uint256",
-        "name": "_LUSDLoss",
+        "name": "_HCHFLoss",
         "type": "uint256"
       }
     ],
@@ -256,6 +256,19 @@
     "anonymous": false,
     "inputs": [
       {
+        "indexed": false,
+        "internalType": "address",
+        "name": "_newHCHFTokenAddress",
+        "type": "address"
+      }
+    ],
+    "name": "HCHFTokenAddressChanged",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
         "indexed": true,
         "internalType": "address",
         "name": "_depositor",
@@ -264,11 +277,11 @@
       {
         "indexed": false,
         "internalType": "uint256",
-        "name": "_LQTY",
+        "name": "_HLQTY",
         "type": "uint256"
       }
     ],
-    "name": "LQTYPaidToDepositor",
+    "name": "HLQTYPaidToDepositor",
     "type": "event"
   },
   {
@@ -283,24 +296,11 @@
       {
         "indexed": false,
         "internalType": "uint256",
-        "name": "_LQTY",
+        "name": "_HLQTY",
         "type": "uint256"
       }
     ],
-    "name": "LQTYPaidToFrontEnd",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": false,
-        "internalType": "address",
-        "name": "_newLUSDTokenAddress",
-        "type": "address"
-      }
-    ],
-    "name": "LUSDTokenAddressChanged",
+    "name": "HLQTYPaidToFrontEnd",
     "type": "event"
   },
   {
@@ -422,7 +422,38 @@
         "type": "uint256"
       }
     ],
-    "name": "StabilityPoolLUSDBalanceUpdated",
+    "name": "StabilityPoolHCHFBalanceUpdated",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "token",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "from",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "to",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "int64",
+        "name": "value",
+        "type": "int64"
+      }
+    ],
+    "name": "Transfer",
     "type": "event"
   },
   {
@@ -498,7 +529,7 @@
   },
   {
     "inputs": [],
-    "name": "LUSD_GAS_COMPENSATION",
+    "name": "HCHF_GAS_COMPENSATION",
     "outputs": [
       {
         "internalType": "uint256",
@@ -898,7 +929,7 @@
         "type": "address"
       }
     ],
-    "name": "getCompoundedLUSDDeposit",
+    "name": "getCompoundedHCHFDeposit",
     "outputs": [
       {
         "internalType": "uint256",
@@ -936,7 +967,7 @@
         "type": "address"
       }
     ],
-    "name": "getDepositorLQTYGain",
+    "name": "getDepositorHLQTYGain",
     "outputs": [
       {
         "internalType": "uint256",
@@ -994,7 +1025,7 @@
         "type": "address"
       }
     ],
-    "name": "getFrontEndLQTYGain",
+    "name": "getFrontEndHLQTYGain",
     "outputs": [
       {
         "internalType": "uint256",
@@ -1007,12 +1038,25 @@
   },
   {
     "inputs": [],
-    "name": "getTotalLUSDDeposits",
+    "name": "getTotalHCHFDeposits",
     "outputs": [
       {
         "internalType": "uint256",
         "name": "",
         "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "hchfToken",
+    "outputs": [
+      {
+        "internalType": "contract IHCHFToken",
+        "name": "",
+        "type": "address"
       }
     ],
     "stateMutability": "view",
@@ -1046,7 +1090,7 @@
   },
   {
     "inputs": [],
-    "name": "lastLQTYError",
+    "name": "lastHCHFLossError_Offset",
     "outputs": [
       {
         "internalType": "uint256",
@@ -1059,25 +1103,12 @@
   },
   {
     "inputs": [],
-    "name": "lastLUSDLossError_Offset",
+    "name": "lastHLQTYError",
     "outputs": [
       {
         "internalType": "uint256",
         "name": "",
         "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "lusdToken",
-    "outputs": [
-      {
-        "internalType": "contract IDCHFToken",
-        "name": "",
-        "type": "address"
       }
     ],
     "stateMutability": "view",
@@ -1177,7 +1208,7 @@
       },
       {
         "internalType": "address",
-        "name": "_lusdTokenAddress",
+        "name": "_hchfTokenAddress",
         "type": "address"
       },
       {

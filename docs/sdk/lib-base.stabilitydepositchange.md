@@ -10,11 +10,11 @@ Represents the change between two Stability Deposit states.
 
 ```typescript
 export declare type StabilityDepositChange<T> = {
-    depositLUSD: T;
-    withdrawLUSD?: undefined;
+    depositHCHF: T;
+    withdrawHCHF?: undefined;
 } | {
-    depositLUSD?: undefined;
-    withdrawLUSD: T;
-    withdrawAllLUSD: boolean;
+    depositHCHF?: undefined;
+    withdrawHCHF: T;
+    withdrawAllHCHF: boolean;
 };
 ```

@@ -3,7 +3,7 @@
     "inputs": [
       {
         "internalType": "address",
-        "name": "_lqtyTokenAddress",
+        "name": "_hlqtyTokenAddress",
         "type": "address"
       }
     ],
@@ -16,11 +16,11 @@
       {
         "indexed": false,
         "internalType": "address",
-        "name": "_lqtyTokenAddress",
+        "name": "_hlqtyTokenAddress",
         "type": "address"
       }
     ],
-    "name": "LQTYTokenAddressChanged",
+    "name": "HLQTYTokenAddressChanged",
     "type": "event"
   },
   {
@@ -91,6 +91,37 @@
       }
     ],
     "name": "Staked",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "token",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "from",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "to",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "int64",
+        "name": "value",
+        "type": "int64"
+      }
+    ],
+    "name": "Transfer",
     "type": "event"
   },
   {
@@ -198,6 +229,19 @@
   },
   {
     "inputs": [],
+    "name": "hlqtyToken",
+    "outputs": [
+      {
+        "internalType": "contract IHLQTYToken",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
     "name": "isOwner",
     "outputs": [
       {
@@ -230,19 +274,6 @@
         "internalType": "uint256",
         "name": "",
         "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "lqtyToken",
-    "outputs": [
-      {
-        "internalType": "contract IHLQTYToken",
-        "name": "",
-        "type": "address"
       }
     ],
     "stateMutability": "view",
@@ -334,11 +365,6 @@
   },
   {
     "inputs": [
-      {
-        "internalType": "address",
-        "name": "_lqtyTokenAddress",
-        "type": "address"
-      },
       {
         "internalType": "address",
         "name": "_uniTokenAddress",
@@ -454,7 +480,7 @@
     "name": "uniToken",
     "outputs": [
       {
-        "internalType": "contract IERC20",
+        "internalType": "address",
         "name": "",
         "type": "address"
       }

@@ -15,14 +15,14 @@ import {
 import activePoolAbi from "../abi/ActivePool.json";
 import borrowerOperationsAbi from "../abi/BorrowerOperations.json";
 import troveManagerAbi from "../abi/TroveManager.json";
-import lusdTokenAbi from "../abi/DCHFToken.json";
+import hchfTokenAbi from "../abi/HCHFToken.json";
 import collSurplusPoolAbi from "../abi/CollSurplusPool.json";
 import communityIssuanceAbi from "../abi/CommunityIssuance.json";
 import defaultPoolAbi from "../abi/DefaultPool.json";
-import lqtyTokenAbi from "../abi/HLQTYToken.json";
+import hlqtyTokenAbi from "../abi/HLQTYToken.json";
 import hintHelpersAbi from "../abi/HintHelpers.json";
 import lockupContractFactoryAbi from "../abi/LockupContractFactory.json";
-import lqtyStakingAbi from "../abi/HLQTYStaking.json";
+import hlqtyStakingAbi from "../abi/HLQTYStaking.json";
 import multiTroveGetterAbi from "../abi/MultiTroveGetter.json";
 import priceFeedAbi from "../abi/PriceFeed.json";
 import priceFeedTestnetAbi from "../abi/PriceFeedTestnet.json";
@@ -37,7 +37,7 @@ import {
   ActivePool,
   BorrowerOperations,
   TroveManager,
-  DCHFToken,
+  HCHFToken,
   CollSurplusPool,
   CommunityIssuance,
   DefaultPool,
@@ -157,14 +157,14 @@ export interface _LiquityContracts {
   activePool: ActivePool;
   borrowerOperations: BorrowerOperations;
   troveManager: TroveManager;
-  lusdToken: DCHFToken;
+  hchfToken: HCHFToken;
   collSurplusPool: CollSurplusPool;
   communityIssuance: CommunityIssuance;
   defaultPool: DefaultPool;
-  lqtyToken: HLQTYToken;
+  hlqtyToken: HLQTYToken;
   hintHelpers: HintHelpers;
   lockupContractFactory: LockupContractFactory;
-  lqtyStaking: HLQTYStaking;
+  hlqtyStaking: HLQTYStaking;
   multiTroveGetter: MultiTroveGetter;
   priceFeed: PriceFeed | PriceFeedTestnet;
   sortedTroves: SortedTroves;
@@ -194,13 +194,13 @@ const getAbi = (priceFeedIsTestnet: boolean, uniTokenIsMock: boolean): LiquityCo
   activePool: activePoolAbi,
   borrowerOperations: borrowerOperationsAbi,
   troveManager: troveManagerAbi,
-  lusdToken: lusdTokenAbi,
+  hchfToken: hchfTokenAbi,
   communityIssuance: communityIssuanceAbi,
   defaultPool: defaultPoolAbi,
-  lqtyToken: lqtyTokenAbi,
+  hlqtyToken: hlqtyTokenAbi,
   hintHelpers: hintHelpersAbi,
   lockupContractFactory: lockupContractFactoryAbi,
-  lqtyStaking: lqtyStakingAbi,
+  hlqtyStaking: hlqtyStakingAbi,
   multiTroveGetter: multiTroveGetterAbi,
   priceFeed: priceFeedIsTestnet ? priceFeedTestnetAbi : priceFeedAbi,
   sortedTroves: sortedTrovesAbi,
@@ -226,8 +226,8 @@ export interface _LiquityDeploymentJSON {
   readonly version: string;
   readonly deploymentDate: number;
   readonly bootstrapPeriod: number;
-  readonly totalStabilityPoolLQTYReward: string;
-  readonly liquidityMiningLQTYRewardRate: string;
+  readonly totalStabilityPoolHLQTYReward: string;
+  readonly liquidityMiningHLQTYRewardRate: string;
   readonly _priceFeedIsTestnet: boolean;
   readonly _uniTokenIsMock: boolean;
   readonly _isDev: boolean;

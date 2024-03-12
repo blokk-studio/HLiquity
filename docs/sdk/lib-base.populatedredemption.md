@@ -15,17 +15,17 @@ export interface PopulatedRedemption<P = unknown, S = unknown, R = unknown> exte
 
 ## Remarks
 
-The Liquity protocol fulfills redemptions by repaying the debt of Troves in ascending order of their collateralization ratio, and taking a portion of their collateral in exchange. Due to the [minimum debt](./lib-base.lusd_minimum_debt.md) requirement that Troves must fulfill, some LUSD amounts are not possible to redeem exactly.
+The Liquity protocol fulfills redemptions by repaying the debt of Troves in ascending order of their collateralization ratio, and taking a portion of their collateral in exchange. Due to the [minimum debt](./lib-base.hchf_minimum_debt.md) requirement that Troves must fulfill, some HCHF amounts are not possible to redeem exactly.
 
-When [redeemLUSD()](./lib-base.populatableliquity.redeemlusd.md) is called with an amount that can't be fully redeemed, the amount will be truncated (see the `redeemableLUSDAmount` property). When this happens, the redeemer can either redeem the truncated amount by sending the transaction unchanged, or prepare a new transaction by [increasing the amount](./lib-base.populatedredemption.increaseamountbyminimumnetdebt.md) to the next lowest possible value, which is the sum of the truncated amount and [LUSD\_MINIMUM\_NET\_DEBT](./lib-base.lusd_minimum_net_debt.md)<!-- -->.
+When [redeemHCHF()](./lib-base.populatableliquity.redeemhchf.md) is called with an amount that can't be fully redeemed, the amount will be truncated (see the `redeemableHCHFAmount` property). When this happens, the redeemer can either redeem the truncated amount by sending the transaction unchanged, or prepare a new transaction by [increasing the amount](./lib-base.populatedredemption.increaseamountbyminimumnetdebt.md) to the next lowest possible value, which is the sum of the truncated amount and [HCHF\_MINIMUM\_NET\_DEBT](./lib-base.hchf_minimum_net_debt.md)<!-- -->.
 
 ## Properties
 
 |  Property | Type | Description |
 |  --- | --- | --- |
-|  [attemptedLUSDAmount](./lib-base.populatedredemption.attemptedlusdamount.md) | [Decimal](./lib-base.decimal.md) | Amount of LUSD the redeemer is trying to redeem. |
-|  [isTruncated](./lib-base.populatedredemption.istruncated.md) | boolean | Whether <code>redeemableLUSDAmount</code> is less than <code>attemptedLUSDAmount</code>. |
-|  [redeemableLUSDAmount](./lib-base.populatedredemption.redeemablelusdamount.md) | [Decimal](./lib-base.decimal.md) | Maximum amount of LUSD that is currently redeemable from <code>attemptedLUSDAmount</code>. |
+|  [attemptedHCHFAmount](./lib-base.populatedredemption.attemptedhchfamount.md) | [Decimal](./lib-base.decimal.md) | Amount of HCHF the redeemer is trying to redeem. |
+|  [isTruncated](./lib-base.populatedredemption.istruncated.md) | boolean | Whether <code>redeemableHCHFAmount</code> is less than <code>attemptedHCHFAmount</code>. |
+|  [redeemableHCHFAmount](./lib-base.populatedredemption.redeemablehchfamount.md) | [Decimal](./lib-base.decimal.md) | Maximum amount of HCHF that is currently redeemable from <code>attemptedHCHFAmount</code>. |
 
 ## Methods
 

@@ -55,19 +55,6 @@
     "anonymous": false,
     "inputs": [
       {
-        "indexed": false,
-        "internalType": "address",
-        "name": "_lqtyStakingAddress",
-        "type": "address"
-      }
-    ],
-    "name": "LQTYStakingAddressChanged",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
         "indexed": true,
         "internalType": "address",
         "name": "_borrower",
@@ -76,11 +63,11 @@
       {
         "indexed": false,
         "internalType": "uint256",
-        "name": "_LUSDFee",
+        "name": "_HCHFFee",
         "type": "uint256"
       }
     ],
-    "name": "LUSDBorrowingFeePaid",
+    "name": "HCHFBorrowingFeePaid",
     "type": "event"
   },
   {
@@ -89,11 +76,37 @@
       {
         "indexed": false,
         "internalType": "address",
-        "name": "_lusdTokenAddress",
+        "name": "_hchfTokenAddress",
         "type": "address"
       }
     ],
-    "name": "LUSDTokenAddressChanged",
+    "name": "HCHFTokenAddressChanged",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "_hlqtyStakingAddress",
+        "type": "address"
+      }
+    ],
+    "name": "HLQTYStakingAddressChanged",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "_hlqtyStakingAddress",
+        "type": "address"
+      }
+    ],
+    "name": "LQTYStakingAddressChanged",
     "type": "event"
   },
   {
@@ -264,7 +277,7 @@
   },
   {
     "inputs": [],
-    "name": "LUSD_GAS_COMPENSATION",
+    "name": "HCHF_GAS_COMPENSATION",
     "outputs": [
       {
         "internalType": "uint256",
@@ -385,7 +398,7 @@
       },
       {
         "internalType": "uint256",
-        "name": "_LUSDChange",
+        "name": "_HCHFChange",
         "type": "uint256"
       },
       {
@@ -483,12 +496,12 @@
   },
   {
     "inputs": [],
-    "name": "isOwner",
+    "name": "hchfToken",
     "outputs": [
       {
-        "internalType": "bool",
+        "internalType": "contract IHCHFToken",
         "name": "",
-        "type": "bool"
+        "type": "address"
       }
     ],
     "stateMutability": "view",
@@ -496,7 +509,7 @@
   },
   {
     "inputs": [],
-    "name": "lqtyStaking",
+    "name": "hlqtyStaking",
     "outputs": [
       {
         "internalType": "contract IHLQTYStaking",
@@ -509,7 +522,7 @@
   },
   {
     "inputs": [],
-    "name": "lqtyStakingAddress",
+    "name": "hlqtyStakingAddress",
     "outputs": [
       {
         "internalType": "address",
@@ -522,12 +535,12 @@
   },
   {
     "inputs": [],
-    "name": "lusdToken",
+    "name": "isOwner",
     "outputs": [
       {
-        "internalType": "contract IDCHFToken",
+        "internalType": "bool",
         "name": "",
-        "type": "address"
+        "type": "bool"
       }
     ],
     "stateMutability": "view",
@@ -565,7 +578,7 @@
       },
       {
         "internalType": "uint256",
-        "name": "_LUSDAmount",
+        "name": "_HCHFAmount",
         "type": "uint256"
       },
       {
@@ -614,7 +627,7 @@
     "inputs": [
       {
         "internalType": "uint256",
-        "name": "_LUSDAmount",
+        "name": "_HCHFAmount",
         "type": "uint256"
       },
       {
@@ -628,7 +641,7 @@
         "type": "address"
       }
     ],
-    "name": "repayLUSD",
+    "name": "repayHCHF",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -677,12 +690,12 @@
       },
       {
         "internalType": "address",
-        "name": "_lusdTokenAddress",
+        "name": "_hchfTokenAddress",
         "type": "address"
       },
       {
         "internalType": "address",
-        "name": "_lqtyStakingAddress",
+        "name": "_hlqtyStakingAddress",
         "type": "address"
       }
     ],
@@ -749,7 +762,7 @@
       },
       {
         "internalType": "uint256",
-        "name": "_LUSDAmount",
+        "name": "_HCHFAmount",
         "type": "uint256"
       },
       {
@@ -763,7 +776,7 @@
         "type": "address"
       }
     ],
-    "name": "withdrawLUSD",
+    "name": "withdrawHCHF",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"

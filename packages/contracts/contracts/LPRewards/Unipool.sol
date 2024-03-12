@@ -8,12 +8,10 @@ import "../Dependencies/SafeMath.sol";
 import "../Dependencies/Ownable.sol";
 import "../Dependencies/CheckContract.sol";
 import "../Interfaces/IHLQTYToken.sol";
-import "./Dependencies/SafeERC20.sol";
 import "./Interfaces/ILPTokenWrapper.sol";
 import "./Interfaces/IUnipool.sol";
 import "../Dependencies/console.sol";
-import "../Dependencies/HederaResponseCodes.sol";
-import "../Dependencies/HederaTokenService.sol";
+import "../Dependencies/BaseHST.sol";
 
 // Adapted from: https://github.com/Synthetixio/Unipool/blob/master/contracts/Unipool.sol
 // Some more useful references:
@@ -22,11 +20,10 @@ import "../Dependencies/HederaTokenService.sol";
 // Incremental changes (commit by commit) from the original to this version: https://github.com/liquity/dev/pull/271
 
 // LPTokenWrapper contains the basic staking functionality
-contract LPTokenWrapper is ILPTokenWrapper, HederaTokenService {
+contract LPTokenWrapper is ILPTokenWrapper, BaseHST {
     using SafeMath for uint256;
-    using SafeERC20 for IERC20;
 
-    IERC20 public uniToken;
+    address public uniToken;
 
     uint256 private _totalSupply;
     mapping(address => uint256) private _balances;
@@ -42,18 +39,18 @@ contract LPTokenWrapper is ILPTokenWrapper, HederaTokenService {
     function stake(uint256 amount) public virtual override {
         _totalSupply = _totalSupply.add(amount);
         _balances[msg.sender] = _balances[msg.sender].add(amount);
-        uniToken.safeTransferFrom(msg.sender, address(this), amount);
+        _transfer(uniToken, msg.sender, address(this), amount);
     }
 
     function withdraw(uint256 amount) public virtual override {
         _totalSupply = _totalSupply.sub(amount);
         _balances[msg.sender] = _balances[msg.sender].sub(amount);
-        uniToken.safeTransfer(msg.sender, amount);
+        _transfer(uniToken, address(this), msg.sender, amount);
     }
 }
 
 /*
- * On deployment a new Uniswap pool will be created for the pair LUSD/ETH and its token will be set here.
+ * On deployment a new Uniswap pool will be created for the pair HCHF/HBAR and its token will be set here.
 
  * Essentially the way it works is:
 
@@ -63,14 +60,14 @@ contract LPTokenWrapper is ILPTokenWrapper, HederaTokenService {
  * - Liquidity providers can claim their rewards when they want
  * - Liquidity providers can unstake UNIv2 LP tokens to exit the program (i.e., stop earning rewards) when they want
 
- * Funds for rewards will only be added once, on deployment of LQTY token,
+ * Funds for rewards will only be added once, on deployment of HLQTY token,
  * which will happen after this contract is deployed and before this `setParams` in this contract is called.
 
  * If at some point the total amount of staked tokens is zero, the clock will be “stopped”,
  * so the period will be extended by the time during which the staking pool is empty,
- * in order to avoid getting LQTY tokens locked.
+ * in order to avoid getting HLQTY tokens locked.
  * That also means that the start time for the program will be the event that occurs first:
- * either LQTY token contract is deployed, and therefore LQTY tokens are minted to Unipool contract,
+ * either HLQTY token contract is deployed, and therefore HLQTY tokens are minted to Unipool contract,
  * or first liquidity provider stakes UNIv2 LP tokens into it.
  */
 contract Unipool is LPTokenWrapper, Ownable, CheckContract, IUnipool {
@@ -78,7 +75,7 @@ contract Unipool is LPTokenWrapper, Ownable, CheckContract, IUnipool {
     address internal constant _PRECOMPILED_ADDRESS = address(0x167);
 
     uint256 public duration;
-    IHLQTYToken public lqtyToken;
+    IHLQTYToken public hlqtyToken;
 
     uint256 public periodFinish = 0;
     uint256 public rewardRate = 0;
@@ -87,29 +84,24 @@ contract Unipool is LPTokenWrapper, Ownable, CheckContract, IUnipool {
     mapping(address => uint256) public userRewardPerTokenPaid;
     mapping(address => uint256) public rewards;
 
-    event LQTYTokenAddressChanged(address _lqtyTokenAddress);
+    event HLQTYTokenAddressChanged(address _hlqtyTokenAddress);
     event UniTokenAddressChanged(address _uniTokenAddress);
     event RewardAdded(uint256 reward);
     event Staked(address indexed user, uint256 amount);
     event Withdrawn(address indexed user, uint256 amount);
     event RewardPaid(address indexed user, uint256 reward);
 
-    constructor(address _lqtyTokenAddress) public {
-        checkContract(_lqtyTokenAddress);
-        lqtyToken = IHLQTYToken(_lqtyTokenAddress);
+    constructor(address _hlqtyTokenAddress) public {
+        checkContract(_hlqtyTokenAddress);
+        hlqtyToken = IHLQTYToken(_hlqtyTokenAddress);
 
-        int responseCode = HederaTokenService.associateToken(address(this), lqtyToken.getTokenAddress());
+        _associateToken(address(this),hlqtyToken.getTokenAddress());
 
-        if (responseCode != HederaResponseCodes.SUCCESS) {
-            revert ();
-        }
-
-        emit LQTYTokenAddressChanged(_lqtyTokenAddress);
+        emit HLQTYTokenAddressChanged(_hlqtyTokenAddress);
     }
 
     // initialization function
     function setParams(
-        address _lqtyTokenAddress,
         address _uniTokenAddress,
         uint _duration
     )
@@ -118,12 +110,13 @@ contract Unipool is LPTokenWrapper, Ownable, CheckContract, IUnipool {
     onlyOwner
     {
         checkContract(_uniTokenAddress);
+        _associateToken(address(this), _uniTokenAddress);
 
-        uniToken = IERC20(_uniTokenAddress);
+        uniToken = _uniTokenAddress;
 
         duration = _duration;
 
-        _notifyRewardAmount(lqtyToken.getLpRewardsEntitlement(), _duration);
+        _notifyRewardAmount(hlqtyToken.getLpRewardsEntitlement(), _duration);
 
 
         emit UniTokenAddressChanged(_uniTokenAddress);
@@ -163,7 +156,7 @@ contract Unipool is LPTokenWrapper, Ownable, CheckContract, IUnipool {
     // stake visibility is public as overriding LPTokenWrapper's stake() function
     function stake(uint256 amount) public override {
         require(amount > 0, "Cannot stake 0");
-        require(address(uniToken) != address(0), "Liquidity Pool Token has not been set yet");
+        require(uniToken != address(0), "Liquidity Pool Token has not been set yet");
 
         _updatePeriodFinish();
         _updateAccountReward(msg.sender);
@@ -175,7 +168,7 @@ contract Unipool is LPTokenWrapper, Ownable, CheckContract, IUnipool {
 
     function withdraw(uint256 amount) public override {
         require(amount > 0, "Cannot withdraw 0");
-        require(address(uniToken) != address(0), "Liquidity Pool Token has not been set yet");
+        require(uniToken != address(0), "Liquidity Pool Token has not been set yet");
 
         _updateAccountReward(msg.sender);
 
@@ -191,7 +184,7 @@ contract Unipool is LPTokenWrapper, Ownable, CheckContract, IUnipool {
     }
 
     function claimReward() public override {
-        require(address(uniToken) != address(0), "Liquidity Pool Token has not been set yet");
+        require(uniToken != address(0), "Liquidity Pool Token has not been set yet");
 
         _updatePeriodFinish();
         _updateAccountReward(msg.sender);
@@ -201,22 +194,16 @@ contract Unipool is LPTokenWrapper, Ownable, CheckContract, IUnipool {
         require(reward > 0, "Nothing to claim");
 
         rewards[msg.sender] = 0;
-        int64 safeReward = int64(reward);
-        int responseCode = HederaTokenService.transferToken(lqtyToken.getTokenAddress(), address(this), msg.sender, safeReward);
-        _checkResponse(responseCode);
-        emit RewardPaid(msg.sender, reward);
-    }
 
-    function _checkResponse(int responseCode) internal pure returns (bool) {
-        // Using require to check the condition, and provide a custom error message if it fails.
-        require(responseCode == HederaResponseCodes.SUCCESS, "ResponseCodeInvalid: provided code is not success");
-        return true;
+        _transfer(hlqtyToken.getTokenAddress(), address(this), msg.sender, reward);
+
+        emit RewardPaid(msg.sender, reward);
     }
 
     // Used only on initialization, sets the reward rate and the end time for the program
     function _notifyRewardAmount(uint256 _reward, uint256 _duration) internal {
         assert(_reward > 0);
-        assert(_reward == lqtyToken.balanceOf(address(this)));
+        assert(_reward == hlqtyToken.balanceOf(address(this)));
         assert(periodFinish == 0);
 
         _updateReward();
