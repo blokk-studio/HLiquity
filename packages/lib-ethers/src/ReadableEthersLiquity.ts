@@ -214,11 +214,11 @@ export class ReadableEthersLiquity implements ReadableLiquity {
   getPrice(overrides?: EthersCallOverrides): Promise<Decimal> {
     const { priceFeed } = _getContracts(this.connection);
 
-     return priceFeed.callStatic.fetchPrice({ ...overrides }).then(price => {
-        return decimalify(price);
+    return priceFeed.callStatic.fetchPrice({ ...overrides }).then(price => {
+      return decimalify(price);
     });
   }
-  
+
   /** @internal */
   async _getActivePool(overrides?: EthersCallOverrides): Promise<Trove> {
     const { activePool } = _getContracts(this.connection);
@@ -315,12 +315,12 @@ export class ReadableEthersLiquity implements ReadableLiquity {
   getLQTYTokenAddress(overrides?: EthersCallOverrides): Promise<string> {
     const { lqtyToken } = _getContracts(this.connection);
 
-    return lqtyToken.getTokenAddress( { ...overrides });
+    return lqtyToken.getTokenAddress({ ...overrides });
   }
   getLUSDTokenAddress(overrides?: EthersCallOverrides): Promise<string> {
     const { lusdToken } = _getContracts(this.connection);
 
-    return lusdToken.getTokenAddress( { ...overrides });
+    return lusdToken.getTokenAddress({ ...overrides });
   }
 
   /** {@inheritDoc @liquity/lib-base#ReadableLiquity.getLQTYBalance} */
