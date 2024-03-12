@@ -18,8 +18,8 @@ import {
   BondNFT__factory,
   ChickenBondManager__factory
 } from "@liquity/chicken-bonds/lusd/types";
-import type { DCHFToken as LUSDToken } from "@liquity/lib-ethers/dist/types";
-import LUSDTokenAbi from "@liquity/lib-ethers/abi/DCHFToken.json";
+import type { HCHFToken } from "@liquity/lib-ethers/dist/types";
+import HCHFTokenAbi from "@liquity/lib-ethers/abi/HCHFToken.json";
 import { useContract } from "../../../hooks/useContract";
 import { useLiquity } from "../../../hooks/LiquityContext";
 import { useCallback } from "react";
@@ -47,7 +47,7 @@ type BondsInformation = {
 
 type BondContracts = {
   addresses: Addresses;
-  lusdToken: LUSDToken | undefined;
+  lusdToken: HCHFToken | undefined;
   bLusdToken: BLUSDToken | undefined;
   bondNft: BondNFT | undefined;
   chickenBondManager: ChickenBondManager | undefined;
@@ -75,9 +75,9 @@ export const useBondContracts = (): BondContracts => {
     BLUSD_AMM_STAKING_ADDRESS
   } = addresses;
 
-  const [lusdTokenDefault, lusdTokenDefaultStatus] = useContract<LUSDToken>(
+  const [lusdTokenDefault, lusdTokenDefaultStatus] = useContract<HCHFToken>(
     liquity.connection.addresses.lusdToken,
-    LUSDTokenAbi
+    HCHFTokenAbi
   );
 
   const [lusdTokenOverride, lusdTokenOverrideStatus] = useContract<ERC20Faucet>(
@@ -88,7 +88,7 @@ export const useBondContracts = (): BondContracts => {
   const [lusdToken, lusdTokenStatus] =
     LUSD_OVERRIDE_ADDRESS === null
       ? [lusdTokenDefault, lusdTokenDefaultStatus]
-      : [(lusdTokenOverride as unknown) as LUSDToken, lusdTokenOverrideStatus];
+      : [(lusdTokenOverride as unknown) as HCHFToken, lusdTokenOverrideStatus];
 
   const [bLusdToken, bLusdTokenStatus] = useContract<BLUSDToken>(
     BLUSD_TOKEN_ADDRESS,
