@@ -51,7 +51,7 @@ export type BlockPolledLiquityStoreState = LiquityStoreState<BlockPolledLiquityS
 type Resolved<T> = T extends Promise<infer U> ? U : T;
 type ResolvedValues<T> = { [P in keyof T]: Resolved<T[P]> };
 
-const promiseAllValues = <T>(object: T) => {
+const promiseAllValues = <T extends Record<string, unknown>>(object: T) => {
   const keys = Object.keys(object);
 
   return Promise.all(Object.values(object)).then(values =>

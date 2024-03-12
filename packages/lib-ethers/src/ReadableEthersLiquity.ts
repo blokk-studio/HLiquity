@@ -72,12 +72,13 @@ const convertToDate = (timestamp: number) => new Date(timestamp * 1000);
 const validSortingOptions = ["ascendingCollateralRatio", "descendingCollateralRatio"];
 
 const expectPositiveInt = <K extends string>(obj: { [P in K]?: number }, key: K) => {
-  if (obj[key] !== undefined) {
-    if (!Number.isInteger(obj[key])) {
+  const value: number | undefined = obj[key];
+  if (value !== undefined) {
+    if (!Number.isInteger(value)) {
       throw new Error(`${key} must be an integer`);
     }
 
-    if (obj[key] < 0) {
+    if (value < 0) {
       throw new Error(`${key} must not be negative`);
     }
   }
