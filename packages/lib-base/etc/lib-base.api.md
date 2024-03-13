@@ -260,9 +260,9 @@ export class HLQTYStake {
     apply(change: HLQTYStakeChange<Decimalish> | undefined): Decimal;
     readonly collateralGain: Decimal;
     equals(that: HLQTYStake): boolean;
+    readonly hchfGain: Decimal;
     // (undocumented)
     get isEmpty(): boolean;
-    readonly hchfGain: Decimal;
     readonly stakedHLQTY: Decimal;
     // @internal (undocumented)
     toString(): string;
