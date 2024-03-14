@@ -50,8 +50,8 @@
     "@types/node": "14.14.34",
     "@types/sinon-chai": "3.2.5",
     "@types/ws": "7.4.4",
-    "@typescript-eslint/eslint-plugin": "4.17.0",
-    "@typescript-eslint/parser": "4.18.0",
+    "@typescript-eslint/eslint-plugin": "^5.62.0",
+    "@typescript-eslint/parser": "^5.62.0",
     "chai": "4.3.4",
     "chai-as-promised": "7.1.1",
     "chai-spies": "1.0.0",
@@ -68,7 +68,7 @@
     "ws": "7.4.6"
   },
   "dependencies": {
-    "@hashgraph/sdk": "^2.41.0",
+    "@hashgraph/sdk": "^2.42.0",
     "axios": "^1.6.7"
   }
 }
