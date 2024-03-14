@@ -26,9 +26,11 @@ const dev = devOrNull as _LiquityDeploymentJSON | null;
 const deployments: {
   [chainId: number]: _LiquityDeploymentJSON | undefined;
 } = {
-  [hedera.chainId]: hedera,
+  // TODO: deploy to mainnet
+  // [hedera.chainId]: hedera,
   [hederaLocalTestnet.chainId]: hederaLocalTestnet,
-  [hederaPreviewnet.chainId]: hederaPreviewnet,
+  // TODO: deploy to previewnet
+  // [hederaPreviewnet.chainId]: hederaPreviewnet,
   [hederaTestnet.chainId]: hederaTestnet,
 
   ...(dev !== null ? { [dev.chainId]: dev } : {})
