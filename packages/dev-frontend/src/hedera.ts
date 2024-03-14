@@ -10,7 +10,7 @@ export const testnet: Chain = {
     symbol: "HBAR",
     decimals: 18
   },
-  network: "hedera_testnet",
+  network: "hederaTestnet",
   rpcUrls: {
     default: {
       http: ["https://testnet.hashio.io/api"]
@@ -30,7 +30,7 @@ export const previewnet: Chain = {
     symbol: "HBAR",
     decimals: 18
   },
-  network: "hedera_previewnet",
+  network: "hederaPreviewnet",
   rpcUrls: {
     default: {
       http: ["https://previewnet.hashio.io/api"]
