@@ -5,8 +5,8 @@ import {
   Decimal,
   Decimalish,
   LiquityStoreState,
-  LQTYStake,
-  LQTYStakeChange
+  HLQTYStake,
+  HLQTYStakeChange
 } from "@liquity/lib-base";
 
 import { LiquityStoreUpdate, useLiquityReducer, useLiquitySelector } from "@liquity/lib-react";
@@ -19,9 +19,9 @@ import { StakingManagerAction } from "./StakingManagerAction";
 import { ActionDescription, Amount } from "../ActionDescription";
 import { ErrorDescription } from "../ErrorDescription";
 
-const init = ({ lqtyStake }: LiquityStoreState) => ({
-  originalStake: lqtyStake,
-  editedLQTY: lqtyStake.stakedLQTY
+const init = ({ hlqtyStake }: LiquityStoreState) => ({
+  originalStake: hlqtyStake,
+  editedLQTY: hlqtyStake.stakedHLQTY
 });
 
 type StakeManagerState = ReturnType<typeof init>;
@@ -41,11 +41,11 @@ const reduce = (state: StakeManagerState, action: StakeManagerAction): StakeMana
       return { ...state, editedLQTY: Decimal.from(action.newValue) };
 
     case "revert":
-      return { ...state, editedLQTY: originalStake.stakedLQTY };
+      return { ...state, editedLQTY: originalStake.stakedHLQTY };
 
     case "updateStore": {
       const {
-        stateChange: { lqtyStake: updatedStake }
+        stateChange: { hlqtyStake: updatedStake }
       } = action;
 
       if (updatedStake) {
@@ -60,53 +60,53 @@ const reduce = (state: StakeManagerState, action: StakeManagerAction): StakeMana
   return state;
 };
 
-const selectLQTYBalance = ({ lqtyBalance }: LiquityStoreState) => lqtyBalance;
+const selectLQTYBalance = ({ hlqtyBalance }: LiquityStoreState) => hlqtyBalance;
 
 type StakingManagerActionDescriptionProps = {
-  originalStake: LQTYStake;
-  change: LQTYStakeChange<Decimal>;
+  originalStake: HLQTYStake;
+  change: HLQTYStakeChange<Decimal>;
 };
 
 const StakingManagerActionDescription: React.FC<StakingManagerActionDescriptionProps> = ({
   originalStake,
   change
 }) => {
-  const stakeLQTY = change.stakeLQTY?.prettify().concat(" ", GT);
-  const unstakeLQTY = change.unstakeLQTY?.prettify().concat(" ", GT);
+  const stakeHLQTY = change.stakeHLQTY?.prettify().concat(" ", GT);
+  const unstakeHLQTY = change.unstakeHLQTY?.prettify().concat(" ", GT);
   const collateralGain = originalStake.collateralGain.nonZero?.prettify(4).concat(" ETH");
-  const lusdGain = originalStake.lusdGain.nonZero?.prettify().concat(" ", COIN);
+  const hchfGain = originalStake.hchfGain.nonZero?.prettify().concat(" ", COIN);
 
-  if (originalStake.isEmpty && stakeLQTY) {
+  if (originalStake.isEmpty && stakeHLQTY) {
     return (
       <ActionDescription>
-        You are staking <Amount>{stakeLQTY}</Amount>.
+        You are staking <Amount>{stakeHLQTY}</Amount>.
       </ActionDescription>
     );
   }
 
   return (
     <ActionDescription>
-      {stakeLQTY && (
+      {stakeHLQTY && (
         <>
-          You are adding <Amount>{stakeLQTY}</Amount> to your stake
+          You are adding <Amount>{stakeHLQTY}</Amount> to your stake
         </>
       )}
-      {unstakeLQTY && (
+      {unstakeHLQTY && (
         <>
-          You are withdrawing <Amount>{unstakeLQTY}</Amount> to your wallet
+          You are withdrawing <Amount>{unstakeHLQTY}</Amount> to your wallet
         </>
       )}
-      {(collateralGain || lusdGain) && (
+      {(collateralGain || hchfGain) && (
         <>
           {" "}
           and claiming{" "}
-          {collateralGain && lusdGain ? (
+          {collateralGain && hchfGain ? (
             <>
-              <Amount>{collateralGain}</Amount> and <Amount>{lusdGain}</Amount>
+              <Amount>{collateralGain}</Amount> and <Amount>{hchfGain}</Amount>
             </>
           ) : (
             <>
-              <Amount>{collateralGain ?? lusdGain}</Amount>
+              <Amount>{collateralGain ?? hchfGain}</Amount>
             </>
           )}
         </>
@@ -119,18 +119,18 @@ const StakingManagerActionDescription: React.FC<StakingManagerActionDescriptionP
 export const StakingManager: React.FC = () => {
   const { dispatch: dispatchStakingViewAction } = useStakingView();
   const [{ originalStake, editedLQTY }, dispatch] = useLiquityReducer(reduce, init);
-  const lqtyBalance = useLiquitySelector(selectLQTYBalance);
+  const hlqtyBalance = useLiquitySelector(selectLQTYBalance);
 
   const change = originalStake.whatChanged(editedLQTY);
   const [validChange, description] = !change
     ? [undefined, undefined]
-    : change.stakeLQTY?.gt(lqtyBalance)
+    : change.stakeHLQTY?.gt(hlqtyBalance)
     ? [
         undefined,
         <ErrorDescription>
           The amount you're trying to stake exceeds your balance by{" "}
           <Amount>
-            {change.stakeLQTY.sub(lqtyBalance).prettify()} {GT}
+            {change.stakeHLQTY.sub(hlqtyBalance).prettify()} {GT}
           </Amount>
           .
         </ErrorDescription>

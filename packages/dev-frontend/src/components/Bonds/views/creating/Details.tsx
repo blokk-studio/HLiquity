@@ -36,21 +36,21 @@ export const Details: React.FC<DetailsProps> = ({ onBack }) => {
     dispatchEvent,
     statuses,
     isInfiniteBondApproved,
-    lusdBalance,
+    hchfBalance,
     simulatedProtocolInfo,
     setSimulatedMarketPrice,
     resetSimulatedMarketPrice,
     protocolInfo
   } = useBondView();
   const { back } = useWizard();
-  const [deposit, setDeposit] = useState<Decimal>(lusdBalance ?? Decimal.ZERO);
+  const [deposit, setDeposit] = useState<Decimal>(hchfBalance ?? Decimal.ZERO);
   const depositEditingState = useState<string>();
   const isApprovingOrConfirming = useMemo(
     () => statuses.APPROVE === "PENDING" || statuses.CREATE === "PENDING",
     [statuses.APPROVE, statuses.CREATE]
   );
   const handleBack = back ?? onBack ?? (() => dispatchEvent("BACK_PRESSED"));
-  const [isDepositEnough, setIsDepositEnough] = useState<boolean>(lusdBalance?.gte(100) ?? true);
+  const [isDepositEnough, setIsDepositEnough] = useState<boolean>(hchfBalance?.gte(100) ?? true);
   const [doesDepositExceedBalance, setDoesDepositExceedBalance] = useState<boolean>(false);
 
   const handleDismiss = () => {
@@ -67,7 +67,7 @@ export const Details: React.FC<DetailsProps> = ({ onBack }) => {
 
   const handleDepositAmountChanged = (amount: Decimal) => {
     const isDepositEnough = amount.gte(100);
-    const doesDepositExceedBalance = !!lusdBalance?.lt(amount);
+    const doesDepositExceedBalance = !!hchfBalance?.lt(amount);
     setDeposit(amount);
     setIsDepositEnough(isDepositEnough);
     setDoesDepositExceedBalance(doesDepositExceedBalance);
@@ -78,7 +78,7 @@ export const Details: React.FC<DetailsProps> = ({ onBack }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  if (protocolInfo === undefined || simulatedProtocolInfo === undefined || lusdBalance === undefined)
+  if (protocolInfo === undefined || simulatedProtocolInfo === undefined || hchfBalance === undefined)
     return null;
 
   const hasMarketPremium = simulatedProtocolInfo.hasMarketPremium;
@@ -228,8 +228,8 @@ export const Details: React.FC<DetailsProps> = ({ onBack }) => {
         editingState={depositEditingState}
         editedAmount={deposit.toString()}
         setEditedAmount={amount => handleDepositAmountChanged(Decimal.from(amount))}
-        maxedOut={deposit.eq(lusdBalance)}
-        maxAmount={lusdBalance.toString()}
+        maxedOut={deposit.eq(hchfBalance)}
+        maxAmount={hchfBalance.toString()}
       />
 
       <Grid sx={{ my: 1, mb: 3, justifyItems: "center", pl: 2 }} gap="20px" columns={3}>
@@ -297,7 +297,7 @@ export const Details: React.FC<DetailsProps> = ({ onBack }) => {
       {!isDepositEnough && <ErrorDescription>The minimum bond amount is 100 LUSD.</ErrorDescription>}
       {doesDepositExceedBalance && (
         <ErrorDescription>
-          Amount exceeds your balance by <Amount>{deposit.sub(lusdBalance).prettify(2)} LUSD</Amount>
+          Amount exceeds your balance by <Amount>{deposit.sub(hchfBalance).prettify(2)} LUSD</Amount>
         </ErrorDescription>
       )}
 

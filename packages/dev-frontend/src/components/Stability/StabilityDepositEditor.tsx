@@ -18,9 +18,9 @@ import { EditableRow, StaticRow } from "../Trove/Editor";
 import { LoadingOverlay } from "../LoadingOverlay";
 import { InfoIcon } from "../InfoIcon";
 
-const select = ({ lusdBalance, lusdInStabilityPool }: LiquityStoreState) => ({
-  lusdBalance,
-  lusdInStabilityPool
+const select = ({ hchfBalance, hchfInStabilityPool }: LiquityStoreState) => ({
+  hchfBalance,
+  hchfInStabilityPool
 });
 
 type StabilityDepositEditorProps = {
@@ -37,22 +37,22 @@ export const StabilityDepositEditor: React.FC<StabilityDepositEditorProps> = ({
   dispatch,
   children
 }) => {
-  const { lusdBalance, lusdInStabilityPool } = useLiquitySelector(select);
+  const { hchfBalance, hchfInStabilityPool } = useLiquitySelector(select);
   const editingState = useState<string>();
 
-  const edited = !editedLUSD.eq(originalDeposit.currentLUSD);
+  const edited = !editedLUSD.eq(originalDeposit.currentHCHF);
 
-  const maxAmount = originalDeposit.currentLUSD.add(lusdBalance);
+  const maxAmount = originalDeposit.currentHCHF.add(hchfBalance);
   const maxedOut = editedLUSD.eq(maxAmount);
 
-  const lusdInStabilityPoolAfterChange = lusdInStabilityPool
-    .sub(originalDeposit.currentLUSD)
+  const lusdInStabilityPoolAfterChange = hchfInStabilityPool
+    .sub(originalDeposit.currentHCHF)
     .add(editedLUSD);
 
-  const originalPoolShare = originalDeposit.currentLUSD.mulDiv(100, lusdInStabilityPool);
+  const originalPoolShare = originalDeposit.currentHCHF.mulDiv(100, hchfInStabilityPool);
   const newPoolShare = editedLUSD.mulDiv(100, lusdInStabilityPoolAfterChange);
   const poolShareChange =
-    originalDeposit.currentLUSD.nonZero &&
+    originalDeposit.currentHCHF.nonZero &&
     Difference.between(newPoolShare, originalPoolShare).nonZero;
 
   return (
@@ -109,8 +109,8 @@ export const StabilityDepositEditor: React.FC<StabilityDepositEditorProps> = ({
             <StaticRow
               label="Reward"
               inputId="deposit-reward"
-              amount={originalDeposit.lqtyReward.prettify()}
-              color={originalDeposit.lqtyReward.nonZero && "success"}
+              amount={originalDeposit.hlqtyReward.prettify()}
+              color={originalDeposit.hlqtyReward.nonZero && "success"}
               unit={GT}
               infoIcon={
                 <InfoIcon

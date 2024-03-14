@@ -16,23 +16,23 @@ import { RemainingLQTY } from "./RemainingLQTY";
 import { Yield } from "./Yield";
 import { InfoIcon } from "../InfoIcon";
 
-const selector = ({ stabilityDeposit, trove, lusdInStabilityPool }: LiquityStoreState) => ({
+const selector = ({ stabilityDeposit, trove, hchfInStabilityPool }: LiquityStoreState) => ({
   stabilityDeposit,
   trove,
-  lusdInStabilityPool
+  hchfInStabilityPool
 });
 
 export const ActiveDeposit: React.FC = () => {
   const { dispatchEvent } = useStabilityView();
-  const { stabilityDeposit, trove, lusdInStabilityPool } = useLiquitySelector(selector);
+  const { stabilityDeposit, trove, hchfInStabilityPool } = useLiquitySelector(selector);
 
-  const poolShare = stabilityDeposit.currentLUSD.mulDiv(100, lusdInStabilityPool);
+  const poolShare = stabilityDeposit.currentHCHF.mulDiv(100, hchfInStabilityPool);
 
   const handleAdjustDeposit = useCallback(() => {
     dispatchEvent("ADJUST_DEPOSIT_PRESSED");
   }, [dispatchEvent]);
 
-  const hasReward = !stabilityDeposit.lqtyReward.isZero;
+  const hasReward = !stabilityDeposit.hlqtyReward.isZero;
   const hasGain = !stabilityDeposit.collateralGain.isZero;
   const hasTrove = !trove.isEmpty;
 
@@ -63,7 +63,7 @@ export const ActiveDeposit: React.FC = () => {
           <DisabledEditableRow
             label="Deposit"
             inputId="deposit-lusd"
-            amount={stabilityDeposit.currentLUSD.prettify()}
+            amount={stabilityDeposit.currentHCHF.prettify()}
             unit={COIN}
           />
 
@@ -86,8 +86,8 @@ export const ActiveDeposit: React.FC = () => {
             <StaticRow
               label="Reward"
               inputId="deposit-reward"
-              amount={stabilityDeposit.lqtyReward.prettify()}
-              color={stabilityDeposit.lqtyReward.nonZero && "success"}
+              amount={stabilityDeposit.hlqtyReward.prettify()}
+              color={stabilityDeposit.hlqtyReward.nonZero && "success"}
               unit={GT}
               infoIcon={
                 <InfoIcon

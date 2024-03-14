@@ -19,7 +19,7 @@ import {
 
 const init = ({ stabilityDeposit }: LiquityStoreState) => ({
   originalDeposit: stabilityDeposit,
-  editedLUSD: stabilityDeposit.currentLUSD,
+  editedLUSD: stabilityDeposit.currentHCHF,
   changePending: false
 });
 
@@ -58,7 +58,7 @@ const reduce = (
       return { ...state, editedLUSD: Decimal.from(action.newValue) };
 
     case "revert":
-      return { ...state, editedLUSD: originalDeposit.currentLUSD };
+      return { ...state, editedLUSD: originalDeposit.currentHCHF };
 
     case "updateStore": {
       const {
@@ -72,10 +72,10 @@ const reduce = (
       const newState = { ...state, originalDeposit: updatedDeposit };
 
       const changeCommitted =
-        !updatedDeposit.initialLUSD.eq(originalDeposit.initialLUSD) ||
-        updatedDeposit.currentLUSD.gt(originalDeposit.currentLUSD) ||
+        !updatedDeposit.initialHCHF.eq(originalDeposit.initialHCHF) ||
+        updatedDeposit.currentHCHF.gt(originalDeposit.currentHCHF) ||
         updatedDeposit.collateralGain.lt(originalDeposit.collateralGain) ||
-        updatedDeposit.lqtyReward.lt(originalDeposit.lqtyReward);
+        updatedDeposit.hlqtyReward.lt(originalDeposit.hlqtyReward);
 
       if (changePending && changeCommitted) {
         return finishChange(revert(newState));

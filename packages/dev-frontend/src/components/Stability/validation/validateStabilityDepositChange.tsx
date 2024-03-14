@@ -12,12 +12,12 @@ import { StabilityActionDescription } from "../StabilityActionDescription";
 
 export const selectForStabilityDepositChangeValidation = ({
   trove,
-  lusdBalance,
+  hchfBalance,
   ownFrontend,
   haveUndercollateralizedTroves
 }: LiquityStoreState) => ({
   trove,
-  lusdBalance,
+  hchfBalance,
   haveOwnFrontend: ownFrontend.status === "registered",
   haveUndercollateralizedTroves
 });
@@ -30,7 +30,7 @@ export const validateStabilityDepositChange = (
   originalDeposit: StabilityDeposit,
   editedLUSD: Decimal,
   {
-    lusdBalance,
+    hchfBalance,
     haveOwnFrontend,
     haveUndercollateralizedTroves
   }: StabilityDepositChangeValidationContext
@@ -53,20 +53,20 @@ export const validateStabilityDepositChange = (
     return [undefined, undefined];
   }
 
-  if (change.depositLUSD?.gt(lusdBalance)) {
+  if (change.depositHCHF?.gt(hchfBalance)) {
     return [
       undefined,
       <ErrorDescription>
         The amount you're trying to deposit exceeds your balance by{" "}
         <Amount>
-          {change.depositLUSD.sub(lusdBalance).prettify()} {COIN}
+          {change.depositHCHF.sub(hchfBalance).prettify()} {COIN}
         </Amount>
         .
       </ErrorDescription>
     ];
   }
 
-  if (change.withdrawLUSD && haveUndercollateralizedTroves) {
+  if (change.withdrawHCHF && haveUndercollateralizedTroves) {
     return [
       undefined,
       <ErrorDescription>

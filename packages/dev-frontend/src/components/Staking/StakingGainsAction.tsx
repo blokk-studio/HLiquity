@@ -6,11 +6,11 @@ import { useLiquitySelector } from "@liquity/lib-react";
 import { useLiquity } from "../../hooks/LiquityContext";
 import { useTransactionFunction } from "../Transaction";
 
-const selectLQTYStake = ({ lqtyStake }: LiquityStoreState) => lqtyStake;
+const selectLQTYStake = ({ hlqtyStake }: LiquityStoreState) => hlqtyStake;
 
 export const StakingGainsAction: React.FC = () => {
   const { liquity } = useLiquity();
-  const { collateralGain, lusdGain } = useLiquitySelector(selectLQTYStake);
+  const { collateralGain, hchfGain } = useLiquitySelector(selectLQTYStake);
 
   const [sendTransaction] = useTransactionFunction(
     "stake",
@@ -18,7 +18,7 @@ export const StakingGainsAction: React.FC = () => {
   );
 
   return (
-    <Button onClick={sendTransaction} disabled={collateralGain.isZero && lusdGain.isZero}>
+    <Button onClick={sendTransaction} disabled={collateralGain.isZero && hchfGain.isZero}>
       Claim gains
     </Button>
   );

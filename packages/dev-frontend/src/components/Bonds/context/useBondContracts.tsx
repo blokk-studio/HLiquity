@@ -36,7 +36,7 @@ type BondsInformation = {
   bonds: Bond[];
   stats: Stats;
   bLusdBalance: Decimal;
-  lusdBalance: Decimal;
+  hchfBalance: Decimal;
   lpTokenBalance: Decimal;
   stakedLpTokenBalance: Decimal;
   lpTokenSupply: Decimal;
@@ -162,7 +162,7 @@ export const useBondContracts = (): BondContracts => {
 
       const [
         bLusdBalance,
-        lusdBalance,
+        hchfBalance,
         lpTokenBalance,
         stakedLpTokenBalance,
         lpTokenSupply,
@@ -185,7 +185,7 @@ export const useBondContracts = (): BondContracts => {
         bonds,
         stats,
         bLusdBalance,
-        lusdBalance,
+        hchfBalance,
         lpTokenBalance,
         stakedLpTokenBalance,
         lpTokenSupply,

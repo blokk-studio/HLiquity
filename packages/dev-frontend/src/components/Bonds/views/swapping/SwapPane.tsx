@@ -47,7 +47,7 @@ export const SwapPane: React.FC = () => {
     dispatchEvent,
     statuses,
     inputToken,
-    lusdBalance,
+    hchfBalance,
     bLusdBalance,
     isInputTokenApprovedWithBLusdAmm,
     bLusdAmmBLusdBalance,
@@ -56,7 +56,7 @@ export const SwapPane: React.FC = () => {
   } = useBondView();
   const editingState = useState<string>();
   const inputTokenBalance =
-    (inputToken === BLusdAmmTokenIndex.BLUSD ? bLusdBalance : lusdBalance) ?? Decimal.ZERO;
+    (inputToken === BLusdAmmTokenIndex.BLUSD ? bLusdBalance : hchfBalance) ?? Decimal.ZERO;
   const [inputAmount, setInputAmount] = useState<Decimal>(Decimal.ZERO);
   const [outputAmount, setOutputAmount] = useState<Decimal>();
   const [exchangeRate, setExchangeRate] = useState<Decimal>();

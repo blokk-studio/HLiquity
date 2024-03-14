@@ -1,12 +1,12 @@
 import { Button } from "theme-ui";
 
-import { Decimal, LQTYStakeChange } from "@liquity/lib-base";
+import { Decimal, HLQTYStakeChange } from "@liquity/lib-base";
 
 import { useLiquity } from "../../hooks/LiquityContext";
 import { useTransactionFunction } from "../Transaction";
 
 type StakingActionProps = {
-  change: LQTYStakeChange<Decimal>;
+  change: HLQTYStakeChange<Decimal>;
 };
 
 export const StakingManagerAction: React.FC<StakingActionProps> = ({ change, children }) => {
@@ -14,9 +14,9 @@ export const StakingManagerAction: React.FC<StakingActionProps> = ({ change, chi
 
   const [sendTransaction] = useTransactionFunction(
     "stake",
-    change.stakeLQTY
-      ? liquity.send.stakeLQTY.bind(liquity.send, change.stakeLQTY)
-      : liquity.send.unstakeLQTY.bind(liquity.send, change.unstakeLQTY)
+    change.stakeHLQTY
+      ? liquity.send.stakeHLQTY.bind(liquity.send, change.stakeHLQTY)
+      : liquity.send.unstakeHLQTY.bind(liquity.send, change.unstakeHLQTY)
   );
 
   return <Button onClick={sendTransaction}>{children}</Button>;

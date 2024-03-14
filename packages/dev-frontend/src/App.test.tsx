@@ -1,10 +1,10 @@
 import { render, fireEvent } from "@testing-library/react";
 
-import { Decimal, LUSD_MINIMUM_NET_DEBT, Trove } from "@liquity/lib-base";
+import { Decimal, HCHF_MINIMUM_NET_DEBT, Trove } from "@liquity/lib-base";
 
 import App from "./App";
 
-const params = { depositCollateral: Decimal.from(20), borrowLUSD: LUSD_MINIMUM_NET_DEBT };
+const params = { depositCollateral: Decimal.from(20), borrowHCHF: HCHF_MINIMUM_NET_DEBT };
 const trove = Trove.create(params);
 
 /*

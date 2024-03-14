@@ -13,19 +13,19 @@ import { useBondView } from "./Bonds/context/BondViewContext";
 import { useBondAddresses } from "./Bonds/context/BondAddressesContext";
 import { ConnectKitButton } from "connectkit";
 
-const select = ({ accountBalance, lusdBalance, lqtyBalance }: LiquityStoreState) => ({
+const select = ({ accountBalance, hchfBalance, hlqtyBalance }: LiquityStoreState) => ({
   accountBalance,
-  lusdBalance,
-  lqtyBalance
+  hchfBalance,
+  hlqtyBalance
 });
 
 export const UserAccount: React.FC = () => {
   const { account } = useLiquity();
-  const { accountBalance, lusdBalance: realLusdBalance, lqtyBalance } = useLiquitySelector(select);
-  const { bLusdBalance, lusdBalance: customLusdBalance } = useBondView();
+  const { accountBalance, hchfBalance: realLusdBalance, hlqtyBalance } = useLiquitySelector(select);
+  const { bLusdBalance, hchfBalance: customLusdBalance } = useBondView();
   const { LUSD_OVERRIDE_ADDRESS } = useBondAddresses();
 
-  const lusdBalance = LUSD_OVERRIDE_ADDRESS === null ? realLusdBalance : customLusdBalance;
+  const hchfBalance = LUSD_OVERRIDE_ADDRESS === null ? realLusdBalance : customLusdBalance;
 
   return (
     <Flex>
@@ -54,8 +54,8 @@ export const UserAccount: React.FC = () => {
 
         {([
           ["ETH", accountBalance],
-          [COIN, Decimal.from(lusdBalance || 0)],
-          [GT, Decimal.from(lqtyBalance)],
+          [COIN, Decimal.from(hchfBalance || 0)],
+          [GT, Decimal.from(hlqtyBalance)],
           ["bLUSD", Decimal.from(bLusdBalance || 0)]
         ] as const).map(([currency, balance], i) => (
           <Flex key={i} sx={{ ml: 3, flexDirection: "column" }}>

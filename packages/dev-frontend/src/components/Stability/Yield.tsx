@@ -6,9 +6,9 @@ import { InfoIcon } from "../InfoIcon";
 import { Badge } from "../Badge";
 import { fetchLqtyPrice } from "./context/fetchLqtyPrice";
 
-const selector = ({ lusdInStabilityPool, remainingStabilityPoolLQTYReward }: LiquityStoreState) => ({
-  lusdInStabilityPool,
-  remainingStabilityPoolLQTYReward
+const selector = ({ hchfInStabilityPool, remainingStabilityPoolHLQTYReward }: LiquityStoreState) => ({
+  hchfInStabilityPool,
+  remainingStabilityPoolHLQTYReward
 });
 
 const yearlyIssuanceFraction = 0.5;
@@ -16,10 +16,10 @@ const dailyIssuanceFraction = Decimal.from(1 - yearlyIssuanceFraction ** (1 / 36
 const dailyIssuancePercentage = dailyIssuanceFraction.mul(100);
 
 export const Yield: React.FC = () => {
-  const { lusdInStabilityPool, remainingStabilityPoolLQTYReward } = useLiquitySelector(selector);
+  const { hchfInStabilityPool, remainingStabilityPoolHLQTYReward } = useLiquitySelector(selector);
 
   const [lqtyPrice, setLqtyPrice] = useState<Decimal | undefined>(undefined);
-  const hasZeroValue = remainingStabilityPoolLQTYReward?.isZero || lusdInStabilityPool?.isZero || true;
+  const hasZeroValue = remainingStabilityPoolHLQTYReward?.isZero || hchfInStabilityPool?.isZero || true;
 
   useEffect(() => {
     (async () => {
@@ -34,10 +34,10 @@ export const Yield: React.FC = () => {
 
   if (hasZeroValue || lqtyPrice === undefined) return null;
 
-  const lqtyIssuanceOneDay = remainingStabilityPoolLQTYReward.mul(dailyIssuanceFraction);
+  const lqtyIssuanceOneDay = remainingStabilityPoolHLQTYReward.mul(dailyIssuanceFraction);
   const lqtyIssuanceOneDayInUSD = lqtyIssuanceOneDay.mul(lqtyPrice);
-  const aprPercentage = lqtyIssuanceOneDayInUSD.mulDiv(365 * 100, lusdInStabilityPool);
-  const remainingLqtyInUSD = remainingStabilityPoolLQTYReward.mul(lqtyPrice);
+  const aprPercentage = lqtyIssuanceOneDayInUSD.mulDiv(365 * 100, hchfInStabilityPool);
+  const remainingLqtyInUSD = remainingStabilityPoolHLQTYReward.mul(lqtyPrice);
 
   if (aprPercentage.isZero) return null;
 
@@ -59,7 +59,7 @@ export const Yield: React.FC = () => {
             <Paragraph sx={{ fontSize: "12px", fontFamily: "monospace" }}>
               ($
               {remainingLqtyInUSD.shorten()} * {dailyIssuancePercentage.toString(4)}% / $
-              {lusdInStabilityPool.shorten()}) * 365 * 100 =
+              {hchfInStabilityPool.shorten()}) * 365 * 100 =
               <Text sx={{ fontWeight: "bold" }}> {aprPercentage.toString(2)}%</Text>
             </Paragraph>
           </Card>

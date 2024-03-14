@@ -15,7 +15,7 @@ export const DepositPane: React.FC = () => {
   const {
     dispatchEvent,
     statuses,
-    lusdBalance,
+    hchfBalance,
     bLusdBalance,
     isBLusdApprovedWithAmmZapper,
     isLusdApprovedWithAmmZapper,
@@ -33,7 +33,7 @@ export const DepositPane: React.FC = () => {
   const [shouldDepositBalanced, setShouldDepositBalanced] = useState(true);
 
   const coalescedBLusdBalance = bLusdBalance ?? Decimal.ZERO;
-  const coalescedLusdBalance = lusdBalance ?? Decimal.ZERO;
+  const coalescedLusdBalance = hchfBalance ?? Decimal.ZERO;
 
   const isApprovePending = statuses.APPROVE_SPENDER === "PENDING";
   const isManageLiquidityPending = statuses.MANAGE_LIQUIDITY === "PENDING";

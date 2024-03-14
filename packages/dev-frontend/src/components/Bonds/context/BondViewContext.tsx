@@ -25,7 +25,7 @@ export type BondViewContextType = {
   selectedBond?: Bond;
   optimisticBond?: OptimisticBond;
   bLusdBalance?: Decimal;
-  lusdBalance?: Decimal;
+  hchfBalance?: Decimal;
   lpTokenBalance?: Decimal;
   stakedLpTokenBalance?: Decimal;
   lpTokenSupply?: Decimal;

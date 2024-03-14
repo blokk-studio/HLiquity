@@ -74,7 +74,7 @@ export const BondViewProvider: React.FC = props => {
     MANAGE_LIQUIDITY: "IDLE"
   });
   const [bLusdBalance, setBLusdBalance] = useState<Decimal>();
-  const [lusdBalance, setLusdBalance] = useState<Decimal>();
+  const [hchfBalance, setLusdBalance] = useState<Decimal>();
   const [lpTokenBalance, setLpTokenBalance] = useState<Decimal>();
   const [stakedLpTokenBalance, setStakedLpTokenBalance] = useState<Decimal>();
 
@@ -303,7 +303,7 @@ export const BondViewProvider: React.FC = props => {
           bonds,
           stats,
           bLusdBalance,
-          lusdBalance,
+          hchfBalance,
           lpTokenBalance,
           stakedLpTokenBalance,
           lpTokenSupply,
@@ -332,7 +332,7 @@ export const BondViewProvider: React.FC = props => {
         setShouldSynchronize(false);
         setLpRewards(lpRewards);
         setBLusdBalance(bLusdBalance);
-        setLusdBalance(lusdBalance);
+        setLusdBalance(hchfBalance);
         setLpTokenBalance(lpTokenBalance);
         setStakedLpTokenBalance(stakedLpTokenBalance);
         setLpTokenSupply(lpTokenSupply);
@@ -734,7 +734,7 @@ export const BondViewProvider: React.FC = props => {
     statuses,
     selectedBond,
     bLusdBalance,
-    lusdBalance,
+    hchfBalance,
     lpTokenBalance,
     stakedLpTokenBalance,
     lpTokenSupply,
