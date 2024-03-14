@@ -216,7 +216,8 @@ export const _connectToDeployment = (
   deployment: _LiquityDeploymentJSON,
   signerOrProvider: EthersSigner | EthersProvider,
   optionalParams?: EthersLiquityConnectionOptionalParams
-): EthersLiquityConnection => connectionFrom(
+): EthersLiquityConnection =>
+  connectionFrom(
     ...getProviderAndSigner(signerOrProvider),
     _connectToContracts(signerOrProvider, deployment),
     undefined,
