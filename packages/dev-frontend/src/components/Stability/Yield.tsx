@@ -19,7 +19,7 @@ export const Yield: React.FC = () => {
   const { lusdInStabilityPool, remainingStabilityPoolLQTYReward } = useLiquitySelector(selector);
 
   const [lqtyPrice, setLqtyPrice] = useState<Decimal | undefined>(undefined);
-  const hasZeroValue = remainingStabilityPoolLQTYReward.isZero || lusdInStabilityPool.isZero;
+  const hasZeroValue = remainingStabilityPoolLQTYReward?.isZero || lusdInStabilityPool?.isZero || true;
 
   useEffect(() => {
     (async () => {

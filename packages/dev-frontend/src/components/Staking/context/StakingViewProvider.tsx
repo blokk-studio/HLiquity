@@ -90,7 +90,7 @@ export const StakingViewProvider: React.FC = ({ children }) => {
   return (
     <StakingViewContext.Provider
       value={{
-        view: adjusting ? "ADJUSTING" : lqtyStake.isEmpty ? "NONE" : "ACTIVE",
+        view: adjusting ? "ADJUSTING" : (!lqtyStake || lqtyStake.isEmpty) ? "NONE" : "ACTIVE",
         changePending,
         dispatch
       }}

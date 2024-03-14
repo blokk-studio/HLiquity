@@ -95,9 +95,9 @@ export const SystemStats: React.FC<SystemStatsProps> = ({ variant = "info", show
       <Statistic lexicon={l.BORROW_FEE}>{borrowingFeePct.toString(2)}</Statistic>
 
       <Statistic lexicon={l.TVL}>
-        {total.collateral.shorten()} <Text sx={{ fontSize: 1 }}>&nbsp;ETH</Text>
+        {total.collateral?.shorten()} <Text sx={{ fontSize: 1 }}>&nbsp;ETH</Text>
         <Text sx={{ fontSize: 1 }}>
-          &nbsp;(${Decimal.from(total.collateral.mul(price)).shorten()})
+          &nbsp;(${Decimal.from(total.collateral?.mul(price)).shorten()})
         </Text>
       </Statistic>
       <Statistic lexicon={l.TROVES}>{Decimal.from(numberOfTroves).prettify(0)}</Statistic>
@@ -108,7 +108,7 @@ export const SystemStats: React.FC<SystemStatsProps> = ({ variant = "info", show
           <Text sx={{ fontSize: 1 }}>&nbsp;({lusdInStabilityPoolPct.toString(1)})</Text>
         </Statistic>
       )}
-      <Statistic lexicon={l.STAKED_LQTY}>{totalStakedLQTY.shorten()}</Statistic>
+      <Statistic lexicon={l.STAKED_LQTY}>{totalStakedLQTY?.shorten()}</Statistic>
       <Statistic lexicon={l.TCR}>{totalCollateralRatioPct.prettify()}</Statistic>
       <Statistic lexicon={l.RECOVERY_MODE}>
         {total.collateralRatioIsBelowCritical(price) ? <Box color="danger">Yes</Box> : "No"}

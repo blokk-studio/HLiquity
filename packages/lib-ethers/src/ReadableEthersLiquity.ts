@@ -333,18 +333,29 @@ export class ReadableEthersLiquity implements ReadableLiquity {
 
   /** {@inheritDoc @liquity/lib-base#ReadableLiquity.getUniTokenBalance} */
   getUniTokenBalance(address?: string, overrides?: EthersCallOverrides): Promise<Decimal> {
-    address ??= _requireAddress(this.connection);
-    const { uniToken } = _getContracts(this.connection);
+    return new Promise(resolve => {
+      const decimal = Decimal.from(0);
+      resolve(decimal);
+    });
 
-    return uniToken.balanceOf(address, { ...overrides }).then(decimalify);
+    throw "unitoken";
+    // address ??= _requireAddress(this.connection);
+    // const { uniToken } = _getContracts(this.connection);
+
+    // return uniToken.balanceOf(address, { ...overrides }).then(decimalify);
   }
 
   /** {@inheritDoc @liquity/lib-base#ReadableLiquity.getUniTokenAllowance} */
   getUniTokenAllowance(address?: string, overrides?: EthersCallOverrides): Promise<Decimal> {
-    address ??= _requireAddress(this.connection);
-    const { uniToken, unipool } = _getContracts(this.connection);
+    return new Promise(resolve => {
+      const decimal = Decimal.from(0);
+      resolve(decimal);
+    });
+    throw "unitoken";
+    // address ??= _requireAddress(this.connection);
+    // const { uniToken, unipool } = _getContracts(this.connection);
 
-    return uniToken.allowance(address, unipool.address, { ...overrides }).then(decimalify);
+    // return uniToken.allowance(address, unipool.address, { ...overrides }).then(decimalify);
   }
 
   /** @internal */

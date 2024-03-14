@@ -122,7 +122,7 @@ function* generateTrials(totalNumberOfTrials: number) {
  */
 export class SentEthersLiquityTransaction<T = unknown>
   implements
-  SentLiquityTransaction<EthersTransactionResponse, LiquityReceipt<EthersTransactionReceipt, T>> {
+    SentLiquityTransaction<EthersTransactionResponse, LiquityReceipt<EthersTransactionReceipt, T>> {
   /** Ethers' representation of a sent transaction. */
   readonly rawSentTransaction: EthersTransactionResponse;
 
@@ -144,8 +144,8 @@ export class SentEthersLiquityTransaction<T = unknown>
     return rawReceipt
       ? rawReceipt.status
         ? _successfulReceipt(rawReceipt, this._parse(rawReceipt), () =>
-          logsToString(rawReceipt, _getContracts(this._connection))
-        )
+            logsToString(rawReceipt, _getContracts(this._connection))
+          )
         : _failedReceipt(rawReceipt)
       : _pendingReceipt;
   }
@@ -178,7 +178,7 @@ export class SentEthersLiquityTransaction<T = unknown>
  */
 export class PopulatedEthersLiquityTransaction<T = unknown>
   implements
-  PopulatedLiquityTransaction<EthersPopulatedTransaction, SentEthersLiquityTransaction<T>> {
+    PopulatedLiquityTransaction<EthersPopulatedTransaction, SentEthersLiquityTransaction<T>> {
   /** Unsigned transaction object populated by Ethers. */
   readonly rawPopulatedTransaction: EthersPopulatedTransaction;
 
@@ -214,11 +214,11 @@ export class PopulatedEthersLiquityTransaction<T = unknown>
 export class PopulatedEthersRedemption
   extends PopulatedEthersLiquityTransaction<RedemptionDetails>
   implements
-  PopulatedRedemption<
-    EthersPopulatedTransaction,
-    EthersTransactionResponse,
-    EthersTransactionReceipt
-  > {
+    PopulatedRedemption<
+      EthersPopulatedTransaction,
+      EthersTransactionResponse,
+      EthersTransactionReceipt
+    > {
   /** {@inheritDoc @liquity/lib-base#PopulatedRedemption.attemptedHCHFAmount} */
   readonly attemptedHCHFAmount: Decimal;
 
@@ -272,7 +272,7 @@ export class PopulatedEthersRedemption
     if (!this._increaseAmountByMinimumNetDebt) {
       throw new Error(
         "PopulatedEthersRedemption: increaseAmountByMinimumNetDebt() can " +
-        "only be called when amount is truncated"
+          "only be called when amount is truncated"
       );
     }
 
@@ -294,11 +294,11 @@ export interface _TroveChangeWithFees<T> {
  */
 export class PopulatableEthersLiquity
   implements
-  PopulatableLiquity<
-    EthersTransactionReceipt,
-    EthersTransactionResponse,
-    EthersPopulatedTransaction
-  > {
+    PopulatableLiquity<
+      EthersTransactionReceipt,
+      EthersTransactionResponse,
+      EthersPopulatedTransaction
+    > {
   private readonly _readable: ReadableEthersLiquity;
 
   constructor(readable: ReadableEthersLiquity) {
@@ -575,8 +575,8 @@ export class PopulatableEthersLiquity
       partialRedemptionUpperHint,
       partialRedemptionLowerHint
     ] = partialRedemptionHintNICR.isZero()
-        ? [AddressZero, AddressZero]
-        : await this._findHintsForNominalCollateralRatio(decimalify(partialRedemptionHintNICR));
+      ? [AddressZero, AddressZero]
+      : await this._findHintsForNominalCollateralRatio(decimalify(partialRedemptionHintNICR));
 
     return [
       decimalify(truncatedHCHFamount),
@@ -605,20 +605,15 @@ export class PopulatableEthersLiquity
         ? Decimal.from(maxBorrowingRate)
         : borrowingRate.add(defaultBorrowingRateSlippageTolerance);
 
-
     const resultOfOpenTrove = await borrowerOperations.estimateAndPopulate.openTrove(
       { value: ethers.utils.parseEther(depositCollateral.toString()), gasLimit: 3000000 },
       compose(addGasForPotentialLastFeeOperationTimeUpdate, addGasForPotentialListTraversal),
       maxBorrowingRate.hex,
       borrowHCHF.hex,
       ...(await this._findHints(newTrove))
-    )
-
-    return this._wrapTroveChangeWithFees(
-      normalized,
-      resultOfOpenTrove
     );
 
+    return this._wrapTroveChangeWithFees(normalized, resultOfOpenTrove);
   }
 
   /** {@inheritDoc @liquity/lib-base#PopulatableLiquity.closeTrove} */
@@ -692,7 +687,7 @@ export class PopulatableEthersLiquity
 
     let value;
     if (depositCollateral !== undefined) {
-      value = ethers.utils.parseEther(depositCollateral.toString())
+      value = ethers.utils.parseEther(depositCollateral.toString());
     }
 
     return this._wrapTroveChangeWithFees(
@@ -735,7 +730,11 @@ export class PopulatableEthersLiquity
     }
 
     return this._wrapSimpleTransaction(
-      await priceFeed.estimateAndPopulate.setPrice({ gasLimit: 3000000 }, id, Decimal.from(price).hex)
+      await priceFeed.estimateAndPopulate.setPrice(
+        { gasLimit: 3000000 },
+        id,
+        Decimal.from(price).hex
+      )
     );
   }
 
@@ -913,10 +912,10 @@ export class PopulatableEthersLiquity
 
         truncatedAmount.lt(attemptedHCHFAmount)
           ? newMaxRedemptionRate =>
-            populateRedemption(
-              truncatedAmount.add(HCHF_MINIMUM_NET_DEBT),
-              newMaxRedemptionRate ?? maxRedemptionRate
-            )
+              populateRedemption(
+                truncatedAmount.add(HCHF_MINIMUM_NET_DEBT),
+                newMaxRedemptionRate ?? maxRedemptionRate
+              )
           : undefined
       );
     };
@@ -932,7 +931,11 @@ export class PopulatableEthersLiquity
     const { hlqtyStaking } = _getContracts(this._readable.connection);
 
     return this._wrapSimpleTransaction(
-      await hlqtyStaking.estimateAndPopulate.stake({ gasLimit: 3000000 }, id, Decimal.from(amount).hex)
+      await hlqtyStaking.estimateAndPopulate.stake(
+        { gasLimit: 3000000 },
+        id,
+        Decimal.from(amount).hex
+      )
     );
   }
 
@@ -944,7 +947,11 @@ export class PopulatableEthersLiquity
     const { hlqtyStaking } = _getContracts(this._readable.connection);
 
     return this._wrapSimpleTransaction(
-      await hlqtyStaking.estimateAndPopulate.unstake({ gasLimit: 3000000 }, id, Decimal.from(amount).hex)
+      await hlqtyStaking.estimateAndPopulate.unstake(
+        { gasLimit: 3000000 },
+        id,
+        Decimal.from(amount).hex
+      )
     );
   }
 
@@ -977,21 +984,23 @@ export class PopulatableEthersLiquity
     address?: string,
     overrides?: EthersTransactionOverrides
   ): Promise<PopulatedEthersLiquityTransaction<void>> {
-    address ??= _requireAddress(this._readable.connection, overrides);
-    const { uniToken } = _getContracts(this._readable.connection);
+    console.debug("_mintUniToken");
+    throw "unitoken";
+    // address ??= _requireAddress(this._readable.connection, overrides);
+    // const { uniToken } = _getContracts(this._readable.connection);
 
-    if (!_uniTokenIsMock(uniToken)) {
-      throw new Error("_mintUniToken() unavailable on this deployment of Liquity");
-    }
+    // if (!_uniTokenIsMock(uniToken)) {
+    //   throw new Error("_mintUniToken() unavailable on this deployment of Liquity");
+    // }
 
-    return this._wrapSimpleTransaction(
-      await uniToken.estimateAndPopulate.mint(
-        { gasLimit: 3000000 },
-        id,
-        address,
-        Decimal.from(amount).hex
-      )
-    );
+    // return this._wrapSimpleTransaction(
+    //   await uniToken.estimateAndPopulate.mint(
+    //     { gasLimit: 3000000 },
+    //     id,
+    //     address,
+    //     Decimal.from(amount).hex
+    //   )
+    // );
   }
 
   /** {@inheritDoc @liquity/lib-base#PopulatableLiquity.approveUniTokens} */
@@ -999,16 +1008,18 @@ export class PopulatableEthersLiquity
     allowance?: Decimalish,
     overrides?: EthersTransactionOverrides
   ): Promise<PopulatedEthersLiquityTransaction<void>> {
-    const { uniToken, unipool } = _getContracts(this._readable.connection);
+    console.debug("approveUniTokens");
+    throw "unitoken";
+    // const { uniToken, unipool } = _getContracts(this._readable.connection);
 
-    return this._wrapSimpleTransaction(
-      await uniToken.estimateAndPopulate.approve(
-        { gasLimit: 3000000 },
-        id,
-        unipool.address,
-        Decimal.from(allowance ?? Decimal.INFINITY).hex
-      )
-    );
+    // return this._wrapSimpleTransaction(
+    //   await uniToken.estimateAndPopulate.approve(
+    //     { gasLimit: 3000000 },
+    //     id,
+    //     unipool.address,
+    //     Decimal.from(allowance ?? Decimal.INFINITY).hex
+    //   )
+    // );
   }
 
   /** {@inheritDoc @liquity/lib-base#PopulatableLiquity.stakeUniTokens} */
@@ -1050,7 +1061,10 @@ export class PopulatableEthersLiquity
     const { unipool } = _getContracts(this._readable.connection);
 
     return this._wrapSimpleTransaction(
-      await unipool.estimateAndPopulate.claimReward({ gasLimit: 3000000 }, addGasForUnipoolRewardUpdate)
+      await unipool.estimateAndPopulate.claimReward(
+        { gasLimit: 3000000 },
+        addGasForUnipoolRewardUpdate
+      )
     );
   }
 
