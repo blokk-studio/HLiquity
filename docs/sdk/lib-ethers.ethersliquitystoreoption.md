@@ -9,7 +9,7 @@ Possible values for the optional [useStore](./lib-ethers.ethersliquityconnection
 <b>Signature:</b>
 
 ```typescript
-export declare type EthersLiquityStoreOption = "blockPolled";
+export type EthersLiquityStoreOption = "blockPolled";
 ```
 
 ## Remarks

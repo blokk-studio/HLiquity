@@ -4,7 +4,7 @@
 
 ## EthersLiquity.withdrawGainsFromStaking() method
 
-Withdraw [collateral gain](./lib-base.hlqtystake.collateralgain.md) and  from HLQTY stake.
+Withdraw [collateral gain](./lib-base.hlqtystake.collateralgain.md) and [HCHF gain](./lib-base.hlqtystake.hchfgain.md) from HLQTY stake.
 
 <b>Signature:</b>
 

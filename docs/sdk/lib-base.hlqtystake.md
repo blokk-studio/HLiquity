@@ -9,7 +9,7 @@ Represents a user's HLQTY stake and accrued gains.
 <b>Signature:</b>
 
 ```typescript
-export declare class HLQTYStake
+export declare class HLQTYStake 
 ```
 
 ## Remarks
@@ -20,17 +20,18 @@ The constructor for this class is marked as internal. Third-party code should no
 
 ## Properties
 
-| Property                                                  | Modifiers | Type                             | Description                            |
-| --------------------------------------------------------- | --------- | -------------------------------- | -------------------------------------- |
-| [collateralGain](./lib-base.hlqtystake.collateralgain.md) |           | [Decimal](./lib-base.decimal.md) | Collateral gain available to withdraw. |
-| [isEmpty](./lib-base.hlqtystake.isempty.md)               |           | boolean                          |                                        |
-| [hchfGain](./lib-base.hlqtystake.lusdgain.md)             |           | [Decimal](./lib-base.decimal.md) | HCHF gain available to withdraw.       |
-| [stakedHLQTY](./lib-base.hlqtystake.stakedhlqty.md)       |           | [Decimal](./lib-base.decimal.md) | The amount of HLQTY that's staked.     |
+|  Property | Modifiers | Type | Description |
+|  --- | --- | --- | --- |
+|  [collateralGain](./lib-base.hlqtystake.collateralgain.md) |  | [Decimal](./lib-base.decimal.md) | Collateral gain available to withdraw. |
+|  [hchfGain](./lib-base.hlqtystake.hchfgain.md) |  | [Decimal](./lib-base.decimal.md) | HCHF gain available to withdraw. |
+|  [isEmpty](./lib-base.hlqtystake.isempty.md) |  | boolean |  |
+|  [stakedHLQTY](./lib-base.hlqtystake.stakedhlqty.md) |  | [Decimal](./lib-base.decimal.md) | The amount of HLQTY that's staked. |
 
 ## Methods
 
-| Method                                                               | Modifiers | Description                                                                                     |
-| -------------------------------------------------------------------- | --------- | ----------------------------------------------------------------------------------------------- |
-| [apply(change)](./lib-base.hlqtystake.apply.md)                      |           | Apply a [HLQTYStakeChange](./lib-base.hlqtystakechange.md) to this <code>HLQTYStake</code>.     |
-| [equals(that)](./lib-base.hlqtystake.equals.md)                      |           | Compare to another instance of <code>HLQTYStake</code>.                                         |
-| [whatChanged(thatStakedHLQTY)](./lib-base.hlqtystake.whatchanged.md) |           | Calculate the difference between this <code>HLQTYStake</code> and <code>thatStakedHLQTY</code>. |
+|  Method | Modifiers | Description |
+|  --- | --- | --- |
+|  [apply(change)](./lib-base.hlqtystake.apply.md) |  | Apply a [HLQTYStakeChange](./lib-base.hlqtystakechange.md) to this <code>HLQTYStake</code>. |
+|  [equals(that)](./lib-base.hlqtystake.equals.md) |  | Compare to another instance of <code>HLQTYStake</code>. |
+|  [whatChanged(thatStakedHLQTY)](./lib-base.hlqtystake.whatchanged.md) |  | Calculate the difference between this <code>HLQTYStake</code> and <code>thatStakedHLQTY</code>. |
+

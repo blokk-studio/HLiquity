@@ -9,5 +9,5 @@ Alias of Ethers' [TransactionResponse](https://docs.ethers.io/v5/api/providers/t
 <b>Signature:</b>
 
 ```typescript
-export declare type EthersTransactionResponse = TransactionResponse;
+export type EthersTransactionResponse = TransactionResponse;
 ```

@@ -24,5 +24,5 @@ Promise&lt;[SentLiquityTransaction](./lib-base.sentliquitytransaction.md)<!-- --
 
 ## Remarks
 
-As a side-effect, the transaction will also pay out the HLQTY stake's [collateral gain](./lib-base.hlqtystake.collateralgain.md) and .
+As a side-effect, the transaction will also pay out the HLQTY stake's [collateral gain](./lib-base.hlqtystake.collateralgain.md) and [HCHF gain](./lib-base.hlqtystake.hchfgain.md)<!-- -->.
 

@@ -44,7 +44,7 @@ export declare class SendableEthersLiquity implements SendableLiquity<EthersTran
 |  [unstakeUniTokens(amount, overrides)](./lib-ethers.sendableethersliquity.unstakeunitokens.md) |  | Withdraw Uniswap ETH/HCHF LP tokens from liquidity mining. |
 |  [withdrawCollateral(amount, overrides)](./lib-ethers.sendableethersliquity.withdrawcollateral.md) |  | Adjust existing Trove by withdrawing some of its collateral. |
 |  [withdrawGainsFromStabilityPool(overrides)](./lib-ethers.sendableethersliquity.withdrawgainsfromstabilitypool.md) |  | Withdraw [collateral gain](./lib-base.stabilitydeposit.collateralgain.md) and [HLQTY reward](./lib-base.stabilitydeposit.hlqtyreward.md) from Stability Deposit. |
-|  [withdrawGainsFromStaking(overrides)](./lib-ethers.sendableethersliquity.withdrawgainsfromstaking.md) |  | Withdraw [collateral gain](./lib-base.hlqtystake.collateralgain.md) and  from HLQTY stake. |
+|  [withdrawGainsFromStaking(overrides)](./lib-ethers.sendableethersliquity.withdrawgainsfromstaking.md) |  | Withdraw [collateral gain](./lib-base.hlqtystake.collateralgain.md) and [HCHF gain](./lib-base.hlqtystake.hchfgain.md) from HLQTY stake. |
 |  [withdrawHCHFFromStabilityPool(amount, overrides)](./lib-ethers.sendableethersliquity.withdrawhchffromstabilitypool.md) |  | Withdraw HCHF from Stability Deposit. |
 |  [withdrawHLQTYRewardFromLiquidityMining(overrides)](./lib-ethers.sendableethersliquity.withdrawhlqtyrewardfromliquiditymining.md) |  | Withdraw HLQTY that has been earned by mining liquidity. |
 
