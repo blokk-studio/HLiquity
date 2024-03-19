@@ -25,6 +25,10 @@ import {
   SentEthersLiquityTransaction
 } from "./PopulatableEthersLiquity";
 
+// import { HashConnect } from "@hashgraph/hashconnect";
+import { TokenAssociateTransaction } from "@hashgraph/sdk";
+console.debug(TokenAssociateTransaction);
+
 const sendTransaction = <T>(tx: PopulatedEthersLiquityTransaction<T>) => tx.send();
 
 /**
