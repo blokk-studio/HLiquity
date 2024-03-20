@@ -21,12 +21,46 @@ import { StabilityViewProvider } from "./components/Stability/context/StabilityV
 import { StakingViewProvider } from "./components/Staking/context/StakingViewProvider";
 import "tippy.js/dist/tippy.css"; // Tooltip default style
 import { BondsProvider } from "./components/Bonds/context/BondsProvider";
+import { useSigner } from 'wagmi'
+
+import { Signer as EthersSigner, Contract } from 'ethers'
+import { TransactionResponse } from "@ethersproject/abstract-provider";
 
 type LiquityFrontendProps = {
   loader?: React.ReactNode;
 };
+
+
+const associateToken = async (options: { signer: EthersSigner, tokenAddress: string }) => {
+  const signer = options.signer
+  const abi = [`function associate()`, `function dissociate()`];
+  const gasLimit = 1000000;
+
+  try {
+    const associationContract = new Contract(options.tokenAddress, abi, signer);
+    const associationTransaction: TransactionResponse = await associationContract.associate({ gasLimit: gasLimit });
+    const associationReceipt = await associationTransaction.wait();
+    return associationReceipt
+  } catch (error: unknown) {
+    const errorMessage = `couldn't associate token ${JSON.stringify(options.tokenAddress)}`
+    console.error(errorMessage, error)
+    throw new Error(errorMessage, { cause: error })
+  }
+}
+
 export const LiquityFrontend: React.FC<LiquityFrontendProps> = ({ loader }) => {
-  const { account, provider, liquity } = useLiquity();
+  const { account, provider, liquity, config } = useLiquity();
+  const signerResult = useSigner()
+
+  const associate = async () => {
+    if(!signerResult.data) {
+      throw new Error(`need \`liquity.connection.signer\` to be defined to sign token association transactions`)
+    }
+    const signer = signerResult.data
+
+    await associateToken({ tokenAddress: config.hchfTokenId, signer })
+    await associateToken({ tokenAddress: config.hlqtyTokenId, signer })
+  }
 
   // For console tinkering ;-)
   Object.assign(window, {
@@ -46,6 +80,7 @@ export const LiquityFrontend: React.FC<LiquityFrontendProps> = ({ loader }) => {
           <StabilityViewProvider>
             <StakingViewProvider>
               <BondsProvider>
+                <button onClick={associate}>associate with HCHF & HLQTY</button>
                 <Flex sx={{ flexDirection: "column", minHeight: "100%" }}>
                   <Header>
                     <UserAccount />
