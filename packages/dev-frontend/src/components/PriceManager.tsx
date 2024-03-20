@@ -8,6 +8,7 @@ import { useLiquity } from "../hooks/LiquityContext";
 
 import { Icon } from "./Icon";
 import { Transaction } from "./Transaction";
+import { COLLATERAL_COIN } from "../strings";
 
 const selectPrice = ({ price }: LiquityStoreState) => price;
 
@@ -32,7 +33,7 @@ export const PriceManager: React.FC = () => {
 
       <Box sx={{ p: [2, 3] }}>
         <Flex sx={{ alignItems: "stretch" }}>
-          <Label>ETH</Label>
+          <Label>{COLLATERAL_COIN}</Label>
 
           <Label variant="unit">$</Label>
 

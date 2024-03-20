@@ -60,7 +60,7 @@ export const BondViewProvider: React.FC = props => {
   const [isBLusdLpApprovedWithAmmZapper, setIsBLusdLpApprovedWithAmmZapper] = useState(false);
   const [isBLusdLpApprovedWithGauge, setIsBLusdLpApprovedWithGauge] = useState(false);
   const [isSynchronizing, setIsSynchronizing] = useState(false);
-  const [inputToken, setInputToken] = useState<BLusdAmmTokenIndex.BLUSD | BLusdAmmTokenIndex.LUSD>(
+  const [inputToken, setInputToken] = useState<BLusdAmmTokenIndex.BLUSD | BLusdAmmTokenIndex.HCHF>(
     BLusdAmmTokenIndex.BLUSD
   );
   const [statuses, setStatuses] = useState<BondTransactionStatuses>({
@@ -404,7 +404,7 @@ export const BondViewProvider: React.FC = props => {
           } else if (spender === BLUSD_LP_ZAP_ADDRESS) {
             setIsBLusdApprovedWithAmmZapper(true);
           }
-        } else if (token === BLusdAmmTokenIndex.LUSD) {
+        } else if (token === BLusdAmmTokenIndex.HCHF) {
           await api.approveToken(
             contracts.lusdToken,
             BLUSD_LP_ZAP_ADDRESS,
@@ -580,7 +580,7 @@ export const BondViewProvider: React.FC = props => {
     ): Promise<Map<BLusdAmmTokenIndex, Decimal>> => {
       if (contracts.bLusdAmm === undefined)
         return new Map([
-          [BLusdAmmTokenIndex.LUSD, Decimal.ZERO],
+          [BLusdAmmTokenIndex.HCHF, Decimal.ZERO],
           [BLusdAmmTokenIndex.BLUSD, Decimal.ZERO]
         ]);
 

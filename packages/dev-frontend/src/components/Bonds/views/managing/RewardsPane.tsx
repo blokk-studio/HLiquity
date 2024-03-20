@@ -26,7 +26,7 @@ export const RewardsPane: React.FC = () => {
     <>
       <PendingRewards />
 
-      <StaticRow label="bLUSD LP APR">
+      <StaticRow label="bHCHF LP APR">
         <StaticAmounts sx={{ alignItems: "center", justifyContent: "flex-start" }}>
           <PoolBalance symbol="%">
             {(protocolInfo?.bLusdLpApr ?? Decimal.INFINITY).prettify(2)}

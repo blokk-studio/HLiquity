@@ -17,17 +17,17 @@ import {
 import { useBondView } from "../../context/BondViewContext";
 import { BLusdAmmTokenIndex } from "../../context/transitions";
 
-const tokenSymbol: Record<BLusdAmmTokenIndex.BLUSD | BLusdAmmTokenIndex.LUSD, string> = {
-  [BLusdAmmTokenIndex.BLUSD]: "bLUSD",
-  [BLusdAmmTokenIndex.LUSD]: "LUSD"
+const tokenSymbol: Record<BLusdAmmTokenIndex.BLUSD | BLusdAmmTokenIndex.HCHF, string> = {
+  [BLusdAmmTokenIndex.BLUSD]: "bHCHF",
+  [BLusdAmmTokenIndex.HCHF]: "HCHF"
 };
 
 const outputToken: Record<
-  BLusdAmmTokenIndex.BLUSD | BLusdAmmTokenIndex.LUSD,
-  BLusdAmmTokenIndex.BLUSD | BLusdAmmTokenIndex.LUSD
+  BLusdAmmTokenIndex.BLUSD | BLusdAmmTokenIndex.HCHF,
+  BLusdAmmTokenIndex.BLUSD | BLusdAmmTokenIndex.HCHF
 > = {
-  [BLusdAmmTokenIndex.BLUSD]: BLusdAmmTokenIndex.LUSD,
-  [BLusdAmmTokenIndex.LUSD]: BLusdAmmTokenIndex.BLUSD
+  [BLusdAmmTokenIndex.BLUSD]: BLusdAmmTokenIndex.HCHF,
+  [BLusdAmmTokenIndex.HCHF]: BLusdAmmTokenIndex.BLUSD
 };
 
 const marginalAmount = Decimal.ONE.div(1000);
@@ -160,7 +160,7 @@ export const SwapPane: React.FC = () => {
     <>
       <Heading as="h2" sx={{ pt: 2, pb: 3, px: 2 }}>
         <Flex sx={{ justifyContent: "center" }}>
-          {inputToken === BLusdAmmTokenIndex.BLUSD ? <>Sell</> : <>Buy</>} bLUSD
+          {inputToken === BLusdAmmTokenIndex.BLUSD ? <>Sell</> : <>Buy</>} bHCHF
         </Flex>
         <Close
           onClick={handleDismiss}

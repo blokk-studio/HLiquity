@@ -13,7 +13,7 @@ import {
   TroveCreationParams
 } from "@liquity/lib-base";
 
-import { COIN } from "../../../strings";
+import { COIN, COLLATERAL_COIN } from "../../../strings";
 
 import { ActionDescription, Amount } from "../../ActionDescription";
 import { ErrorDescription } from "../../ErrorDescription";
@@ -29,7 +29,7 @@ const TroveChangeDescription: React.FC<TroveAdjustmentDescriptionParams> = ({ pa
   <ActionDescription>
     {params.depositCollateral && params.borrowHCHF ? (
       <>
-        You will deposit <Amount>{params.depositCollateral.prettify()} ETH</Amount> and receive{" "}
+        You will deposit <Amount>{params.depositCollateral.prettify()} {COLLATERAL_COIN}</Amount> and receive{" "}
         <Amount>
           {params.borrowHCHF.prettify()} {COIN}
         </Amount>
@@ -40,29 +40,29 @@ const TroveChangeDescription: React.FC<TroveAdjustmentDescriptionParams> = ({ pa
         <Amount>
           {params.repayHCHF.prettify()} {COIN}
         </Amount>{" "}
-        and receive <Amount>{params.withdrawCollateral.prettify()} ETH</Amount>
+        and receive <Amount>{params.withdrawCollateral.prettify()} {COLLATERAL_COIN}</Amount>
       </>
     ) : params.depositCollateral && params.repayHCHF ? (
       <>
-        You will deposit <Amount>{params.depositCollateral.prettify()} ETH</Amount> and pay{" "}
+        You will deposit <Amount>{params.depositCollateral.prettify()} {COLLATERAL_COIN}</Amount> and pay{" "}
         <Amount>
           {params.repayHCHF.prettify()} {COIN}
         </Amount>
       </>
     ) : params.borrowHCHF && params.withdrawCollateral ? (
       <>
-        You will receive <Amount>{params.withdrawCollateral.prettify()} ETH</Amount> and{" "}
+        You will receive <Amount>{params.withdrawCollateral.prettify()} {COLLATERAL_COIN}</Amount> and{" "}
         <Amount>
           {params.borrowHCHF.prettify()} {COIN}
         </Amount>
       </>
     ) : params.depositCollateral ? (
       <>
-        You will deposit <Amount>{params.depositCollateral.prettify()} ETH</Amount>
+        You will deposit <Amount>{params.depositCollateral.prettify()} {COLLATERAL_COIN}</Amount>
       </>
     ) : params.withdrawCollateral ? (
       <>
-        You will receive <Amount>{params.withdrawCollateral.prettify()} ETH</Amount>
+        You will receive <Amount>{params.withdrawCollateral.prettify()} {COLLATERAL_COIN}</Amount>
       </>
     ) : params.borrowHCHF ? (
       <>
@@ -215,7 +215,7 @@ const validateTroveCreation = (
     return (
       <ErrorDescription>
         The amount you're trying to deposit exceeds your balance by{" "}
-        <Amount>{depositCollateral.sub(accountBalance).prettify()} ETH</Amount>.
+        <Amount>{depositCollateral.sub(accountBalance).prettify()} {COLLATERAL_COIN}</Amount>.
       </ErrorDescription>
     );
   }
@@ -311,7 +311,7 @@ const validateTroveAdjustment = (
     return (
       <ErrorDescription>
         The amount you're trying to deposit exceeds your balance by{" "}
-        <Amount>{depositCollateral.sub(accountBalance).prettify()} ETH</Amount>.
+        <Amount>{depositCollateral.sub(accountBalance).prettify()} {COLLATERAL_COIN}</Amount>.
       </ErrorDescription>
     );
   }

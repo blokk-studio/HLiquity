@@ -33,7 +33,7 @@ export const Idle: React.FC = () => {
   const handleManageLiquidityPressed = () => dispatchEvent("MANAGE_LIQUIDITY_PRESSED");
 
   const handleBuyBLusdPressed = () =>
-    dispatchEvent("SWAP_PRESSED", { inputToken: BLusdAmmTokenIndex.LUSD } as SwapPressedPayload);
+    dispatchEvent("SWAP_PRESSED", { inputToken: BLusdAmmTokenIndex.HCHF } as SwapPressedPayload);
 
   const handleSellBLusdPressed = () =>
     dispatchEvent("SWAP_PRESSED", { inputToken: BLusdAmmTokenIndex.BLUSD } as SwapPressedPayload);
@@ -46,16 +46,16 @@ export const Idle: React.FC = () => {
         </Button>
 
         <Button variant="outline" onClick={handleBuyBLusdPressed}>
-          Buy bLUSD
+          Buy bHCHF
         </Button>
 
         <Button variant="outline" onClick={handleSellBLusdPressed}>
-          Sell bLUSD
+          Sell bHCHF
         </Button>
 
         {showLusdFaucet && (
           <Button variant={hasBonds ? "outline" : "primary"} onClick={() => getLusdFromFaucet()}>
-            Get 10k LUSD
+            Get 10k HCHF
           </Button>
         )}
 

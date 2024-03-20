@@ -11,7 +11,7 @@ import {
 
 import { LiquityStoreUpdate, useLiquityReducer, useLiquitySelector } from "@liquity/lib-react";
 
-import { GT, COIN } from "../../strings";
+import { GT, COIN, COLLATERAL_COIN } from "../../strings";
 
 import { useStakingView } from "./context/StakingViewContext";
 import { StakingEditor } from "./StakingEditor";
@@ -73,7 +73,7 @@ const StakingManagerActionDescription: React.FC<StakingManagerActionDescriptionP
 }) => {
   const stakeHLQTY = change.stakeHLQTY?.prettify().concat(" ", GT);
   const unstakeHLQTY = change.unstakeHLQTY?.prettify().concat(" ", GT);
-  const collateralGain = originalStake.collateralGain.nonZero?.prettify(4).concat(" ETH");
+  const collateralGain = originalStake.collateralGain.nonZero?.prettify(4).concat(` ${COLLATERAL_COIN}`);
   const hchfGain = originalStake.hchfGain.nonZero?.prettify().concat(" ", COIN);
 
   if (originalStake.isEmpty && stakeHLQTY) {

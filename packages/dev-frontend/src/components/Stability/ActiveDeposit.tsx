@@ -4,7 +4,7 @@ import { Card, Heading, Box, Flex, Button } from "theme-ui";
 import { LiquityStoreState } from "@liquity/lib-base";
 import { useLiquitySelector } from "@liquity/lib-react";
 
-import { COIN, GT } from "../../strings";
+import { COIN, COLLATERAL_COIN, GT } from "../../strings";
 import { Icon } from "../Icon";
 import { LoadingOverlay } from "../LoadingOverlay";
 import { useMyTransactionState } from "../Transaction";
@@ -62,7 +62,7 @@ export const ActiveDeposit: React.FC = () => {
         <Box>
           <DisabledEditableRow
             label="Deposit"
-            inputId="deposit-lusd"
+            inputId="deposit-hchf"
             amount={stabilityDeposit.currentHCHF.prettify()}
             unit={COIN}
           />
@@ -79,7 +79,7 @@ export const ActiveDeposit: React.FC = () => {
             inputId="deposit-gain"
             amount={stabilityDeposit.collateralGain.prettify(4)}
             color={stabilityDeposit.collateralGain.nonZero && "success"}
-            unit="ETH"
+            unit={COLLATERAL_COIN}
           />
 
           <Flex sx={{ alignItems: "center" }}>
@@ -93,7 +93,7 @@ export const ActiveDeposit: React.FC = () => {
                 <InfoIcon
                   tooltip={
                     <Card variant="tooltip" sx={{ width: "240px" }}>
-                      Although the LQTY rewards accrue every minute, the value on the UI only updates
+                      Although the HLQTY rewards accrue every minute, the value on the UI only updates
                       when a user transacts with the Stability Pool. Therefore you may receive more
                       rewards than is displayed when you claim or adjust your deposit.
                     </Card>
@@ -113,11 +113,11 @@ export const ActiveDeposit: React.FC = () => {
             &nbsp;Adjust
           </Button>
 
-          <ClaimRewards disabled={!hasGain && !hasReward}>Claim ETH and LQTY</ClaimRewards>
+          <ClaimRewards disabled={!hasGain && !hasReward}>Claim {COLLATERAL_COIN} and {GT}</ClaimRewards>
         </Flex>
 
         {hasTrove && (
-          <ClaimAndMove disabled={!hasGain}>Claim LQTY and move ETH to Trove</ClaimAndMove>
+          <ClaimAndMove disabled={!hasGain}>Claim {GT} and move {COLLATERAL_COIN} to Trove</ClaimAndMove>
         )}
       </Box>
 

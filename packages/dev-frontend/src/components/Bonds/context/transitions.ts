@@ -92,7 +92,7 @@ export const transitions: BondEventTransitions = {
 
 export enum BLusdAmmTokenIndex {
   BLUSD,
-  LUSD,
+  HCHF,
   BLUSD_LUSD_LP
 }
 
@@ -101,7 +101,7 @@ export type CreateBondPayload = { deposit: Decimal };
 export type SelectBondPayload = { bondId: string };
 
 export type SwapPressedPayload = {
-  inputToken: BLusdAmmTokenIndex.BLUSD | BLusdAmmTokenIndex.LUSD;
+  inputToken: BLusdAmmTokenIndex.BLUSD | BLusdAmmTokenIndex.HCHF;
 };
 
 export type SwapPayload = {

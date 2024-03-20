@@ -2,7 +2,7 @@ import React from "react";
 
 import { Decimal, StabilityDeposit, StabilityDepositChange } from "@liquity/lib-base";
 
-import { COIN, GT } from "../../strings";
+import { COIN, COLLATERAL_COIN, GT } from "../../strings";
 import { ActionDescription, Amount } from "../ActionDescription";
 
 type StabilityActionDescriptionProps = {
@@ -14,7 +14,7 @@ export const StabilityActionDescription: React.FC<StabilityActionDescriptionProp
   originalDeposit,
   change
 }) => {
-  const collateralGain = originalDeposit.collateralGain.nonZero?.prettify(4).concat(" ETH");
+  const collateralGain = originalDeposit.collateralGain.nonZero?.prettify(4).concat(` ${COLLATERAL_COIN}`);
   const hlqtyReward = originalDeposit.hlqtyReward.nonZero?.prettify().concat(" ", GT);
 
   return (

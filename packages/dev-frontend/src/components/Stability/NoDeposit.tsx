@@ -4,6 +4,7 @@ import { InfoMessage } from "../InfoMessage";
 import { useStabilityView } from "./context/StabilityViewContext";
 import { RemainingLQTY } from "./RemainingLQTY";
 import { Yield } from "./Yield";
+import { COIN, COLLATERAL_COIN, GT } from "../../strings";
 
 export const NoDeposit: React.FC = () => {
   const { dispatchEvent } = useStabilityView();
@@ -21,8 +22,8 @@ export const NoDeposit: React.FC = () => {
         </Flex>
       </Heading>
       <Box sx={{ p: [2, 3] }}>
-        <InfoMessage title="You have no LUSD in the Stability Pool.">
-          You can earn ETH and LQTY rewards by depositing LUSD.
+        <InfoMessage title="You have no HCHF in the Stability Pool.">
+          You can earn {COLLATERAL_COIN} and {GT} rewards by depositing {COIN}.
         </InfoMessage>
 
         <Flex variant="layout.actions">

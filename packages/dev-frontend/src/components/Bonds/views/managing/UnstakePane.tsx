@@ -44,7 +44,7 @@ export const UnstakePane: React.FC = () => {
 
       <PendingRewards />
 
-      <StaticRow label="bLUSD LP APR">
+      <StaticRow label="bHCHF LP APR">
         <StaticAmounts sx={{ alignItems: "center", justifyContent: "flex-start" }}>
           <PoolBalance symbol="%">
             {(protocolInfo?.bLusdLpApr ?? Decimal.INFINITY).prettify(2)}
@@ -53,7 +53,7 @@ export const UnstakePane: React.FC = () => {
       </StaticRow>
 
       <Flex mb={3} sx={{ fontWeight: 300, fontSize: "16px" }}>
-        Your staked LP tokens will be unstaked from the bLUSD Curve gauge and moved into your wallet.
+        Your staked LP tokens will be unstaked from the bHCHF Curve gauge and moved into your wallet.
         Pending rewards will also be claimed and moved into your wallet.
       </Flex>
 

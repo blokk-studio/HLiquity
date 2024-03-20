@@ -143,7 +143,7 @@ export const Details: React.FC<DetailsProps> = ({ onBack }) => {
   return (
     <>
       <Heading as="h2" sx={{ pt: 1, pb: 3, px: 2 }}>
-        <Flex sx={{ justifyContent: "center" }}>Bond LUSD</Flex>
+        <Flex sx={{ justifyContent: "center" }}>Bond HCHF</Flex>
         <Close
           onClick={handleDismiss}
           sx={{
@@ -180,10 +180,10 @@ export const Details: React.FC<DetailsProps> = ({ onBack }) => {
               date: new Date(dateWithoutHours(Date.now())),
               label: (
                 <>
-                  <Label subLabel="0 bLUSD" description={l.BOND_CREATED.description}>
+                  <Label subLabel="0 bHCHF" description={l.BOND_CREATED.description}>
                     {l.BOND_CREATED.term}
                   </Label>
-                  <SubLabel>0 bLUSD</SubLabel>
+                  <SubLabel>0 bHCHF</SubLabel>
                 </>
               ),
               isEndOfLife: true
@@ -195,7 +195,7 @@ export const Details: React.FC<DetailsProps> = ({ onBack }) => {
                   <Label description={l.BREAK_EVEN_TIME.description}>{l.BREAK_EVEN_TIME.term}</Label>
                   <SubLabel>
                     <InfiniteEstimate estimate={breakEvenAccrual}>
-                      {breakEvenAccrual.prettify(2)} bLUSD
+                      {breakEvenAccrual.prettify(2)} bHCHF
                     </InfiniteEstimate>
                   </SubLabel>
                 </>
@@ -210,7 +210,7 @@ export const Details: React.FC<DetailsProps> = ({ onBack }) => {
                   </Label>
                   <SubLabel>
                     <InfiniteEstimate estimate={rebondAccrual}>
-                      {rebondAccrual.prettify(2)} bLUSD
+                      {rebondAccrual.prettify(2)} bHCHF
                     </InfiniteEstimate>
                   </SubLabel>
                 </>
@@ -224,7 +224,7 @@ export const Details: React.FC<DetailsProps> = ({ onBack }) => {
         label={l.BOND_DEPOSIT.term}
         inputId="bond-deposit-amount"
         amount={deposit.prettify(2)}
-        unit="LUSD"
+        unit="HCHF"
         editingState={depositEditingState}
         editedAmount={deposit.toString()}
         setEditedAmount={amount => handleDepositAmountChanged(Decimal.from(amount))}
@@ -236,7 +236,7 @@ export const Details: React.FC<DetailsProps> = ({ onBack }) => {
         <Record
           lexicon={l.REBOND_RETURN}
           value={hasMarketPremium ? rebondReturn.toFixed(2) : "N/A"}
-          type="LUSD"
+          type="HCHF"
         />
 
         <Record
@@ -258,51 +258,51 @@ export const Details: React.FC<DetailsProps> = ({ onBack }) => {
 
       <HorizontalSlider
         name={"Simulate market price"}
-        description={`The market price of bLUSD impacts how long it will take to rebond and break even. The actual times may be overestimated as the simulator is based on the current bLUSD accrual rate, not taking into account potential rate adjustments.`}
+        description={`The market price of bHCHF impacts how long it will take to rebond and break even. The actual times may be overestimated as the simulator is based on the current bHCHF accrual rate, not taking into account potential rate adjustments.`}
         descriptionLink="https://docs.chickenbonds.org/faq/economic-design#_44lrt4qpho3a"
         value={simulatedProtocolInfo.simulatedMarketPrice}
         min={marketPriceMin}
         max={marketPriceMax}
-        type="LUSD"
+        type="HCHF"
         onSliderChange={value => setSimulatedMarketPrice(value)}
         onReset={() => resetSimulatedMarketPrice()}
       />
 
       {!protocolInfo.hasMarketPremium && (
         <Warning>
-          When the bLUSD market price is less than 3% above the floor price, it's not profitable to
-          bond. Buying bLUSD from the market currently generates a higher return than bonding.{" "}
+          When the bHCHF market price is less than 3% above the floor price, it's not profitable to
+          bond. Buying bHCHF from the market currently generates a higher return than bonding.{" "}
           <LearnMoreLink link={l.INFINITE_ESTIMATION.link} />
         </Warning>
       )}
 
       {!isInfiniteBondApproved && (
         <ActionDescription>
-          <Text>You are approving LUSD for bonding</Text>
+          <Text>You are approving HCHF for bonding</Text>
         </ActionDescription>
       )}
 
       {statuses.APPROVE === "FAILED" && (
-        <Warning>Failed to approve spend of LUSD. Please try again.</Warning>
+        <Warning>Failed to approve spend of HCHF. Please try again.</Warning>
       )}
 
       {statuses.CREATE === "FAILED" && <Warning>Failed to create bond. Please try again.</Warning>}
 
       {isInfiniteBondApproved && (
         <ActionDescription>
-          You are bonding <Text sx={{ fontWeight: "bold" }}>{deposit.prettify(2)} LUSD</Text>
+          You are bonding <Text sx={{ fontWeight: "bold" }}>{deposit.prettify(2)} HCHF</Text>
         </ActionDescription>
       )}
 
-      {!isDepositEnough && <ErrorDescription>The minimum bond amount is 100 LUSD.</ErrorDescription>}
+      {!isDepositEnough && <ErrorDescription>The minimum bond amount is 100 HCHF.</ErrorDescription>}
       {doesDepositExceedBalance && (
         <ErrorDescription>
-          Amount exceeds your balance by <Amount>{deposit.sub(hchfBalance).prettify(2)} LUSD</Amount>
+          Amount exceeds your balance by <Amount>{deposit.sub(hchfBalance).prettify(2)} HCHF</Amount>
         </ErrorDescription>
       )}
 
       <Flex pb={2} sx={{ fontSize: "15.5px", justifyContent: "center", fontStyle: "italic" }}>
-        You can cancel your bond at any time to recover your deposited LUSD
+        You can cancel your bond at any time to recover your deposited HCHF
       </Flex>
 
       <Flex variant="layout.actions">

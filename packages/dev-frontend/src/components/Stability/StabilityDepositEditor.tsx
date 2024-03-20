@@ -11,7 +11,7 @@ import {
 
 import { useLiquitySelector } from "@liquity/lib-react";
 
-import { COIN, GT } from "../../strings";
+import { COIN, COLLATERAL_COIN, GT } from "../../strings";
 
 import { Icon } from "../Icon";
 import { EditableRow, StaticRow } from "../Trove/Editor";
@@ -103,7 +103,7 @@ export const StabilityDepositEditor: React.FC<StabilityDepositEditorProps> = ({
               inputId="deposit-gain"
               amount={originalDeposit.collateralGain.prettify(4)}
               color={originalDeposit.collateralGain.nonZero && "success"}
-              unit="ETH"
+              unit={COLLATERAL_COIN}
             />
 
             <StaticRow
@@ -116,7 +116,7 @@ export const StabilityDepositEditor: React.FC<StabilityDepositEditorProps> = ({
                 <InfoIcon
                   tooltip={
                     <Card variant="tooltip" sx={{ width: "240px" }}>
-                      Although the LQTY rewards accrue every minute, the value on the UI only updates
+                      Although the HLQTY rewards accrue every minute, the value on the UI only updates
                       when a user transacts with the Stability Pool. Therefore you may receive more
                       rewards than is displayed when you claim or adjust your deposit.
                     </Card>

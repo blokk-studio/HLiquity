@@ -23,11 +23,11 @@ export const PoolDetails: React.FC = () => {
             sx={{ alignItems: "center", justifyContent: "flex-start" }}
             inputId="deposit-pool-balance"
           >
-            <PoolBalance symbol="bLUSD">
+            <PoolBalance symbol="bHCHF">
               {(bLusdAmmBLusdBalance ?? Decimal.ZERO).prettify(2)}
             </PoolBalance>
             <Text sx={{ fontWeight: "light", mx: "12px" }}>+</Text>
-            <PoolBalance symbol="LUSD-3CRV">
+            <PoolBalance symbol="HCHF-3CRV">
               {(bLusdAmmLusdBalance ?? Decimal.ZERO).prettify(2)}
             </PoolBalance>
           </StaticAmounts>
@@ -38,9 +38,9 @@ export const PoolDetails: React.FC = () => {
             sx={{ alignItems: "center", justifyContent: "flex-start" }}
             inputId="deposit-pool-ratio"
           >
-            <PoolBalance symbol="bLUSD">1</PoolBalance>
+            <PoolBalance symbol="bHCHF">1</PoolBalance>
             <Text sx={{ fontWeight: "thin", mx: "6px" }}>:</Text>
-            <PoolBalance symbol="LUSD-3CRV">{poolBalanceRatio.prettify(2)}</PoolBalance>
+            <PoolBalance symbol="HCHF-3CRV">{poolBalanceRatio.prettify(2)}</PoolBalance>
           </StaticAmounts>
         </StaticRow>
 
@@ -51,15 +51,15 @@ export const PoolDetails: React.FC = () => {
             amount={(lpTokenSupply ?? Decimal.ZERO).prettify(2)}
           />
 
-          <StaticRow label="bLUSD price">
+          <StaticRow label="bHCHF price">
             <StaticAmounts sx={{ alignItems: "center", justifyContent: "flex-start" }}>
-              <PoolBalance symbol="LUSD">
+              <PoolBalance symbol="HCHF">
                 {(protocolInfo?.marketPrice ?? Decimal.INFINITY).prettify(2)}
               </PoolBalance>{" "}
             </StaticAmounts>
           </StaticRow>
 
-          <StaticRow label="bLUSD LP APR">
+          <StaticRow label="bHCHF LP APR">
             <StaticAmounts sx={{ alignItems: "center", justifyContent: "flex-start" }}>
               <PoolBalance symbol="%">
                 {(protocolInfo?.bLusdLpApr ?? Decimal.INFINITY).prettify(2)}

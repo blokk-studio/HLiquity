@@ -15,7 +15,7 @@ import { ActionDescription } from "../ActionDescription";
 import { useMyTransactionState } from "../Transaction";
 import { TroveAction } from "./TroveAction";
 import { useTroveView } from "./context/TroveViewContext";
-import { COIN } from "../../strings";
+import { COIN, COLLATERAL_COIN } from "../../strings";
 import { Icon } from "../Icon";
 import { InfoIcon } from "../InfoIcon";
 import { LoadingOverlay } from "../LoadingOverlay";
@@ -113,7 +113,7 @@ export const Opening: React.FC = () => {
           maxAmount={maxCollateral.toString()}
           maxedOut={collateralMaxedOut}
           editingState={editingState}
-          unit="ETH"
+          unit={COLLATERAL_COIN}
           editedAmount={collateral.toString(4)}
           setEditedAmount={(amount: string) => setCollateral(Decimal.from(amount))}
         />
@@ -173,11 +173,11 @@ export const Opening: React.FC = () => {
             <InfoIcon
               tooltip={
                 <Card variant="tooltip" sx={{ width: "240px" }}>
-                  The total amount of LUSD your Trove will hold.{" "}
+                  The total amount of HCHF your Trove will hold.{" "}
                   {isDirty && (
                     <>
                       You will need to repay {totalDebt.sub(HCHF_LIQUIDATION_RESERVE).prettify(2)}{" "}
-                      LUSD to reclaim your collateral ({HCHF_LIQUIDATION_RESERVE.toString()} LUSD
+                      HCHF to reclaim your collateral ({HCHF_LIQUIDATION_RESERVE.toString()} HCHF
                       Liquidation Reserve excluded).
                     </>
                   )}
@@ -191,7 +191,7 @@ export const Opening: React.FC = () => {
 
         {description ?? (
           <ActionDescription>
-            Start by entering the amount of ETH you'd like to deposit as collateral.
+            Start by entering the amount of {COLLATERAL_COIN} you'd like to deposit as collateral.
           </ActionDescription>
         )}
 

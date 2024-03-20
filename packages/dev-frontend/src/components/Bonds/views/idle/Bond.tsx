@@ -16,7 +16,7 @@ const getBondEvents = (bond: BondType): EventType[] => {
       label: (
         <>
           <Label description={l.BOND_CREATED.description}>{l.BOND_CREATED.term}</Label>
-          <SubLabel>{`0.00 bLUSD`}</SubLabel>
+          <SubLabel>{`0.00 bHCHF`}</SubLabel>
         </>
       )
     },
@@ -36,9 +36,9 @@ const getBondEvents = (bond: BondType): EventType[] => {
           </Label>
           <SubLabel style={{ fontWeight: 400 }}>
             {bond.status === "PENDING"
-              ? `${bond.accrued.prettify(2)} bLUSD`
+              ? `${bond.accrued.prettify(2)} bHCHF`
               : bond.status === "CLAIMED"
-              ? `${bond?.claimedAmount?.prettify(2)} bLUSD`
+              ? `${bond?.claimedAmount?.prettify(2)} bHCHF`
               : ""}
           </SubLabel>
         </>
@@ -56,7 +56,7 @@ const getBondEvents = (bond: BondType): EventType[] => {
           <Label description={l.BREAK_EVEN_TIME.description}>{l.BREAK_EVEN_TIME.term}</Label>
           <SubLabel>
             <InfiniteEstimate estimate={bond?.breakEvenAccrual}>
-              {bond?.breakEvenAccrual?.prettify(2) ?? "?"} bLUSD
+              {bond?.breakEvenAccrual?.prettify(2) ?? "?"} bHCHF
             </InfiniteEstimate>
           </SubLabel>
         </>
@@ -70,7 +70,7 @@ const getBondEvents = (bond: BondType): EventType[] => {
           <Label description={l.OPTIMUM_REBOND_TIME.description}>{l.OPTIMUM_REBOND_TIME.term}</Label>
           <SubLabel>
             <InfiniteEstimate estimate={bond?.rebondAccrual}>
-              {bond?.rebondAccrual?.prettify(2) ?? "?"} bLUSD
+              {bond?.rebondAccrual?.prettify(2) ?? "?"} bHCHF
             </InfiniteEstimate>
           </SubLabel>
         </>
@@ -139,19 +139,19 @@ export const Bond: React.FC<BondProps> = ({ bond, style }) => {
                 fontSize: "14.5px"
               }}
             >
-              <Record lexicon={l.BOND_DEPOSIT} value={bond.deposit.prettify(2)} type="LUSD" />
+              <Record lexicon={l.BOND_DEPOSIT} value={bond.deposit.prettify(2)} type="HCHF" />
               {bond.status === "PENDING" && (
                 <Record
                   lexicon={l.MARKET_VALUE}
                   value={bond?.marketValue?.prettify(2) ?? "0"}
-                  type="LUSD"
+                  type="HCHF"
                 />
               )}
             </Flex>
             {bond.status === "PENDING" && <Actions bondId={bond.id} />}
             {bond.status !== "PENDING" && bond.status === "CLAIMED" && (
               <Button variant="outline" sx={{ height: "44px" }} onClick={handleSellBLusdPressed}>
-                Sell bLUSD
+                Sell bHCHF
               </Button>
             )}
           </Flex>

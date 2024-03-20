@@ -5,6 +5,7 @@ import { useLiquitySelector } from "@liquity/lib-react";
 import { InfoIcon } from "../InfoIcon";
 import { Badge } from "../Badge";
 import { fetchLqtyPrice } from "./context/fetchLqtyPrice";
+import { COIN, COLLATERAL_COIN, GT } from "../../strings";
 
 const selector = ({ hchfInStabilityPool, remainingStabilityPoolHLQTYReward }: LiquityStoreState) => ({
   hchfInStabilityPool,
@@ -43,17 +44,17 @@ export const Yield: React.FC = () => {
 
   return (
     <Badge>
-      <Text>LQTY APR {aprPercentage.toString(2)}%</Text>
+      <Text>HLQTY APR {aprPercentage.toString(2)}%</Text>
       <InfoIcon
         tooltip={
           <Card variant="tooltip" sx={{ width: ["220px", "518px"] }}>
             <Paragraph>
-              An <Text sx={{ fontWeight: "bold" }}>estimate</Text> of the LQTY return on the LUSD
-              deposited to the Stability Pool over the next year, not including your ETH gains from
+              An <Text sx={{ fontWeight: "bold" }}>estimate</Text> of the {GT} return on the {COIN}
+              deposited to the Stability Pool over the next year, not including your {COLLATERAL_COIN} gains from
               liquidations.
             </Paragraph>
             <Paragraph sx={{ fontSize: "12px", fontFamily: "monospace", mt: 2 }}>
-              ($LQTY_REWARDS * DAILY_ISSUANCE% / DEPOSITED_LUSD) * 365 * 100 ={" "}
+              (${GT}_REWARDS * DAILY_ISSUANCE% / DEPOSITED_{COIN}) * 365 * 100 ={" "}
               <Text sx={{ fontWeight: "bold" }}> APR</Text>
             </Paragraph>
             <Paragraph sx={{ fontSize: "12px", fontFamily: "monospace" }}>

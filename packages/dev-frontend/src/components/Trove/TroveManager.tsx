@@ -16,6 +16,7 @@ import {
   selectForTroveChangeValidation,
   validateTroveChange
 } from "./validation/validateTroveChange";
+import { COLLATERAL_COIN } from "../../strings";
 
 const init = ({ trove }: LiquityStoreState) => ({
   original: trove,
@@ -217,7 +218,7 @@ export const TroveManager: React.FC<TroveManagerProps> = ({ collateral, debt }) 
       {description ??
         (openingNewTrove ? (
           <ActionDescription>
-            Start by entering the amount of ETH you'd like to deposit as collateral.
+            Start by entering the amount of {COLLATERAL_COIN} you'd like to deposit as collateral.
           </ActionDescription>
         ) : (
           <ActionDescription>

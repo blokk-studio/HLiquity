@@ -45,7 +45,7 @@ export type BondViewContextType = {
   isBLusdApprovedWithAmmZapper: boolean;
   isBLusdLpApprovedWithAmmZapper: boolean;
   isBLusdLpApprovedWithGauge: boolean;
-  inputToken: BLusdAmmTokenIndex.BLUSD | BLusdAmmTokenIndex.LUSD;
+  inputToken: BLusdAmmTokenIndex.BLUSD | BLusdAmmTokenIndex.HCHF;
   isInputTokenApprovedWithBLusdAmm: boolean;
   getExpectedSwapOutput: (inputToken: BLusdAmmTokenIndex, inputAmount: Decimal) => Promise<Decimal>;
   getExpectedLpTokens: (bLusdAmount: Decimal, lusdAmount: Decimal) => Promise<Decimal>;

@@ -56,7 +56,7 @@ export const DepositPane: React.FC = () => {
   const handleApprovePressed = () => {
     const tokensNeedingApproval = new Map<BLusdAmmTokenIndex, Address>();
     if (zapperNeedsLusdApproval) {
-      tokensNeedingApproval.set(BLusdAmmTokenIndex.LUSD, addresses.BLUSD_LP_ZAP_ADDRESS);
+      tokensNeedingApproval.set(BLusdAmmTokenIndex.HCHF, addresses.BLUSD_LP_ZAP_ADDRESS);
     }
     if (zapperNeedsBLusdApproval) {
       tokensNeedingApproval.set(BLusdAmmTokenIndex.BLUSD, addresses.BLUSD_LP_ZAP_ADDRESS);
@@ -91,14 +91,14 @@ export const DepositPane: React.FC = () => {
     setShouldDepositBalanced(toggle => !toggle);
   };
 
-  const handleSetAmount = (token: "bLUSD" | "LUSD", amount: Decimal) => {
+  const handleSetAmount = (token: "bHCHF" | "HCHF", amount: Decimal) => {
     if (shouldDepositBalanced) {
-      if (token === "bLUSD") setLusdAmount(poolBalanceRatio.mul(amount));
-      else if (token === "LUSD") setBLusdAmount(amount.div(poolBalanceRatio));
+      if (token === "bHCHF") setLusdAmount(poolBalanceRatio.mul(amount));
+      else if (token === "HCHF") setBLusdAmount(amount.div(poolBalanceRatio));
     }
 
-    if (token === "bLUSD") setBLusdAmount(amount);
-    else if (token === "LUSD") setLusdAmount(amount);
+    if (token === "bHCHF") setBLusdAmount(amount);
+    else if (token === "HCHF") setLusdAmount(amount);
   };
 
   useEffect(() => {
@@ -129,25 +129,25 @@ export const DepositPane: React.FC = () => {
   return (
     <>
       <EditableRow
-        label="bLUSD amount"
+        label="bHCHF amount"
         inputId="deposit-blusd"
         amount={bLusdAmount.prettify(2)}
-        unit="bLUSD"
+        unit="bHCHF"
         editingState={editingState}
         editedAmount={bLusdAmount.toString()}
-        setEditedAmount={amount => handleSetAmount("bLUSD", Decimal.from(amount))}
+        setEditedAmount={amount => handleSetAmount("bHCHF", Decimal.from(amount))}
         maxAmount={coalescedBLusdBalance.toString()}
         maxedOut={bLusdAmount.eq(coalescedBLusdBalance)}
       />
 
       <EditableRow
-        label="LUSD amount"
-        inputId="deposit-lusd"
+        label="HCHF amount"
+        inputId="deposit-hchf"
         amount={lusdAmount.prettify(2)}
-        unit="LUSD"
+        unit="HCHF"
         editingState={editingState}
         editedAmount={lusdAmount.toString()}
-        setEditedAmount={amount => handleSetAmount("LUSD", Decimal.from(amount))}
+        setEditedAmount={amount => handleSetAmount("HCHF", Decimal.from(amount))}
         maxAmount={coalescedLusdBalance.toString()}
         maxedOut={lusdAmount.eq(coalescedLusdBalance)}
       />
@@ -171,8 +171,8 @@ export const DepositPane: React.FC = () => {
             size="xs"
             tooltip={
               <Card variant="tooltip">
-                Tick this box to deposit bLUSD and LUSD-3CRV in the pool's current liquidity ratio.
-                Current ratio = 1 bLUSD : {poolBalanceRatio.prettify(2)} LUSD.
+                Tick this box to deposit bHCHF and HCHF-3CRV in the pool's current liquidity ratio.
+                Current ratio = 1 bHCHF : {poolBalanceRatio.prettify(2)} HCHF.
               </Card>
             }
           />
@@ -188,7 +188,7 @@ export const DepositPane: React.FC = () => {
             size="xs"
             tooltip={
               <Card variant="tooltip">
-                Tick this box to have your Curve LP tokens staked in the bLUSD Curve gauge. Staked LP
+                Tick this box to have your Curve LP tokens staked in the bHCHF Curve gauge. Staked LP
                 tokens will earn protocol fees and Curve rewards.
               </Card>
             }
@@ -203,12 +203,12 @@ export const DepositPane: React.FC = () => {
           Deposit exceeds your balance by{" "}
           {isBLusdBalanceInsufficient && (
             <>
-              <Amount>{bLusdAmount.sub(coalescedBLusdBalance).prettify(2)} bLUSD</Amount>
+              <Amount>{bLusdAmount.sub(coalescedBLusdBalance).prettify(2)} bHCHF</Amount>
               {isLusdBalanceInsufficient && <> and </>}
             </>
           )}
           {isLusdBalanceInsufficient && (
-            <Amount>{lusdAmount.sub(coalescedLusdBalance).prettify(2)} LUSD</Amount>
+            <Amount>{lusdAmount.sub(coalescedLusdBalance).prettify(2)} HCHF</Amount>
           )}
         </ErrorDescription>
       )}

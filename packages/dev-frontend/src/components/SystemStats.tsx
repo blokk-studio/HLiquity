@@ -7,6 +7,7 @@ import { useLiquitySelector } from "@liquity/lib-react";
 import { useLiquity } from "../hooks/LiquityContext";
 import { Statistic } from "./Statistic";
 import * as l from "../lexicon";
+import { COLLATERAL_COIN } from "../strings";
 
 const selectBalances = ({ accountBalance, hchfBalance, hlqtyBalance }: LiquityStoreState) => ({
   accountBalance,
@@ -20,9 +21,9 @@ const Balances: React.FC = () => {
   return (
     <Box sx={{ mb: 3 }}>
       <Heading>My Account Balances</Heading>
-      <Statistic lexicon={l.ETH}>{accountBalance.prettify(4)}</Statistic>
-      <Statistic lexicon={l.LUSD}>{hchfBalance.prettify()}</Statistic>
-      <Statistic lexicon={l.LQTY}>{hlqtyBalance.prettify()}</Statistic>
+      <Statistic lexicon={l.HBAR}>{accountBalance.prettify(4)}</Statistic>
+      <Statistic lexicon={l.HCHF}>{hchfBalance.prettify()}</Statistic>
+      <Statistic lexicon={l.HLQTY}>{hlqtyBalance.prettify()}</Statistic>
     </Box>
   );
 };
@@ -95,20 +96,20 @@ export const SystemStats: React.FC<SystemStatsProps> = ({ variant = "info", show
       <Statistic lexicon={l.BORROW_FEE}>{borrowingFeePct.toString(2)}</Statistic>
 
       <Statistic lexicon={l.TVL}>
-        {total.collateral?.shorten()} <Text sx={{ fontSize: 1 }}>&nbsp;ETH</Text>
+        {total.collateral?.shorten()} <Text sx={{ fontSize: 1 }}>&nbsp;{COLLATERAL_COIN}</Text>
         <Text sx={{ fontSize: 1 }}>
           &nbsp;(${Decimal.from(total.collateral?.mul(price)).shorten()})
         </Text>
       </Statistic>
       <Statistic lexicon={l.TROVES}>{Decimal.from(numberOfTroves).prettify(0)}</Statistic>
-      <Statistic lexicon={l.LUSD_SUPPLY}>{total.debt.shorten()}</Statistic>
+      <Statistic lexicon={l.HCHF_SUPPLY}>{total.debt.shorten()}</Statistic>
       {lusdInStabilityPoolPct && (
-        <Statistic lexicon={l.STABILITY_POOL_LUSD}>
+        <Statistic lexicon={l.STABILITY_POOL_HCHF}>
           {hchfInStabilityPool.shorten()}
           <Text sx={{ fontSize: 1 }}>&nbsp;({lusdInStabilityPoolPct.toString(1)})</Text>
         </Statistic>
       )}
-      <Statistic lexicon={l.STAKED_LQTY}>{totalStakedHLQTY?.shorten()}</Statistic>
+      <Statistic lexicon={l.STAKED_HLQTY}>{totalStakedHLQTY?.shorten()}</Statistic>
       <Statistic lexicon={l.TCR}>{totalCollateralRatioPct.prettify()}</Statistic>
       <Statistic lexicon={l.RECOVERY_MODE}>
         {total.collateralRatioIsBelowCritical(price) ? <Box color="danger">Yes</Box> : "No"}

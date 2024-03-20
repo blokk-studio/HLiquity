@@ -64,7 +64,7 @@ export const StakePane: React.FC = () => {
       />
 
       <Flex mt={3}>
-        <StaticRow label="bLUSD LP APR">
+        <StaticRow label="bHCHF LP APR">
           <StaticAmounts sx={{ alignItems: "center", justifyContent: "flex-start" }}>
             <PoolBalance symbol="%">
               {(protocolInfo?.bLusdLpApr ?? Decimal.INFINITY).prettify(2)}
@@ -74,7 +74,7 @@ export const StakePane: React.FC = () => {
       </Flex>
 
       <Flex my={3} sx={{ fontWeight: 300, fontSize: "16px" }}>
-        Your LP tokens will be staked in the bLUSD Curve gauge to earn protocol fees and Curve
+        Your LP tokens will be staked in the bHCHF Curve gauge to earn protocol fees and Curve
         rewards.
       </Flex>
 
