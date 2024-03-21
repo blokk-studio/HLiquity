@@ -1,5 +1,5 @@
-import React from "react";
-import { Flex, Container } from "theme-ui";
+import React, { useMemo, useState } from "react";
+import { Flex, Container, Button, Paragraph, Heading, Spinner } from "theme-ui";
 import { HashRouter as Router, Switch, Route } from "react-router-dom";
 import { Wallet } from "@ethersproject/wallet";
 
@@ -21,50 +21,234 @@ import { StabilityViewProvider } from "./components/Stability/context/StabilityV
 import { StakingViewProvider } from "./components/Staking/context/StakingViewProvider";
 import "tippy.js/dist/tippy.css"; // Tooltip default style
 import { BondsProvider } from "./components/Bonds/context/BondsProvider";
-import { useSigner } from 'wagmi'
+import { useAccount, useSigner } from "wagmi";
 
-import { Signer as EthersSigner, Contract } from 'ethers'
+import { Signer as EthersSigner, Contract, BigNumber } from "ethers";
 import { TransactionResponse } from "@ethersproject/abstract-provider";
+import { Icon } from "./components/Icon";
+import { mainnet, previewnet, testnet } from "./hedera";
+import { TokenId } from "@hashgraph/sdk";
 
 type LiquityFrontendProps = {
   loader?: React.ReactNode;
 };
 
-
-const associateToken = async (options: { signer: EthersSigner, tokenAddress: string }) => {
-  const signer = options.signer
+const associateToken = async (options: { signer: EthersSigner; tokenAddress: string }) => {
   const abi = [`function associate()`, `function dissociate()`];
   const gasLimit = 1000000;
 
   try {
-    const associationContract = new Contract(options.tokenAddress, abi, signer);
-    const associationTransaction: TransactionResponse = await associationContract.associate({ gasLimit: gasLimit });
+    const associationContract = new Contract(options.tokenAddress, abi, options.signer);
+    const associationTransaction: TransactionResponse = await associationContract.associate({
+      gasLimit: gasLimit
+    });
     const associationReceipt = await associationTransaction.wait();
-    return associationReceipt
+    return associationReceipt;
   } catch (error: unknown) {
-    const errorMessage = `couldn't associate token ${JSON.stringify(options.tokenAddress)}`
-    console.error(errorMessage, error)
-    throw new Error(errorMessage, { cause: error })
+    const errorMessage = `couldn't associate token ${JSON.stringify(options.tokenAddress)}`;
+    console.error(errorMessage, error);
+    throw new Error(errorMessage, { cause: error });
   }
+};
+
+//     const createStackingToken = await createFungibleToken("Stacking Token", "ST", operatorAccountId, operatorPrKey.publicKey, client, operatorPrKey);
+
+//   let underlyingTokenAddress = createStackingToken.toSolidityAddress();
+
+//   const contractUnderlyingToken = new web3.eth.Contract(
+//       underlyingTokenAbi,
+//       underlyingTokenAddress
+//   );
+
+//   let approveVault = await contractUnderlyingToken.methods.approve(simpleVaultAddress, 100)
+//   .send({ from: accountAddress, gas: 1000000 })
+//       .on("receipt", (receipt) => {
+//         console.log(receipt);
+//         console.log("Transaction hash", receipt.transactionHash);
+//       });
+//   console.log("Approval", approveVault);
+
+const approveContract = async (options: {
+  signer: EthersSigner;
+  contactAddress: string;
+  tokenAddress: string;
+  tokenAmount: number;
+}) => {
+  const abi = [`function approve(address spender, uint256 amount) returns (bool)`];
+  const gasLimit = 1000000;
+
+  try {
+    const contract = new Contract(options.contactAddress, abi, options.signer);
+    const approvalTransaction: TransactionResponse = await contract.approve(
+      options.contactAddress,
+      BigNumber.from(options.tokenAmount),
+      {
+        gasLimit: gasLimit
+      }
+    );
+    const approvalReceipt = await approvalTransaction.wait();
+    return approvalReceipt;
+  } catch (error: unknown) {
+    const errorMessage = `couldn't approve contract ${JSON.stringify(
+      options.contactAddress
+    )} to spend tokens ${JSON.stringify(options.tokenAddress)}`;
+    console.error(errorMessage, error);
+    throw new Error(errorMessage, { cause: error });
+  }
+};
+
+const dissociateToken = async (options: { signer: EthersSigner; tokenAddress: string }) => {
+  const abi = [`function associate()`, `function dissociate()`];
+  const gasLimit = 1000000;
+
+  try {
+    const associationContract = new Contract(options.tokenAddress, abi, options.signer);
+    const associationTransaction: TransactionResponse = await associationContract.dissociate({
+      gasLimit: gasLimit
+    });
+    const associationReceipt = await associationTransaction.wait();
+    return associationReceipt;
+  } catch (error: unknown) {
+    const errorMessage = `couldn't dissociate token ${JSON.stringify(options.tokenAddress)}`;
+    console.error(errorMessage, error);
+    throw new Error(errorMessage, { cause: error });
+  }
+};
+
+const chains = [testnet, previewnet, mainnet];
+const getChainById = (chainId: number) => {
+  const chain = chains.find(chain => chain.id === chainId);
+
+  if (!chain) {
+    throw `there is no hedera chain with id ${chainId}`;
+  }
+
+  return chain;
+};
+
+interface HederaApiToken {
+  token_id: `0.0.${string}`;
+}
+interface HederaApiTokensData {
+  tokens: HederaApiToken[];
+}
+interface HederaToken {
+  id: `0.0.${string}`;
 }
 
-export const LiquityFrontend: React.FC<LiquityFrontendProps> = ({ loader }) => {
-  const { account, provider, liquity, config } = useLiquity();
-  const signerResult = useSigner()
-
-  const associate = async () => {
-    if(!signerResult.data) {
-      throw new Error(`need \`liquity.connection.signer\` to be defined to sign token association transactions`)
+const fetchTokens = async (options: { accountAddress: `0x${string}` }) => {
+  const accountAddressUrlSegment = options.accountAddress.replace(/^0x/, "");
+  // TODO: get api endpoint based on chain id
+  const response = await fetch(
+    `https://testnet.mirrornode.hedera.com/api/v1/accounts/${accountAddressUrlSegment}/tokens`,
+    {
+      method: "GET",
+      headers: {}
     }
-    const signer = signerResult.data
+  );
+  const data: HederaApiTokensData = await response.json();
 
-    await associateToken({ tokenAddress: config.hchfTokenId, signer })
-    await associateToken({ tokenAddress: config.hlqtyTokenId, signer })
-  }
+  const tokens = data.tokens.map(tokenData => {
+    const id = tokenData.token_id;
+    const token = {
+      id
+    };
+
+    return token;
+  });
+
+  return tokens;
+};
+
+export const LiquityFrontend: React.FC<LiquityFrontendProps> = ({ loader }) => {
+  const { account: accountAddress, provider, liquity, config } = useLiquity();
+  const signerResult = useSigner();
+  const account = useAccount();
+  const [tokens, setTokens] = useState<HederaToken[]>([]);
+  useMemo(async () => {
+    if (!account.address) {
+      return;
+    }
+
+    const tokens = await fetchTokens({ accountAddress: account.address });
+
+    setTokens(tokens);
+  }, [account.address]);
+
+  const hchfTokenId = TokenId.fromSolidityAddress(config.hchfTokenId).toString();
+  const hasAssociatedWithHchf = tokens.some(token => {
+    const isHchf = token.id === hchfTokenId;
+    return isHchf;
+  });
+  const hlqtyTokenId = TokenId.fromSolidityAddress(config.hlqtyTokenId).toString();
+  const hasAssociatedWithHlqty = tokens.some(token => {
+    const isHlqty = token.id === hlqtyTokenId;
+    return isHlqty;
+  });
+  const hasConsentedToAll = [hasAssociatedWithHchf, hasAssociatedWithHlqty].every(
+    consent => consent
+  );
+
+  const [isLoadingHchfAssociation, setIsLoadingHchfAssociation] = useState(false);
+  const associateHchf = async () => {
+    setIsLoadingHchfAssociation(true);
+    try {
+      if (!signerResult.data) {
+        throw new Error(
+          `need \`liquity.connection.signer\` to be defined to sign token association transactions`
+        );
+      }
+      const signer = signerResult.data;
+
+      await associateToken({ tokenAddress: config.hchfTokenId, signer });
+
+      if (!account.address) {
+        console.warn(
+          "need account address to update the account info. refresh the page to get up-to-date (token) info."
+        );
+        return;
+      }
+
+      const tokens = await fetchTokens({ accountAddress: account.address });
+
+      setTokens(tokens);
+    } catch {
+      // eslint
+    }
+    setIsLoadingHchfAssociation(false);
+  };
+  const [isLoadingHlqtyAssociation, setIsLoadingHlqtyAssociation] = useState(false);
+  const associateHlqty = async () => {
+    setIsLoadingHlqtyAssociation(true);
+    try {
+      if (!signerResult.data) {
+        throw new Error(
+          `need \`liquity.connection.signer\` to be defined to sign token association transactions`
+        );
+      }
+      const signer = signerResult.data;
+
+      await associateToken({ tokenAddress: config.hlqtyTokenId, signer });
+
+      if (!account.address) {
+        console.warn(
+          "need account address to update the account info. refresh the page to get up-to-date (token) info."
+        );
+        return;
+      }
+
+      const tokens = await fetchTokens({ accountAddress: account.address });
+
+      setTokens(tokens);
+    } catch {
+      // eslint
+    }
+    setIsLoadingHlqtyAssociation(false);
+  };
 
   // For console tinkering ;-)
   Object.assign(window, {
-    account,
+    account: accountAddress,
     provider,
     liquity,
     Trove,
@@ -75,45 +259,101 @@ export const LiquityFrontend: React.FC<LiquityFrontendProps> = ({ loader }) => {
 
   return (
     <LiquityStoreProvider {...{ loader }} store={liquity.store}>
-      <Router>
-        <TroveViewProvider>
-          <StabilityViewProvider>
-            <StakingViewProvider>
-              <BondsProvider>
-                <button onClick={associate}>associate with HCHF & HLQTY</button>
-                <Flex sx={{ flexDirection: "column", minHeight: "100%" }}>
-                  <Header>
-                    <UserAccount />
-                    <SystemStatsPopup />
-                  </Header>
+      {!hasConsentedToAll ? (
+        <Flex
+          sx={{
+            flexDirection: "column",
+            minHeight: "100%",
+            justifyContent: "center",
+            marginInline: "clamp(2rem, 100%, 50% - 16rem)"
+          }}
+        >
+          <Heading>Consent to HLiquity</Heading>
+          <Paragraph sx={{ marginTop: "1rem" }}>
+            You have to associate with HLiquity tokens and approve HLiquity contracts before you can
+            use HLiquity.
+          </Paragraph>
 
-                  <Container
-                    variant="main"
-                    sx={{
-                      display: "flex",
-                      flexGrow: 1,
-                      flexDirection: "column",
-                      alignItems: "center"
-                    }}
-                  >
-                    <Switch>
-                      <Route path="/" exact>
-                        <PageSwitcher />
-                      </Route>
-                      <Route path="/bonds">
-                        <Bonds />
-                      </Route>
-                      <Route path="/risky-troves">
-                        <RiskyTrovesPage />
-                      </Route>
-                    </Switch>
-                  </Container>
-                </Flex>
-              </BondsProvider>
-            </StakingViewProvider>
-          </StabilityViewProvider>
-        </TroveViewProvider>
-      </Router>
+          <Flex
+            sx={{
+              marginTop: "2rem",
+              flexDirection: "column",
+              minHeight: "100%",
+              gap: "1rem",
+              justifyContent: "center"
+            }}
+          >
+            <Button
+              disabled={isLoadingHchfAssociation || hasAssociatedWithHchf}
+              onClick={associateHchf}
+              sx={{
+                gap: "1rem",
+                ...(hasAssociatedWithHchf
+                  ? { backgroundColor: "success", borderColor: "success" }
+                  : {})
+              }}
+            >
+              <span>Consent to receiving HCHF</span>
+              {hasAssociatedWithHchf && <Icon name="check" />}
+              {isLoadingHchfAssociation && <Spinner size="1rem" color="inherit" />}
+            </Button>
+
+            <Button
+              disabled={isLoadingHlqtyAssociation || hasAssociatedWithHlqty}
+              onClick={associateHlqty}
+              sx={{
+                gap: "1rem",
+                ...(hasAssociatedWithHlqty
+                  ? { backgroundColor: "success", borderColor: "success" }
+                  : {})
+              }}
+            >
+              <span>Consent to receiving HLQTY</span>
+              {hasAssociatedWithHlqty && <Icon name="check" />}
+              {isLoadingHlqtyAssociation && <Spinner size="1rem" color="inherit" />}
+            </Button>
+          </Flex>
+        </Flex>
+      ) : (
+        <Router>
+          <TroveViewProvider>
+            <StabilityViewProvider>
+              <StakingViewProvider>
+                <BondsProvider>
+                  <Flex sx={{ flexDirection: "column", minHeight: "100%" }}>
+                    <Header>
+                      <UserAccount />
+                      <SystemStatsPopup />
+                    </Header>
+
+                    <Container
+                      variant="main"
+                      sx={{
+                        display: "flex",
+                        flexGrow: 1,
+                        flexDirection: "column",
+                        alignItems: "center"
+                      }}
+                    >
+                      <Switch>
+                        <Route path="/" exact>
+                          <PageSwitcher />
+                        </Route>
+                        <Route path="/bonds">
+                          <Bonds />
+                        </Route>
+                        <Route path="/risky-troves">
+                          <RiskyTrovesPage />
+                        </Route>
+                      </Switch>
+                    </Container>
+                  </Flex>
+                </BondsProvider>
+              </StakingViewProvider>
+            </StabilityViewProvider>
+          </TroveViewProvider>
+        </Router>
+      )}
       <TransactionMonitor />
     </LiquityStoreProvider>
   );

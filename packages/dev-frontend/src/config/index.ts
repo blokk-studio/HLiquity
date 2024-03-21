@@ -7,8 +7,8 @@ export type LiquityFrontendConfig = {
   alchemyApiKey?: string;
   testnetOnly?: boolean;
   walletConnectProjectId: string;
-  hchfTokenId: string;
-  hlqtyTokenId: string;
+  hchfTokenId: `0x${string}`;
+  hlqtyTokenId: `0x${string}`;
 };
 
 const defaultConfig: LiquityFrontendConfig = {
