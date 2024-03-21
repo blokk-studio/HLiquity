@@ -3,7 +3,8 @@ import assert from "assert";
 import { BigNumber, BigNumberish } from "@ethersproject/bignumber";
 import { AddressZero } from "@ethersproject/constants";
 import { Log } from "@ethersproject/abstract-provider";
-import { ethers } from "ethers";
+import { Contract, ethers } from "ethers";
+import { TransactionResponse } from "@ethersproject/abstract-provider";
 
 import {
   CollateralGainTransferDetails,
@@ -788,6 +789,32 @@ export class PopulatableEthersLiquity
   ): Promise<PopulatedEthersLiquityTransaction<StabilityDepositChangeDetails>> {
     const { stabilityPool } = _getContracts(this._readable.connection);
     const depositHCHF = Decimal.from(amount);
+
+    // approve that the stability pool can spend the users HCHF
+    const abi = [`function approve(address spender, uint256 amount) returns (bool)`];
+    const gasLimit = 1000000;
+    // TODO: configure token ids in `this._readable.connection`
+    const hchfTokenId = "0x0000000000000000000000000000000000388c1c";
+    const contract = new Contract(hchfTokenId, abi, this._readable.connection.signer);
+    const approvalTransaction: TransactionResponse = await contract.approve(
+      this._readable.connection.addresses.hchfToken,
+      depositHCHF.bigNumber,
+      {
+        gasLimit: gasLimit
+      }
+    );
+    const approvalTransactionReceipt = await approvalTransaction.wait();
+    if (approvalTransactionReceipt.status !== 1) {
+      const errorMessage = `unable to approve stability pool (${
+        this._readable.connection.addresses.stabilityPool
+      }) to spend ${depositHCHF.toString()} HCHF (${hchfTokenId})`;
+      console.error(errorMessage, {
+        transactionReceipt: approvalTransactionReceipt,
+        approvalTransaction
+      });
+      throw new Error(errorMessage);
+    }
+
     return this._wrapStabilityDepositTopup(
       { depositHCHF },
       await stabilityPool.estimateAndPopulate.provideToSP(
