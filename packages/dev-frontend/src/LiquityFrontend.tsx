@@ -148,7 +148,7 @@ const fetchTokens = async (options: { accountAddress: `0x${string}` }) => {
   );
 
   if (!response.ok) {
-    const responseText = await response.text()
+    const responseText = await response.text();
     const errorMessage = `tokens api responded with ${response.status}: \`${responseText}\``;
     console.error(errorMessage, { responseText, response });
     throw errorMessage;
@@ -173,14 +173,20 @@ export const LiquityFrontend: React.FC<LiquityFrontendProps> = ({ loader }) => {
   const signerResult = useSigner();
   const account = useAccount();
   const [tokens, setTokens] = useState<HederaToken[]>([]);
+  const [isConsentOverridden, setIsConsentOverridden] = useState(false);
+  const [tokensApiError, setTokensApiError] = useState<Error | null>(null);
   useMemo(async () => {
     if (!account.address) {
       return;
     }
 
-    const tokens = await fetchTokens({ accountAddress: account.address });
+    try {
+      const tokens = await fetchTokens({ accountAddress: account.address });
 
-    setTokens(tokens);
+      setTokens(tokens);
+    } catch (error: unknown) {
+      setTokensApiError(error as Error);
+    }
   }, [account.address]);
 
   const hchfTokenId = TokenId.fromSolidityAddress(config.hchfTokenId).toString();
@@ -193,9 +199,8 @@ export const LiquityFrontend: React.FC<LiquityFrontendProps> = ({ loader }) => {
     const isHlqty = token.id === hlqtyTokenId;
     return isHlqty;
   });
-  const hasConsentedToAll = [hasAssociatedWithHchf, hasAssociatedWithHlqty].every(
-    consent => consent
-  );
+  const hasConsentedToAll =
+    isConsentOverridden || [hasAssociatedWithHchf, hasAssociatedWithHlqty].every(consent => consent);
 
   const [isLoadingHchfAssociation, setIsLoadingHchfAssociation] = useState(false);
   const associateHchf = async () => {
@@ -278,6 +283,7 @@ export const LiquityFrontend: React.FC<LiquityFrontendProps> = ({ loader }) => {
           }}
         >
           <Heading>Consent to HLiquity</Heading>
+
           <Paragraph sx={{ marginTop: "1rem" }}>
             You have to associate with HLiquity tokens and approve HLiquity contracts before you can
             use HLiquity.
@@ -295,11 +301,9 @@ export const LiquityFrontend: React.FC<LiquityFrontendProps> = ({ loader }) => {
             <Button
               disabled={isLoadingHchfAssociation || hasAssociatedWithHchf}
               onClick={associateHchf}
+              variant={hasAssociatedWithHchf ? "success" : "primary"}
               sx={{
-                gap: "1rem",
-                ...(hasAssociatedWithHchf
-                  ? { backgroundColor: "success", borderColor: "success" }
-                  : {})
+                gap: "1rem"
               }}
             >
               <span>Consent to receiving HCHF</span>
@@ -310,11 +314,9 @@ export const LiquityFrontend: React.FC<LiquityFrontendProps> = ({ loader }) => {
             <Button
               disabled={isLoadingHlqtyAssociation || hasAssociatedWithHlqty}
               onClick={associateHlqty}
+              variant={hasAssociatedWithHlqty ? "success" : "primary"}
               sx={{
-                gap: "1rem",
-                ...(hasAssociatedWithHlqty
-                  ? { backgroundColor: "success", borderColor: "success" }
-                  : {})
+                gap: "1rem"
               }}
             >
               <span>Consent to receiving HLQTY</span>
@@ -322,6 +324,29 @@ export const LiquityFrontend: React.FC<LiquityFrontendProps> = ({ loader }) => {
               {isLoadingHlqtyAssociation && <Spinner size="1rem" color="inherit" />}
             </Button>
           </Flex>
+
+          {tokensApiError && (
+            <>
+              <Heading sx={{ marginTop: "4rem", color: "danger" }}>
+                Couldn't check your associations
+              </Heading>
+
+              <Paragraph sx={{ marginTop: "1rem", color: "danger" }}>
+                Something went wrong while fetching which tokens you're associated with. Continuing
+                without consent will cause transactions to fail.
+              </Paragraph>
+
+              <Button
+                onClick={() => {
+                  setIsConsentOverridden(true);
+                }}
+                variant="danger"
+                sx={{ marginTop: "2rem" }}
+              >
+                Continue anyway
+              </Button>
+            </>
+          )}
         </Flex>
       ) : (
         <Router>
