@@ -146,6 +146,14 @@ const fetchTokens = async (options: { accountAddress: `0x${string}` }) => {
       headers: {}
     }
   );
+
+  if (!response.ok) {
+    const responseText = await response.text()
+    const errorMessage = `tokens api responded with ${response.status}: \`${responseText}\``;
+    console.error(errorMessage, { responseText, response });
+    throw errorMessage;
+  }
+
   const data: HederaApiTokensData = await response.json();
 
   const tokens = data.tokens.map(tokenData => {
@@ -217,6 +225,7 @@ export const LiquityFrontend: React.FC<LiquityFrontendProps> = ({ loader }) => {
     }
     setIsLoadingHchfAssociation(false);
   };
+
   const [isLoadingHlqtyAssociation, setIsLoadingHlqtyAssociation] = useState(false);
   const associateHlqty = async () => {
     setIsLoadingHlqtyAssociation(true);
