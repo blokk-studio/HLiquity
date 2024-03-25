@@ -28,7 +28,7 @@ import type {
   BondClaimedEvent
 } from "@liquity/chicken-bonds/lusd/types/ChickenBondManager";
 import { Decimal } from "@liquity/lib-base";
-import type { DCHFToken as LUSDToken } from "@liquity/lib-ethers/dist/types";
+import type { HCHFToken } from "@liquity/lib-ethers/dist/types";
 import type { ProtocolInfo, Bond, BondStatus, Stats, Maybe, BLusdLpRewards } from "./transitions";
 import {
   numberify,
@@ -663,7 +663,7 @@ const getTokenTotalSupply = async (
 
 const isInfiniteBondApproved = async (
   account: string,
-  lusdToken: LUSDToken,
+  lusdToken: HCHFToken,
   chickenBondManager: ChickenBondManager
 ): Promise<boolean> => {
   // TODO: hedera alternative to erc20.allowance
@@ -680,7 +680,7 @@ const isInfiniteBondApproved = async (
 };
 
 const approveInfiniteBond = async (
-  lusdToken: LUSDToken | undefined,
+  lusdToken: HCHFToken | undefined,
   chickenBondManager: ChickenBondManager | undefined,
   signer: Signer | undefined
 ): Promise<void> => {
@@ -895,7 +895,7 @@ const claimBond = async (
 
 const isTokenApprovedWithBLusdAmm = async (
   account: string,
-  token: LUSDToken | BLUSDToken,
+  token: HCHFToken | BLUSDToken,
   bLusdAmmAddress: string | null
 ): Promise<boolean> => {
   if (bLusdAmmAddress === null) {
@@ -916,7 +916,7 @@ const isTokenApprovedWithBLusdAmm = async (
 
 const isTokenApprovedWithBLusdAmmMainnet = async (
   account: string,
-  token: LUSDToken | BLUSDToken
+  token: HCHFToken | BLUSDToken
 ): Promise<boolean> => {
   // TODO: hedera alternative to erc20.allowance
   account;
@@ -933,7 +933,7 @@ const isTokenApprovedWithBLusdAmmMainnet = async (
 
 const isTokenApprovedWithAmmZapper = async (
   account: string,
-  token: LUSDToken | BLUSDToken | ERC20,
+  token: HCHFToken | BLUSDToken | ERC20,
   ammZapperAddress: string | null
 ): Promise<boolean> => {
   if (ammZapperAddress === null) {
@@ -949,7 +949,7 @@ const isTokenApprovedWithAmmZapper = async (
 };
 
 const approveTokenWithBLusdAmm = async (
-  token: LUSDToken | BLUSDToken | undefined,
+  token: HCHFToken | BLUSDToken | undefined,
   bLusdAmmAddress: string | null,
   signer: Signer | undefined
 ) => {
@@ -964,7 +964,7 @@ const approveTokenWithBLusdAmm = async (
 };
 
 const approveToken = async (
-  token: LUSDToken | BLUSDToken | ERC20 | undefined,
+  token: HCHFToken | BLUSDToken | ERC20 | undefined,
   spenderAddress: string | null,
   signer: Signer | undefined
 ) => {
@@ -979,7 +979,7 @@ const approveToken = async (
 };
 
 const approveTokenWithBLusdAmmMainnet = async (
-  token: LUSDToken | BLUSDToken | undefined,
+  token: HCHFToken | BLUSDToken | undefined,
   signer: Signer | undefined
 ) => {
   if (token === undefined || signer === undefined) {
