@@ -69,7 +69,8 @@
     "link:chicken-bonds": "yalc link @liquity/chicken-bonds",
     "unlink:chicken-bonds": "yalc remove @liquity/chicken-bonds",
     "preview": "vite preview",
-    "test": "vitest"
+    "test": "vitest",
+    "configure": "echo \"{\\\"frontendTag\\\":\\\"$FRONTEND_TAG\\\"}\" > public/config.json"
   },
   "eslintConfig": {
     "extends": "react-app"
