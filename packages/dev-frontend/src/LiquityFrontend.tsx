@@ -125,9 +125,9 @@ export const LiquityFrontend: React.FC<LiquityFrontendProps> = ({ loader }) => {
     const isHchf = token.id === hchfTokenId;
     return isHchf;
   });
-  const hlqtyTokenId = TokenId.fromSolidityAddress(config.hlqtyTokenId).toString();
+  const hlqtTokenId = TokenId.fromSolidityAddress(config.hlqtTokenId).toString();
   const hasAssociatedWithHlqty = tokens.some(token => {
-    const isHlqty = token.id === hlqtyTokenId;
+    const isHlqty = token.id === hlqtTokenId;
     return isHlqty;
   });
   const hasConsentedToAll =
@@ -184,7 +184,7 @@ export const LiquityFrontend: React.FC<LiquityFrontendProps> = ({ loader }) => {
       }
       const signer = signerResult.data;
 
-      await associateToken({ tokenAddress: config.hlqtyTokenId, signer });
+      await associateToken({ tokenAddress: config.hlqtTokenId, signer });
 
       if (!account.address) {
         console.warn(

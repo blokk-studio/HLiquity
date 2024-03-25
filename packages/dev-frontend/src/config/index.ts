@@ -8,14 +8,14 @@ export type LiquityFrontendConfig = {
   testnetOnly?: boolean;
   walletConnectProjectId: string;
   hchfTokenId: `0x${string}`;
-  hlqtyTokenId: `0x${string}`;
+  hlqtTokenId: `0x${string}`;
 };
 
 const defaultConfig: LiquityFrontendConfig = {
   frontendTag: AddressZero,
   walletConnectProjectId: "b16efb4fd41473c0f45dbad8efa15a00",
   hchfTokenId: "0x0000000000000000000000000000000000388c1c",
-  hlqtyTokenId: "0x0000000000000000000000000000000000388c1F"
+  hlqtTokenId: "0x0000000000000000000000000000000000388c1F"
 };
 
 function hasKey<K extends string>(o: object, k: K): o is Record<K, unknown> {
