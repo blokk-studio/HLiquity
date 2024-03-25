@@ -5,6 +5,7 @@ const baseColors = {
   purple: "#745ddf",
   cyan: "#2eb6ea",
   green: "#28c081",
+  lightGreen: "#78dcb1",
   yellow: "#fd9d28",
   red: "#dc2c10",
   lightRed: "#ff755f"
@@ -16,6 +17,7 @@ const colors = {
   accent: baseColors.cyan,
 
   success: baseColors.green,
+  successHover: baseColors.lightGreen,
   warning: baseColors.yellow,
   danger: baseColors.red,
   dangerHover: baseColors.lightRed,
@@ -227,6 +229,18 @@ const theme: Theme = {
       ":enabled:hover": {
         bg: "dangerHover",
         borderColor: "dangerHover"
+      }
+    },
+
+    success: {
+      ...button,
+
+      bg: "success",
+      borderColor: "success",
+
+      ":enabled:hover": {
+        bg: "successHover",
+        borderColor: "successHover"
       }
     },
 
