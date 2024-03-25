@@ -5,7 +5,7 @@ import { BigNumber } from "@ethersproject/bignumber";
 const getDigits = (numDigits: number) => TEN.pow(numDigits);
 
 const MAX_UINT_256 = "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff";
-const PRECISION = 18;
+const PRECISION = 8;
 const ONE = BigNumber.from(1);
 const TEN = BigNumber.from(10);
 const DIGITS = getDigits(PRECISION);
@@ -60,6 +60,12 @@ export class Decimal {
 
   static fromBigNumberString(bigNumberString: string): Decimal {
     return new Decimal(BigNumber.from(bigNumberString));
+  }
+
+  static fromBigNumberStringWithPrecision(bigNumberString: string, precision: number): Decimal {
+    const digits = TEN.pow(precision);
+    const bigNumber = BigNumber.from(bigNumberString).mul(DIGITS).div(digits);
+    return new Decimal(bigNumber);
   }
 
   private static _fromString(representation: string): Decimal {

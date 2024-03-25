@@ -131,7 +131,11 @@ export class BlockPolledLiquityStore extends HLiquityStore<BlockPolledLiquitySto
 
       ...(userAddress
         ? {
-            accountBalance: this._provider.getBalance(userAddress, blockTag).then(decimalify),
+            accountBalance: this._provider
+              .getBalance(userAddress, blockTag)
+              .then(bigNumber =>
+                Decimal.fromBigNumberStringWithPrecision(bigNumber.toHexString(), 18)
+              ),
             hchfBalance: this._readable.getHCHFBalance(userAddress, { blockTag }),
             hchfTokenAddress: this._readable.getHCHFTokenAddress({ blockTag }),
             hlqtyTokenAddress: this._readable.getHLQTYTokenAddress({ blockTag }),
