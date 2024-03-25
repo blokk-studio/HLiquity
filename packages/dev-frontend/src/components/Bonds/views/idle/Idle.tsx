@@ -11,7 +11,7 @@ import { useBondAddresses } from "../../context/BondAddressesContext";
 
 export const Idle: React.FC = () => {
   const { liquity } = useLiquity();
-  const { HCHF_OVERRIDE_ADDRESS } = useBondAddresses();
+  const { LUSD_OVERRIDE_ADDRESS } = useBondAddresses();
 
   const { dispatchEvent, bonds, getLusdFromFaucet, hchfBalance, hasLoaded } = useBondView();
   const [chain, setChain] = useState<number>();
@@ -28,7 +28,7 @@ export const Idle: React.FC = () => {
 
   const hasBonds = bonds !== undefined && bonds.length > 0;
 
-  const showLusdFaucet = HCHF_OVERRIDE_ADDRESS !== null && hchfBalance?.eq(0);
+  const showLusdFaucet = LUSD_OVERRIDE_ADDRESS !== null && hchfBalance?.eq(0);
 
   const handleManageLiquidityPressed = () => dispatchEvent("MANAGE_LIQUIDITY_PRESSED");
 
