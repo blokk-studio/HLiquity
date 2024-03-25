@@ -202,6 +202,7 @@ export const LiquityFrontend: React.FC<LiquityFrontendProps> = ({ loader }) => {
   const hasConsentedToAll =
     isConsentOverridden || [hasAssociatedWithHchf, hasAssociatedWithHlqty].every(consent => consent);
 
+  // TODO: move consent to separate component
   const [isLoadingHchfAssociation, setIsLoadingHchfAssociation] = useState(false);
   const associateHchf = async () => {
     setIsLoadingHchfAssociation(true);
@@ -372,9 +373,6 @@ export const LiquityFrontend: React.FC<LiquityFrontendProps> = ({ loader }) => {
                       <Switch>
                         <Route path="/" exact>
                           <PageSwitcher />
-                        </Route>
-                        <Route path="/bonds">
-                          <Bonds />
                         </Route>
                         <Route path="/risky-troves">
                           <RiskyTrovesPage />

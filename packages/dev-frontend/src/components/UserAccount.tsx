@@ -4,7 +4,7 @@ import { Text, Flex, Box, Heading, Button } from "theme-ui";
 import { Decimal, LiquityStoreState } from "@liquity/lib-base";
 import { useLiquitySelector } from "@liquity/lib-react";
 
-import { BONDED_COIN, COIN, COLLATERAL_COIN, GT } from "../strings";
+import { COIN, COLLATERAL_COIN, GT } from "../strings";
 import { useLiquity } from "../hooks/LiquityContext";
 import { shortenAddress } from "../utils/shortenAddress";
 
@@ -21,11 +21,11 @@ const select = ({ accountBalance, hchfBalance, hlqtyBalance }: LiquityStoreState
 
 export const UserAccount: React.FC = () => {
   const { account } = useLiquity();
-  const { accountBalance, hchfBalance: realLusdBalance, hlqtyBalance } = useLiquitySelector(select);
-  const { bLusdBalance, hchfBalance: customLusdBalance } = useBondView();
-  const { LUSD_OVERRIDE_ADDRESS } = useBondAddresses();
+  const { accountBalance, hchfBalance: realHchfBalance, hlqtyBalance } = useLiquitySelector(select);
+  const { hchfBalance: customHchfBalance } = useBondView();
+  const { HCHF_OVERRIDE_ADDRESS } = useBondAddresses();
 
-  const hchfBalance = LUSD_OVERRIDE_ADDRESS === null ? realLusdBalance : customLusdBalance;
+  const hchfBalance = HCHF_OVERRIDE_ADDRESS === null ? realHchfBalance : customHchfBalance;
 
   return (
     <Flex>
@@ -56,7 +56,6 @@ export const UserAccount: React.FC = () => {
           [COLLATERAL_COIN, accountBalance],
           [COIN, Decimal.from(hchfBalance || 0)],
           [GT, Decimal.from(hlqtyBalance)],
-          [BONDED_COIN, Decimal.from(bLusdBalance || 0)]
         ] as const).map(([currency, balance], i) => (
           <Flex key={i} sx={{ ml: 3, flexDirection: "column" }}>
             <Heading sx={{ fontSize: 1 }}>{currency}</Heading>

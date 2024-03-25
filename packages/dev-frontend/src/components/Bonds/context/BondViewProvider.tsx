@@ -84,7 +84,7 @@ export const BondViewProvider: React.FC = props => {
   const [isBootstrapPeriodActive, setIsBootstrapPeriodActive] = useState<boolean>();
   const { account, liquity } = useLiquity();
   const {
-    LUSD_OVERRIDE_ADDRESS,
+    HCHF_OVERRIDE_ADDRESS,
     BLUSD_AMM_ADDRESS,
     BLUSD_LP_ZAP_ADDRESS,
     BLUSD_AMM_STAKING_ADDRESS
@@ -146,7 +146,7 @@ export const BondViewProvider: React.FC = props => {
     if (contracts.lusdToken === undefined || liquity.connection.signer === undefined) return;
 
     if (
-      LUSD_OVERRIDE_ADDRESS !== null &&
+      HCHF_OVERRIDE_ADDRESS !== null &&
       (await contracts.lusdToken.balanceOf(account)).eq(0) &&
       "tap" in contracts.lusdToken
     ) {
@@ -157,7 +157,7 @@ export const BondViewProvider: React.FC = props => {
       ).wait();
       setShouldSynchronize(true);
     }
-  }, [contracts.lusdToken, account, LUSD_OVERRIDE_ADDRESS, liquity.connection.signer]);
+  }, [contracts.lusdToken, account, HCHF_OVERRIDE_ADDRESS, liquity.connection.signer]);
 
   useEffect(() => {
     (async () => {

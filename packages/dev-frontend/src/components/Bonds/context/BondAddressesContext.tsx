@@ -11,7 +11,7 @@ const nullAddresses: Addresses = {
   BLUSD_TOKEN_ADDRESS: null,
   BOND_NFT_ADDRESS: null,
   CHICKEN_BOND_MANAGER_ADDRESS: null,
-  LUSD_OVERRIDE_ADDRESS: null,
+  HCHF_OVERRIDE_ADDRESS: null,
   BLUSD_LP_ZAP_ADDRESS: null
 };
 

@@ -70,7 +70,7 @@ export const useBondContracts = (): BondContracts => {
     BLUSD_TOKEN_ADDRESS,
     BOND_NFT_ADDRESS,
     CHICKEN_BOND_MANAGER_ADDRESS,
-    LUSD_OVERRIDE_ADDRESS,
+    HCHF_OVERRIDE_ADDRESS,
     BLUSD_LP_ZAP_ADDRESS,
     BLUSD_AMM_STAKING_ADDRESS
   } = addresses;
@@ -81,12 +81,12 @@ export const useBondContracts = (): BondContracts => {
   );
 
   const [lusdTokenOverride, lusdTokenOverrideStatus] = useContract<ERC20Faucet>(
-    LUSD_OVERRIDE_ADDRESS,
+    HCHF_OVERRIDE_ADDRESS,
     ERC20Faucet__factory.abi
   );
 
   const [lusdToken, lusdTokenStatus] =
-    LUSD_OVERRIDE_ADDRESS === null
+    HCHF_OVERRIDE_ADDRESS === null
       ? [lusdTokenDefault, lusdTokenDefaultStatus]
       : [(lusdTokenOverride as unknown) as HCHFToken, lusdTokenOverrideStatus];
 
