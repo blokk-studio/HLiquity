@@ -805,7 +805,7 @@ export class PopulatableEthersLiquity
     );
     const approvalTransactionReceipt = await approvalTransaction.wait();
     if (approvalTransactionReceipt.status !== 1) {
-      const errorMessage = `unable to approve stability pool (${
+      const errorMessage = `unable to approve hchf contract (${
         this._readable.connection.addresses.stabilityPool
       }) to spend ${depositHCHF.toString()} HCHF (${hchfTokenId})`;
       console.error(errorMessage, {
