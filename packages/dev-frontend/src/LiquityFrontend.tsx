@@ -14,7 +14,6 @@ import { Header } from "./components/Header";
 
 import { PageSwitcher } from "./pages/PageSwitcher";
 import { RiskyTrovesPage } from "./pages/RiskyTrovesPage";
-import { Bonds } from "./pages/Bonds";
 
 import { TroveViewProvider } from "./components/Trove/context/TroveViewProvider";
 import { StabilityViewProvider } from "./components/Stability/context/StabilityViewProvider";
@@ -23,10 +22,9 @@ import "tippy.js/dist/tippy.css"; // Tooltip default style
 import { BondsProvider } from "./components/Bonds/context/BondsProvider";
 import { useAccount, useSigner } from "wagmi";
 
-import { Signer as EthersSigner, Contract, BigNumber } from "ethers";
+import { Signer as EthersSigner, Contract } from "ethers";
 import { TransactionResponse } from "@ethersproject/abstract-provider";
 import { Icon } from "./components/Icon";
-import { mainnet, previewnet, testnet } from "./hedera";
 import { TokenId } from "@hashgraph/sdk";
 
 type LiquityFrontendProps = {
@@ -49,81 +47,6 @@ const associateToken = async (options: { signer: EthersSigner; tokenAddress: str
     console.error(errorMessage, error);
     throw new Error(errorMessage, { cause: error });
   }
-};
-
-//     const createStackingToken = await createFungibleToken("Stacking Token", "ST", operatorAccountId, operatorPrKey.publicKey, client, operatorPrKey);
-
-//   let underlyingTokenAddress = createStackingToken.toSolidityAddress();
-
-//   const contractUnderlyingToken = new web3.eth.Contract(
-//       underlyingTokenAbi,
-//       underlyingTokenAddress
-//   );
-
-//   let approveVault = await contractUnderlyingToken.methods.approve(simpleVaultAddress, 100)
-//   .send({ from: accountAddress, gas: 1000000 })
-//       .on("receipt", (receipt) => {
-//         console.log(receipt);
-//         console.log("Transaction hash", receipt.transactionHash);
-//       });
-//   console.log("Approval", approveVault);
-
-const approveContract = async (options: {
-  signer: EthersSigner;
-  contactAddress: string;
-  tokenAddress: string;
-  tokenAmount: number;
-}) => {
-  const abi = [`function approve(address spender, uint256 amount) returns (bool)`];
-  const gasLimit = 1000000;
-
-  try {
-    const contract = new Contract(options.contactAddress, abi, options.signer);
-    const approvalTransaction: TransactionResponse = await contract.approve(
-      options.contactAddress,
-      BigNumber.from(options.tokenAmount),
-      {
-        gasLimit: gasLimit
-      }
-    );
-    const approvalReceipt = await approvalTransaction.wait();
-    return approvalReceipt;
-  } catch (error: unknown) {
-    const errorMessage = `couldn't approve contract ${JSON.stringify(
-      options.contactAddress
-    )} to spend tokens ${JSON.stringify(options.tokenAddress)}`;
-    console.error(errorMessage, error);
-    throw new Error(errorMessage, { cause: error });
-  }
-};
-
-const dissociateToken = async (options: { signer: EthersSigner; tokenAddress: string }) => {
-  const abi = [`function associate()`, `function dissociate()`];
-  const gasLimit = 1000000;
-
-  try {
-    const associationContract = new Contract(options.tokenAddress, abi, options.signer);
-    const associationTransaction: TransactionResponse = await associationContract.dissociate({
-      gasLimit: gasLimit
-    });
-    const associationReceipt = await associationTransaction.wait();
-    return associationReceipt;
-  } catch (error: unknown) {
-    const errorMessage = `couldn't dissociate token ${JSON.stringify(options.tokenAddress)}`;
-    console.error(errorMessage, error);
-    throw new Error(errorMessage, { cause: error });
-  }
-};
-
-const chains = [testnet, previewnet, mainnet];
-const getChainById = (chainId: number) => {
-  const chain = chains.find(chain => chain.id === chainId);
-
-  if (!chain) {
-    throw `there is no hedera chain with id ${chainId}`;
-  }
-
-  return chain;
 };
 
 interface HederaApiToken {
