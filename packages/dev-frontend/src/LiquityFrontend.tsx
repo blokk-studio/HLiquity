@@ -1,3 +1,4 @@
+/** @jsxImportSource theme-ui */
 import React, { useMemo, useState } from "react";
 import { Flex, Container, Button, Paragraph, Heading, Spinner } from "theme-ui";
 import { HashRouter as Router, Switch, Route } from "react-router-dom";
@@ -27,6 +28,7 @@ import { TransactionResponse } from "@ethersproject/abstract-provider";
 import { Icon } from "./components/Icon";
 import { TokenId } from "@hashgraph/sdk";
 import { useHederaChain } from "./hedera/wagmi-chains";
+import { Imprint } from "./components/Imprint";
 
 type LiquityFrontendProps = {
   loader?: React.ReactNode;
@@ -335,6 +337,11 @@ export const LiquityFrontend: React.FC<LiquityFrontendProps> = ({ loader }) => {
           </TroveViewProvider>
         </Router>
       )}
+
+      <footer sx={{ marginInline: "clamp(2rem, 100%, 50% - 38rem)", paddingBottom: "2rem" }}>
+        <Imprint />
+      </footer>
+
       <TransactionMonitor />
     </LiquityStoreProvider>
   );
