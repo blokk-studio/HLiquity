@@ -956,6 +956,32 @@ export class PopulatableEthersLiquity
     overrides?: EthersTransactionOverrides
   ): Promise<PopulatedEthersLiquityTransaction<void>> {
     const { hlqtyStaking } = _getContracts(this._readable.connection);
+    const decimalAmount = Decimal.from(amount);
+
+    // approve that the hltq contract can spend the users hlqt
+    const abi = [`function approve(address spender, uint256 amount) returns (bool)`];
+    const gasLimit = 1000000;
+    // TODO: configure token ids in `this._readable.connection`
+    const hlqtTokenId = "0x0000000000000000000000000000000000388c1f";
+    const contract = new Contract(hlqtTokenId, abi, this._readable.connection.signer);
+    const approvalTransaction: TransactionResponse = await contract.approve(
+      this._readable.connection.addresses.hlqtyToken,
+      decimalAmount.bigNumber,
+      {
+        gasLimit: gasLimit
+      }
+    );
+    const approvalTransactionReceipt = await approvalTransaction.wait();
+    if (approvalTransactionReceipt.status !== 1) {
+      const errorMessage = `unable to approve the hlqty contract (${
+        this._readable.connection.addresses.stabilityPool
+      }) to spend ${decimalAmount.toString()} HLQT (${hlqtTokenId})`;
+      console.error(errorMessage, {
+        transactionReceipt: approvalTransactionReceipt,
+        approvalTransaction
+      });
+      throw new Error(errorMessage);
+    }
 
     return this._wrapSimpleTransaction(
       await hlqtyStaking.estimateAndPopulate.stake(
