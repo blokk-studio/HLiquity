@@ -13,7 +13,7 @@ export const RemainingLQTY: React.FC = () => {
 
   return (
     <Flex sx={{ mr: 2, fontSize: 2, fontWeight: "medium" }}>
-      {remainingStabilityPoolHLQTYReward?.prettify(0)} HLQTY remaining
+      {remainingStabilityPoolHLQTYReward?.prettify(0)} HLQT remaining
     </Flex>
   );
 };

@@ -17,8 +17,8 @@ export const TVL: Lexicon = {
 };
 
 export const STAKED_HLQTY: Lexicon = {
-  term: "Staked HLQTY",
-  description: "The total amount of HLQTY that is staked for earning fee revenue."
+  term: "Staked HLQT",
+  description: "The total amount of HLQT that is staked for earning fee revenue."
 };
 
 export const TCR: Lexicon = {
@@ -42,7 +42,7 @@ export const STABILITY_POOL_HCHF: Lexicon = {
 export const KICKBACK_RATE: Lexicon = {
   term: "Kickback Rate",
   description:
-    "A rate between 0 and 100% set by the Frontend Operator that determines the fraction of HLQTY that will be paid out as a kickback to the Stability Providers using the frontend."
+    "A rate between 0 and 100% set by the Frontend Operator that determines the fraction of HLQT that will be paid out as a kickback to the Stability Providers using the frontend."
 };
 
 export const HBAR: Lexicon = {
@@ -53,8 +53,8 @@ export const HCHF: Lexicon = {
   term: "HCHF"
 };
 
-export const HLQTY: Lexicon = {
-  term: "HLQTY"
+export const HLQT: Lexicon = {
+  term: "HLQT"
 };
 
 export const TROVES: Lexicon = {

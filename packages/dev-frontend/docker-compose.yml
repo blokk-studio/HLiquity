@@ -7,7 +7,7 @@ services:
     ports:
       - 80:80
     environment:
-      # Ethereum address that shall receive HLQTY rewards
+      # Ethereum address that shall receive HLQT rewards
       - FRONTEND_TAG=0x0000000000000000000000000000000000000000
       # Optional Infura API key, if Infura is to be used as an additional API provider
       - INFURA_API_KEY=

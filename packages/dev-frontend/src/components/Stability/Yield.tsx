@@ -44,7 +44,7 @@ export const Yield: React.FC = () => {
 
   return (
     <Badge>
-      <Text>HLQTY APR {aprPercentage.toString(2)}%</Text>
+      <Text>HLQT APR {aprPercentage.toString(2)}%</Text>
       <InfoIcon
         tooltip={
           <Card variant="tooltip" sx={{ width: ["220px", "518px"] }}>

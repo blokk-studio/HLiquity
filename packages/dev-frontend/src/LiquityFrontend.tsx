@@ -319,7 +319,7 @@ export const LiquityFrontend: React.FC<LiquityFrontendProps> = ({ loader }) => {
                 gap: "1rem"
               }}
             >
-              <span>Consent to receiving HLQTY</span>
+              <span>Consent to receiving HLQT</span>
               {hasAssociatedWithHlqty && <Icon name="check" />}
               {isLoadingHlqtyAssociation && <Spinner size="1rem" color="inherit" />}
             </Button>

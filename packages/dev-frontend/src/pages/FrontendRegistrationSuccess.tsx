@@ -36,7 +36,7 @@ export const FrontendRegistrationSuccess: React.FC<FrontendRegistrationSuccessPr
         <Heading sx={{ ml: 3, fontSize: 4 }}>Success!</Heading>
       </Flex>
 
-      <Paragraph sx={{ fontSize: 2 }}>Your frontend is now ready to receive HLQTY rewards.</Paragraph>
+      <Paragraph sx={{ fontSize: 2 }}>Your frontend is now ready to receive HLQT rewards.</Paragraph>
     </Box>
 
     <Button onClick={onDismiss}>Go to Dashboard</Button>
