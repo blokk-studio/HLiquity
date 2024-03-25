@@ -790,7 +790,7 @@ export class PopulatableEthersLiquity
     const { stabilityPool } = _getContracts(this._readable.connection);
     const depositHCHF = Decimal.from(amount);
 
-    // approve that the stability pool can spend the users HCHF
+    // approve that the hchf contract can spend the users HCHF
     const abi = [`function approve(address spender, uint256 amount) returns (bool)`];
     const gasLimit = 1000000;
     // TODO: configure token ids in `this._readable.connection`
