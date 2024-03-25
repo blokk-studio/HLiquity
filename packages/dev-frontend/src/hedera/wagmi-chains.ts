@@ -1,8 +1,11 @@
 import { Chain } from "@wagmi/core";
+import { useNetwork } from "wagmi";
 
-// TODO: move these chains to a file that mentions hashio & wagmi in its name. these chains are specifically in wagmi format with hashio rpc urls!
+interface HederaChain extends Chain {
+  apiBaseUrl: string;
+}
 
-export const testnet: Chain = {
+export const testnet: HederaChain = {
   id: 0x128,
   name: "Hedera Testnet",
   nativeCurrency: {
@@ -19,10 +22,11 @@ export const testnet: Chain = {
       http: ["https://testnet.hashio.io/api"]
     }
   },
-  testnet: true
+  testnet: true,
+  apiBaseUrl: "https://testnet.mirrornode.hedera.com/api/v1"
 };
 
-export const previewnet: Chain = {
+export const previewnet: HederaChain = {
   id: 0x129,
   name: "Hedera Previewnet",
   nativeCurrency: {
@@ -39,10 +43,11 @@ export const previewnet: Chain = {
       http: ["https://previewnet.hashio.io/api"]
     }
   },
-  testnet: true
+  testnet: true,
+  apiBaseUrl: "https://previewnet.mirrornode.hedera.com/api/v1"
 };
 
-export const mainnet: Chain = {
+export const mainnet: HederaChain = {
   id: 0x127,
   name: "Hedera",
   nativeCurrency: {
@@ -59,5 +64,22 @@ export const mainnet: Chain = {
       http: ["https://mainnet.hashio.io/api"]
     }
   },
-  testnet: true
+  testnet: true,
+  apiBaseUrl: "https://mainnet.mirrornode.hedera.com/api/v1"
+};
+
+export const useHederaChain = () => {
+  const network = useNetwork();
+
+  const chainId = network.chain?.id;
+  if (chainId === undefined) {
+    return null;
+  }
+
+  const hederaChain = [mainnet, previewnet, testnet].find(chain => chain.id === chainId);
+  if (!hederaChain) {
+    return null;
+  }
+
+  return hederaChain;
 };

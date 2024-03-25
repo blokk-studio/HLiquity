@@ -15,7 +15,7 @@ import { DisposableWalletProvider } from "./testUtils/DisposableWalletProvider";
 import { LiquityFrontend } from "./LiquityFrontend";
 import { AppLoader } from "./components/AppLoader";
 import { useAsyncValue } from "./hooks/AsyncValue";
-import { mainnet as hederaMainnet, testnet as hederaTestnet, previewnet as hederaPreviewnet } from "./hedera";
+import { mainnet as hederaMainnet, testnet as hederaTestnet, previewnet as hederaPreviewnet } from "./hedera/wagmi-chains";
 
 const isDemoMode = import.meta.env.VITE_APP_DEMO_MODE === "true";
 

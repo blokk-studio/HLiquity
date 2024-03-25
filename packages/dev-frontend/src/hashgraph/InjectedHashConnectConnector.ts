@@ -3,7 +3,7 @@ import { Chain } from "wagmi/chains";
 import { Address } from "@wagmi/core";
 import { DappMetadata, HashConnect, HashConnectConnectionState, SessionData } from "hashconnect";
 import { LedgerId, AccountId } from "@hashgraph/sdk";
-import { testnet, previewnet, mainnet } from "../hedera";
+import { testnet, previewnet, mainnet } from "../hedera/wagmi-chains";
 
 export class HashConnectConnector extends InjectedConnector {
   public id = "hashconnect";

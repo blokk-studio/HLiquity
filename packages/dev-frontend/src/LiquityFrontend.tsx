@@ -26,6 +26,7 @@ import { Signer as EthersSigner, Contract } from "ethers";
 import { TransactionResponse } from "@ethersproject/abstract-provider";
 import { Icon } from "./components/Icon";
 import { TokenId } from "@hashgraph/sdk";
+import { useHederaChain } from "./hedera/wagmi-chains";
 
 type LiquityFrontendProps = {
   loader?: React.ReactNode;
@@ -59,16 +60,13 @@ interface HederaToken {
   id: `0.0.${string}`;
 }
 
-const fetchTokens = async (options: { accountAddress: `0x${string}` }) => {
+const fetchTokens = async (options: { apiBaseUrl: string; accountAddress: `0x${string}` }) => {
   const accountAddressUrlSegment = options.accountAddress.replace(/^0x/, "");
   // TODO: get api endpoint based on chain id
-  const response = await fetch(
-    `https://testnet.mirrornode.hedera.com/api/v1/accounts/${accountAddressUrlSegment}/tokens`,
-    {
-      method: "GET",
-      headers: {}
-    }
-  );
+  const response = await fetch(`${options.apiBaseUrl}/accounts/${accountAddressUrlSegment}/tokens`, {
+    method: "GET",
+    headers: {}
+  });
 
   if (!response.ok) {
     const responseText = await response.text();
@@ -95,6 +93,7 @@ export const LiquityFrontend: React.FC<LiquityFrontendProps> = ({ loader }) => {
   const { account: accountAddress, provider, liquity, config } = useLiquity();
   const signerResult = useSigner();
   const account = useAccount();
+  const hederaChain = useHederaChain();
   const [tokens, setTokens] = useState<HederaToken[]>([]);
   const [isConsentOverridden, setIsConsentOverridden] = useState(false);
   const [tokensApiError, setTokensApiError] = useState<Error | null>(null);
@@ -103,14 +102,21 @@ export const LiquityFrontend: React.FC<LiquityFrontendProps> = ({ loader }) => {
       return;
     }
 
+    if (!hederaChain) {
+      return;
+    }
+
     try {
-      const tokens = await fetchTokens({ accountAddress: account.address });
+      const tokens = await fetchTokens({
+        apiBaseUrl: hederaChain.apiBaseUrl,
+        accountAddress: account.address
+      });
 
       setTokens(tokens);
     } catch (error: unknown) {
       setTokensApiError(error as Error);
     }
-  }, [account.address]);
+  }, [account.address, hederaChain]);
 
   const hchfTokenId = TokenId.fromSolidityAddress(config.hchfTokenId).toString();
   const hasAssociatedWithHchf = tokens.some(token => {
@@ -141,12 +147,22 @@ export const LiquityFrontend: React.FC<LiquityFrontendProps> = ({ loader }) => {
 
       if (!account.address) {
         console.warn(
-          "need account address to update the account info. refresh the page to get up-to-date (token) info."
+          "need an account address to update the account info. refresh the page to get up-to-date (token) info."
         );
         return;
       }
 
-      const tokens = await fetchTokens({ accountAddress: account.address });
+      if (!hederaChain) {
+        console.warn(
+          "need a hedera chain to update the account info. refresh the page to get up-to-date (token) info."
+        );
+        return;
+      }
+
+      const tokens = await fetchTokens({
+        apiBaseUrl: hederaChain.apiBaseUrl,
+        accountAddress: account.address
+      });
 
       setTokens(tokens);
     } catch {
@@ -170,12 +186,22 @@ export const LiquityFrontend: React.FC<LiquityFrontendProps> = ({ loader }) => {
 
       if (!account.address) {
         console.warn(
-          "need account address to update the account info. refresh the page to get up-to-date (token) info."
+          "need an account address to update the account info. refresh the page to get up-to-date (token) info."
         );
         return;
       }
 
-      const tokens = await fetchTokens({ accountAddress: account.address });
+      if (!hederaChain) {
+        console.warn(
+          "need a hedera chain to update the account info. refresh the page to get up-to-date (token) info."
+        );
+        return;
+      }
+
+      const tokens = await fetchTokens({
+        apiBaseUrl: hederaChain.apiBaseUrl,
+        accountAddress: account.address
+      });
 
       setTokens(tokens);
     } catch {

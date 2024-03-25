@@ -1,13 +1,13 @@
 import { Provider } from "@wagmi/core";
 import { providers } from "ethers";
-import { testnet, previewnet, mainnet } from "../hedera";
+import { testnet, previewnet, mainnet } from "../hedera/wagmi-chains";
 import { ChainProviderFn } from "wagmi";
 import { Chain } from "wagmi/chains";
 import {
   testnet as hederaTestnet,
   previewnet as hederaPreviewnet,
   mainnet as hederaMainnet
-} from "../hedera";
+} from "../hedera/wagmi-chains";
 
 export class HederaHashioProvider extends providers.BaseProvider implements Provider {
   public chains = [testnet, previewnet, mainnet];
