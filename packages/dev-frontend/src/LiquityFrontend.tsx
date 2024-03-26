@@ -1,6 +1,6 @@
 /** @jsxImportSource theme-ui */
 import React, { useEffect, useMemo, useState } from "react";
-import { Flex, Container, Button, Paragraph, Heading, Spinner, Input } from "theme-ui";
+import { Flex, Container, Button, Paragraph, Heading, Spinner, Input, Label } from "theme-ui";
 import { HashRouter as Router, Switch, Route } from "react-router-dom";
 import { Wallet } from "@ethersproject/wallet";
 
@@ -279,7 +279,6 @@ export const LiquityFrontend: React.FC<LiquityFrontendProps> = ({ loader }) => {
           display: "flex",
           flexDirection: "column",
           minHeight: "100%",
-          gap: "1rem",
           justifyContent: "center"
         }}
         onSubmit={event => {
@@ -287,9 +286,14 @@ export const LiquityFrontend: React.FC<LiquityFrontendProps> = ({ loader }) => {
           logIn(passwordInput);
         }}
       >
-        <Input onInput={event => setPasswordInput((event.target as HTMLInputElement).value)} />
+        <Label htmlFor="login-password-input">Password</Label>
+        <Input
+          id="login-password-input"
+          placeholder="12345"
+          onInput={event => setPasswordInput((event.target as HTMLInputElement).value)}
+        />
 
-        <Button type="submit" sx={{ marginTop: "1rem", alignSelf: "end" }}>
+        <Button type="submit" sx={{ marginTop: "2rem", alignSelf: "end" }}>
           Log in
         </Button>
       </form>
