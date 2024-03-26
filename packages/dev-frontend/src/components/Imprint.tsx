@@ -4,7 +4,6 @@ import React, { useEffect, useState } from "react";
 export const Imprint: React.FC = () => {
     const [email, setEmail] = useState('')
     useEffect(() => {
-        console.debug('effect')
         setEmail(atob('aGVsbG9AYmxva2suc3R1ZGlv'))
     }, [])
     
