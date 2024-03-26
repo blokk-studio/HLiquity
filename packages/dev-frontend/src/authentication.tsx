@@ -1,5 +1,5 @@
 /** @jsxImportSource theme-ui */
-import React, { ReactNode, createContext, useContext, useEffect, useState } from "react";
+import React, { ReactNode, createContext, useContext, useState } from "react";
 import { Flex, Button, Paragraph, Heading, Input, Label } from "theme-ui";
 
 const AuthenticatedContext = createContext<boolean>(false);

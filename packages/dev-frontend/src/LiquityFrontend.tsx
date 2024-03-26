@@ -29,7 +29,6 @@ import { Icon } from "./components/Icon";
 import { TokenId } from "@hashgraph/sdk";
 import { useHederaChain } from "./hedera/wagmi-chains";
 import { Imprint } from "./components/Imprint";
-import { AuthenticationProvider } from "./authentication";
 
 type LiquityFrontendProps = {
   loader?: React.ReactNode;
