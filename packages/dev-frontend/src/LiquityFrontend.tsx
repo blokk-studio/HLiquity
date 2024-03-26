@@ -1,6 +1,6 @@
 /** @jsxImportSource theme-ui */
-import React, { useMemo, useState } from "react";
-import { Flex, Container, Button, Paragraph, Heading, Spinner } from "theme-ui";
+import React, { useEffect, useMemo, useState } from "react";
+import { Flex, Container, Button, Paragraph, Heading, Spinner, Input } from "theme-ui";
 import { HashRouter as Router, Switch, Route } from "react-router-dom";
 import { Wallet } from "@ethersproject/wallet";
 
@@ -91,6 +91,39 @@ const fetchTokens = async (options: { apiBaseUrl: string; accountAddress: `0x${s
   return tokens;
 };
 
+const useAuthentication = () => {
+  const [encodedPassword, setCookieValue] = useState<string | null>();
+  const authenticated = encodedPassword === import.meta.env.VITE_HLIQUITY_PASSWORD;
+
+  const logIn = (password: string) => {
+    const encodedPassword = btoa(password);
+
+    const authenticated = encodedPassword === import.meta.env.VITE_HLIQUITY_PASSWORD;
+    if (!authenticated) {
+      throw `wrong password`;
+    }
+
+    // secure, same-site cookie that expires in a year
+    document.cookie = `hliquity_password=${encodedPassword}; max-age=31536000; SameSite=Strict; Secure`;
+    setCookieValue(encodedPassword);
+  };
+
+  useEffect(() => {
+    // https://developer.mozilla.org/en-US/docs/Web/API/Document/cookie#example_2_get_a_sample_cookie_named_test2
+    const cookieValue = document.cookie
+      .split("; ")
+      .find(row => row.startsWith("hliquity_password="))
+      ?.split("=")[1];
+
+    setCookieValue(cookieValue);
+  }, []);
+
+  return {
+    authenticated,
+    logIn
+  };
+};
+
 export const LiquityFrontend: React.FC<LiquityFrontendProps> = ({ loader }) => {
   const { account: accountAddress, provider, liquity, config } = useLiquity();
   const signerResult = useSigner();
@@ -99,6 +132,8 @@ export const LiquityFrontend: React.FC<LiquityFrontendProps> = ({ loader }) => {
   const [tokens, setTokens] = useState<HederaToken[]>([]);
   const [isConsentOverridden, setIsConsentOverridden] = useState(false);
   const [tokensApiError, setTokensApiError] = useState<Error | null>(null);
+  const [passwordInput, setPasswordInput] = useState("");
+  const { authenticated, logIn } = useAuthentication();
   useMemo(async () => {
     if (!account.address) {
       return;
@@ -223,7 +258,43 @@ export const LiquityFrontend: React.FC<LiquityFrontendProps> = ({ loader }) => {
     Wallet
   });
 
-  return (
+  return !authenticated ? (
+    <Flex
+      sx={{
+        flexDirection: "column",
+        minHeight: "100%",
+        justifyContent: "center",
+        marginInline: "clamp(2rem, 100%, 50% - 12rem)"
+      }}
+    >
+      <Heading>Log in</Heading>
+
+      <Paragraph sx={{ marginTop: "1rem" }}>
+        This front end is not available to the public yet.
+      </Paragraph>
+
+      <form
+        sx={{
+          marginTop: "2rem",
+          display: "flex",
+          flexDirection: "column",
+          minHeight: "100%",
+          gap: "1rem",
+          justifyContent: "center"
+        }}
+        onSubmit={event => {
+          event.preventDefault();
+          logIn(passwordInput);
+        }}
+      >
+        <Input onInput={event => setPasswordInput((event.target as HTMLInputElement).value)} />
+
+        <Button type="submit" sx={{ marginTop: "1rem", alignSelf: "end" }}>
+          Log in
+        </Button>
+      </form>
+    </Flex>
+  ) : (
     <LiquityStoreProvider {...{ loader }} store={liquity.store}>
       {!hasConsentedToAll ? (
         <Flex
