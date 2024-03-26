@@ -2,17 +2,13 @@
 import React, { ReactNode, createContext, useContext, useState } from "react";
 import { Flex, Button, Paragraph, Heading, Input, Label } from "theme-ui";
 
-const AuthenticatedContext = createContext<boolean>(false);
-const LogInContext = createContext<(password: string) => void>(() => undefined);
+const AuthenticationContext = createContext<{
+  authenticated: boolean;
+  logIn: (password: string) => void;
+}>({ authenticated: false, logIn: () => undefined });
 
 export const useAuthentication = () => {
-  const authenticated = useContext(AuthenticatedContext);
-  const logIn = useContext(LogInContext);
-
-  return {
-    authenticated,
-    logIn
-  };
+  return useContext(AuthenticationContext);
 };
 
 const getPasswordCookieValue = (cookieString: typeof document.cookie) => {
@@ -47,11 +43,9 @@ export const AuthenticationProvider: React.FC<{
   };
 
   return (
-    <AuthenticatedContext.Provider value={authenticated}>
-      <LogInContext.Provider value={logIn}>
-        {!authenticated ? loginForm : children}
-      </LogInContext.Provider>
-    </AuthenticatedContext.Provider>
+    <AuthenticationContext.Provider value={{ authenticated, logIn }}>
+      {!authenticated ? loginForm : children}
+    </AuthenticationContext.Provider>
   );
 };
 
