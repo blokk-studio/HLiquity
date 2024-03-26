@@ -16,6 +16,7 @@ import { LiquityFrontend } from "./LiquityFrontend";
 import { AppLoader } from "./components/AppLoader";
 import { useAsyncValue } from "./hooks/AsyncValue";
 import { mainnet as hederaMainnet, testnet as hederaTestnet, previewnet as hederaPreviewnet } from "./hedera/wagmi-chains";
+import { AuthenticationProvider, LoginForm } from "./authentication";
 
 const isDemoMode = import.meta.env.VITE_APP_DEMO_MODE === "true";
 
@@ -104,6 +105,7 @@ const App = () => {
 
   return (
     <ThemeProvider theme={theme}>
+      <AuthenticationProvider loginForm={<LoginForm />}>
         <WagmiConfig client={client}>
           <ConnectKitProvider options={{ hideBalance: true }}>
             <WalletConnector loader={loader}>
@@ -119,6 +121,7 @@ const App = () => {
             </WalletConnector>
           </ConnectKitProvider>
         </WagmiConfig>
+        </AuthenticationProvider>
     </ThemeProvider>
   );
 };
