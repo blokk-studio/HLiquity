@@ -1,5 +1,5 @@
 import React from "react";
-import { Button, Flex } from "theme-ui";
+import { Button, Flex, Spinner } from "theme-ui";
 
 import {
   Decimal,
@@ -18,6 +18,11 @@ import { StakingEditor } from "./StakingEditor";
 import { StakingManagerAction } from "./StakingManagerAction";
 import { ActionDescription, Amount } from "../ActionDescription";
 import { ErrorDescription } from "../ErrorDescription";
+import { useLiquity } from "../../hooks/LiquityContext";
+import { useHedera } from "../../hedera/hedera_context";
+import { useLoadingState } from "../../loading_state";
+import { BigNumber } from "ethers";
+import { Step } from "../Steps";
 
 const init = ({ hlqtyStake }: LiquityStoreState) => ({
   originalStake: hlqtyStake,
@@ -73,7 +78,9 @@ const StakingManagerActionDescription: React.FC<StakingManagerActionDescriptionP
 }) => {
   const stakeHLQTY = change.stakeHLQTY?.prettify().concat(" ", GT);
   const unstakeHLQTY = change.unstakeHLQTY?.prettify().concat(" ", GT);
-  const collateralGain = originalStake.collateralGain.nonZero?.prettify(4).concat(` ${COLLATERAL_COIN}`);
+  const collateralGain = originalStake.collateralGain.nonZero
+    ?.prettify(4)
+    .concat(` ${COLLATERAL_COIN}`);
   const hchfGain = originalStake.hchfGain.nonZero?.prettify().concat(" ", COIN);
 
   if (originalStake.isEmpty && stakeHLQTY) {
@@ -117,7 +124,7 @@ const StakingManagerActionDescription: React.FC<StakingManagerActionDescriptionP
 };
 
 export const StakingManager: React.FC = () => {
-  const { dispatch: dispatchStakingViewAction } = useStakingView();
+  const { dispatch: dispatchStakingViewAction, changePending } = useStakingView();
   const [{ originalStake, editedLQTY }, dispatch] = useLiquityReducer(reduce, init);
   const hlqtyBalance = useLiquitySelector(selectLQTYBalance);
 
@@ -139,8 +146,70 @@ export const StakingManager: React.FC = () => {
 
   const makingNewStake = originalStake.isEmpty;
 
+  // consent & approval
+  const {
+    config,
+    liquity: {
+      connection: { addresses }
+    }
+  } = useLiquity();
+  const { hasAssociatedWithHchf, associateWithToken, approveSpender } = useHedera();
+  // hlqt token association
+  const { call: associateWithHchf, state: hchfAssociationLoadingState } = useLoadingState(() =>
+    associateWithToken({ tokenAddress: config.hchfTokenId })
+  );
+  // hchf spender approval
+  const needsSpenderApproval = !validChange || validChange?.stakeHLQTY;
+  const {
+    call: approveHlqtSpender,
+    state: hlqtApprovalLoadingState,
+  } = useLoadingState(async () => {
+    if (!validChange?.stakeHLQTY) {
+      throw "cannot approve a withdrawal (negative spending/negative deposit) or deposit of 0";
+    }
+
+    const contractAddress = addresses.hlqtyToken as `0x${string}`;
+    const tokenAddress = config.hlqtTokenId;
+    const amount = BigNumber.from(validChange.stakeHLQTY.bigNumber);
+
+    await approveSpender({
+      contractAddress,
+      tokenAddress,
+      amount
+    });
+  });
+
+  const transactionSteps: Step[] = [
+    {
+      title: "Associate with HCHF",
+      status: hasAssociatedWithHchf
+        ? "success"
+        : hchfAssociationLoadingState === "error"
+        ? "danger"
+        : hchfAssociationLoadingState,
+      description: hasAssociatedWithHchf
+        ? "You've already consented to receiving HCHF."
+        : "You have to consent to receiving HCHF tokens before you can use HLiquity."
+    }
+  ];
+  if (needsSpenderApproval) {
+    transactionSteps.push({
+      title: "Approve HLQT spender",
+      status: hlqtApprovalLoadingState === "error" ? "danger" : hlqtApprovalLoadingState,
+      description: "You have to consent to the HLQT contract spending your HLQT tokens."
+    });
+  }
+  transactionSteps.push({
+    title: "Deposit to the Stability Pool",
+    status: changePending ? "pending" : "idle"
+  });
+
   return (
-    <StakingEditor title={"Staking"} {...{ originalStake, editedLQTY, dispatch }}>
+    <StakingEditor
+      title={"Staking"}
+      {...{ originalStake, editedLQTY, dispatch }}
+      transactionSteps={transactionSteps}
+    >
       {description ??
         (makingNewStake ? (
           <ActionDescription>Enter the amount of {GT} you'd like to stake.</ActionDescription>
@@ -156,7 +225,27 @@ export const StakingManager: React.FC = () => {
           Cancel
         </Button>
 
-        {validChange ? (
+        {!hasAssociatedWithHchf ? (
+          <Button
+            disabled={!validChange || hchfAssociationLoadingState === "pending"}
+            onClick={associateWithHchf}
+            sx={{ gap: "1rem" }}
+          >
+            Consent to receiving HCHF
+            {hchfAssociationLoadingState === "pending" && (
+              <Spinner size="1rem" color="currentColor" />
+            )}
+          </Button>
+        ) : needsSpenderApproval && hlqtApprovalLoadingState !== "success" ? (
+          <Button
+            disabled={!validChange || hlqtApprovalLoadingState === "pending"}
+            onClick={approveHlqtSpender}
+            sx={{ gap: "1rem" }}
+          >
+            Consent to spending {validChange?.stakeHLQTY?.toString()} HLQT
+            {hlqtApprovalLoadingState === "pending" && <Spinner size="1rem" color="currentColor" />}
+          </Button>
+        ) : validChange ? (
           <StakingManagerAction change={validChange}>Confirm</StakingManagerAction>
         ) : (
           <Button disabled>Confirm</Button>

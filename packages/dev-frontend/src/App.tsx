@@ -15,8 +15,13 @@ import { DisposableWalletProvider } from "./testUtils/DisposableWalletProvider";
 import { LiquityFrontend } from "./LiquityFrontend";
 import { AppLoader } from "./components/AppLoader";
 import { useAsyncValue } from "./hooks/AsyncValue";
-import { mainnet as hederaMainnet, testnet as hederaTestnet, previewnet as hederaPreviewnet } from "./hedera/wagmi-chains";
+import {
+  mainnet as hederaMainnet,
+  testnet as hederaTestnet,
+  previewnet as hederaPreviewnet
+} from "./hedera/wagmi-chains";
 import { AuthenticationProvider, LoginForm } from "./authentication";
+import { HederaTokensProvider } from "./hedera/hedera_context";
 
 const isDemoMode = import.meta.env.VITE_APP_DEMO_MODE === "true";
 
@@ -82,15 +87,19 @@ const UnsupportedNetworkFallback: React.FC = () => (
 const App = () => {
   const config = useAsyncValue(getConfig);
 
-  if(!config.loaded) {
-    return <ThemeProvider theme={theme} />
+  if (!config.loaded) {
+    return <ThemeProvider theme={theme} />;
   }
 
   // TODO: no deployments on previewnet and mainnet yet
+  const chains =
   // eslint-disable-next-line no-constant-condition
-  const chains = (isDemoMode || import.meta.env.MODE === "test" || config.value.testnetOnly /* TODO: no deployments on previewnet and mainnet yet */ || true)
-    ? [hederaTestnet]
-    : [hederaTestnet, hederaPreviewnet, hederaMainnet]
+    isDemoMode ||
+    import.meta.env.MODE === "test" ||
+    config.value.testnetOnly /* TODO: no deployments on previewnet and mainnet yet */ ||
+    true
+      ? [hederaTestnet]
+      : [hederaTestnet, hederaPreviewnet, hederaMainnet];
   const loader = <AppLoader />;
   const client = createClient(
     getDefaultClient({
@@ -98,10 +107,9 @@ const App = () => {
       chains,
       walletConnectProjectId: config.value.walletConnectProjectId,
       infuraId: config.value.infuraApiKey,
-      alchemyId: config.value.alchemyApiKey,
+      alchemyId: config.value.alchemyApiKey
     })
-  )
-
+  );
 
   return (
     <ThemeProvider theme={theme}>
@@ -115,13 +123,15 @@ const App = () => {
                 unsupportedMainnetFallback={<UnsupportedMainnetFallback />}
               >
                 <TransactionProvider>
-                  <LiquityFrontend loader={loader} />
+                  <HederaTokensProvider>
+                    <LiquityFrontend loader={loader} />
+                  </HederaTokensProvider>
                 </TransactionProvider>
               </LiquityProvider>
             </WalletConnector>
           </ConnectKitProvider>
         </WagmiConfig>
-        </AuthenticationProvider>
+      </AuthenticationProvider>
     </ThemeProvider>
   );
 };

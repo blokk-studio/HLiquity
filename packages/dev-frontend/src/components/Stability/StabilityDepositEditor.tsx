@@ -15,8 +15,8 @@ import { COIN, COLLATERAL_COIN, GT } from "../../strings";
 
 import { Icon } from "../Icon";
 import { EditableRow, StaticRow } from "../Trove/Editor";
-import { LoadingOverlay } from "../LoadingOverlay";
 import { InfoIcon } from "../InfoIcon";
+import { Step, Steps } from "../Steps";
 
 const select = ({ hchfBalance, hchfInStabilityPool }: LiquityStoreState) => ({
   hchfBalance,
@@ -25,44 +25,53 @@ const select = ({ hchfBalance, hchfInStabilityPool }: LiquityStoreState) => ({
 
 type StabilityDepositEditorProps = {
   originalDeposit: StabilityDeposit;
-  editedLUSD: Decimal;
+  editedHCHF: Decimal;
   changePending: boolean;
   dispatch: (action: { type: "setDeposit"; newValue: Decimalish } | { type: "revert" }) => void;
+  transactionSteps: Step[];
 };
 
 export const StabilityDepositEditor: React.FC<StabilityDepositEditorProps> = ({
   originalDeposit,
-  editedLUSD,
+  editedHCHF,
   changePending,
   dispatch,
+  transactionSteps,
   children
 }) => {
   const { hchfBalance, hchfInStabilityPool } = useLiquitySelector(select);
   const editingState = useState<string>();
 
-  const edited = !editedLUSD.eq(originalDeposit.currentHCHF);
+  const edited = !editedHCHF.eq(originalDeposit.currentHCHF);
 
   const maxAmount = originalDeposit.currentHCHF.add(hchfBalance);
-  const maxedOut = editedLUSD.eq(maxAmount);
+  const maxedOut = editedHCHF.eq(maxAmount);
 
   const lusdInStabilityPoolAfterChange = hchfInStabilityPool
     .sub(originalDeposit.currentHCHF)
-    .add(editedLUSD);
+    .add(editedHCHF);
 
   const originalPoolShare = originalDeposit.currentHCHF.mulDiv(100, hchfInStabilityPool);
-  const newPoolShare = editedLUSD.mulDiv(100, lusdInStabilityPoolAfterChange);
+  const newPoolShare = editedHCHF.mulDiv(100, lusdInStabilityPoolAfterChange);
   const poolShareChange =
     originalDeposit.currentHCHF.nonZero &&
     Difference.between(newPoolShare, originalPoolShare).nonZero;
 
   return (
     <Card>
-      <Heading>
+      <Heading
+        sx={{
+          display: "grid !important",
+          gridAutoFlow: "column",
+          gridTemplateColumns: "1fr repeat(2, auto)"
+        }}
+      >
         Stability Pool
+        <Steps steps={transactionSteps} />
         {edited && !changePending && (
           <Button
             variant="titleIcon"
-            sx={{ ":enabled:hover": { color: "danger" } }}
+            sx={{ ":enabled:hover": { color: "danger" }, marginLeft: "1rem" }}
             onClick={() => dispatch({ type: "revert" })}
           >
             <Icon name="history" size="lg" />
@@ -74,12 +83,12 @@ export const StabilityDepositEditor: React.FC<StabilityDepositEditorProps> = ({
         <EditableRow
           label="Deposit"
           inputId="deposit-lqty"
-          amount={editedLUSD.prettify()}
+          amount={editedHCHF.prettify()}
           maxAmount={maxAmount.toString()}
           maxedOut={maxedOut}
           unit={COIN}
           {...{ editingState }}
-          editedAmount={editedLUSD.toString(2)}
+          editedAmount={editedHCHF.toString(2)}
           setEditedAmount={newValue => dispatch({ type: "setDeposit", newValue })}
         />
 
@@ -128,8 +137,6 @@ export const StabilityDepositEditor: React.FC<StabilityDepositEditorProps> = ({
         )}
         {children}
       </Box>
-
-      {changePending && <LoadingOverlay />}
     </Card>
   );
 };

@@ -18,7 +18,6 @@ import { useTroveView } from "./context/TroveViewContext";
 import { COIN, COLLATERAL_COIN } from "../../strings";
 import { Icon } from "../Icon";
 import { InfoIcon } from "../InfoIcon";
-import { LoadingOverlay } from "../LoadingOverlay";
 import { CollateralRatio } from "./CollateralRatio";
 import { EditableRow, StaticRow } from "./Editor";
 import { ExpensiveTroveChangeWarning, GasEstimationState } from "./ExpensiveTroveChangeWarning";
@@ -26,6 +25,9 @@ import {
   selectForTroveChangeValidation,
   validateTroveChange
 } from "./validation/validateTroveChange";
+import { useHedera } from "../../hedera/hedera_context";
+import { Step, Steps } from "../Steps";
+import { useLoadingState } from "../../loading_state";
 
 const selector = (state: LiquityStoreState) => {
   const { fees, price, accountBalance } = state;
@@ -94,12 +96,45 @@ export const Opening: React.FC = () => {
     }
   }, [collateral, borrowAmount]);
 
+  const { hasAssociatedWithHchf, associateWithHchf: runAssociateWithHchf } = useHedera();
+  const { call: associateWithHchf, state: hchfAssociationLoadingState } = useLoadingState(
+    runAssociateWithHchf
+  );
+  const steps: Step[] = [
+    {
+      title: "Associate with HCHF",
+      status: hasAssociatedWithHchf
+        ? "success"
+        : hchfAssociationLoadingState === "error"
+        ? "danger"
+        : hchfAssociationLoadingState,
+      description: hasAssociatedWithHchf
+        ? "You've already consented to receiving HCHF."
+        : "You have to consent to receiving HCHF tokens before you can use HLiquity."
+    },
+    {
+      title: "Open the trove",
+      status: isTransactionPending ? "pending" : "idle"
+    }
+  ];
+
   return (
     <Card>
-      <Heading>
+      <Heading
+        sx={{
+          display: "grid !important",
+          gridAutoFlow: "column",
+          gridTemplateColumns: "1fr repeat(2, auto)"
+        }}
+      >
         Trove
+        <Steps steps={steps} />
         {isDirty && !isTransactionPending && (
-          <Button variant="titleIcon" sx={{ ":enabled:hover": { color: "danger" } }} onClick={reset}>
+          <Button
+            variant="titleIcon"
+            sx={{ ":enabled:hover": { color: "danger" }, marginLeft: "1rem" }}
+            onClick={reset}
+          >
             <Icon name="history" size="lg" />
           </Button>
         )}
@@ -212,7 +247,20 @@ export const Opening: React.FC = () => {
             <Button disabled>
               <Spinner size="24px" sx={{ color: "background" }} />
             </Button>
-          ) : stableTroveChange ? (
+          ) : !hasAssociatedWithHchf ? (
+            <Button
+              onClick={associateWithHchf}
+              disabled={!stableTroveChange || hchfAssociationLoadingState === "pending"}
+              sx={{ gap: "1rem" }}
+            >
+              Consent to receiving HCHF
+              {hchfAssociationLoadingState === "pending" && (
+                <Spinner size="1rem" color="currentColor" />
+              )}
+            </Button>
+          ) : !stableTroveChange ? (
+            <Button disabled>Confirm</Button>
+          ) : (
             <TroveAction
               transactionId={TRANSACTION_ID}
               change={stableTroveChange}
@@ -221,12 +269,9 @@ export const Opening: React.FC = () => {
             >
               Confirm
             </TroveAction>
-          ) : (
-            <Button disabled>Confirm</Button>
           )}
         </Flex>
       </Box>
-      {isTransactionPending && <LoadingOverlay />}
     </Card>
   );
 };

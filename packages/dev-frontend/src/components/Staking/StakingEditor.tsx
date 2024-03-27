@@ -8,9 +8,9 @@ import { COIN, COLLATERAL_COIN, GT } from "../../strings";
 
 import { Icon } from "../Icon";
 import { EditableRow, StaticRow } from "../Trove/Editor";
-import { LoadingOverlay } from "../LoadingOverlay";
 
 import { useStakingView } from "./context/StakingViewContext";
+import { Step, Steps } from "../Steps";
 
 const select = ({ hlqtyBalance, totalStakedHLQTY }: LiquityStoreState) => ({
   hlqtyBalance,
@@ -22,6 +22,7 @@ type StakingEditorProps = {
   originalStake: HLQTYStake;
   editedLQTY: Decimal;
   dispatch: (action: { type: "setStake"; newValue: Decimalish } | { type: "revert" }) => void;
+  transactionSteps: Step[];
 };
 
 export const StakingEditor: React.FC<StakingEditorProps> = ({
@@ -29,6 +30,7 @@ export const StakingEditor: React.FC<StakingEditorProps> = ({
   title,
   originalStake,
   editedLQTY,
+  transactionSteps,
   dispatch
 }) => {
   const { hlqtyBalance, totalStakedHLQTY } = useLiquitySelector(select);
@@ -49,12 +51,19 @@ export const StakingEditor: React.FC<StakingEditorProps> = ({
 
   return (
     <Card>
-      <Heading>
+      <Heading
+        sx={{
+          display: "grid !important",
+          gridAutoFlow: "column",
+          gridTemplateColumns: "1fr repeat(2, auto)"
+        }}
+      >
         {title}
+        <Steps steps={transactionSteps} />
         {edited && !changePending && (
           <Button
             variant="titleIcon"
-            sx={{ ":enabled:hover": { color: "danger" } }}
+            sx={{ ":enabled:hover": { color: "danger" }, marginLeft: "1rem" }}
             onClick={() => dispatch({ type: "revert" })}
           >
             <Icon name="history" size="lg" />
@@ -110,8 +119,6 @@ export const StakingEditor: React.FC<StakingEditorProps> = ({
 
         {children}
       </Box>
-
-      {changePending && <LoadingOverlay />}
     </Card>
   );
 };
