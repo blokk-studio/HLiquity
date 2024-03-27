@@ -2211,7 +2211,7 @@ __metadata:
     "@types/fs-extra": 9.0.8
     "@types/mocha": 8.2.1
     "@types/node": 14.14.34
-    "@types/sinon-chai": 3.2.5
+    "@types/sinon-chai": 3.2.12
     "@types/ws": 7.4.4
     "@typescript-eslint/eslint-plugin": ^5.62.0
     "@typescript-eslint/parser": ^5.62.0
@@ -5573,13 +5573,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/sinon-chai@npm:3.2.5":
-  version: 3.2.5
-  resolution: "@types/sinon-chai@npm:3.2.5"
+"@types/sinon-chai@npm:3.2.12":
+  version: 3.2.12
+  resolution: "@types/sinon-chai@npm:3.2.12"
   dependencies:
     "@types/chai": "*"
     "@types/sinon": "*"
-  checksum: ac332b8f2c9e13f081773a1c01fa12225768879ed310b36ba954982fccdf464fca4c3b852a60b2ca8e232026dd0a386b04f638bc903761c0d33375d9b3e9240f
+  checksum: d906f2f766613534c5e9fe1437ec740fb6a9a550f02d1a0abe180c5f18fe73a99f0c12935195404d42f079f5f72a371e16b81e2aef963a6ef0ee0ed9d5d7f391
   languageName: node
   linkType: hard
 
