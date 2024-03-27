@@ -2208,7 +2208,7 @@ __metadata:
     "@types/chai": 4.2.15
     "@types/chai-as-promised": 7.1.8
     "@types/chai-spies": 1.0.3
-    "@types/fs-extra": 9.0.8
+    "@types/fs-extra": 9.0.13
     "@types/mocha": 8.2.1
     "@types/node": 14.14.34
     "@types/sinon-chai": 3.2.12
@@ -5217,12 +5217,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/fs-extra@npm:9.0.8":
-  version: 9.0.8
-  resolution: "@types/fs-extra@npm:9.0.8"
+"@types/fs-extra@npm:9.0.13":
+  version: 9.0.13
+  resolution: "@types/fs-extra@npm:9.0.13"
   dependencies:
     "@types/node": "*"
-  checksum: 88b6a29ebb27b743fbc3340df5619fefe8d64e73224a29939ec19cf7cd3235f22a25a865ab1059fc49131389eab5513c997b1b4b24622ae7d4a15bfc2fbf130e
+  checksum: add79e212acd5ac76b97b9045834e03a7996aef60a814185e0459088fd290519a3c1620865d588fa36c4498bf614210d2a703af5cf80aa1dbc125db78f6edac3
   languageName: node
   linkType: hard
 
