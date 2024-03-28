@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState, useRef } from "react";
-import { Flex, Button, Box, Card, Heading } from "theme-ui";
+import { Flex, Button, Box, Card, Heading, Spinner } from "theme-ui";
 import {
   LiquityStoreState,
   Decimal,
@@ -26,6 +26,12 @@ import {
   selectForTroveChangeValidation,
   validateTroveChange
 } from "./validation/validateTroveChange";
+import { Step, Steps } from "../Steps";
+import { useLiquity } from "../../hooks/LiquityContext";
+import { useHedera } from "../../hedera/hedera_context";
+import { useLoadingState } from "../../loading_state";
+import { BigNumber } from "ethers";
+import { LoadingButton } from "../LoadingButton";
 
 const selector = (state: LiquityStoreState) => {
   const { trove, fees, price, accountBalance } = state;
@@ -155,16 +161,85 @@ export const Adjusting: React.FC = () => {
     transactionState.type === "waitingForApproval" ||
     transactionState.type === "waitingForConfirmation";
 
+  // consent & approval
+  const {
+    config,
+    liquity: {
+      connection: { addresses }
+    }
+  } = useLiquity();
+
+  const needsHchfAssociation = !stableTroveChange || stableTroveChange?.params.borrowHCHF;
+  const { hasAssociatedWithHchf, associateWithToken, approveSpender } = useHedera();
+  // hchf token association
+  const { call: associateWithHchf, state: hchfAssociationLoadingState } = useLoadingState(() =>
+    associateWithToken({ tokenAddress: config.hlqtTokenId })
+  );
+  // hchf spender approval
+  const needsSpenderApproval = stableTroveChange?.params.repayHCHF;
+  const { call: approveHchfSpender, state: hchfApprovalLoadingState } = useLoadingState(async () => {
+    if (!stableTroveChange?.params.repayHCHF) {
+      throw "cannot approve a withdrawal (negative spending/negative deposit) or deposit of 0";
+    }
+
+    const contractAddress = addresses.hchfToken as `0x${string}`;
+    const tokenAddress = config.hchfTokenId;
+    const amount = BigNumber.from(stableTroveChange.params.repayHCHF.bigNumber);
+
+    await approveSpender({
+      contractAddress,
+      tokenAddress,
+      amount
+    });
+  });
+
   if (trove.status !== "open") {
     return null;
   }
 
+  const transactionSteps: Step[] = [];
+  if (needsHchfAssociation) {
+    transactionSteps.push({
+      title: "Associate with HCHF",
+      status: hasAssociatedWithHchf
+        ? "success"
+        : hchfAssociationLoadingState === "error"
+        ? "danger"
+        : hchfAssociationLoadingState,
+      description: hasAssociatedWithHchf
+        ? "You've already consented to receiving HCHF."
+        : "You have to consent to receiving HCHF tokens before you can use HLiquity."
+    });
+  }
+  if (needsSpenderApproval) {
+    transactionSteps.push({
+      title: "Approve HCHF spender",
+      status: hchfApprovalLoadingState === "error" ? "danger" : hchfApprovalLoadingState,
+      description: "You have to consent to the HCHF contract spending your HCHF tokens."
+    });
+  }
+  transactionSteps.push({
+    title: "Adjust your trove",
+    status: isTransactionPending ? "pending" : "idle"
+  });
+
   return (
     <Card>
-      <Heading>
+      <Heading
+        sx={{
+          display: "grid !important",
+          gridAutoFlow: "column",
+          gridTemplateColumns: "1fr repeat(2, auto)"
+        }}
+      >
         Trove
+        <Steps steps={transactionSteps} />
         {isDirty && !isTransactionPending && (
-          <Button variant="titleIcon" sx={{ ":enabled:hover": { color: "danger" } }} onClick={reset}>
+          <Button
+            variant="titleIcon"
+            sx={{ ":enabled:hover": { color: "danger" }, marginLeft: "1rem" }}
+            onClick={reset}
+          >
             <Icon name="history" size="lg" />
           </Button>
         )}
@@ -273,12 +348,29 @@ export const Adjusting: React.FC = () => {
             Cancel
           </Button>
 
-          {stableTroveChange ? (
+          {needsHchfAssociation && !hasAssociatedWithHchf ? (
+            <LoadingButton
+              disabled={!stableTroveChange}
+              loading={hchfAssociationLoadingState === "pending"}
+              onClick={associateWithHchf}
+            >
+              Consent to receiving HCHF
+            </LoadingButton>
+          ) : needsSpenderApproval && hchfApprovalLoadingState !== "success" ? (
+            <LoadingButton
+              disabled={!stableTroveChange}
+              loading={hchfApprovalLoadingState === "pending"}
+              onClick={approveHchfSpender}
+            >
+              Consent to spending {stableTroveChange?.params.repayHCHF?.toString(2)} HCHF
+            </LoadingButton>
+          ) : stableTroveChange ? (
             <TroveAction
               transactionId={TRANSACTION_ID}
               change={stableTroveChange}
               maxBorrowingRate={maxBorrowingRate}
               borrowingFeeDecayToleranceMinutes={60}
+              loading={isTransactionPending}
             >
               Confirm
             </TroveAction>
@@ -287,7 +379,6 @@ export const Adjusting: React.FC = () => {
           )}
         </Flex>
       </Box>
-      {isTransactionPending && <LoadingOverlay />}
     </Card>
   );
 };

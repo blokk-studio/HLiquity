@@ -18,6 +18,7 @@ import { StaticRow } from "./Editor";
 import { LoadingOverlay } from "../LoadingOverlay";
 import { CollateralRatio } from "./CollateralRatio";
 import { InfoIcon } from "../InfoIcon";
+import { Step, Steps } from "../Steps";
 
 type TroveEditorProps = {
   original: Trove;
@@ -28,6 +29,7 @@ type TroveEditorProps = {
   dispatch: (
     action: { type: "setCollateral" | "setDebt"; newValue: Decimalish } | { type: "revert" }
   ) => void;
+  transactionSteps: Step[];
 };
 
 const select = ({ price }: LiquityStoreState) => ({ price });
@@ -38,7 +40,8 @@ export const TroveEditor: React.FC<TroveEditorProps> = ({
   edited,
   fee,
   borrowingRate,
-  changePending
+  changePending,
+  transactionSteps
 }) => {
   const { price } = useLiquitySelector(select);
 
@@ -50,7 +53,16 @@ export const TroveEditor: React.FC<TroveEditorProps> = ({
 
   return (
     <Card>
-      <Heading>Trove</Heading>
+      <Heading
+        sx={{
+          display: "grid !important",
+          gridAutoFlow: "column",
+          gridTemplateColumns: "1fr repeat(2, auto)"
+        }}
+      >
+        Trove
+        <Steps steps={transactionSteps} />
+      </Heading>
 
       <Box sx={{ p: [2, 3] }}>
         <StaticRow
@@ -104,8 +116,6 @@ export const TroveEditor: React.FC<TroveEditorProps> = ({
 
         {children}
       </Box>
-
-      {changePending && <LoadingOverlay />}
     </Card>
   );
 };

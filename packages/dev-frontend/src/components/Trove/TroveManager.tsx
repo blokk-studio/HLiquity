@@ -17,6 +17,12 @@ import {
   validateTroveChange
 } from "./validation/validateTroveChange";
 import { COLLATERAL_COIN } from "../../strings";
+import { Step } from "../Steps";
+import { useLiquity } from "../../hooks/LiquityContext";
+import { useHedera } from "../../hedera/hedera_context";
+import { useLoadingState } from "../../loading_state";
+import { BigNumber } from "ethers";
+import { LoadingButton } from "../LoadingButton";
 
 const init = ({ trove }: LiquityStoreState) => ({
   original: trove,
@@ -188,6 +194,9 @@ export const TroveManager: React.FC<TroveManagerProps> = ({ collateral, debt }) 
   const openingNewTrove = original.isEmpty;
 
   const myTransactionState = useMyTransactionState(transactionIdMatcher);
+  const isTransactionPending =
+    myTransactionState.type === "waitingForApproval" ||
+    myTransactionState.type === "waitingForConfirmation";
 
   useEffect(() => {
     if (
@@ -206,6 +215,44 @@ export const TroveManager: React.FC<TroveManagerProps> = ({ collateral, debt }) 
     }
   }, [myTransactionState, dispatch, dispatchEvent]);
 
+  // consent & approval
+  const {
+    config,
+    liquity: {
+      connection: { addresses }
+    }
+  } = useLiquity();
+
+  const { approveSpender } = useHedera();
+  // hchf spender approval
+  const { call: approveHchfSpender, state: hchfApprovalLoadingState } = useLoadingState(async () => {
+    if (!validChange?.params.repayHCHF) {
+      throw "cannot approve a withdrawal (negative spending/negative deposit) or deposit of 0";
+    }
+
+    const contractAddress = addresses.hchfToken as `0x${string}`;
+    const tokenAddress = config.hchfTokenId;
+    const amount = BigNumber.from(validChange.params.repayHCHF.bigNumber);
+
+    await approveSpender({
+      contractAddress,
+      tokenAddress,
+      amount
+    });
+  });
+
+  const transactionSteps: Step[] = [
+    {
+      title: "Approve HCHF spender",
+      status: hchfApprovalLoadingState === "error" ? "danger" : hchfApprovalLoadingState,
+      description: "You have to consent to the HCHF contract spending your HCHF tokens."
+    },
+    {
+      title: "Close your trove",
+      status: isTransactionPending ? "pending" : "idle"
+    }
+  ];
+
   return (
     <TroveEditor
       original={original}
@@ -214,6 +261,7 @@ export const TroveManager: React.FC<TroveManagerProps> = ({ collateral, debt }) 
       borrowingRate={borrowingRate}
       changePending={changePending}
       dispatch={dispatch}
+      transactionSteps={transactionSteps}
     >
       {description ??
         (openingNewTrove ? (
@@ -231,12 +279,21 @@ export const TroveManager: React.FC<TroveManagerProps> = ({ collateral, debt }) 
           Cancel
         </Button>
 
-        {validChange ? (
+        {hchfApprovalLoadingState !== "success" ? (
+          <LoadingButton
+            disabled={!validChange}
+            loading={hchfApprovalLoadingState === "pending"}
+            onClick={approveHchfSpender}
+          >
+            Consent to spending {validChange?.params.repayHCHF?.toString(2)} HCHF
+          </LoadingButton>
+        ) : validChange ? (
           <TroveAction
             transactionId={`${transactionIdPrefix}${validChange.type}`}
             change={validChange}
             maxBorrowingRate={maxBorrowingRate}
             borrowingFeeDecayToleranceMinutes={60}
+            loading={isTransactionPending}
           >
             Confirm
           </TroveAction>

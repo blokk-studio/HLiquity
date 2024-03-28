@@ -28,6 +28,7 @@ import {
 import { useHedera } from "../../hedera/hedera_context";
 import { Step, Steps } from "../Steps";
 import { useLoadingState } from "../../loading_state";
+import { useLiquity } from "../../hooks/LiquityContext";
 
 const selector = (state: LiquityStoreState) => {
   const { fees, price, accountBalance } = state;
@@ -96,9 +97,11 @@ export const Opening: React.FC = () => {
     }
   }, [collateral, borrowAmount]);
 
-  const { hasAssociatedWithHchf, associateWithHchf: runAssociateWithHchf } = useHedera();
-  const { call: associateWithHchf, state: hchfAssociationLoadingState } = useLoadingState(
-    runAssociateWithHchf
+  // consent & approval
+  const { config } = useLiquity();
+  const { hasAssociatedWithHchf, associateWithToken } = useHedera();
+  const { call: associateWithHchf, state: hchfAssociationLoadingState } = useLoadingState(() =>
+    associateWithToken({ tokenAddress: config.hchfTokenId })
   );
   const steps: Step[] = [
     {
@@ -266,6 +269,7 @@ export const Opening: React.FC = () => {
               change={stableTroveChange}
               maxBorrowingRate={maxBorrowingRate}
               borrowingFeeDecayToleranceMinutes={60}
+              loading={isTransactionPending}
             >
               Confirm
             </TroveAction>

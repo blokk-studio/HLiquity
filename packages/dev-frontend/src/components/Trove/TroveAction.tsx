@@ -1,23 +1,23 @@
-import { Button } from "theme-ui";
-
 import { Decimal, TroveChange } from "@liquity/lib-base";
 
 import { useLiquity } from "../../hooks/LiquityContext";
 import { useTransactionFunction } from "../Transaction";
+import { LoadingButton, LoadingButtonProps } from "../LoadingButton";
 
 type TroveActionProps = {
   transactionId: string;
   change: Exclude<TroveChange<Decimal>, { type: "invalidCreation" }>;
   maxBorrowingRate: Decimal;
   borrowingFeeDecayToleranceMinutes: number;
-};
+} & LoadingButtonProps;
 
 export const TroveAction: React.FC<TroveActionProps> = ({
   children,
   transactionId,
   change,
   maxBorrowingRate,
-  borrowingFeeDecayToleranceMinutes
+  borrowingFeeDecayToleranceMinutes,
+  ...loadingButtonProps
 }) => {
   const { liquity } = useLiquity();
 
@@ -49,5 +49,9 @@ export const TroveAction: React.FC<TroveActionProps> = ({
         )
   );
 
-  return <Button onClick={sendTransaction}>{children}</Button>;
+  return (
+    <LoadingButton {...loadingButtonProps} onClick={sendTransaction}>
+      {children}
+    </LoadingButton>
+  );
 };

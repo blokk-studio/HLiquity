@@ -1,14 +1,14 @@
-import { Button } from "theme-ui";
 import { Decimal, LiquityStoreState, StabilityDepositChange } from "@liquity/lib-base";
 import { useLiquitySelector } from "@liquity/lib-react";
 
 import { useLiquity } from "../../hooks/LiquityContext";
 import { useTransactionFunction } from "../Transaction";
+import { LoadingButton, LoadingButtonProps } from "../LoadingButton";
 
 type StabilityDepositActionProps = {
   transactionId: string;
   change: StabilityDepositChange<Decimal>;
-};
+} & LoadingButtonProps;
 
 const selectFrontendRegistered = ({ frontend }: LiquityStoreState) =>
   frontend.status === "registered";
@@ -16,7 +16,8 @@ const selectFrontendRegistered = ({ frontend }: LiquityStoreState) =>
 export const StabilityDepositAction: React.FC<StabilityDepositActionProps> = ({
   children,
   transactionId,
-  change
+  change,
+  ...loadingButtonProps
 }) => {
   const { config, liquity } = useLiquity();
   const frontendRegistered = useLiquitySelector(selectFrontendRegistered);
@@ -30,5 +31,9 @@ export const StabilityDepositAction: React.FC<StabilityDepositActionProps> = ({
       : liquity.send.withdrawHCHFFromStabilityPool.bind(liquity.send, change.withdrawHCHF)
   );
 
-  return <Button onClick={sendTransaction}>{children}</Button>;
+  return (
+    <LoadingButton {...loadingButtonProps} onClick={sendTransaction}>
+      {children}
+    </LoadingButton>
+  );
 };

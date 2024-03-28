@@ -23,6 +23,7 @@ import { useHedera } from "../../hedera/hedera_context";
 import { useLoadingState } from "../../loading_state";
 import { BigNumber } from "ethers";
 import { Step } from "../Steps";
+import { LoadingButton } from "../LoadingButton";
 
 const init = ({ hlqtyStake }: LiquityStoreState) => ({
   originalStake: hlqtyStake,
@@ -160,10 +161,7 @@ export const StakingManager: React.FC = () => {
   );
   // hchf spender approval
   const needsSpenderApproval = !validChange || validChange?.stakeHLQTY;
-  const {
-    call: approveHlqtSpender,
-    state: hlqtApprovalLoadingState,
-  } = useLoadingState(async () => {
+  const { call: approveHlqtSpender, state: hlqtApprovalLoadingState } = useLoadingState(async () => {
     if (!validChange?.stakeHLQTY) {
       throw "cannot approve a withdrawal (negative spending/negative deposit) or deposit of 0";
     }
@@ -226,25 +224,21 @@ export const StakingManager: React.FC = () => {
         </Button>
 
         {!hasAssociatedWithHchf ? (
-          <Button
-            disabled={!validChange || hchfAssociationLoadingState === "pending"}
+          <LoadingButton
+            disabled={!validChange}
+            loading={hchfAssociationLoadingState === "pending"}
             onClick={associateWithHchf}
-            sx={{ gap: "1rem" }}
           >
             Consent to receiving HCHF
-            {hchfAssociationLoadingState === "pending" && (
-              <Spinner size="1rem" color="currentColor" />
-            )}
-          </Button>
+          </LoadingButton>
         ) : needsSpenderApproval && hlqtApprovalLoadingState !== "success" ? (
-          <Button
-            disabled={!validChange || hlqtApprovalLoadingState === "pending"}
+          <LoadingButton
+            disabled={!validChange}
+            loading={hlqtApprovalLoadingState === "pending"}
             onClick={approveHlqtSpender}
-            sx={{ gap: "1rem" }}
           >
-            Consent to spending {validChange?.stakeHLQTY?.toString()} HLQT
-            {hlqtApprovalLoadingState === "pending" && <Spinner size="1rem" color="currentColor" />}
-          </Button>
+            Consent to spending {validChange?.stakeHLQTY?.toString(2)} HLQT
+          </LoadingButton>
         ) : validChange ? (
           <StakingManagerAction change={validChange}>Confirm</StakingManagerAction>
         ) : (
