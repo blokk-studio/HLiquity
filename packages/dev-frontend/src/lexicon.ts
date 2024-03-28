@@ -13,7 +13,7 @@ export const BORROW_FEE: Lexicon = {
 export const TVL: Lexicon = {
   term: "TVL",
   description:
-    "The Total Value Locked (TVL) is the total value of Ether locked as collateral in the system, given in HBAR and CHF."
+    "The Total Value Locked (TVL) is the total value of HBAR locked as collateral in the system, given in HBAR and HCHF."
 };
 
 export const STAKED_HLQTY: Lexicon = {
