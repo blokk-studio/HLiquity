@@ -84,6 +84,7 @@ export const LoginForm = () => {
         <Label htmlFor="login-password-input">Password</Label>
         <Input
           id="login-password-input"
+          type="password"
           placeholder="12345"
           onInput={event => setPasswordInput((event.target as HTMLInputElement).value)}
         />
