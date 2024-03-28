@@ -98,7 +98,7 @@ export const SystemStats: React.FC<SystemStatsProps> = ({ variant = "info", show
       <Statistic lexicon={l.TVL}>
         {total.collateral?.shorten()} <Text sx={{ fontSize: 1 }}>&nbsp;{COLLATERAL_COIN}</Text>
         <Text sx={{ fontSize: 1 }}>
-          &nbsp;(${Decimal.from(total.collateral?.mul(price)).shorten()})
+          &nbsp;(CHF {Decimal.from(total.collateral?.mul(price)).shorten()})
         </Text>
       </Statistic>
       <Statistic lexicon={l.TROVES}>{Decimal.from(numberOfTroves).prettify(0)}</Statistic>

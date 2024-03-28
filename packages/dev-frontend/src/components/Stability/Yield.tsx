@@ -4,7 +4,7 @@ import { Decimal, LiquityStoreState } from "@liquity/lib-base";
 import { useLiquitySelector } from "@liquity/lib-react";
 import { InfoIcon } from "../InfoIcon";
 import { Badge } from "../Badge";
-import { fetchLqtyPrice } from "./context/fetchLqtyPrice";
+import { fetchHlqtPrice } from "./context/fetchHlqtPrice";
 import { COIN, COLLATERAL_COIN, GT } from "../../strings";
 
 const selector = ({ hchfInStabilityPool, remainingStabilityPoolHLQTYReward }: LiquityStoreState) => ({
@@ -19,26 +19,26 @@ const dailyIssuancePercentage = dailyIssuanceFraction.mul(100);
 export const Yield: React.FC = () => {
   const { hchfInStabilityPool, remainingStabilityPoolHLQTYReward } = useLiquitySelector(selector);
 
-  const [lqtyPrice, setLqtyPrice] = useState<Decimal | undefined>(undefined);
+  const [hlqtPrice, setHlqtPrice] = useState<Decimal | undefined>(undefined);
   const hasZeroValue = remainingStabilityPoolHLQTYReward?.isZero || hchfInStabilityPool?.isZero || true;
 
   useEffect(() => {
     (async () => {
       try {
-        const { lqtyPriceUSD } = await fetchLqtyPrice();
-        setLqtyPrice(lqtyPriceUSD);
+        const { hlqtPriceCHF: hlqtPriceCHF } = await fetchHlqtPrice();
+        setHlqtPrice(hlqtPriceCHF);
       } catch (error) {
         console.error(error);
       }
     })();
   }, []);
 
-  if (hasZeroValue || lqtyPrice === undefined) return null;
+  if (hasZeroValue || hlqtPrice === undefined) return null;
 
   const lqtyIssuanceOneDay = remainingStabilityPoolHLQTYReward.mul(dailyIssuanceFraction);
-  const lqtyIssuanceOneDayInUSD = lqtyIssuanceOneDay.mul(lqtyPrice);
+  const lqtyIssuanceOneDayInUSD = lqtyIssuanceOneDay.mul(hlqtPrice);
   const aprPercentage = lqtyIssuanceOneDayInUSD.mulDiv(365 * 100, hchfInStabilityPool);
-  const remainingLqtyInUSD = remainingStabilityPoolHLQTYReward.mul(lqtyPrice);
+  const remainingHlqtInCHF = remainingStabilityPoolHLQTYReward.mul(hlqtPrice);
 
   if (aprPercentage.isZero) return null;
 
@@ -54,12 +54,12 @@ export const Yield: React.FC = () => {
               liquidations.
             </Paragraph>
             <Paragraph sx={{ fontSize: "12px", fontFamily: "monospace", mt: 2 }}>
-              (${GT}_REWARDS * DAILY_ISSUANCE% / DEPOSITED_{COIN}) * 365 * 100 ={" "}
+              (CHF {GT}_REWARDS * DAILY_ISSUANCE% / DEPOSITED_{COIN}) * 365 * 100 ={" "}
               <Text sx={{ fontWeight: "bold" }}> APR</Text>
             </Paragraph>
             <Paragraph sx={{ fontSize: "12px", fontFamily: "monospace" }}>
-              ($
-              {remainingLqtyInUSD.shorten()} * {dailyIssuancePercentage.toString(4)}% / $
+              (CHF
+              {remainingHlqtInCHF.shorten()} * {dailyIssuancePercentage.toString(4)}% / CHF
               {hchfInStabilityPool.shorten()}) * 365 * 100 =
               <Text sx={{ fontWeight: "bold" }}> {aprPercentage.toString(2)}%</Text>
             </Paragraph>

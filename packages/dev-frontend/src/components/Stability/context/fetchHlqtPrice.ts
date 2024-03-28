@@ -67,14 +67,15 @@ const fetchCoinGeckoSimplePrice = async <T extends string, U extends string>(
   return validateCoinGeckoSimplePriceResponse(coinIds, vsCurrencies, await response.json());
 };
 
-export interface LqtyPriceResponse {
-  lqtyPriceUSD: Decimal;
+export interface HlqtyPriceResponse {
+  hlqtPriceCHF: Decimal;
 }
 
-export const fetchLqtyPrice = async (): Promise<LqtyPriceResponse> => {
+export const fetchHlqtPrice = async (): Promise<HlqtyPriceResponse> => {
+  // TODO: hlqt + chf
   const response = await fetchCoinGeckoSimplePrice(["liquity"] as const, ["usd"] as const);
 
   return {
-    lqtyPriceUSD: Decimal.from(response.liquity.usd)
+    hlqtPriceCHF: Decimal.from(response.liquity.usd)
   };
 };

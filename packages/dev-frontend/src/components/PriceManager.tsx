@@ -35,7 +35,7 @@ export const PriceManager: React.FC = () => {
         <Flex sx={{ alignItems: "stretch" }}>
           <Label>{COLLATERAL_COIN}</Label>
 
-          <Label variant="unit">$</Label>
+          <Label variant="unit">CHF</Label>
 
           <Input
             type={canSetPrice ? "number" : "text"}

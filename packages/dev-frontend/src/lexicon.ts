@@ -24,7 +24,7 @@ export const STAKED_HLQTY: Lexicon = {
 export const TCR: Lexicon = {
   term: "Total Collateral Ratio",
   description:
-    "The ratio of the Dollar value of the entire system collateral at the current HBAR:CHF price, to the entire system debt."
+    "The ratio of the Swiss Franc value of the entire system collateral at the current HBAR:CHF price, to the entire system debt."
 };
 
 export const RECOVERY_MODE: Lexicon = {
