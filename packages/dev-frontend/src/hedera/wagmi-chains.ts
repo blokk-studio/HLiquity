@@ -1,5 +1,7 @@
 import { Chain } from "@wagmi/core";
 import { useNetwork } from "wagmi";
+import { enabledChainIds } from "../configuration/enabled_chains";
+import { deployments } from "../configuration/deployments";
 
 interface HederaChain extends Chain {
   apiBaseUrl: string;
@@ -66,6 +68,19 @@ export const mainnet: HederaChain = {
   },
   testnet: true,
   apiBaseUrl: "https://mainnet.mirrornode.hedera.com/api/v1"
+};
+
+const enabledChainIdsSet = new Set(enabledChainIds);
+const enabledChains = [mainnet, previewnet, testnet].filter(chain =>
+  enabledChainIdsSet.has(chain.id)
+);
+const setOfChainIdsWithDeployment = new Set(deployments.map(deployment => deployment.chainId));
+const chainsWithDeployment = enabledChains.filter(chain =>
+  setOfChainIdsWithDeployment.has(chain.id)
+);
+
+export const useHederaChains = () => {
+  return chainsWithDeployment;
 };
 
 export const useHederaChain = () => {

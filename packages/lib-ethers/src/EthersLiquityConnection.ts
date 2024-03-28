@@ -5,8 +5,6 @@ import { Signer } from "@ethersproject/abstract-signer";
 import { Decimal } from "@liquity/lib-base";
 
 import devOrNull from "../deployments/dev.json";
-import hedera from "../deployments/hedera.json";
-import hederaPreviewnet from "../deployments/hederaPreviewnet.json";
 import hederaLocalTestnet from "../deployments/hederaLocalTestnet.json";
 import hederaTestnet from "../deployments/hederaTestnet.json";
 
@@ -95,7 +93,14 @@ export interface _InternalEthersLiquityConnection extends EthersLiquityConnectio
   readonly _multicall?: _Multicall;
 }
 
-const connectionFrom = (
+export interface EthersLiquityConnectionOptions extends EthersLiquityConnectionOptionalParams {
+  deployment: _LiquityDeploymentJSON;
+  provider: EthersProvider;
+  signer: EthersSigner;
+  chainId: number;
+}
+
+const getConnection = (
   provider: EthersProvider,
   signer: EthersSigner | undefined,
   _contracts: _LiquityContracts,
@@ -127,6 +132,24 @@ const connectionFrom = (
     ...deployment,
     ...optionalParams
   });
+};
+
+export const getConnectionWithBlockPolledStore = (
+  options: Omit<EthersLiquityConnectionOptions, "useStore">
+): EthersLiquityConnection & { useStore: "blockPolled" } => {
+  const connection = getConnection(
+    options.provider,
+    options.signer,
+    _connectToContracts(options.signer, options.deployment),
+    _connectToMulticall(options.signer, options.chainId),
+    options.deployment,
+    {
+      ...options,
+      useStore: "blockPolled"
+    }
+  ) as EthersLiquityConnection & { useStore: "blockPolled" };
+
+  return connection;
 };
 
 /** @internal */
@@ -217,7 +240,7 @@ export const _connectToDeployment = (
   signerOrProvider: EthersSigner | EthersProvider,
   optionalParams?: EthersLiquityConnectionOptionalParams
 ): EthersLiquityConnection =>
-  connectionFrom(
+  getConnection(
     ...getProviderAndSigner(signerOrProvider),
     _connectToContracts(signerOrProvider, deployment),
     undefined,
@@ -312,7 +335,7 @@ export function _connectByChainId(
   const deployment: _LiquityDeploymentJSON =
     deployments[chainId] ?? panic(new UnsupportedNetworkError(chainId));
 
-  return connectionFrom(
+  return getConnection(
     provider,
     signer,
     _connectToContracts(signer ?? provider, deployment),

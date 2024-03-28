@@ -1,5 +1,5 @@
 import React from "react";
-import { createClient, WagmiConfig } from "wagmi";
+import { Chain, createClient, WagmiConfig } from "wagmi";
 import { ConnectKitProvider } from "connectkit";
 import { Flex, Heading, ThemeProvider, Paragraph, Link } from "theme-ui";
 
@@ -18,10 +18,12 @@ import { useAsyncValue } from "./hooks/AsyncValue";
 import {
   mainnet as hederaMainnet,
   testnet as hederaTestnet,
-  previewnet as hederaPreviewnet
+  previewnet as hederaPreviewnet,
+  useHederaChains
 } from "./hedera/wagmi-chains";
 import { AuthenticationProvider, LoginForm } from "./authentication";
 import { HederaTokensProvider } from "./hedera/hedera_context";
+import { useDeployments } from "./configuration/deployments";
 
 const isDemoMode = import.meta.env.VITE_APP_DEMO_MODE === "true";
 
@@ -41,65 +43,53 @@ getConfig().then(config => {
   Object.assign(window, { config });
 });
 
-const UnsupportedMainnetFallback: React.FC = () => (
-  <Flex
-    sx={{
-      flexDirection: "column",
-      alignItems: "center",
-      justifyContent: "center",
-      height: "100vh",
-      textAlign: "center"
-    }}
-  >
-    <Heading sx={{ mb: 3 }}>
-      <Icon name="exclamation-triangle" /> This app is for testing purposes only.
-    </Heading>
+const getChainNameListString = (chains: Chain[]) => {
+  if (chains.length === 1) {
+    return chains[0].name;
+  }
 
-    <Paragraph sx={{ mb: 3 }}>Please change your network to Görli or Sepolia.</Paragraph>
+  const chainsWithoutLast = chains.slice(0, chains.length - 1);
+  const lastChain = chains[chains.length - 1];
 
-    <Paragraph>
-      If you'd like to use the Liquity Protocol on mainnet, please pick a frontend{" "}
-      <Link href="https://www.liquity.org/frontend">
-        here <Icon name="external-link-alt" size="xs" />
-      </Link>
-      .
-    </Paragraph>
-  </Flex>
-);
+  const listString = `${chainsWithoutLast.map(chain => chain.name).join(", ")} or ${lastChain.name}`;
 
-const UnsupportedNetworkFallback: React.FC = () => (
-  <Flex
-    sx={{
-      flexDirection: "column",
-      alignItems: "center",
-      justifyContent: "center",
-      height: "100vh",
-      textAlign: "center"
-    }}
-  >
-    <Heading sx={{ mb: 3 }}>
-      <Icon name="exclamation-triangle" /> Liquity is not supported on this network.
-    </Heading>
-    Please switch to mainnet, Görli or Sepolia.
-  </Flex>
-);
+  return listString;
+};
+
+const UnsupportedNetworkFallback: React.FC<{ availableNetworks: Chain[] }> = ({
+  availableNetworks
+}) => {
+  return (
+    <Flex
+      sx={{
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        height: "100vh",
+        textAlign: "center"
+      }}
+    >
+      <Heading sx={{ mb: 3 }}>
+        <Icon name="exclamation-triangle" /> HLiquity is not supported on this network.
+      </Heading>
+
+      {availableNetworks.length ? (
+        <p>Please switch to {getChainNameListString(availableNetworks)}.</p>
+      ) : (
+        <p>No chains or deployments have been configured.</p>
+      )}
+    </Flex>
+  );
+};
 
 const App = () => {
   const config = useAsyncValue(getConfig);
+  const chains = useHederaChains();
 
   if (!config.loaded) {
     return <ThemeProvider theme={theme} />;
   }
 
-  // TODO: no deployments on previewnet and mainnet yet
-  const chains =
-  // eslint-disable-next-line no-constant-condition
-    isDemoMode ||
-    import.meta.env.MODE === "test" ||
-    config.value.testnetOnly /* TODO: no deployments on previewnet and mainnet yet */ ||
-    true
-      ? [hederaTestnet]
-      : [hederaTestnet, hederaPreviewnet, hederaMainnet];
   const loader = <AppLoader />;
   const client = createClient(
     getDefaultClient({
@@ -119,8 +109,12 @@ const App = () => {
             <WalletConnector loader={loader}>
               <LiquityProvider
                 loader={loader}
-                unsupportedNetworkFallback={<UnsupportedNetworkFallback />}
-                unsupportedMainnetFallback={<UnsupportedMainnetFallback />}
+                unsupportedNetworkFallback={
+                  <UnsupportedNetworkFallback availableNetworks={chains} />
+                }
+                unsupportedMainnetFallback={
+                  <UnsupportedNetworkFallback availableNetworks={chains} />
+                }
               >
                 <TransactionProvider>
                   <HederaTokensProvider>

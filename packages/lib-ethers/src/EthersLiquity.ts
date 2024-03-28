@@ -28,9 +28,11 @@ import {
 import {
   EthersLiquityConnection,
   EthersLiquityConnectionOptionalParams,
+  EthersLiquityConnectionOptions,
   EthersLiquityStoreOption,
   _connect,
-  _usingStore
+  _usingStore,
+  getConnectionWithBlockPolledStore
 } from "./EthersLiquityConnection";
 
 import {
@@ -91,6 +93,15 @@ export class EthersLiquity implements ReadableEthersLiquity, TransactableLiquity
     this.connection = readable.connection;
     this.populate = new PopulatableEthersLiquity(readable);
     this.send = new SendableEthersLiquity(this.populate);
+  }
+
+  static fromConnectionOptionsWithBlockPolledStore(
+    options: Omit<EthersLiquityConnectionOptions, "useStore">
+  ): EthersLiquityWithStore<BlockPolledLiquityStore> {
+    const connection = getConnectionWithBlockPolledStore(options);
+    const ethersLiquity = EthersLiquity._from(connection);
+
+    return ethersLiquity;
   }
 
   /** @internal */
@@ -259,7 +270,10 @@ export class EthersLiquity implements ReadableEthersLiquity, TransactableLiquity
   }
 
   /** {@inheritDoc @liquity/lib-base#ReadableLiquity.getLiquidityMiningHLQTYReward} */
-  getLiquidityMiningHLQTYReward(address?: string, overrides?: EthersCallOverrides): Promise<Decimal> {
+  getLiquidityMiningHLQTYReward(
+    address?: string,
+    overrides?: EthersCallOverrides
+  ): Promise<Decimal> {
     return this._readable.getLiquidityMiningHLQTYReward(address, overrides);
   }
 

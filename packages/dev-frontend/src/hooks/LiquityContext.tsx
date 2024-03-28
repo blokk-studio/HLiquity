@@ -12,6 +12,9 @@ import {
 
 import { LiquityFrontendConfig, getConfig } from "../config";
 import { BatchedProvider } from "../providers/BatchingProvider";
+import { useDeployment } from "../configuration/deployments";
+import { Signer } from "ethers";
+import { _LiquityDeploymentJSON } from "@liquity/lib-ethers/dist/src/contracts";
 
 type LiquityContextValue = {
   config: LiquityFrontendConfig;
@@ -28,6 +31,56 @@ type LiquityProviderProps = {
   unsupportedMainnetFallback?: React.ReactNode;
 };
 
+// TODO: move the config to env variables. no clue why this is a json file.
+const useConfig = () => {
+  const [config, setConfig] = useState<LiquityFrontendConfig>();
+  useEffect(() => {
+    getConfig().then(setConfig);
+  }, []);
+
+  return config;
+};
+
+interface NonNullableLiquityProviderProps {
+  config: LiquityFrontendConfig;
+  provider: Provider;
+  signer: Signer;
+  userAddress: `0x${string}`;
+  frontendTag: `0x${string}`;
+  chainId: number;
+  deployment: _LiquityDeploymentJSON;
+}
+
+const NonNullableLiquityProvider: React.FC<NonNullableLiquityProviderProps> = ({
+  children,
+  config,
+  provider,
+  signer,
+  userAddress,
+  frontendTag,
+  chainId,
+  deployment
+}) => {
+  const liquity = useMemo(() => {
+    const liquity = EthersLiquity.fromConnectionOptionsWithBlockPolledStore({
+      chainId,
+      deployment,
+      provider,
+      signer,
+      frontendTag,
+      userAddress
+    });
+
+    return liquity;
+  }, [provider, signer, userAddress, frontendTag, chainId, deployment]);
+
+  return (
+    <LiquityContext.Provider value={{ config, account: userAddress, provider: provider, liquity }}>
+      {children}
+    </LiquityContext.Provider>
+  );
+};
+
 export const LiquityProvider: React.FC<LiquityProviderProps> = ({
   children,
   loader,
@@ -38,7 +91,8 @@ export const LiquityProvider: React.FC<LiquityProviderProps> = ({
   const signer = useSigner();
   const account = useAccount();
   const chainId = useChainId();
-  const [config, setConfig] = useState<LiquityFrontendConfig>();
+  const config = useConfig();
+  const deployment = useDeployment();
 
   const connection = useMemo(() => {
     if (config && provider && signer.data && account.address) {
@@ -57,10 +111,6 @@ export const LiquityProvider: React.FC<LiquityProviderProps> = ({
     }
   }, [config, provider, signer.data, account.address, chainId]);
 
-  useEffect(() => {
-    getConfig().then(setConfig);
-  }, []);
-
   if (!config || !provider || !signer.data || !account.address) {
     return <>{loader}</>;
   }
@@ -73,15 +123,25 @@ export const LiquityProvider: React.FC<LiquityProviderProps> = ({
     return <>{unsupportedNetworkFallback}</>;
   }
 
+  if (!deployment) {
+    return <>{unsupportedNetworkFallback}</>;
+  }
+
   const liquity = EthersLiquity._from(connection);
   liquity.store.logging = true;
 
   return (
-    <LiquityContext.Provider
-      value={{ config, account: account.address, provider: connection.provider, liquity }}
+    <NonNullableLiquityProvider
+      chainId={chainId}
+      config={config}
+      deployment={deployment}
+      frontendTag={config.frontendTag}
+      provider={provider}
+      signer={signer.data}
+      userAddress={account.address}
     >
       {children}
-    </LiquityContext.Provider>
+    </NonNullableLiquityProvider>
   );
 };
 
