@@ -240,7 +240,9 @@ export const StakingManager: React.FC = () => {
             Consent to spending {validChange?.stakeHLQTY?.toString(2)} HLQT
           </LoadingButton>
         ) : validChange ? (
-          <StakingManagerAction change={validChange}>Confirm</StakingManagerAction>
+          <StakingManagerAction change={validChange} loading={changePending}>
+            Confirm
+          </StakingManagerAction>
         ) : (
           <Button disabled>Confirm</Button>
         )}
