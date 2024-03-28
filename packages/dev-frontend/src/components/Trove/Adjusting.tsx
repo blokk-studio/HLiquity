@@ -372,7 +372,9 @@ export const Adjusting: React.FC = () => {
               borrowingFeeDecayToleranceMinutes={60}
               loading={isTransactionPending}
             >
-              Confirm
+              {stableTroveChange?.params.borrowHCHF
+                ? `Borrow ${stableTroveChange?.params.borrowHCHF?.toString(2)} HCHF`
+                : `Repay ${stableTroveChange?.params.repayHCHF?.toString(2)} HCHF`}
             </TroveAction>
           ) : (
             <Button disabled>Confirm</Button>

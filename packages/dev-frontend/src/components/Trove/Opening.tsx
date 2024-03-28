@@ -271,7 +271,7 @@ export const Opening: React.FC = () => {
               borrowingFeeDecayToleranceMinutes={60}
               loading={isTransactionPending}
             >
-              Confirm
+              Borrow {stableTroveChange?.params.borrowHCHF?.toString(2)} HCHF
             </TroveAction>
           )}
         </Flex>

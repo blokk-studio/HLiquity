@@ -295,7 +295,7 @@ export const TroveManager: React.FC<TroveManagerProps> = ({ collateral, debt }) 
             borrowingFeeDecayToleranceMinutes={60}
             loading={isTransactionPending}
           >
-            Confirm
+            Repay {validChange?.params.repayHCHF?.toString(2)} HCHF
           </TroveAction>
         ) : (
           <Button disabled>Confirm</Button>

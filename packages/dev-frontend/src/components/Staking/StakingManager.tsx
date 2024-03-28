@@ -198,7 +198,7 @@ export const StakingManager: React.FC = () => {
     });
   }
   transactionSteps.push({
-    title: "Deposit to the Stability Pool",
+    title: !validChange || validChange?.stakeHLQTY ? "Stake HLQT" : "Unstake HLQT",
     status: changePending ? "pending" : "idle"
   });
 
@@ -241,7 +241,9 @@ export const StakingManager: React.FC = () => {
           </LoadingButton>
         ) : validChange ? (
           <StakingManagerAction change={validChange} loading={changePending}>
-            Confirm
+            {validChange?.stakeHLQTY
+              ? `Stake ${validChange?.stakeHLQTY?.toString(2)} HLQT`
+              : `Unstake ${validChange?.unstakeHLQTY?.toString(2)} HLQT`}
           </StakingManagerAction>
         ) : (
           <Button disabled>Confirm</Button>
