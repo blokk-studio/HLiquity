@@ -2,7 +2,7 @@ import { AddressZero } from "@ethersproject/constants";
 import { isAddress, getAddress } from "@ethersproject/address";
 
 export type LiquityFrontendConfig = {
-  frontendTag: string;
+  frontendTag: `0x${string}`;
   infuraApiKey?: string;
   alchemyApiKey?: string;
   testnetOnly?: boolean;

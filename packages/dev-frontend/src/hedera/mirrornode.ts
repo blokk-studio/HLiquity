@@ -20,7 +20,7 @@ export const fetchTokens = async (options: {
     const responseText = await response.text();
     const errorMessage = `tokens api responded with ${response.status}: \`${responseText}\``;
     console.error(errorMessage, { responseText, response });
-    throw errorMessage;
+    throw new Error(errorMessage);
   }
 
   const data: HederaApiTokensData = await response.json();
