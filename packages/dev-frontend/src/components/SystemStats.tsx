@@ -30,7 +30,9 @@ const Balances: React.FC = () => {
 
 const GitHubCommit: React.FC<{ children?: string }> = ({ children }) =>
   children?.match(/[0-9a-f]{40}/) ? (
-    <Link href={`https://github.com/blokk-studio/HLiquity/commit/${children}`}>{children.substr(0, 7)}</Link>
+    <Link href={`https://github.com/blokk-studio/HLiquity/commit/${children}`}>
+      {children.substr(0, 7)}
+    </Link>
   ) : (
     <>unknown</>
   );
@@ -87,7 +89,7 @@ export const SystemStats: React.FC<SystemStatsProps> = ({ variant = "info", show
     <Card {...{ variant }}>
       {showBalances && <Balances />}
 
-      <Heading>Liquity statistics</Heading>
+      <Heading>HLiquity statistics</Heading>
 
       <Heading as="h2" sx={{ mt: 3, fontWeight: "body" }}>
         Protocol
