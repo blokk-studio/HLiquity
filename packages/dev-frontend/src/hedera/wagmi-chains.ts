@@ -18,10 +18,10 @@ export const testnet: HederaChain = {
   network: "hederaTestnet",
   rpcUrls: {
     default: {
-      http: ["https://pool.arkhia.io/hedera/testnet/json-rpc/v1/eQ9f74x2yQs02vvfa2dO05te79u0S7s5"]
+      http: ["https://testnet.hashio.io/api"]
     },
     public: {
-      http: ["https://pool.arkhia.io/hedera/testnet/json-rpc/v1/eQ9f74x2yQs02vvfa2dO05te79u0S7s5"]
+      http: ["https://testnet.hashio.io/api"]
     }
   },
   testnet: true,
