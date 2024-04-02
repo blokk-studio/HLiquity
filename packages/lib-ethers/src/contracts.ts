@@ -240,9 +240,11 @@ export const _connectToContracts = (
 ): _LiquityContracts => {
   const abi = getAbi(_priceFeedIsTestnet, _uniTokenIsMock);
 
-  return mapLiquityContracts(
-    addresses,
-    (address, key) =>
-      new _LiquityContract(address, abi[key], signerOrProvider) as _TypedLiquityContract
-  ) as _LiquityContracts;
+  return mapLiquityContracts(addresses, (address, key) => {
+    const abi_ = abi[key];
+    if (!abi_) {
+      return;
+    }
+    return new _LiquityContract(address, abi_, signerOrProvider) as _TypedLiquityContract;
+  }) as _LiquityContracts;
 };
