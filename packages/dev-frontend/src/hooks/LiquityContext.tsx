@@ -70,6 +70,7 @@ const NonNullableLiquityProvider: React.FC<NonNullableLiquityProviderProps> = ({
       frontendTag,
       userAddress
     });
+    liquity.store.logging = true;
 
     return liquity;
   }, [provider, signer, userAddress, frontendTag, chainId, deployment]);
@@ -94,23 +95,6 @@ export const LiquityProvider: React.FC<LiquityProviderProps> = ({
   const config = useConfig();
   const deployment = useDeployment();
 
-  const connection = useMemo(() => {
-    if (config && provider && signer.data && account.address) {
-      const batchedProvider = new BatchedProvider(provider, chainId);
-      // batchedProvider._debugLog = true;
-
-      try {
-        return _connectByChainId(batchedProvider, signer.data, chainId, {
-          userAddress: account.address,
-          frontendTag: config.frontendTag,
-          useStore: "blockPolled"
-        });
-      } catch (err) {
-        console.error(err);
-      }
-    }
-  }, [config, provider, signer.data, account.address, chainId]);
-
   if (!config || !provider || !signer.data || !account.address) {
     return <>{loader}</>;
   }
@@ -119,16 +103,9 @@ export const LiquityProvider: React.FC<LiquityProviderProps> = ({
     return <>{unsupportedMainnetFallback}</>;
   }
 
-  if (!connection) {
-    return <>{unsupportedNetworkFallback}</>;
-  }
-
   if (!deployment) {
     return <>{unsupportedNetworkFallback}</>;
   }
-
-  const liquity = EthersLiquity._from(connection);
-  liquity.store.logging = true;
 
   return (
     <NonNullableLiquityProvider
