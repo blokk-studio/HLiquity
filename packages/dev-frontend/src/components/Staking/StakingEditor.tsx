@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Heading, Box, Card, Button } from "theme-ui";
 
-import { Decimal, Decimalish, Difference, LiquityStoreState, HLQTYStake } from "@liquity/lib-base";
+import { Decimal, Decimalish, Difference, LiquityStoreState, HLQTStake } from "@liquity/lib-base";
 import { useLiquitySelector } from "@liquity/lib-react";
 
 import { COIN, COLLATERAL_COIN, GT } from "../../strings";
@@ -12,14 +12,14 @@ import { EditableRow, StaticRow } from "../Trove/Editor";
 import { useStakingView } from "./context/StakingViewContext";
 import { Step, Steps } from "../Steps";
 
-const select = ({ hlqtyBalance, totalStakedHLQTY }: LiquityStoreState) => ({
-  hlqtyBalance,
-  totalStakedHLQTY
+const select = ({ hlqtBalance, totalStakedHLQT }: LiquityStoreState) => ({
+  hlqtBalance,
+  totalStakedHLQT
 });
 
 type StakingEditorProps = {
   title: string;
-  originalStake: HLQTYStake;
+  originalStake: HLQTStake;
   editedLQTY: Decimal;
   dispatch: (action: { type: "setStake"; newValue: Decimalish } | { type: "revert" }) => void;
   transactionSteps: Step[];
@@ -33,21 +33,21 @@ export const StakingEditor: React.FC<StakingEditorProps> = ({
   transactionSteps,
   dispatch
 }) => {
-  const { hlqtyBalance, totalStakedHLQTY } = useLiquitySelector(select);
+  const { hlqtBalance, totalStakedHLQT } = useLiquitySelector(select);
   const { changePending } = useStakingView();
   const editingState = useState<string>();
 
-  const edited = !editedLQTY.eq(originalStake.stakedHLQTY);
+  const edited = !editedLQTY.eq(originalStake.stakedHLQT);
 
-  const maxAmount = originalStake.stakedHLQTY.add(hlqtyBalance);
+  const maxAmount = originalStake.stakedHLQT.add(hlqtBalance);
   const maxedOut = editedLQTY.eq(maxAmount);
 
-  const totalStakedLQTYAfterChange = totalStakedHLQTY.sub(originalStake.stakedHLQTY).add(editedLQTY);
+  const totalStakedLQTYAfterChange = totalStakedHLQT.sub(originalStake.stakedHLQT).add(editedLQTY);
 
-  const originalPoolShare = originalStake.stakedHLQTY.mulDiv(100, totalStakedHLQTY);
+  const originalPoolShare = originalStake.stakedHLQT.mulDiv(100, totalStakedHLQT);
   const newPoolShare = editedLQTY.mulDiv(100, totalStakedLQTYAfterChange);
   const poolShareChange =
-    originalStake.stakedHLQTY.nonZero && Difference.between(newPoolShare, originalPoolShare).nonZero;
+    originalStake.stakedHLQT.nonZero && Difference.between(newPoolShare, originalPoolShare).nonZero;
 
   return (
     <Card>

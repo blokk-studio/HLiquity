@@ -118,8 +118,8 @@ export const StabilityDepositEditor: React.FC<StabilityDepositEditorProps> = ({
             <StaticRow
               label="Reward"
               inputId="deposit-reward"
-              amount={originalDeposit.hlqtyReward.prettify()}
-              color={originalDeposit.hlqtyReward.nonZero && "success"}
+              amount={originalDeposit.hlqtReward.prettify()}
+              color={originalDeposit.hlqtReward.nonZero && "success"}
               unit={GT}
               infoIcon={
                 <InfoIcon

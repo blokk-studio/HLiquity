@@ -16,7 +16,7 @@ export const TVL: Lexicon = {
     "The Total Value Locked (TVL) is the total value of HBAR locked as collateral in the system, given in HBAR and HCHF."
 };
 
-export const STAKED_HLQTY: Lexicon = {
+export const STAKED_HLQT: Lexicon = {
   term: "Staked HLQT",
   description: "The total amount of HLQT that is staked for earning fee revenue."
 };

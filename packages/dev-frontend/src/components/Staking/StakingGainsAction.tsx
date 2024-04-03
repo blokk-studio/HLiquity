@@ -6,7 +6,7 @@ import { useLiquitySelector } from "@liquity/lib-react";
 import { useLiquity } from "../../hooks/LiquityContext";
 import { useTransactionFunction } from "../Transaction";
 
-const selectLQTYStake = ({ hlqtyStake }: LiquityStoreState) => hlqtyStake;
+const selectLQTYStake = ({ hlqtStake }: LiquityStoreState) => hlqtStake;
 
 export const StakingGainsAction: React.FC = () => {
   const { liquity } = useLiquity();

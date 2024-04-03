@@ -11,7 +11,7 @@ const arbitraryStake = () =>
 
 const nonZeroStake = () => arbitraryStake().filter(({ stakedHLQT }) => !stakedHLQT.isZero);
 
-describe("HLQTYStake", () => {
+describe("HLQTStake", () => {
   it("applying diff of `b` from `a` to `a` should always yield `b`", () => {
     fc.assert(fc.property(arbitraryStake(), fc.float(), (a, b) => a.apply(a.whatChanged(b)).eq(b)));
   });

@@ -81,7 +81,7 @@ const reduce = (
         !updatedDeposit.initialHCHF.eq(originalDeposit.initialHCHF) ||
         updatedDeposit.currentHCHF.gt(originalDeposit.currentHCHF) ||
         updatedDeposit.collateralGain.lt(originalDeposit.collateralGain) ||
-        updatedDeposit.hlqtyReward.lt(originalDeposit.hlqtyReward);
+        updatedDeposit.hlqtReward.lt(originalDeposit.hlqtReward);
 
       if (changePending && changeCommitted) {
         return finishChange(revert(newState));

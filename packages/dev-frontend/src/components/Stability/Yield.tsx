@@ -7,9 +7,9 @@ import { Badge } from "../Badge";
 import { fetchHlqtPrice } from "./context/fetchHlqtPrice";
 import { COIN, COLLATERAL_COIN, GT } from "../../strings";
 
-const selector = ({ hchfInStabilityPool, remainingStabilityPoolHLQTYReward }: LiquityStoreState) => ({
+const selector = ({ hchfInStabilityPool, remainingStabilityPoolHLQTReward }: LiquityStoreState) => ({
   hchfInStabilityPool,
-  remainingStabilityPoolHLQTYReward
+  remainingStabilityPoolHLQTReward
 });
 
 const yearlyIssuanceFraction = 0.5;
@@ -17,10 +17,11 @@ const dailyIssuanceFraction = Decimal.from(1 - yearlyIssuanceFraction ** (1 / 36
 const dailyIssuancePercentage = dailyIssuanceFraction.mul(100);
 
 export const Yield: React.FC = () => {
-  const { hchfInStabilityPool, remainingStabilityPoolHLQTYReward } = useLiquitySelector(selector);
+  const { hchfInStabilityPool, remainingStabilityPoolHLQTReward } = useLiquitySelector(selector);
 
   const [hlqtPrice, setHlqtPrice] = useState<Decimal | undefined>(undefined);
-  const hasZeroValue = remainingStabilityPoolHLQTYReward?.isZero || hchfInStabilityPool?.isZero || true;
+  const hasZeroValue =
+    remainingStabilityPoolHLQTReward?.isZero || hchfInStabilityPool?.isZero || true;
 
   useEffect(() => {
     (async () => {
@@ -35,10 +36,10 @@ export const Yield: React.FC = () => {
 
   if (hasZeroValue || hlqtPrice === undefined) return null;
 
-  const lqtyIssuanceOneDay = remainingStabilityPoolHLQTYReward.mul(dailyIssuanceFraction);
+  const lqtyIssuanceOneDay = remainingStabilityPoolHLQTReward.mul(dailyIssuanceFraction);
   const lqtyIssuanceOneDayInUSD = lqtyIssuanceOneDay.mul(hlqtPrice);
   const aprPercentage = lqtyIssuanceOneDayInUSD.mulDiv(365 * 100, hchfInStabilityPool);
-  const remainingHlqtInCHF = remainingStabilityPoolHLQTYReward.mul(hlqtPrice);
+  const remainingHlqtInCHF = remainingStabilityPoolHLQTReward.mul(hlqtPrice);
 
   if (aprPercentage.isZero) return null;
 
@@ -50,8 +51,8 @@ export const Yield: React.FC = () => {
           <Card variant="tooltip" sx={{ width: ["220px", "518px"] }}>
             <Paragraph>
               An <Text sx={{ fontWeight: "bold" }}>estimate</Text> of the {GT} return on the {COIN}
-              deposited to the Stability Pool over the next year, not including your {COLLATERAL_COIN} gains from
-              liquidations.
+              deposited to the Stability Pool over the next year, not including your{" "}
+              {COLLATERAL_COIN} gains from liquidations.
             </Paragraph>
             <Paragraph sx={{ fontSize: "12px", fontFamily: "monospace", mt: 2 }}>
               (CHF {GT}_REWARDS * DAILY_ISSUANCE% / DEPOSITED_{COIN}) * 365 * 100 ={" "}

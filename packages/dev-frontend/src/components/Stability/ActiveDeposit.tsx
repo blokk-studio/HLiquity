@@ -32,7 +32,7 @@ export const ActiveDeposit: React.FC = () => {
     dispatchEvent("ADJUST_DEPOSIT_PRESSED");
   }, [dispatchEvent]);
 
-  const hasReward = !stabilityDeposit.hlqtyReward.isZero;
+  const hasReward = !stabilityDeposit.hlqtReward.isZero;
   const hasGain = !stabilityDeposit.collateralGain.isZero;
   const hasTrove = !trove.isEmpty;
 
@@ -86,8 +86,8 @@ export const ActiveDeposit: React.FC = () => {
             <StaticRow
               label="Reward"
               inputId="deposit-reward"
-              amount={stabilityDeposit.hlqtyReward.prettify()}
-              color={stabilityDeposit.hlqtyReward.nonZero && "success"}
+              amount={stabilityDeposit.hlqtReward.prettify()}
+              color={stabilityDeposit.hlqtReward.nonZero && "success"}
               unit={GT}
               infoIcon={
                 <InfoIcon
@@ -113,11 +113,15 @@ export const ActiveDeposit: React.FC = () => {
             &nbsp;Adjust
           </Button>
 
-          <ClaimRewards disabled={!hasGain && !hasReward}>Claim {COLLATERAL_COIN} and {GT}</ClaimRewards>
+          <ClaimRewards disabled={!hasGain && !hasReward}>
+            Claim {COLLATERAL_COIN} and {GT}
+          </ClaimRewards>
         </Flex>
 
         {hasTrove && (
-          <ClaimAndMove disabled={!hasGain}>Claim {GT} and move {COLLATERAL_COIN} to Trove</ClaimAndMove>
+          <ClaimAndMove disabled={!hasGain}>
+            Claim {GT} and move {COLLATERAL_COIN} to Trove
+          </ClaimAndMove>
         )}
       </Box>
 

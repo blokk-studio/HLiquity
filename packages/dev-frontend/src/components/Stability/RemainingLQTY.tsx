@@ -4,16 +4,16 @@ import { Flex } from "theme-ui";
 import { LiquityStoreState } from "@liquity/lib-base";
 import { useLiquitySelector } from "@liquity/lib-react";
 
-const selector = ({ remainingStabilityPoolHLQTYReward }: LiquityStoreState) => ({
-  remainingStabilityPoolHLQTYReward
+const selector = ({ remainingStabilityPoolHLQTReward }: LiquityStoreState) => ({
+  remainingStabilityPoolHLQTReward
 });
 
 export const RemainingLQTY: React.FC = () => {
-  const { remainingStabilityPoolHLQTYReward } = useLiquitySelector(selector);
+  const { remainingStabilityPoolHLQTReward } = useLiquitySelector(selector);
 
   return (
     <Flex sx={{ mr: 2, fontSize: 2, fontWeight: "medium" }}>
-      {remainingStabilityPoolHLQTYReward?.prettify(0)} HLQT remaining
+      {remainingStabilityPoolHLQTReward?.prettify(0)} HLQT remaining
     </Flex>
   );
 };

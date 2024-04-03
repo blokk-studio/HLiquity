@@ -9,21 +9,21 @@ import { Statistic } from "./Statistic";
 import * as l from "../lexicon";
 import { COLLATERAL_COIN } from "../strings";
 
-const selectBalances = ({ accountBalance, hchfBalance, hlqtyBalance }: LiquityStoreState) => ({
+const selectBalances = ({ accountBalance, hchfBalance, hlqtBalance }: LiquityStoreState) => ({
   accountBalance,
   hchfBalance,
-  hlqtyBalance
+  hlqtBalance
 });
 
 const Balances: React.FC = () => {
-  const { accountBalance, hchfBalance, hlqtyBalance } = useLiquitySelector(selectBalances);
+  const { accountBalance, hchfBalance, hlqtBalance } = useLiquitySelector(selectBalances);
 
   return (
     <Box sx={{ mb: 3 }}>
       <Heading>My Account Balances</Heading>
       <Statistic lexicon={l.HBAR}>{accountBalance.prettify(4)}</Statistic>
       <Statistic lexicon={l.HCHF}>{hchfBalance.prettify()}</Statistic>
-      <Statistic lexicon={l.HLQT}>{hlqtyBalance.prettify()}</Statistic>
+      <Statistic lexicon={l.HLQT}>{hlqtBalance.prettify()}</Statistic>
     </Box>
   );
 };
@@ -49,7 +49,7 @@ const select = ({
   hchfInStabilityPool,
   borrowingRate,
   redemptionRate,
-  totalStakedHLQTY,
+  totalStakedHLQT,
   frontend
 }: LiquityStoreState) => ({
   numberOfTroves,
@@ -58,7 +58,7 @@ const select = ({
   hchfInStabilityPool,
   borrowingRate,
   redemptionRate,
-  totalStakedHLQTY,
+  totalStakedHLQT,
   kickbackRate: frontend.status === "registered" ? frontend.kickbackRate : null
 });
 
@@ -75,7 +75,7 @@ export const SystemStats: React.FC<SystemStatsProps> = ({ variant = "info", show
     hchfInStabilityPool,
     total,
     borrowingRate,
-    totalStakedHLQTY,
+    totalStakedHLQT,
     kickbackRate
   } = useLiquitySelector(select);
 
@@ -111,7 +111,7 @@ export const SystemStats: React.FC<SystemStatsProps> = ({ variant = "info", show
           <Text sx={{ fontSize: 1 }}>&nbsp;({lusdInStabilityPoolPct.toString(1)})</Text>
         </Statistic>
       )}
-      <Statistic lexicon={l.STAKED_HLQTY}>{totalStakedHLQTY?.shorten()}</Statistic>
+      <Statistic lexicon={l.STAKED_HLQT}>{totalStakedHLQT?.shorten()}</Statistic>
       <Statistic lexicon={l.TCR}>{totalCollateralRatioPct.prettify()}</Statistic>
       <Statistic lexicon={l.RECOVERY_MODE}>
         {total.collateralRatioIsBelowCritical(price) ? <Box color="danger">Yes</Box> : "No"}

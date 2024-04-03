@@ -67,11 +67,11 @@ const fetchCoinGeckoSimplePrice = async <T extends string, U extends string>(
   return validateCoinGeckoSimplePriceResponse(coinIds, vsCurrencies, await response.json());
 };
 
-export interface HlqtyPriceResponse {
+export interface HlqtPriceResponse {
   hlqtPriceCHF: Decimal;
 }
 
-export const fetchHlqtPrice = async (): Promise<HlqtyPriceResponse> => {
+export const fetchHlqtPrice = async (): Promise<HlqtPriceResponse> => {
   // TODO: hlqt + chf
   const response = await fetchCoinGeckoSimplePrice(["liquity"] as const, ["usd"] as const);
 

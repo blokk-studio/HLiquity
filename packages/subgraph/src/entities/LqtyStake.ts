@@ -23,7 +23,7 @@ function startLQTYStakeChange(event: ethereum.Event): LqtyStakeChange {
   return stakeChange;
 }
 
-function finishLQTYStakeChange(stakeChange: LqtyStakeChange): void {
+function finishLQTStakeChange(stakeChange: LqtyStakeChange): void {
   finishChange(stakeChange);
   stakeChange.save();
 }
@@ -100,7 +100,7 @@ export function updateStake(event: ethereum.Event, address: Address, newStake: B
   }
 
   updateSystemStateByLqtyStakeChange(stakeChange);
-  finishLQTYStakeChange(stakeChange);
+  finishLQTStakeChange(stakeChange);
 
   stake.save();
 }
@@ -126,7 +126,7 @@ export function withdrawStakeGains(
   stakeChange.stakedAmountAfter = stake.amount;
 
   updateSystemStateByLqtyStakeChange(stakeChange);
-  finishLQTYStakeChange(stakeChange);
+  finishLQTStakeChange(stakeChange);
 
   stake.save();
 }
