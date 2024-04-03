@@ -67,11 +67,11 @@ export interface EthersLiquityConnection extends EthersLiquityConnectionOptional
   /** Time period (in seconds) after `deploymentDate` during which redemptions are disabled. */
   readonly bootstrapPeriod: number;
 
-  /** Total amount of HLQTY allocated for rewarding stability depositors. */
-  readonly totalStabilityPoolHLQTYReward: Decimal;
+  /** Total amount of HLQT allocated for rewarding stability depositors. */
+  readonly totalStabilityPoolHLQTReward: Decimal;
 
-  /** Amount of HLQTY collectively rewarded to stakers of the liquidity mining pool per second. */
-  readonly liquidityMiningHLQTYRewardRate: Decimal;
+  /** Amount of HLQT collectively rewarded to stakers of the liquidity mining pool per second. */
+  readonly liquidityMiningHLQTRewardRate: Decimal;
 
   /** A mapping of Liquity contracts' names to their addresses. */
   readonly addresses: Record<string, string>;
@@ -107,8 +107,8 @@ const getConnection = (
   _multicall: _Multicall | undefined,
   {
     deploymentDate,
-    totalStabilityPoolHLQTYReward,
-    liquidityMiningHLQTYRewardRate,
+    totalStabilityPoolHLQTReward,
+    liquidityMiningHLQTRewardRate,
     ...deployment
   }: _LiquityDeploymentJSON,
   optionalParams?: EthersLiquityConnectionOptionalParams
@@ -127,8 +127,8 @@ const getConnection = (
     _contracts,
     _multicall,
     deploymentDate: new Date(deploymentDate),
-    totalStabilityPoolHLQTYReward: Decimal.from(totalStabilityPoolHLQTYReward),
-    liquidityMiningHLQTYRewardRate: Decimal.from(liquidityMiningHLQTYRewardRate),
+    totalStabilityPoolHLQTReward: Decimal.from(totalStabilityPoolHLQTReward),
+    liquidityMiningHLQTRewardRate: Decimal.from(liquidityMiningHLQTRewardRate),
     ...deployment,
     ...optionalParams
   });
@@ -271,7 +271,7 @@ const validStoreOptions = ["blockPolled"];
  */
 export interface EthersLiquityConnectionOptionalParams {
   /**
-   * Address whose Trove, Stability Deposit, HLQTY Stake and balances will be read by default.
+   * Address whose Trove, Stability Deposit, HLQT Stake and balances will be read by default.
    *
    * @remarks
    * For example {@link EthersLiquity.getTrove | getTrove(address?)} will return the Trove owned by
@@ -283,7 +283,7 @@ export interface EthersLiquityConnectionOptionalParams {
   readonly userAddress?: string;
 
   /**
-   * Address that will receive HLQTY rewards from newly created Stability Deposits by default.
+   * Address that will receive HLQT rewards from newly created Stability Deposits by default.
    *
    * @remarks
    * For example

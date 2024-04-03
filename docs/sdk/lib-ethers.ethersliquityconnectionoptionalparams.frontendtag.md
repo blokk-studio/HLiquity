@@ -4,7 +4,7 @@
 
 ## EthersLiquityConnectionOptionalParams.frontendTag property
 
-Address that will receive HLQTY rewards from newly created Stability Deposits by default.
+Address that will receive HLQT rewards from newly created Stability Deposits by default.
 
 <b>Signature:</b>
 
