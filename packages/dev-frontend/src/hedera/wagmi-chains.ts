@@ -51,7 +51,7 @@ export const previewnet: HederaChain = {
 
 export const mainnet: HederaChain = {
   id: 0x127,
-  name: "Hedera",
+  name: "Hedera Mainnet",
   nativeCurrency: {
     name: "HBAR",
     symbol: "HBAR",
