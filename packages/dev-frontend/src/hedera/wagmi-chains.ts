@@ -67,7 +67,7 @@ export const mainnet: HederaChain = {
     }
   },
   testnet: true,
-  apiBaseUrl: "https://mainnet.mirrornode.hedera.com/api/v1"
+  apiBaseUrl: "https://mainnet-public.mirrornode.hedera.com/api/v1"
 };
 
 const enabledChainIdsSet = new Set(enabledChainIds);
