@@ -30,7 +30,7 @@ export const HCHF_LIQUIDATION_RESERVE = Decimal.from(1);
  *
  * @public
  */
-export const HCHF_MINIMUM_NET_DEBT = Decimal.from(10);
+export const HCHF_MINIMUM_NET_DEBT = Decimal.from(1);
 
 /**
  * A Trove must always have at least this much debt.
