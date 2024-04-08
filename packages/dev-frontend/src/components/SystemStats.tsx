@@ -174,7 +174,7 @@ export const SystemStats: React.FC<SystemStatsProps> = ({ variant = "info", show
           )}
         </Box>
         <Box sx={{ fontSize: 0 }}>
-          HLQT Token Address:{" "}
+          HLQT Token ID:{" "}
           {chain ? (
             <Tooltip
               message={
