@@ -1,3 +1,4 @@
+/** @jsxImportSource theme-ui */
 import React from "react";
 import { Card, Heading, Link, Box, Text } from "theme-ui";
 import { AddressZero } from "@ethersproject/constants";
@@ -8,6 +9,10 @@ import { useLiquity } from "../hooks/LiquityContext";
 import { Statistic } from "./Statistic";
 import * as l from "../lexicon";
 import { COLLATERAL_COIN } from "../strings";
+import { useHederaChain } from "../hedera/wagmi-chains";
+import { shortenAddress } from "../utils/shortenAddress";
+import { Tooltip } from "./Tooltip";
+import { TokenId } from "@hashgraph/sdk";
 
 const selectBalances = ({ accountBalance, hchfBalance, hlqtBalance }: LiquityStoreState) => ({
   accountBalance,
@@ -75,6 +80,7 @@ export const SystemStats: React.FC<SystemStatsProps> = ({ variant = "info", show
   const totalCollateralRatioPct = new Percent(total.collateralRatio(price));
   const borrowingFeePct = new Percent(borrowingRate);
   const kickbackRatePct = frontendTag === AddressZero ? "100" : kickbackRate?.mul(100).prettify();
+  const chain = useHederaChain();
 
   return (
     <Card {...{ variant }}>
@@ -136,6 +142,55 @@ export const SystemStats: React.FC<SystemStatsProps> = ({ variant = "info", show
             >
               {import.meta.env.VITE_APP_VERSION.substring(0, 7)}
             </Link>
+          ) : (
+            <>unknown</>
+          )}
+        </Box>
+        <Box sx={{ fontSize: 0 }}>
+          HCHF Token ID:{" "}
+          {chain ? (
+            <Tooltip
+              message={
+                <Card variant="tooltip">
+                  <header sx={{ fontWeight: "700", display: "block" }}>HCHF Token</header>
+                  <span sx={{ display: "block" }}>
+                    Hedera ID:{" "}
+                    <span sx={{ fontWeight: "700" }}>
+                      {TokenId.fromSolidityAddress(chain.hchfTokenId).toString()}
+                    </span>
+                  </span>
+                  <span sx={{ display: "block" }}>
+                    EVM Address: <span sx={{ fontWeight: "700" }}>{chain.hchfTokenId}</span>
+                  </span>
+                </Card>
+              }
+            >
+              <span sx={{ fontWeight: "700" }}>
+                {TokenId.fromSolidityAddress(chain.hchfTokenId).toString()}
+              </span>
+            </Tooltip>
+          ) : (
+            <>unknown</>
+          )}
+        </Box>
+        <Box sx={{ fontSize: 0 }}>
+          HLQT Token Address:{" "}
+          {chain ? (
+            <Tooltip
+              message={
+                <Card variant="tooltip">
+                  <header sx={{ fontWeight: "700", display: "block" }}>HLQT Token</header>
+                  <span sx={{ display: "block" }}>
+                    Hedera ID: {TokenId.fromSolidityAddress(chain.hlqtTokenId).toString()}
+                  </span>
+                  <span sx={{ display: "block" }}>EVM Address: {chain.hlqtTokenId}</span>
+                </Card>
+              }
+            >
+              <span sx={{ fontWeight: "700" }}>
+                {TokenId.fromSolidityAddress(chain.hlqtTokenId).toString()}
+              </span>
+            </Tooltip>
           ) : (
             <>unknown</>
           )}
