@@ -1,10 +1,14 @@
 import { Chain } from "@wagmi/core";
 import { useNetwork } from "wagmi";
+import { AddressZero } from "@ethersproject/constants";
 import { enabledChainIds } from "../configuration/enabled_chains";
 import { deployments } from "../configuration/deployments";
 
 interface HederaChain extends Chain {
   apiBaseUrl: string;
+  color: `#${string}`;
+  hchfTokenId: `0x${string}`;
+  hlqtTokenId: `0x${string}`;
 }
 
 export const testnet: HederaChain = {
@@ -25,7 +29,9 @@ export const testnet: HederaChain = {
     }
   },
   testnet: true,
-  apiBaseUrl: "https://testnet.mirrornode.hedera.com/api/v1"
+  apiBaseUrl: "https://testnet.mirrornode.hedera.com/api/v1",
+  hchfTokenId: "0x0000000000000000000000000000000000388c1c",
+  hlqtTokenId: "0x0000000000000000000000000000000000388c1F"
 };
 
 export const previewnet: HederaChain = {
@@ -46,7 +52,9 @@ export const previewnet: HederaChain = {
     }
   },
   testnet: true,
-  apiBaseUrl: "https://previewnet.mirrornode.hedera.com/api/v1"
+  apiBaseUrl: "https://previewnet.mirrornode.hedera.com/api/v1",
+  hchfTokenId: AddressZero,
+  hlqtTokenId: AddressZero
 };
 
 export const mainnet: HederaChain = {
@@ -67,7 +75,9 @@ export const mainnet: HederaChain = {
     }
   },
   testnet: true,
-  apiBaseUrl: "https://mainnet-public.mirrornode.hedera.com/api/v1"
+  apiBaseUrl: "https://mainnet-public.mirrornode.hedera.com/api/v1",
+  hchfTokenId: "0x0000000000000000000000000000000000500326",
+  hlqtTokenId: "0x0000000000000000000000000000000000500334"
 };
 
 const enabledChainIdsSet = new Set(enabledChainIds);

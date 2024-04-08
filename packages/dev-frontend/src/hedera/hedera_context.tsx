@@ -8,7 +8,11 @@ import { fetchTokens } from "./mirrornode";
 import { approveSpender, associateWithToken, dissociateFromToken } from "./consent";
 
 interface HederaContext {
-  approveSpender: (options: { contractAddress: `0x${string}`; tokenAddress: `0x${string}`; amount: BigNumber }) => Promise<void>;
+  approveSpender: (options: {
+    contractAddress: `0x${string}`;
+    tokenAddress: `0x${string}`;
+    amount: BigNumber;
+  }) => Promise<void>;
   associateWithToken: (options: { tokenAddress: `0x${string}` }) => Promise<void>;
   dissociateFromToken: (options: { tokenAddress: `0x${string}` }) => Promise<void>;
   hasAssociatedWithHchf: boolean;
@@ -60,12 +64,16 @@ export const HederaTokensProvider: React.FC = ({ children }) => {
     }
   }, [account.address, hederaChain]);
 
-  const hchfTokenId = TokenId.fromSolidityAddress(config.hchfTokenId).toString();
+  const hchfTokenId = hederaChain
+    ? TokenId.fromSolidityAddress(hederaChain.hchfTokenId).toString()
+    : undefined;
   const hasAssociatedWithHchf = tokens.some(token => {
     const isHchf = token.id === hchfTokenId;
     return isHchf;
   });
-  const hlqtTokenId = TokenId.fromSolidityAddress(config.hlqtTokenId).toString();
+  const hlqtTokenId = hederaChain
+    ? TokenId.fromSolidityAddress(hederaChain.hlqtTokenId).toString()
+    : undefined;
   const hasAssociatedWithHlqt = tokens.some(token => {
     const isHlqt = token.id === hlqtTokenId;
     return isHlqt;
@@ -146,7 +154,6 @@ export const HederaTokensProvider: React.FC = ({ children }) => {
     await approveSpender({ ...options, signer });
   };
 
-
   return (
     <hederaContext.Provider
       value={{
@@ -154,7 +161,7 @@ export const HederaTokensProvider: React.FC = ({ children }) => {
         dissociateFromToken: dissociateFromTokenWithContext,
         approveSpender: approveSpenderWithContext,
         hasAssociatedWithHchf,
-        hasAssociatedWithHlqt,
+        hasAssociatedWithHlqt
       }}
     >
       {children}

@@ -28,7 +28,7 @@ import {
 import { useHedera } from "../../hedera/hedera_context";
 import { Step, Steps } from "../Steps";
 import { useLoadingState } from "../../loading_state";
-import { useLiquity } from "../../hooks/LiquityContext";
+import { useHederaChain } from "../../hedera/wagmi-chains";
 
 const selector = (state: LiquityStoreState) => {
   const { fees, price, accountBalance } = state;
@@ -98,10 +98,18 @@ export const Opening: React.FC = () => {
   }, [collateral, borrowAmount]);
 
   // consent & approval
-  const { config } = useLiquity();
+  const chain = useHederaChain();
   const { hasAssociatedWithHchf, associateWithToken } = useHedera();
-  const { call: associateWithHchf, state: hchfAssociationLoadingState } = useLoadingState(() =>
-    associateWithToken({ tokenAddress: config.hchfTokenId })
+  const { call: associateWithHchf, state: hchfAssociationLoadingState } = useLoadingState(
+    async () => {
+      if (!chain) {
+        const errorMessage = `i cannot get the hchf token id if there is no chain. please connect to a chain first.`;
+        console.error(errorMessage, "context:", { chain });
+        throw new Error(errorMessage);
+      }
+
+      await associateWithToken({ tokenAddress: chain.hchfTokenId });
+    }
   );
   const steps: Step[] = [
     {

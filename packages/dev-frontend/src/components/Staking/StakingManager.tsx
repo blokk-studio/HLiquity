@@ -1,5 +1,5 @@
 import React from "react";
-import { Button, Flex, Spinner } from "theme-ui";
+import { Button, Flex } from "theme-ui";
 
 import {
   Decimal,
@@ -24,6 +24,7 @@ import { useLoadingState } from "../../loading_state";
 import { BigNumber } from "ethers";
 import { Step } from "../Steps";
 import { LoadingButton } from "../LoadingButton";
+import { useHederaChain } from "../../hedera/wagmi-chains";
 
 const init = ({ hlqtStake }: LiquityStoreState) => ({
   originalStake: hlqtStake,
@@ -149,15 +150,23 @@ export const StakingManager: React.FC = () => {
 
   // consent & approval
   const {
-    config,
     liquity: {
       connection: { addresses }
     }
   } = useLiquity();
+  const chain = useHederaChain();
   const { hasAssociatedWithHchf, associateWithToken, approveSpender } = useHedera();
   // hlqt token association
-  const { call: associateWithHchf, state: hchfAssociationLoadingState } = useLoadingState(() =>
-    associateWithToken({ tokenAddress: config.hchfTokenId })
+  const { call: associateWithHchf, state: hchfAssociationLoadingState } = useLoadingState(
+    async () => {
+      if (!chain) {
+        const errorMessage = `i cannot get the hchf token id if there is no chain. please connect to a chain first.`;
+        console.error(errorMessage, "context:", { chain });
+        throw new Error(errorMessage);
+      }
+
+      await associateWithToken({ tokenAddress: chain.hchfTokenId });
+    }
   );
   // hchf spender approval
   const needsSpenderApproval = !validChange || validChange?.stakeHLQT;
@@ -166,8 +175,14 @@ export const StakingManager: React.FC = () => {
       throw "cannot approve a withdrawal (negative spending/negative deposit) or deposit of 0";
     }
 
+    if (!chain) {
+      const errorMessage = `i cannot get the hlqt token id if there is no chain. please connect to a chain first.`;
+      console.error(errorMessage, "context:", { chain });
+      throw new Error(errorMessage);
+    }
+
     const contractAddress = addresses.hlqtToken as `0x${string}`;
-    const tokenAddress = config.hlqtTokenId;
+    const tokenAddress = chain.hlqtTokenId;
     const amount = BigNumber.from(validChange.stakeHLQT.bigNumber);
 
     await approveSpender({

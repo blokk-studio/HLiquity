@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState, useRef } from "react";
-import { Flex, Button, Box, Card, Heading, Spinner } from "theme-ui";
+import { Flex, Button, Box, Card, Heading } from "theme-ui";
 import {
   LiquityStoreState,
   Decimal,
@@ -18,7 +18,6 @@ import { useTroveView } from "./context/TroveViewContext";
 import { COIN, COLLATERAL_COIN } from "../../strings";
 import { Icon } from "../Icon";
 import { InfoIcon } from "../InfoIcon";
-import { LoadingOverlay } from "../LoadingOverlay";
 import { CollateralRatio } from "./CollateralRatio";
 import { EditableRow, StaticRow } from "./Editor";
 import { ExpensiveTroveChangeWarning, GasEstimationState } from "./ExpensiveTroveChangeWarning";
@@ -32,6 +31,7 @@ import { useHedera } from "../../hedera/hedera_context";
 import { useLoadingState } from "../../loading_state";
 import { BigNumber } from "ethers";
 import { LoadingButton } from "../LoadingButton";
+import { useHederaChain } from "../../hedera/wagmi-chains";
 
 const selector = (state: LiquityStoreState) => {
   const { trove, fees, price, accountBalance } = state;
@@ -163,17 +163,24 @@ export const Adjusting: React.FC = () => {
 
   // consent & approval
   const {
-    config,
     liquity: {
       connection: { addresses }
     }
   } = useLiquity();
-
+  const chain = useHederaChain();
   const needsHchfAssociation = !stableTroveChange || stableTroveChange?.params.borrowHCHF;
   const { hasAssociatedWithHchf, associateWithToken, approveSpender } = useHedera();
   // hchf token association
-  const { call: associateWithHchf, state: hchfAssociationLoadingState } = useLoadingState(() =>
-    associateWithToken({ tokenAddress: config.hlqtTokenId })
+  const { call: associateWithHchf, state: hchfAssociationLoadingState } = useLoadingState(
+    async () => {
+      if (!chain) {
+        const errorMessage = `i cannot get the hlqt token id if there is no chain. please connect to a chain first.`;
+        console.error(errorMessage, "context:", { chain });
+        throw new Error(errorMessage);
+      }
+
+      await associateWithToken({ tokenAddress: chain.hlqtTokenId });
+    }
   );
   // hchf spender approval
   const needsSpenderApproval = stableTroveChange?.params.repayHCHF;
@@ -182,8 +189,14 @@ export const Adjusting: React.FC = () => {
       throw "cannot approve a withdrawal (negative spending/negative deposit) or deposit of 0";
     }
 
+    if (!chain) {
+      const errorMessage = `i cannot get the hchf token id if there is no chain. please connect to a chain first.`;
+      console.error(errorMessage, "context:", { chain });
+      throw new Error(errorMessage);
+    }
+
     const contractAddress = addresses.hchfToken as `0x${string}`;
-    const tokenAddress = config.hchfTokenId;
+    const tokenAddress = chain.hchfTokenId;
     const amount = BigNumber.from(stableTroveChange.params.repayHCHF.bigNumber);
 
     await approveSpender({

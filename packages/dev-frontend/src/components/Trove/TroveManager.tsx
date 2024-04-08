@@ -23,6 +23,7 @@ import { useHedera } from "../../hedera/hedera_context";
 import { useLoadingState } from "../../loading_state";
 import { BigNumber } from "ethers";
 import { LoadingButton } from "../LoadingButton";
+import { useHederaChain } from "../../hedera/wagmi-chains";
 
 const init = ({ trove }: LiquityStoreState) => ({
   original: trove,
@@ -217,12 +218,12 @@ export const TroveManager: React.FC<TroveManagerProps> = ({ collateral, debt }) 
 
   // consent & approval
   const {
-    config,
     liquity: {
       connection: { addresses }
     }
   } = useLiquity();
 
+  const chain = useHederaChain();
   const { approveSpender } = useHedera();
   // hchf spender approval
   const { call: approveHchfSpender, state: hchfApprovalLoadingState } = useLoadingState(async () => {
@@ -230,8 +231,14 @@ export const TroveManager: React.FC<TroveManagerProps> = ({ collateral, debt }) 
       throw "cannot approve a withdrawal (negative spending/negative deposit) or deposit of 0";
     }
 
+    if (!chain) {
+      const errorMessage = `i cannot get the hchf token id if there is no chain. please connect to a chain first.`;
+      console.error(errorMessage, "context:", { chain });
+      throw new Error(errorMessage);
+    }
+
     const contractAddress = addresses.hchfToken as `0x${string}`;
-    const tokenAddress = config.hchfTokenId;
+    const tokenAddress = chain.hchfTokenId;
     const amount = BigNumber.from(validChange.params.repayHCHF.bigNumber);
 
     await approveSpender({

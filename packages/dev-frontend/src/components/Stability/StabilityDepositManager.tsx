@@ -22,6 +22,7 @@ import { useHedera } from "../../hedera/hedera_context";
 import { useLiquity } from "../../hooks/LiquityContext";
 import { BigNumber } from "ethers";
 import { LoadingButton } from "../LoadingButton";
+import { useHederaChain } from "../../hedera/wagmi-chains";
 
 const init = ({ stabilityDeposit }: LiquityStoreState) => ({
   originalDeposit: stabilityDeposit,
@@ -137,12 +138,11 @@ export const StabilityDepositManager: React.FC = () => {
 
   // consent & approval
   const {
-    config,
     liquity: {
       connection: { addresses }
     }
   } = useLiquity();
-
+  const chain = useHederaChain();
   const {
     hasAssociatedWithHlqt,
     hasAssociatedWithHchf,
@@ -151,23 +151,47 @@ export const StabilityDepositManager: React.FC = () => {
   } = useHedera();
   const needsHlqtAssociation = !hasAssociatedWithHlqt && (!validChange || validChange?.depositHCHF);
   // hlqt token association (deposition)
-  const { call: associateWithHlqt, state: hlqtAssociationLoadingState } = useLoadingState(() =>
-    associateWithToken({ tokenAddress: config.hlqtTokenId })
+  const { call: associateWithHlqt, state: hlqtAssociationLoadingState } = useLoadingState(
+    async () => {
+      if (!chain) {
+        const errorMessage = `i cannot get the hlqt token id if there is no chain. please connect to a chain first.`;
+        console.error(errorMessage, "context:", { chain });
+        throw new Error(errorMessage);
+      }
+
+      await associateWithToken({ tokenAddress: chain.hlqtTokenId });
+    }
   );
   // hchf token association (withdrawal)
   const needsHchfAssociation = !hasAssociatedWithHchf && validChange?.withdrawHCHF;
-  const { call: associateWithHchf, state: hchfAssociationLoadingState } = useLoadingState(() =>
-    associateWithToken({ tokenAddress: config.hchfTokenId })
+  const { call: associateWithHchf, state: hchfAssociationLoadingState } = useLoadingState(
+    async () => {
+      if (!chain) {
+        const errorMessage = `i cannot get the hchf token id if there is no chain. please connect to a chain first.`;
+        console.error(errorMessage, "context:", { chain });
+        throw new Error(errorMessage);
+      }
+
+      await associateWithToken({ tokenAddress: chain.hchfTokenId });
+    }
   );
   // hchf spender approval
   const needsHchfSpenderApproval = !validChange || validChange?.depositHCHF;
   const { call: approveHchfSpender, state: hchfApprovalLoadingState } = useLoadingState(async () => {
     if (!validChange?.depositHCHF) {
-      throw "cannot approve a withdrawal (negative spending/negative deposit) or deposit of 0";
+      const errorMessage = `you cannot approve a withdrawal (negative spending/negative deposit) or deposit of 0`;
+      console.error(errorMessage, "context:", { validChange });
+      throw new Error(errorMessage);
+    }
+
+    if (!chain) {
+      const errorMessage = `i cannot get the hchf token id if there is no chain. please connect to a chain first.`;
+      console.error(errorMessage, "context:", { chain });
+      throw new Error(errorMessage);
     }
 
     const contractAddress = addresses.hchfToken as `0x${string}`;
-    const tokenAddress = config.hchfTokenId;
+    const tokenAddress = chain.hchfTokenId;
     const amount = BigNumber.from(validChange.depositHCHF.bigNumber);
 
     await approveSpender({
