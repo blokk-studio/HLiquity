@@ -10,7 +10,6 @@ import { Statistic } from "./Statistic";
 import * as l from "../lexicon";
 import { COLLATERAL_COIN } from "../strings";
 import { useHederaChain } from "../hedera/wagmi-chains";
-import { shortenAddress } from "../utils/shortenAddress";
 import { Tooltip } from "./Tooltip";
 import { TokenId } from "@hashgraph/sdk";
 
@@ -113,7 +112,47 @@ export const SystemStats: React.FC<SystemStatsProps> = ({ variant = "info", show
       <Statistic lexicon={l.RECOVERY_MODE}>
         {total.collateralRatioIsBelowCritical(price) ? <Box color="danger">Yes</Box> : "No"}
       </Statistic>
-      {}
+      <Statistic
+        lexicon={{
+          term: "Price feed",
+          description: (
+            <>
+              The price of 1 HBAR in CHF (and HCHF) as calculated by the HLiquity smart contract. The
+              value is calculated in two steps based on HBAR/USDT and USD/CHF using Pyth (
+              <a
+                href="https://pyth.network/price-feeds/crypto-hbar-usd?range=LIVE"
+                rel="noreferrer noopener"
+              >
+                HBAR/USD
+              </a>
+              ,
+              <a
+                href="https://pyth.network/price-feeds/fx-usd-chf?range=LIVE"
+                rel="noreferrer noopener"
+              >
+                USD/CHF
+              </a>
+              ) and Supra (
+              <a
+                href="https://supra.com/data/catalog/details?instrumentName=hbar_usd&providerName=supra"
+                rel="noreferrer noopener"
+              >
+                HBAR/USD
+              </a>
+              ,
+              <a
+                href="https://supra.com/data/catalog/details?instrumentName=usd_chf&providerName=supra"
+                rel="noreferrer noopener"
+              >
+                USD/CHF
+              </a>
+              ).
+            </>
+          )
+        }}
+      >
+        1 HBAR: {price.toString(4)} CHF
+      </Statistic>
 
       <Heading as="h2" sx={{ mt: 3, fontWeight: "body" }}>
         Frontend

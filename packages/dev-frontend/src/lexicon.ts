@@ -1,6 +1,8 @@
+import { ReactNode } from "react";
+
 export type Lexicon = {
   term: string;
-  description?: string;
+  description?: string | ReactNode;
   link?: string;
 };
 
