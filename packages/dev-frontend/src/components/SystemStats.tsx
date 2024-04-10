@@ -186,6 +186,25 @@ export const SystemStats: React.FC<SystemStatsProps> = ({ variant = "info", show
           )}
         </Box>
         <Box sx={{ fontSize: 0 }}>
+          Connected to chain:{" "}
+          {chain ? (
+            <Tooltip
+              message={
+                <Card variant="tooltip">
+                  <header sx={{ fontWeight: "700", display: "block" }}>{chain.name}</header>
+                  <span sx={{ display: "block" }}>
+                    Chain ID: <span sx={{ fontWeight: "700" }}>{chain.id}</span>
+                  </span>
+                </Card>
+              }
+            >
+              <span sx={{ fontWeight: "700" }}>{chain.name}</span>
+            </Tooltip>
+          ) : (
+            <>not connected</>
+          )}
+        </Box>
+        <Box sx={{ fontSize: 0 }}>
           HCHF Token ID:{" "}
           {chain ? (
             <Tooltip
