@@ -22,10 +22,10 @@ export const testnet: HederaChain = {
   network: "hederaTestnet",
   rpcUrls: {
     default: {
-      http: ["https://testnet.hashio.io/api"]
+      http: ["https://296.rpc.thirdweb.com/"]
     },
     public: {
-      http: ["https://testnet.hashio.io/api"]
+      http: ["https://296.rpc.thirdweb.com/", "https://testnet.hashio.io/api"]
     }
   },
   testnet: true,
@@ -45,10 +45,10 @@ export const previewnet: HederaChain = {
   network: "hederaPreviewnet",
   rpcUrls: {
     default: {
-      http: ["https://previewnet.hashio.io/api"]
+      http: ["https://297.rpc.thirdweb.com/"]
     },
     public: {
-      http: ["https://previewnet.hashio.io/api"]
+      http: ["https://297.rpc.thirdweb.com/", "https://previewnet.hashio.io/api"]
     }
   },
   testnet: true,
@@ -68,10 +68,10 @@ export const mainnet: HederaChain = {
   network: "hedera",
   rpcUrls: {
     default: {
-      http: ["https://mainnet.hashio.io/api"]
+      http: ["https://295.rpc.thirdweb.com/"]
     },
     public: {
-      http: ["https://mainnet.hashio.io/api"]
+      http: ["https://295.rpc.thirdweb.com/", "https://mainnet.hashio.io/api"]
     }
   },
   testnet: true,
