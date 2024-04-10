@@ -1,6 +1,6 @@
 /** @jsxImportSource theme-ui */
-import React, { useMemo, useState } from "react";
-import { Flex, Container, Button, Paragraph, Heading, Spinner } from "theme-ui";
+import React from "react";
+import { Flex, Container } from "theme-ui";
 import { HashRouter as Router, Switch, Route } from "react-router-dom";
 import { Wallet } from "@ethersproject/wallet";
 
