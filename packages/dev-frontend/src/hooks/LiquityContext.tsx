@@ -3,12 +3,7 @@ import { Provider } from "@ethersproject/abstract-provider";
 import { FallbackProvider } from "@ethersproject/providers";
 import { useProvider, useSigner, useAccount, useChainId } from "wagmi";
 
-import {
-  BlockPolledLiquityStore,
-  EthersLiquity,
-  EthersLiquityWithStore,
-  _connectByChainId
-} from "@liquity/lib-ethers";
+import { BlockPolledLiquityStore, EthersLiquity, EthersLiquityWithStore } from "@liquity/lib-ethers";
 
 import { LiquityFrontendConfig, getConfig } from "../config";
 import { BatchedProvider } from "../providers/BatchingProvider";
@@ -88,14 +83,14 @@ export const LiquityProvider: React.FC<LiquityProviderProps> = ({
   unsupportedNetworkFallback,
   unsupportedMainnetFallback
 }) => {
-  const provider = useProvider<FallbackProvider>();
+  const wagmiProvider = useProvider<FallbackProvider>();
   const signer = useSigner();
   const account = useAccount();
   const chainId = useChainId();
   const config = useConfig();
   const deployment = useDeployment();
 
-  if (!config || !provider || !signer.data || !account.address) {
+  if (!config || !wagmiProvider || !signer.data || !account.address) {
     return <>{loader}</>;
   }
 
@@ -106,6 +101,8 @@ export const LiquityProvider: React.FC<LiquityProviderProps> = ({
   if (!deployment) {
     return <>{unsupportedNetworkFallback}</>;
   }
+
+  const provider = new BatchedProvider(wagmiProvider);
 
   return (
     <NonNullableLiquityProvider
