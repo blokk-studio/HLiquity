@@ -102,7 +102,7 @@ export const LiquityProvider: React.FC<LiquityProviderProps> = ({
     return <>{unsupportedNetworkFallback}</>;
   }
 
-  const provider = new BatchedProvider(wagmiProvider);
+  const provider = new BatchedProvider(wagmiProvider, chainId);
 
   return (
     <NonNullableLiquityProvider
