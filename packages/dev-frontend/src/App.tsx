@@ -1,7 +1,7 @@
 import React from "react";
 import { Chain, createClient, WagmiConfig } from "wagmi";
 import { ConnectKitProvider } from "connectkit";
-import { Flex, Heading, ThemeProvider, Paragraph, Link } from "theme-ui";
+import { Flex, Heading, ThemeProvider } from "theme-ui";
 
 import getDefaultClient from "./connectkit/defaultClient";
 import { LiquityProvider } from "./hooks/LiquityContext";
@@ -15,15 +15,9 @@ import { DisposableWalletProvider } from "./testUtils/DisposableWalletProvider";
 import { LiquityFrontend } from "./LiquityFrontend";
 import { AppLoader } from "./components/AppLoader";
 import { useAsyncValue } from "./hooks/AsyncValue";
-import {
-  mainnet as hederaMainnet,
-  testnet as hederaTestnet,
-  previewnet as hederaPreviewnet,
-  useHederaChains
-} from "./hedera/wagmi-chains";
+import { useHederaChains } from "./hedera/wagmi-chains";
 import { AuthenticationProvider, LoginForm } from "./authentication";
 import { HederaTokensProvider } from "./hedera/hedera_context";
-import { useDeployments } from "./configuration/deployments";
 
 const isDemoMode = import.meta.env.VITE_APP_DEMO_MODE === "true";
 
