@@ -16,8 +16,6 @@ export const DeploymentEnvironmentGenerator: React.FC = () => {
     try {
       const evaluatedDeploymentString = eval(`(${deploymentString})`);
 
-      console.debug(evaluatedDeploymentString);
-
       return evaluatedDeploymentString;
     } catch (error) {
       setDeploymentStringFormatError(error as Error);
