@@ -16,7 +16,9 @@ const selectFrontend = ({ frontend }: LiquityStoreState) => frontend;
 export const PageSwitcher: React.FC = () => {
   const {
     account,
-    config: { frontendTag }
+    liquity: {
+      connection: { frontendTag }
+    }
   } = useLiquity();
 
   const frontend = useLiquitySelector(selectFrontend);

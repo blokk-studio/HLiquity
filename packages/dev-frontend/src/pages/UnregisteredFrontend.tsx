@@ -5,9 +5,9 @@ import { Icon } from "../components/Icon";
 import { useLiquity } from "../hooks/LiquityContext";
 
 export const UnregisteredFrontend: React.FC = () => {
-  const {
-    config: { frontendTag }
-  } = useLiquity();
+  const { liquity } = useLiquity();
+  // what is this type? this NEEDS to be defined. i cannot be undefined for hliquity to work. wtf?
+  const frontendTag = liquity.connection.frontendTag as string;
 
   return (
     <Box

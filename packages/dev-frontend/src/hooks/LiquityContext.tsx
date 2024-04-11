@@ -41,7 +41,6 @@ interface NonNullableLiquityProviderProps {
   provider: Provider;
   signer: Signer;
   userAddress: `0x${string}`;
-  frontendTag: `0x${string}`;
   chainId: number;
   deployment: _LiquityDeploymentJSON;
 }
@@ -52,11 +51,12 @@ const NonNullableLiquityProvider: React.FC<NonNullableLiquityProviderProps> = ({
   provider,
   signer,
   userAddress,
-  frontendTag,
   chainId,
   deployment
 }) => {
   const liquity = useMemo(() => {
+    const { frontendTag } = deployment;
+    console.debug({ frontendTag, chainId });
     const liquity = EthersLiquity.fromConnectionOptionsWithBlockPolledStore({
       chainId,
       deployment,
@@ -67,8 +67,10 @@ const NonNullableLiquityProvider: React.FC<NonNullableLiquityProviderProps> = ({
     });
     liquity.store.logging = true;
 
+    console.debug(liquity.connection.frontendTag);
+
     return liquity;
-  }, [provider, signer, userAddress, frontendTag, chainId, deployment]);
+  }, [provider, signer, userAddress, chainId, deployment]);
 
   return (
     <LiquityContext.Provider value={{ config, account: userAddress, provider: provider, liquity }}>
@@ -109,7 +111,6 @@ export const LiquityProvider: React.FC<LiquityProviderProps> = ({
       chainId={chainId}
       config={config}
       deployment={deployment}
-      frontendTag={config.frontendTag}
       provider={provider}
       signer={signer.data}
       userAddress={account.address}

@@ -24,7 +24,7 @@ import { useLoadingState } from "../../loading_state";
 import { BigNumber } from "ethers";
 import { Step } from "../Steps";
 import { LoadingButton } from "../LoadingButton";
-import { useHederaChain } from "../../hedera/wagmi-chains";
+import { useDeployment } from "../../configuration/deployments";
 
 const init = ({ hlqtStake }: LiquityStoreState) => ({
   originalStake: hlqtStake,
@@ -154,18 +154,18 @@ export const StakingManager: React.FC = () => {
       connection: { addresses }
     }
   } = useLiquity();
-  const chain = useHederaChain();
+  const deployment = useDeployment();
   const { hasAssociatedWithHchf, associateWithToken, approveSpender } = useHedera();
   // hlqt token association
   const { call: associateWithHchf, state: hchfAssociationLoadingState } = useLoadingState(
     async () => {
-      if (!chain) {
-        const errorMessage = `i cannot get the hchf token id if there is no chain. please connect to a chain first.`;
-        console.error(errorMessage, "context:", { chain });
+      if (!deployment) {
+        const errorMessage = `i cannot get the hchf token id if there is no deployment. please connect to a chain first.`;
+        console.error(errorMessage, "context:", { deployment });
         throw new Error(errorMessage);
       }
 
-      await associateWithToken({ tokenAddress: chain.hchfTokenId });
+      await associateWithToken({ tokenAddress: deployment.hchfTokenAddress });
     }
   );
   // hchf spender approval
@@ -175,14 +175,14 @@ export const StakingManager: React.FC = () => {
       throw "cannot approve a withdrawal (negative spending/negative deposit) or deposit of 0";
     }
 
-    if (!chain) {
-      const errorMessage = `i cannot get the hlqt token id if there is no chain. please connect to a chain first.`;
-      console.error(errorMessage, "context:", { chain });
+    if (!deployment) {
+      const errorMessage = `i cannot get the hlqt token id if there is no deployment. please connect to a chain first.`;
+      console.error(errorMessage, "context:", { deployment });
       throw new Error(errorMessage);
     }
 
     const contractAddress = addresses.hlqtToken as `0x${string}`;
-    const tokenAddress = chain.hlqtTokenId;
+    const tokenAddress = deployment.hlqtTokenAddress;
     const amount = BigNumber.from(validChange.stakeHLQT.bigNumber);
 
     await approveSpender({

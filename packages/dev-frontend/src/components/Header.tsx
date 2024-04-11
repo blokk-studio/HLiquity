@@ -17,7 +17,9 @@ const select = ({ frontend }: LiquityStoreState) => ({
 
 export const Header: React.FC = ({ children }) => {
   const {
-    config: { frontendTag }
+    liquity: {
+      connection: { frontendTag }
+    }
   } = useLiquity();
   const { frontend } = useLiquitySelector(select);
   const isFrontendRegistered = frontendTag === AddressZero || frontend.status === "registered";

@@ -2,10 +2,10 @@ import { createContext, useContext, useMemo, useState } from "react";
 import { BigNumber } from "ethers";
 import { useHederaChain } from "./wagmi-chains";
 import { useAccount, useSigner } from "wagmi";
-import { useLiquity } from "../hooks/LiquityContext";
 import { TokenId } from "@hashgraph/sdk";
 import { fetchTokens } from "./mirrornode";
 import { approveSpender, associateWithToken, dissociateFromToken } from "./consent";
+import { useDeployment } from "../configuration/deployments";
 
 interface HederaContext {
   approveSpender: (options: {
@@ -37,10 +37,10 @@ interface HederaToken {
 }
 
 export const HederaTokensProvider: React.FC = ({ children }) => {
-  const { config } = useLiquity();
   const signerResult = useSigner();
   const account = useAccount();
   const hederaChain = useHederaChain();
+  const deployment = useDeployment();
   const [tokens, setTokens] = useState<HederaToken[]>([]);
   // const [tokensApiError, setTokensApiError] = useState<Error | null>(null);
   useMemo(async () => {
@@ -64,15 +64,15 @@ export const HederaTokensProvider: React.FC = ({ children }) => {
     }
   }, [account.address, hederaChain]);
 
-  const hchfTokenId = hederaChain
-    ? TokenId.fromSolidityAddress(hederaChain.hchfTokenId).toString()
+  const hchfTokenId = deployment
+    ? TokenId.fromSolidityAddress(deployment.hchfTokenAddress).toString()
     : undefined;
   const hasAssociatedWithHchf = tokens.some(token => {
     const isHchf = token.id === hchfTokenId;
     return isHchf;
   });
-  const hlqtTokenId = hederaChain
-    ? TokenId.fromSolidityAddress(hederaChain.hlqtTokenId).toString()
+  const hlqtTokenId = deployment
+    ? TokenId.fromSolidityAddress(deployment.hlqtTokenAddress).toString()
     : undefined;
   const hasAssociatedWithHlqt = tokens.some(token => {
     const isHlqt = token.id === hlqtTokenId;

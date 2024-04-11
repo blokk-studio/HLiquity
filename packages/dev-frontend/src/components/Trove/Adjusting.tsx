@@ -31,7 +31,7 @@ import { useHedera } from "../../hedera/hedera_context";
 import { useLoadingState } from "../../loading_state";
 import { BigNumber } from "ethers";
 import { LoadingButton } from "../LoadingButton";
-import { useHederaChain } from "../../hedera/wagmi-chains";
+import { useDeployment } from "../../configuration/deployments";
 
 const selector = (state: LiquityStoreState) => {
   const { trove, fees, price, accountBalance } = state;
@@ -167,19 +167,19 @@ export const Adjusting: React.FC = () => {
       connection: { addresses }
     }
   } = useLiquity();
-  const chain = useHederaChain();
+  const deployment = useDeployment();
   const needsHchfAssociation = !stableTroveChange || stableTroveChange?.params.borrowHCHF;
   const { hasAssociatedWithHchf, associateWithToken, approveSpender } = useHedera();
   // hchf token association
   const { call: associateWithHchf, state: hchfAssociationLoadingState } = useLoadingState(
     async () => {
-      if (!chain) {
-        const errorMessage = `i cannot get the hlqt token id if there is no chain. please connect to a chain first.`;
-        console.error(errorMessage, "context:", { chain });
+      if (!deployment) {
+        const errorMessage = `i cannot get the hlqt token id if there is no deployment. please connect to a chain first.`;
+        console.error(errorMessage, "context:", { deployment });
         throw new Error(errorMessage);
       }
 
-      await associateWithToken({ tokenAddress: chain.hlqtTokenId });
+      await associateWithToken({ tokenAddress: deployment.hlqtTokenAddress });
     }
   );
   // hchf spender approval
@@ -189,14 +189,14 @@ export const Adjusting: React.FC = () => {
       throw "cannot approve a withdrawal (negative spending/negative deposit) or deposit of 0";
     }
 
-    if (!chain) {
-      const errorMessage = `i cannot get the hchf token id if there is no chain. please connect to a chain first.`;
-      console.error(errorMessage, "context:", { chain });
+    if (!deployment) {
+      const errorMessage = `i cannot get the hchf token id if there is no deployment. please connect to a chain first.`;
+      console.error(errorMessage, "context:", { deployment });
       throw new Error(errorMessage);
     }
 
     const contractAddress = addresses.hchfToken as `0x${string}`;
-    const tokenAddress = chain.hchfTokenId;
+    const tokenAddress = deployment.hchfTokenAddress;
     const amount = BigNumber.from(stableTroveChange.params.repayHCHF.bigNumber);
 
     await approveSpender({

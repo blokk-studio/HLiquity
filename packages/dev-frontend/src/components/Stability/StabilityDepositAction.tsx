@@ -19,10 +19,10 @@ export const StabilityDepositAction: React.FC<StabilityDepositActionProps> = ({
   change,
   ...loadingButtonProps
 }) => {
-  const { config, liquity } = useLiquity();
+  const { liquity } = useLiquity();
   const frontendRegistered = useLiquitySelector(selectFrontendRegistered);
 
-  const frontendTag = frontendRegistered ? config.frontendTag : undefined;
+  const frontendTag = frontendRegistered ? liquity.connection.frontendTag : undefined;
 
   const [sendTransaction] = useTransactionFunction(
     transactionId,

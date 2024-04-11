@@ -12,6 +12,13 @@ export const Nav: React.FC = () => {
           Risky Troves
         </Link>
       </Flex>
+      {import.meta.env.DEV && (
+        <Flex sx={{ justifyContent: "flex-end", mr: 3, flex: 1 }}>
+          <Link sx={{ fontSize: 1 }} to="/deployment-environment-generator">
+            Deployment Environment Generator
+          </Link>
+        </Flex>
+      )}
     </Box>
   );
 };

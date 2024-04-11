@@ -12,6 +12,7 @@ import { COLLATERAL_COIN } from "../strings";
 import { useHederaChain } from "../hedera/wagmi-chains";
 import { Tooltip } from "./Tooltip";
 import { TokenId } from "@hashgraph/sdk";
+import { useDeployment } from "../configuration/deployments";
 
 const selectBalances = ({ accountBalance, hchfBalance, hlqtBalance }: LiquityStoreState) => ({
   accountBalance,
@@ -80,6 +81,7 @@ export const SystemStats: React.FC<SystemStatsProps> = ({ variant = "info", show
   const borrowingFeePct = new Percent(borrowingRate);
   const kickbackRatePct = frontendTag === AddressZero ? "100" : kickbackRate?.mul(100).prettify();
   const chain = useHederaChain();
+  const deployment = useDeployment();
 
   return (
     <Card {...{ variant }}>
@@ -198,7 +200,7 @@ export const SystemStats: React.FC<SystemStatsProps> = ({ variant = "info", show
                 </Card>
               }
             >
-              <span sx={{ fontWeight: "700" }}>{chain.name}</span>
+              <span sx={{ fontWeight: "700", color: chain.color }}>{chain.name}</span>
             </Tooltip>
           ) : (
             <>not connected</>
@@ -206,7 +208,7 @@ export const SystemStats: React.FC<SystemStatsProps> = ({ variant = "info", show
         </Box>
         <Box sx={{ fontSize: 0 }}>
           HCHF Token ID:{" "}
-          {chain ? (
+          {deployment ? (
             <Tooltip
               message={
                 <Card variant="tooltip">
@@ -214,17 +216,18 @@ export const SystemStats: React.FC<SystemStatsProps> = ({ variant = "info", show
                   <span sx={{ display: "block" }}>
                     Hedera ID:{" "}
                     <span sx={{ fontWeight: "700" }}>
-                      {TokenId.fromSolidityAddress(chain.hchfTokenId).toString()}
+                      {TokenId.fromSolidityAddress(deployment.hchfTokenAddress).toString()}
                     </span>
                   </span>
                   <span sx={{ display: "block" }}>
-                    EVM Address: <span sx={{ fontWeight: "700" }}>{chain.hchfTokenId}</span>
+                    EVM Address:{" "}
+                    <span sx={{ fontWeight: "700" }}>{deployment.hchfTokenAddress}</span>
                   </span>
                 </Card>
               }
             >
               <span sx={{ fontWeight: "700" }}>
-                {TokenId.fromSolidityAddress(chain.hchfTokenId).toString()}
+                {TokenId.fromSolidityAddress(deployment.hchfTokenAddress).toString()}
               </span>
             </Tooltip>
           ) : (
@@ -233,20 +236,20 @@ export const SystemStats: React.FC<SystemStatsProps> = ({ variant = "info", show
         </Box>
         <Box sx={{ fontSize: 0 }}>
           HLQT Token ID:{" "}
-          {chain ? (
+          {deployment ? (
             <Tooltip
               message={
                 <Card variant="tooltip">
                   <header sx={{ fontWeight: "700", display: "block" }}>HLQT Token</header>
                   <span sx={{ display: "block" }}>
-                    Hedera ID: {TokenId.fromSolidityAddress(chain.hlqtTokenId).toString()}
+                    Hedera ID: {TokenId.fromSolidityAddress(deployment.hlqtTokenAddress).toString()}
                   </span>
-                  <span sx={{ display: "block" }}>EVM Address: {chain.hlqtTokenId}</span>
+                  <span sx={{ display: "block" }}>EVM Address: {deployment.hlqtTokenAddress}</span>
                 </Card>
               }
             >
               <span sx={{ fontWeight: "700" }}>
-                {TokenId.fromSolidityAddress(chain.hlqtTokenId).toString()}
+                {TokenId.fromSolidityAddress(deployment.hlqtTokenAddress).toString()}
               </span>
             </Tooltip>
           ) : (

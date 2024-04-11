@@ -26,10 +26,10 @@ const deployments: {
 } = {
   // TODO: deploy to mainnet
   // [hedera.chainId]: hedera,
-  [hederaLocalTestnet.chainId]: hederaLocalTestnet,
+  [hederaLocalTestnet.chainId]: (hederaLocalTestnet as unknown) as _LiquityDeploymentJSON,
   // TODO: deploy to previewnet
   // [hederaPreviewnet.chainId]: hederaPreviewnet,
-  [hederaTestnet.chainId]: hederaTestnet,
+  [hederaTestnet.chainId]: (hederaTestnet as unknown) as _LiquityDeploymentJSON,
 
   ...(dev !== null ? { [dev.chainId]: dev } : {})
 };
