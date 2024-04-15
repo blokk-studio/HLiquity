@@ -19,10 +19,20 @@ export const testnet: HederaChain = {
   network: "hederaTestnet",
   rpcUrls: {
     default: {
-      http: ["https://296.rpc.thirdweb.com/"]
+      http: [
+        "https://testnet.hedera.validationcloud.io/v1/6nS9fmvxizvD-mtFgelriSrv1CrXUzqDvUa76phY0zs"
+      ],
+      webSocket: [
+        "wss://testnet.hedera.validationcloud.io/v1/wss/6nS9fmvxizvD-mtFgelriSrv1CrXUzqDvUa76phY0zs"
+      ]
     },
     public: {
-      http: ["https://296.rpc.thirdweb.com/", "https://testnet.hashio.io/api"]
+      http: [
+        "https://testnet.hedera.validationcloud.io/v1/6nS9fmvxizvD-mtFgelriSrv1CrXUzqDvUa76phY0zs"
+      ],
+      webSocket: [
+        "wss://testnet.hedera.validationcloud.io/v1/wss/6nS9fmvxizvD-mtFgelriSrv1CrXUzqDvUa76phY0zs"
+      ]
     }
   },
   testnet: true,
@@ -63,10 +73,20 @@ export const mainnet: HederaChain = {
   network: "hedera",
   rpcUrls: {
     default: {
-      http: ["https://295.rpc.thirdweb.com/"]
+      http: [
+        "https://mainnet.hedera.validationcloud.io/v1/lAUDY3DhBzENfGvggNqdDr-tm-CE8r-fSdV_kMag7z4"
+      ],
+      webSocket: [
+        "wss://mainnet.hedera.validationcloud.io/v1/wss/lAUDY3DhBzENfGvggNqdDr-tm-CE8r-fSdV_kMag7z4"
+      ]
     },
     public: {
-      http: ["https://295.rpc.thirdweb.com/", "https://mainnet.hashio.io/api"]
+      http: [
+        "https://mainnet.hedera.validationcloud.io/v1/lAUDY3DhBzENfGvggNqdDr-tm-CE8r-fSdV_kMag7z4"
+      ],
+      webSocket: [
+        "wss://mainnet.hedera.validationcloud.io/v1/wss/lAUDY3DhBzENfGvggNqdDr-tm-CE8r-fSdV_kMag7z4"
+      ]
     }
   },
   testnet: true,
