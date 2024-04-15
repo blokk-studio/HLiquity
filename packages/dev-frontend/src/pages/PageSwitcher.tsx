@@ -10,6 +10,8 @@ import { Dashboard } from "./Dashboard";
 import { UnregisteredFrontend } from "./UnregisteredFrontend";
 import { FrontendRegistration } from "./FrontendRegistration";
 import { FrontendRegistrationSuccess } from "./FrontendRegistrationSuccess";
+import { useHedera } from "../hedera/hedera_context";
+import { AssociateAsFrontendOwner } from "./AssociateAsFrontendOwner";
 
 const selectFrontend = ({ frontend }: LiquityStoreState) => frontend;
 
@@ -24,6 +26,7 @@ export const PageSwitcher: React.FC = () => {
   const frontend = useLiquitySelector(selectFrontend);
   const unregistered = frontendTag !== AddressZero && frontend.status === "unregistered";
   const isFrontendOwner = account.toLowerCase() === frontendTag?.toLowerCase();
+  const { hasAssociatedWithHchf, hasAssociatedWithHlqt } = useHedera();
 
   const [registering, setRegistering] = useState(false);
 
@@ -33,15 +36,23 @@ export const PageSwitcher: React.FC = () => {
     }
   }, [unregistered]);
 
-  if (registering || unregistered) {
-    if (frontend.status === "registered") {
-      return <FrontendRegistrationSuccess onDismiss={() => setRegistering(false)} />;
-    } else if (isFrontendOwner) {
-      return <FrontendRegistration />;
-    } else {
-      return <UnregisteredFrontend />;
-    }
-  } else {
+  console.debug({ isFrontendOwner, hasAssociatedWithHchf, hasAssociatedWithHlqt });
+
+  if (isFrontendOwner && (!hasAssociatedWithHchf || !hasAssociatedWithHlqt)) {
+    return <AssociateAsFrontendOwner />;
+  }
+
+  if (!registering && !unregistered) {
     return <Dashboard />;
   }
+
+  if (frontend.status === "registered") {
+    return <FrontendRegistrationSuccess onDismiss={() => setRegistering(false)} />;
+  }
+
+  if (isFrontendOwner) {
+    return <FrontendRegistration />;
+  }
+
+  return <UnregisteredFrontend />;
 };
