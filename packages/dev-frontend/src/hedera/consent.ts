@@ -16,7 +16,9 @@ export const associateWithToken = async (options: {
     const associationReceipt = await associationTransaction.wait();
     return associationReceipt;
   } catch (error: unknown) {
-    const errorMessage = `couldn't associate with token ${JSON.stringify(options.tokenAddress)}`;
+    const errorMessage = `couldn't associate with token ${JSON.stringify(options.tokenAddress)}: ${
+      (error as Error).message
+    }`;
     console.error(errorMessage, error);
     throw new Error(errorMessage, { cause: error });
   }
@@ -37,7 +39,9 @@ export const dissociateFromToken = async (options: {
     const dissociationReceipt = await dissociationTransaction.wait();
     return dissociationReceipt;
   } catch (error: unknown) {
-    const errorMessage = `couldn't dissociate from token ${JSON.stringify(options.tokenAddress)}`;
+    const errorMessage = `couldn't dissociate from token ${JSON.stringify(options.tokenAddress)}: ${
+      (error as Error).message
+    }`;
     console.error(errorMessage, error);
     throw new Error(errorMessage, { cause: error });
   }
