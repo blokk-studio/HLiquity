@@ -36,7 +36,8 @@ export const testnet: HederaChain = {
     }
   },
   testnet: true,
-  apiBaseUrl: "https://testnet.mirrornode.hedera.com/api/v1",
+  apiBaseUrl:
+    "https://testnet.hedera.validationcloud.io/v1/6nS9fmvxizvD-mtFgelriSrv1CrXUzqDvUa76phY0zs/api/v1",
   color: "#e302ab"
 };
 
@@ -90,7 +91,8 @@ export const mainnet: HederaChain = {
     }
   },
   testnet: true,
-  apiBaseUrl: "https://mainnet-public.mirrornode.hedera.com/api/v1",
+  apiBaseUrl:
+    "https://mainnet.hedera.validationcloud.io/v1/lAUDY3DhBzENfGvggNqdDr-tm-CE8r-fSdV_kMag7z4/api/v1",
   color: "#1896b2"
 };
 
