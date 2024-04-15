@@ -23,6 +23,7 @@ export const PageSwitcher: React.FC = () => {
 
   const frontend = useLiquitySelector(selectFrontend);
   const unregistered = frontendTag !== AddressZero && frontend.status === "unregistered";
+  const isFrontendOwner = account.toLowerCase() === frontendTag?.toLowerCase();
 
   const [registering, setRegistering] = useState(false);
 
@@ -35,7 +36,7 @@ export const PageSwitcher: React.FC = () => {
   if (registering || unregistered) {
     if (frontend.status === "registered") {
       return <FrontendRegistrationSuccess onDismiss={() => setRegistering(false)} />;
-    } else if (account === frontendTag) {
+    } else if (isFrontendOwner) {
       return <FrontendRegistration />;
     } else {
       return <UnregisteredFrontend />;
