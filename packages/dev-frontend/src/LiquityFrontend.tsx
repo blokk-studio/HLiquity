@@ -24,6 +24,7 @@ import { BondsProvider } from "./components/Bonds/context/BondsProvider";
 
 import { Imprint } from "./components/Imprint";
 import { DeploymentEnvironmentGenerator } from "./pages/DeploymentEnvironmentGenerator";
+import { AutomaticDevelopmentDebugMenu } from "./components/DevelopmentDebugMenu";
 
 type LiquityFrontendProps = {
   loader?: React.ReactNode;
@@ -93,6 +94,7 @@ export const LiquityFrontend: React.FC<LiquityFrontendProps> = ({ loader }) => {
       </footer>
 
       <TransactionMonitor />
+      <AutomaticDevelopmentDebugMenu />
     </LiquityStoreProvider>
   );
 };
