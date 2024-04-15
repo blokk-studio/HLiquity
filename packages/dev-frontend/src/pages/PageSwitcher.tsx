@@ -36,8 +36,6 @@ export const PageSwitcher: React.FC = () => {
     }
   }, [unregistered]);
 
-  console.debug({ isFrontendOwner, hasAssociatedWithHchf, hasAssociatedWithHlqt });
-
   if (isFrontendOwner && (!hasAssociatedWithHchf || !hasAssociatedWithHlqt)) {
     return <AssociateAsFrontendOwner />;
   }
