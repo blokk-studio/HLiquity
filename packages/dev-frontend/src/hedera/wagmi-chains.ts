@@ -20,24 +20,24 @@ export const testnet: HederaChain = {
   rpcUrls: {
     default: {
       http: [
-        "https://testnet.hedera.validationcloud.io/v1/6nS9fmvxizvD-mtFgelriSrv1CrXUzqDvUa76phY0zs"
+        "https://testnet.hedera.validationcloud.io/v1/j4asCbIDqOCrH2kW1NuMcFVGhBcs_yAanjJzQIfjO4E"
       ],
       webSocket: [
-        "wss://testnet.hedera.validationcloud.io/v1/wss/6nS9fmvxizvD-mtFgelriSrv1CrXUzqDvUa76phY0zs"
+        "wss://testnet.hedera.validationcloud.io/v1/wss/j4asCbIDqOCrH2kW1NuMcFVGhBcs_yAanjJzQIfjO4E"
       ]
     },
     public: {
       http: [
-        "https://testnet.hedera.validationcloud.io/v1/6nS9fmvxizvD-mtFgelriSrv1CrXUzqDvUa76phY0zs"
+        "https://testnet.hedera.validationcloud.io/v1/j4asCbIDqOCrH2kW1NuMcFVGhBcs_yAanjJzQIfjO4E"
       ],
       webSocket: [
-        "wss://testnet.hedera.validationcloud.io/v1/wss/6nS9fmvxizvD-mtFgelriSrv1CrXUzqDvUa76phY0zs"
+        "wss://testnet.hedera.validationcloud.io/v1/wss/j4asCbIDqOCrH2kW1NuMcFVGhBcs_yAanjJzQIfjO4E"
       ]
     }
   },
   testnet: true,
   apiBaseUrl:
-    "https://testnet.hedera.validationcloud.io/v1/6nS9fmvxizvD-mtFgelriSrv1CrXUzqDvUa76phY0zs/api/v1",
+    "https://testnet.hedera.validationcloud.io/v1/j4asCbIDqOCrH2kW1NuMcFVGhBcs_yAanjJzQIfjO4E/api/v1",
   color: "#e302ab"
 };
 
@@ -75,24 +75,24 @@ export const mainnet: HederaChain = {
   rpcUrls: {
     default: {
       http: [
-        "https://mainnet.hedera.validationcloud.io/v1/lAUDY3DhBzENfGvggNqdDr-tm-CE8r-fSdV_kMag7z4"
+        "https://mainnet.hedera.validationcloud.io/v1/9muW3PJOt2x5vmVt2ozoLt1vr6akjnK-0V7w6xDwmIE"
       ],
       webSocket: [
-        "wss://mainnet.hedera.validationcloud.io/v1/wss/lAUDY3DhBzENfGvggNqdDr-tm-CE8r-fSdV_kMag7z4"
+        "wss://mainnet.hedera.validationcloud.io/v1/wss/9muW3PJOt2x5vmVt2ozoLt1vr6akjnK-0V7w6xDwmIE"
       ]
     },
     public: {
       http: [
-        "https://mainnet.hedera.validationcloud.io/v1/lAUDY3DhBzENfGvggNqdDr-tm-CE8r-fSdV_kMag7z4"
+        "https://mainnet.hedera.validationcloud.io/v1/9muW3PJOt2x5vmVt2ozoLt1vr6akjnK-0V7w6xDwmIE"
       ],
       webSocket: [
-        "wss://mainnet.hedera.validationcloud.io/v1/wss/lAUDY3DhBzENfGvggNqdDr-tm-CE8r-fSdV_kMag7z4"
+        "wss://mainnet.hedera.validationcloud.io/v1/wss/9muW3PJOt2x5vmVt2ozoLt1vr6akjnK-0V7w6xDwmIE"
       ]
     }
   },
   testnet: true,
   apiBaseUrl:
-    "https://mainnet.hedera.validationcloud.io/v1/lAUDY3DhBzENfGvggNqdDr-tm-CE8r-fSdV_kMag7z4/api/v1",
+    "https://mainnet.hedera.validationcloud.io/v1/9muW3PJOt2x5vmVt2ozoLt1vr6akjnK-0V7w6xDwmIE/api/v1",
   color: "#1896b2"
 };
 
