@@ -3,7 +3,7 @@ import { useDeployment } from "../configuration/deployments";
 import { useHedera } from "../hedera/hedera_context";
 import { LoadingButton } from "./LoadingButton";
 import { useLoadingState } from "../loading_state";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { DeploymentEnvironmentGenerator } from "../pages/DeploymentEnvironmentGenerator";
 
 export const DevelopmentDebugMenu: React.FC = () => {
@@ -125,10 +125,10 @@ export const DevelopmentDebugMenu: React.FC = () => {
           </dd>
 
           {Object.entries(deployment.addresses).map(([contractKey, contractAddress]) => (
-            <>
+            <React.Fragment key={`${contractKey}:${contractAddress}`}>
               <dt>{contractKey}</dt>
               <dd>{contractAddress}</dd>
-            </>
+            </React.Fragment>
           ))}
         </dl>
       )}
