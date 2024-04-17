@@ -19,25 +19,16 @@ export const testnet: HederaChain = {
   network: "hederaTestnet",
   rpcUrls: {
     default: {
-      http: [
-        "https://testnet.hedera.validationcloud.io/v1/j4asCbIDqOCrH2kW1NuMcFVGhBcs_yAanjJzQIfjO4E"
-      ],
-      webSocket: [
-        "wss://testnet.hedera.validationcloud.io/v1/wss/j4asCbIDqOCrH2kW1NuMcFVGhBcs_yAanjJzQIfjO4E"
-      ]
+      http: ["https://testnet.hashio.io/api"],
+      webSocket: ["wss://testnet.hashio.io/ws"]
     },
     public: {
-      http: [
-        "https://testnet.hedera.validationcloud.io/v1/j4asCbIDqOCrH2kW1NuMcFVGhBcs_yAanjJzQIfjO4E"
-      ],
-      webSocket: [
-        "wss://testnet.hedera.validationcloud.io/v1/wss/j4asCbIDqOCrH2kW1NuMcFVGhBcs_yAanjJzQIfjO4E"
-      ]
+      http: ["https://testnet.hashio.io/api"],
+      webSocket: ["wss://testnet.hashio.io/ws"]
     }
   },
   testnet: true,
-  apiBaseUrl:
-    "https://testnet.hedera.validationcloud.io/v1/j4asCbIDqOCrH2kW1NuMcFVGhBcs_yAanjJzQIfjO4E/api/v1",
+  apiBaseUrl: "https://testnet.mirrornode.hedera.com/api/v1",
   color: "#e302ab"
 };
 
@@ -52,10 +43,12 @@ export const previewnet: HederaChain = {
   network: "hederaPreviewnet",
   rpcUrls: {
     default: {
-      http: ["https://297.rpc.thirdweb.com/"]
+      http: ["https://previewnet.hashio.io/api"],
+      webSocket: ["wss://previewnet.hashio.io/ws"]
     },
     public: {
-      http: ["https://297.rpc.thirdweb.com/", "https://previewnet.hashio.io/api"]
+      http: ["https://previewnet.hashio.io/api"],
+      webSocket: ["wss://previewnet.hashio.io/ws"]
     }
   },
   testnet: true,
@@ -74,25 +67,16 @@ export const mainnet: HederaChain = {
   network: "hedera",
   rpcUrls: {
     default: {
-      http: [
-        "https://mainnet.hedera.validationcloud.io/v1/9muW3PJOt2x5vmVt2ozoLt1vr6akjnK-0V7w6xDwmIE"
-      ],
-      webSocket: [
-        "wss://mainnet.hedera.validationcloud.io/v1/wss/9muW3PJOt2x5vmVt2ozoLt1vr6akjnK-0V7w6xDwmIE"
-      ]
+      http: ["https://mainnet.hashio.io/api"],
+      webSocket: ["wss://mainnet.hashio.io/ws"]
     },
     public: {
-      http: [
-        "https://mainnet.hedera.validationcloud.io/v1/9muW3PJOt2x5vmVt2ozoLt1vr6akjnK-0V7w6xDwmIE"
-      ],
-      webSocket: [
-        "wss://mainnet.hedera.validationcloud.io/v1/wss/9muW3PJOt2x5vmVt2ozoLt1vr6akjnK-0V7w6xDwmIE"
-      ]
+      http: ["https://mainnet.hashio.io/api"],
+      webSocket: ["wss://mainnet.hashio.io/ws"]
     }
   },
   testnet: true,
-  apiBaseUrl:
-    "https://mainnet.hedera.validationcloud.io/v1/9muW3PJOt2x5vmVt2ozoLt1vr6akjnK-0V7w6xDwmIE/api/v1",
+  apiBaseUrl: "https://mainnet-public.mirrornode.hedera.com//api/v1",
   color: "#1896b2"
 };
 
