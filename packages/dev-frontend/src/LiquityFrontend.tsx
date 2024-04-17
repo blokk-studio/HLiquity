@@ -24,6 +24,7 @@ import { BondsProvider } from "./components/Bonds/context/BondsProvider";
 
 import { Imprint } from "./components/Imprint";
 import { AutomaticDevelopmentDebugMenu } from "./components/DevelopmentDebugMenu";
+import { Dashboard } from "./pages/Dashboard";
 
 type LiquityFrontendProps = {
   loader?: React.ReactNode;
@@ -66,14 +67,16 @@ export const LiquityFrontend: React.FC<LiquityFrontendProps> = ({ loader }) => {
                         alignItems: "center"
                       }}
                     >
-                      <Switch>
-                        <Route path="/" exact>
-                          <PageSwitcher />
-                        </Route>
-                        <Route path="/risky-troves">
-                          <RiskyTrovesPage />
-                        </Route>
-                      </Switch>
+                      <PageSwitcher>
+                        <Switch>
+                          <Route path="/" exact>
+                            <Dashboard />
+                          </Route>
+                          <Route path="/risky-troves">
+                            <RiskyTrovesPage />
+                          </Route>
+                        </Switch>
+                      </PageSwitcher>
                     </Container>
                   </Flex>
                 </BondsProvider>

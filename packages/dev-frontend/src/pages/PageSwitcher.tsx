@@ -6,7 +6,6 @@ import { useLiquitySelector } from "@liquity/lib-react";
 
 import { useLiquity } from "../hooks/LiquityContext";
 
-import { Dashboard } from "./Dashboard";
 import { UnregisteredFrontend } from "./UnregisteredFrontend";
 import { FrontendRegistration } from "./FrontendRegistration";
 import { FrontendRegistrationSuccess } from "./FrontendRegistrationSuccess";
@@ -15,7 +14,7 @@ import { AssociateAsFrontendOwner } from "./AssociateAsFrontendOwner";
 
 const selectFrontend = ({ frontend }: LiquityStoreState) => frontend;
 
-export const PageSwitcher: React.FC = () => {
+export const PageSwitcher: React.FC = ({ children }) => {
   const {
     account,
     liquity: {
@@ -31,26 +30,26 @@ export const PageSwitcher: React.FC = () => {
   const [registering, setRegistering] = useState(false);
 
   useEffect(() => {
-    if (unregistered) {
+    if (unregistered && isFrontendOwner) {
       setRegistering(true);
     }
-  }, [unregistered]);
+  }, [unregistered, isFrontendOwner]);
+
+  if (isFrontendOwner && unregistered) {
+    return <FrontendRegistration />;
+  }
 
   if (isFrontendOwner && (!hasAssociatedWithHchf || !hasAssociatedWithHlqt)) {
     return <AssociateAsFrontendOwner />;
   }
 
-  if (!registering && !unregistered) {
-    return <Dashboard />;
-  }
-
-  if (frontend.status === "registered") {
+  if (registering && frontend.status === "registered") {
     return <FrontendRegistrationSuccess onDismiss={() => setRegistering(false)} />;
   }
 
-  if (isFrontendOwner) {
-    return <FrontendRegistration />;
+  if (unregistered) {
+    return <UnregisteredFrontend />;
   }
 
-  return <UnregisteredFrontend />;
+  return <>{children}</>;
 };
