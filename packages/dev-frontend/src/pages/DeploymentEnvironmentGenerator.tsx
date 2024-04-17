@@ -70,11 +70,10 @@ export const DeploymentEnvironmentGenerator: React.FC = () => {
         />
       </label>
 
+      {deploymentObject && <p>hlqt staking: {deploymentObject.addresses.hlqtStaking}</p>}
+
       <label style={{ display: "grid", marginTop: "2rem" }}>
-        <span>
-          hchf token address{" "}
-          {deploymentObject && <>(hchf contract: {deploymentObject.addresses.hchfToken})</>}
-        </span>
+        <span>hchf token address</span>
 
         <input
           required
@@ -83,12 +82,8 @@ export const DeploymentEnvironmentGenerator: React.FC = () => {
           style={{ fontFamily: "monospace" }}
         />
       </label>
-
       <label style={{ display: "grid", marginTop: "2rem" }}>
-        <span>
-          hlqt token address{" "}
-          {deploymentObject && <>(hlqt contract: {deploymentObject.addresses.hlqtToken})</>}
-        </span>
+        <span>hlqt token address</span>
 
         <input
           required
@@ -97,7 +92,6 @@ export const DeploymentEnvironmentGenerator: React.FC = () => {
           style={{ fontFamily: "monospace" }}
         />
       </label>
-
       <label style={{ display: "grid", marginTop: "2rem" }}>
         <span>frontend tag </span>
 
@@ -108,7 +102,6 @@ export const DeploymentEnvironmentGenerator: React.FC = () => {
           style={{ fontFamily: "monospace" }}
         />
       </label>
-
       {deploymentStringFormatError && (
         <p
           role="alert"
@@ -122,11 +115,9 @@ export const DeploymentEnvironmentGenerator: React.FC = () => {
           {deploymentStringFormatError.message}
         </p>
       )}
-
       {!deploymentStringFormatError && (
         <pre style={{ overflowX: "auto", width: "100%" }}>{JSON.stringify(deployment)}</pre>
       )}
-
       <a href="https://hashscan.io/" rel="noreferrer noopener" target="_blank">
         hashscan
       </a>
