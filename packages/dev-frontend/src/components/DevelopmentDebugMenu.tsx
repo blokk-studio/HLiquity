@@ -4,6 +4,7 @@ import { useHedera } from "../hedera/hedera_context";
 import { LoadingButton } from "./LoadingButton";
 import { useLoadingState } from "../loading_state";
 import { useEffect, useState } from "react";
+import { DeploymentEnvironmentGenerator } from "../pages/DeploymentEnvironmentGenerator";
 
 export const DevelopmentDebugMenu: React.FC = () => {
   const {
@@ -131,6 +132,8 @@ export const DevelopmentDebugMenu: React.FC = () => {
           ))}
         </dl>
       )}
+
+      <DeploymentEnvironmentGenerator />
     </Flex>
   );
 };

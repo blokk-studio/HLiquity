@@ -23,7 +23,6 @@ import "tippy.js/dist/tippy.css"; // Tooltip default style
 import { BondsProvider } from "./components/Bonds/context/BondsProvider";
 
 import { Imprint } from "./components/Imprint";
-import { DeploymentEnvironmentGenerator } from "./pages/DeploymentEnvironmentGenerator";
 import { AutomaticDevelopmentDebugMenu } from "./components/DevelopmentDebugMenu";
 
 type LiquityFrontendProps = {
@@ -74,11 +73,6 @@ export const LiquityFrontend: React.FC<LiquityFrontendProps> = ({ loader }) => {
                         <Route path="/risky-troves">
                           <RiskyTrovesPage />
                         </Route>
-                        {import.meta.env.DEV && (
-                          <Route path="/deployment-environment-generator">
-                            <DeploymentEnvironmentGenerator />
-                          </Route>
-                        )}
                       </Switch>
                     </Container>
                   </Flex>
