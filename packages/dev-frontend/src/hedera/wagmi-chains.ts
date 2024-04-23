@@ -67,12 +67,20 @@ export const mainnet: HederaChain = {
   network: "hedera",
   rpcUrls: {
     default: {
-      http: ["https://mainnet.hashio.io/api"],
-      webSocket: ["wss://mainnet.hashio.io/ws"]
+      http: [
+        "https://testnet.hedera.validationcloud.io/v1/ef8o_n-J_bm6yHBSQZ5iSoSBxffitmMwe1kX_yfz-Gg"
+      ],
+      webSocket: [
+        "wss://testnet.hedera.validationcloud.io/v1/wss/ef8o_n-J_bm6yHBSQZ5iSoSBxffitmMwe1kX_yfz-Gg"
+      ]
     },
     public: {
-      http: ["https://mainnet.hashio.io/api"],
-      webSocket: ["wss://mainnet.hashio.io/ws"]
+      http: [
+        "https://testnet.hedera.validationcloud.io/v1/ef8o_n-J_bm6yHBSQZ5iSoSBxffitmMwe1kX_yfz-Gg"
+      ],
+      webSocket: [
+        "wss://testnet.hedera.validationcloud.io/v1/wss/ef8o_n-J_bm6yHBSQZ5iSoSBxffitmMwe1kX_yfz-Gg"
+      ]
     }
   },
   testnet: true,
