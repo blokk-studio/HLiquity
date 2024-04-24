@@ -204,7 +204,17 @@ export class BlockPolledLiquityStore extends HLiquityStore<BlockPolledLiquitySto
       }
     });
 
+    let doUpdate = false;
+    const interval = setInterval(() => {
+      doUpdate = true;
+    }, 20000);
+
     const blockListener = async (blockTag: number) => {
+      if (!doUpdate) {
+        return;
+      }
+
+      doUpdate = false;
       const state = await this._get(blockTag);
 
       if (this._loaded) {
@@ -217,6 +227,7 @@ export class BlockPolledLiquityStore extends HLiquityStore<BlockPolledLiquitySto
     this._provider.on("block", blockListener);
 
     return () => {
+      clearInterval(interval);
       this._provider.off("block", blockListener);
     };
   }
