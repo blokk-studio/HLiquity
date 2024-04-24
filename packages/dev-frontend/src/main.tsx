@@ -4,6 +4,7 @@ import Modal from "react-modal";
 
 import "./index.css";
 import App from "./App";
+import "./i18n";
 
 Modal.setAppElement("#root");
 
