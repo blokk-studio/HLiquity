@@ -8,5 +8,248 @@
       "strong and reliable Swiss Franc."
     ],
     "connectWallet": "Connect wallet"
+  },
+  "bonds": {
+    "cancelBondText": "You will receive your bonded {{hchf}} and forgo {{bhchf}}.",
+    "claimBondText": "You will receive {{bhchf}} and forgo your bonded {{hchf}}.",
+    "rebondEstimations": "Rebond estimations",
+    "claimingNegativeReturnWarning": "You are claiming a bond which currently has a negative return",
+    "cancellingPositiveReturnWarning": "Your are cancelling a bond which has accrued a positive return"
+  },
+  "generic": {
+    "back": "Back",
+    "confirm": "Confirm"
+  },
+  "lexicon": {
+    "borrowFee": {
+      "term": "Borrowing Fee",
+      "description": "The Borrowing Fee is a one-off fee charged as a percentage of the borrowed amount (in HCHF) and is part of a Trove's debt. The fee varies between 0.5% and 5% depending on HCHF redemption volumes."
+    },
+    "hbar": {
+      "term": "HBAR"
+    },
+    "hchf": {
+      "term": "HCHF"
+    },
+    "hchfSupply": {
+      "term": "HCHF supply",
+      "description": "The total HCHF minted by the HLiquity Protocol."
+    },
+    "hlqt": {
+      "term": "HLQT"
+    },
+    "kickbackRate": {
+      "term": "Kickback Rate",
+      "description": "A rate between 0 and 100% set by the Frontend Operator that determines the fraction of HLQT that will be paid out as a kickback to the Stability Providers using the frontend."
+    },
+    "recoveryMode": {
+      "term": "Recovery Mode",
+      "description": "Recovery Mode is activated when the Total Collateral Ratio (TCR) falls below 150%. When active, your Trove can be liquidated if its collateral ratio is below the TCR. The maximum collateral you can lose from liquidation is capped at 110% of your Trove's debt. Operations are also restricted that would negatively impact the TCR."
+    },
+    "stabilityPoolHchf": {
+      "term": "HCHF in Stability Pool",
+      "description": "The total HCHF currently held in the Stability Pool, expressed as an amount and a fraction of the HCHF supply."
+    },
+    "stakedHlqt": {
+      "term": "Staked HLQT",
+      "description": "The total amount of HLQT that is staked for earning fee revenue."
+    },
+    "tcr": {
+      "term": "Total Collateral Ratio",
+      "description": "The ratio of the Swiss Franc value of the entire system collateral at the current HBAR:CHF price, to the entire system debt."
+    },
+    "troves": {
+      "term": "Troves",
+      "description": "The total number of active Troves in the system."
+    },
+    "tvl": {
+      "term": "TVL",
+      "description": "The Total Value Locked (TVL) is the total value of HBAR locked as collateral in the system, given in HBAR and HCHF."
+    },
+    "accruedAmount": {
+      "term": "Accruing",
+      "description": "The amount of bHCHF this bond has accrued so far."
+    },
+    "availableBonds": {
+      "term": "Available bonds",
+      "description": "The types of bonds you can create."
+    },
+    "blusdApr": {
+      "term": "bHCHF APR",
+      "description": "The APR of bHCHF, based on the yield generated from each bucket in the Treasury.",
+      "link": "https://docs.chickenbonds.org/faq/economic-design#_c2c3valbf2bj"
+    },
+    "blusdFairPrice": {
+      "term": "Fair price",
+      "description": "An estimated range of the market price of bHCHF based on the current yield amplification. The lower bound excludes the Pending bucket, the upper bound factors all buckets.",
+      "link": "https://docs.chickenbonds.org/faq/economic-design#how-is-the-fair-price-calculated"
+    },
+    "blusdFloorPrice": {
+      "term": "Floor price",
+      "description": "The amount of HCHF that an arbitrageur could redeem bHCHF for thus creating a lower bound bHCHF market price.",
+      "link": "https://docs.chickenbonds.org/faq/economic-design#_c2c3valbf2bj-1"
+    },
+    "blusdLpApr": {
+      "term": "LP APR",
+      "description": "The APR from providing liquidity to the bHCHF/HCHF-3CRV pool. A combination of HCHF rewards from Chicken-in fees and Curve rewards.",
+      "link": "https://docs.chickenbonds.org/faq/economic-design#_1qcmo1v5zahs"
+    },
+    "blusdMarketPrice": {
+      "term": "Market price",
+      "description": "The current price of bHCHF according to the bHCHF Curve pool."
+    },
+    "blusdSupply": {
+      "term": "Total supply",
+      "description": "The total amount of bHCHF in circulation. Not including pending bonds accrued bHCHF."
+    },
+    "blusdWindDownPrice": {
+      "term": "Net asset value",
+      "description": "The protocol supports a graceful wind down mechanism for migration purposes, whereby Yearn Finance governance can trigger a special function which moves the Permanent bucket HCHF into the Reserve, thus enabling all bHCHF to be redeemed for a higher floor price.",
+      "link": "https://docs.chickenbonds.org/faq/potential-future-system-migration#what-is-the-wind-down-functionality"
+    },
+    "blusdYieldAmplification": {
+      "term": "Yield amplification",
+      "description": "The bHCHF token generates a yield which is a multiple of the Stability Pool yield. It is derived from the total protocol yield which is being diverted to the Reserve bucket.",
+      "link": "https://docs.chickenbonds.org/faq/economic-design#yield-amplification"
+    },
+    "bonds": {
+      "term": "Bonds",
+      "description": "List of your pending bonds and bonds you have claimed or cancelled in the past."
+    },
+    "bondsNavigation": {
+      "term": "Bonds"
+    },
+    "bondAge": {
+      "term": "Age",
+      "description": "Time elapsed since the creation of the bond."
+    },
+    "bondAsset": {
+      "term": "Asset",
+      "description": "The type of token accepted for bonding."
+    },
+    "bondCreated": {
+      "term": "Bond created",
+      "description": "The date you created your bond. The bHCHF accrual starts at 0 and increases over time."
+    },
+    "bondDeposit": {
+      "term": "Deposit",
+      "description": "The amount deposited into the bond, which can be fully recovered by cancelling the bond."
+    },
+    "bondNft": {
+      "term": "NFT",
+      "description": "Bonds are represented as unique visual NFTs. The NFT image evolves when your bond is claimed or cancelled."
+    },
+    "bondReturn": {
+      "term": "Claim-now return",
+      "description": "Expected HCHF gained from claiming the bond now and selling the bHCHF for HCHF and deducting the initial cost of the bond, under current market prices.",
+      "link": "https://docs.chickenbonds.org/faq/economic-design#_44lrt4qpho3a"
+    },
+    "bondStatus": {
+      "term": "Status",
+      "description": "One of three values: Pending, Cancelled, or Claimed."
+    },
+    "breakEvenTime": {
+      "term": "Break-even time",
+      "description": "Estimated time at which the bond will have accrued enough bHCHF to offset the HCHF cost of the bond, under current market prices."
+    },
+    "cancelledBondsStatistic": {
+      "term": "Cancelled bonds",
+      "description": "The total number of bonds which were cancelled."
+    },
+    "cancelledStatus": {
+      "term": "Cancelled",
+      "description": "A bond which you cancelled."
+    },
+    "cancelBond": {
+      "term": "Cancel bond",
+      "description": "A bond can be cancelled at any time to recover the initially deposited HCHF amount while forgoing the accrued bHCHF.",
+      "link": "https://docs.chickenbonds.org/faq/basic-usage#_rwpo6dhx26fq"
+    },
+    "claimedBondsStatistic": {
+      "term": "Claimed bonds",
+      "description": "The total number of bonds which were claimed."
+    },
+    "claimedStatus": {
+      "term": "Claimed",
+      "description": "A bond which you claimed."
+    },
+    "claimBond": {
+      "term": "Claim bond",
+      "description": "A bond can be claimed at any time to forgo the initially deposited HCHF amount and gain the accrued bHCHF.",
+      "link": "https://docs.chickenbonds.org/faq/basic-usage#_2c022erjceom"
+    },
+    "estimatesOnlyNotice": {
+      "description": "These metrics are estimations based on the current bHCHF market price",
+      "link": "https://docs.chickenbonds.org/faq/economic-design#_lnta1xbq350e"
+    },
+    "infiniteEstimation": {
+      "description": "The bHCHF market price premium is currently too low to make bonding profitable. Bonds will be profitable again if the premium returns. Buying bHCHF from the market currently generates a higher return than bonding.",
+      "link": "https://docs.chickenbonds.org/faq/basic-usage#what-should-the-market-price-be-in-order-for-bonding-to-be-profitable"
+    },
+    "marketValue": {
+      "term": "Accrued value",
+      "description": "Current market value of the accrued bHCHF. The bHCHF market price can fluctuate but will always be higher than the floor price under rational market conditions."
+    },
+    "notBondedYet": {
+      "term": "You don't have any pending bonds.",
+      "description": "You can bond HCHF to obtain Boosted HCHF (bHCHF) - a yield-amplified version of HCHF."
+    },
+    "optimumAccrual": {
+      "term": "Rebond accrual",
+      "description": "The required amount of bHCHF to accrue for the Rebond time, under current market prices.",
+      "link": "https://docs.chickenbonds.org/faq/economic-design#_44lrt4qpho3a"
+    },
+    "optimumApy": {
+      "term": "Max APR",
+      "description": "Estimated APY of continuously bonding and claiming at the Rebond time, under current market prices. Rebonding at other times could lead to a lower APY."
+    },
+    "optimumRebondTime": {
+      "term": "Rebond time",
+      "description": "Estimated optimum time to claim the bond, sell the bHCHF for HCHF, and then bond again, to maximize your return under current market prices."
+    },
+    "pendingBonds": {
+      "term": "Pending bonds",
+      "description": "Your active bonds which are accruing bHCHF and can be claimed or cancelled."
+    },
+    "pendingBondsStatistic": {
+      "term": "Pending bonds",
+      "description": "The current number of active bonds in the system which are not yet claimed or cancelled."
+    },
+    "pendingStatus": {
+      "term": "Pending",
+      "description": "An active bond which is accruding bHCHF and can be cancelled or claimed."
+    },
+    "rebondReturn": {
+      "term": "Rebond time return",
+      "description": "Estimated return from selling your accrued bHCHF to HCHF at the Rebond time, minus the initial HCHF cost of the bond, under current market prices."
+    },
+    "rebondTimeRoi": {
+      "term": "Rebond time ROI",
+      "description": "Estimated ROI of selling your accrued bHCHF to HCHF at the Rebond time, minus the initial HCHF cost of the bond, under current market prices."
+    },
+    "totalBondsStatistic": {
+      "term": "Total bonds",
+      "description": "The total number of bonds including: cancelled, claimed and pending."
+    },
+    "treasuryAcquired": {
+      "term": "Reserve",
+      "description": "Contains a portion of the HCHF obtained from claimed bonds and captures the yield from the entire Treasury. It acts as a reserve backing the bHCHF supply. bHCHF can be redeemed for a pro-rata share of the HCHF held in the Reserve bucket.",
+      "link": "https://docs.chickenbonds.org/faq/technical-design#_ydtvzh456fiz"
+    },
+    "treasuryPending": {
+      "term": "Pending",
+      "description": "Contains the deposited HCHF of the users while they bond. Pending bonds can be claimed or cancelled any time, moving the HCHF into the Reserve and Permanent buckets, or back to the bonder, respectively.",
+      "link": "https://docs.chickenbonds.org/faq/technical-design#_ydtvzh456fiz"
+    },
+    "treasuryPermanent": {
+      "term": "Permanent",
+      "description": "Contains a portion of the HCHF obtained from claimed bonds which contributes a permanent price premium over HCHF. The HCHF in this bucket is not redeemable.",
+      "link": "https://docs.chickenbonds.org/faq/technical-design#_ydtvzh456fiz"
+    },
+    "treasuryTotal": {
+      "term": "Total",
+      "description": "The total amount of HCHF held by the protocol within the three buckets (Pending, Reserve, Permanent).",
+      "link": "https://docs.chickenbonds.org/faq/technical-design#_ydtvzh456fiz"
+    }
   }
 }

@@ -2,6 +2,7 @@ import React from "react";
 import { Flex, Button, Text, Spinner } from "theme-ui";
 import { ActionDescription } from "../../../../../ActionDescription";
 import { useBondView } from "../../../../context/BondViewContext";
+import { replace, t } from "../../../../../../i18n";
 
 export const Claim: React.FC = () => {
   const { dispatchEvent, selectedBond: bond, statuses } = useBondView();
@@ -21,17 +22,18 @@ export const Claim: React.FC = () => {
   return (
     <>
       <ActionDescription>
-        You will receive <Text sx={{ fontWeight: "bold" }}>{bond.accrued.prettify(2)} bHCHF</Text>{" "}
-        and forgo your bonded{" "}
-        <Text sx={{ fontWeight: "bold" }}>{bond.deposit.prettify(2)} HCHF</Text>
+        {replace("bonds.claimBondText", {
+          bhchf: <Text sx={{ fontWeight: "bold" }}>{bond.accrued.prettify(2)} bHCHF</Text>,
+          hchf: <Text sx={{ fontWeight: "bold" }}>{bond.deposit.prettify(2)} HCHF</Text>
+        })}
       </ActionDescription>
 
       <Flex variant="layout.actions">
         <Button variant="cancel" onClick={handleBackPressed} disabled={isProcessingTransaction}>
-          Back
+          {t("generic.back")}
         </Button>
         <Button variant="primary" onClick={handleConfirmPressed} disabled={isProcessingTransaction}>
-          {!isProcessingTransaction && <>Confirm</>}
+          {!isProcessingTransaction && <>{t("generic.confirm")}</>}
           {isProcessingTransaction && <Spinner size="28px" sx={{ color: "white" }} />}
         </Button>
       </Flex>
