@@ -20,6 +20,7 @@ import { AuthenticationProvider, LoginForm } from "./authentication";
 import { HederaTokensProvider } from "./hedera/hedera_context";
 import { Lexicon } from "./lexicon";
 import { t } from "./i18n";
+import { useConfiguration } from "./configuration";
 
 const isDemoMode = import.meta.env.VITE_APP_DEMO_MODE === "true";
 
@@ -103,6 +104,7 @@ const jsonifyLexicon = (lexicon: Record<string, Lexicon>) => {
 const App = () => {
   const config = useAsyncValue(getConfig);
   const chains = useHederaChains();
+  const { walletConnectProjectId } = useConfiguration();
 
   if (!config.loaded) {
     return <ThemeProvider theme={theme} />;
@@ -113,9 +115,7 @@ const App = () => {
     getDefaultClient({
       appName: "Liquity",
       chains,
-      walletConnectProjectId: config.value.walletConnectProjectId,
-      infuraId: config.value.infuraApiKey,
-      alchemyId: config.value.alchemyApiKey
+      walletConnectProjectId
     })
   );
 

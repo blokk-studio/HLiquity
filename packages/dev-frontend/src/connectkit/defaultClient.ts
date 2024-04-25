@@ -35,8 +35,6 @@ import { CoinbaseWalletConnector } from "wagmi/connectors/coinbaseWallet";
 import { SafeConnector } from "wagmi/connectors/safe";
 import { InjectedConnector } from "wagmi/connectors/injected";
 
-import { alchemyProvider } from "../wagmi/alchemyProvider";
-import { infuraProvider } from "wagmi/providers/infura";
 import { jsonRpcProvider } from "wagmi/providers/jsonRpc";
 import { publicProvider } from "wagmi/providers/public";
 import { getHederaHashioChainProviderFunction } from "../hashgraph/HederaHashioProvider";
@@ -164,8 +162,6 @@ const defaultClient = ({
   appDescription,
   appUrl,
   chains = defaultChains,
-  alchemyId,
-  infuraId,
   connectors,
   provider,
   stallTimeout,
@@ -177,12 +173,7 @@ const defaultClient = ({
   if (appIcon) globalAppIcon = appIcon;
 
   const providers: ChainProviderFn[] = [];
-  if (alchemyId) {
-    providers.push(alchemyProvider({ apiKey: alchemyId, stallTimeout }));
-  }
-  if (infuraId) {
-    providers.push(infuraProvider({ apiKey: infuraId, stallTimeout }));
-  }
+
   providers.push(
     jsonRpcProvider({
       rpc: c => {
