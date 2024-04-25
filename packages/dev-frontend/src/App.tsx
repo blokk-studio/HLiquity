@@ -19,7 +19,6 @@ import { useHederaChains } from "./hedera/wagmi-chains";
 import { AuthenticationProvider, LoginForm } from "./authentication";
 import { HederaTokensProvider } from "./hedera/hedera_context";
 import { Lexicon } from "./lexicon";
-import { t } from "./i18n";
 import { useConfiguration } from "./configuration";
 
 const isDemoMode = import.meta.env.VITE_APP_DEMO_MODE === "true";
