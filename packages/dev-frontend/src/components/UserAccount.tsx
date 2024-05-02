@@ -11,6 +11,7 @@ import { shortenAddress } from "../utils/shortenAddress";
 import { Icon } from "./Icon";
 import { useBondView } from "./Bonds/context/BondViewContext";
 import { useBondAddresses } from "./Bonds/context/BondAddressesContext";
+import { useWeb3Modal } from "@web3modal/wagmi/react";
 // import { ConnectKitButton } from "connectkit";
 
 const select = ({ accountBalance, hchfBalance, hlqtBalance }: LiquityStoreState) => ({
@@ -24,25 +25,22 @@ export const UserAccount: React.FC = () => {
   const { accountBalance, hchfBalance: realHchfBalance, hlqtBalance } = useLiquitySelector(select);
   const { hchfBalance: customHchfBalance } = useBondView();
   const { LUSD_OVERRIDE_ADDRESS } = useBondAddresses();
+  const web3modal = useWeb3Modal();
 
   const hchfBalance = LUSD_OVERRIDE_ADDRESS === null ? realHchfBalance : customHchfBalance;
 
   return (
     <Flex>
-      {/* <ConnectKitButton.Custom>
-        {connectKit => (
-          <Button
-            variant="outline"
-            sx={{ alignItems: "center", p: 2, mr: 3 }}
-            onClick={connectKit.show}
-          >
-            <Icon name="user-circle" size="lg" />
-            <Text as="span" sx={{ ml: 2, fontSize: 1 }}>
-              {shortenAddress(account)}
-            </Text>
-          </Button>
-        )}
-      </ConnectKitButton.Custom> */}
+      <Button
+        variant="outline"
+        sx={{ alignItems: "center", p: 2, mr: 3 }}
+        onClick={() => web3modal.open()}
+      >
+        <Icon name="user-circle" size="lg" />
+        <Text as="span" sx={{ ml: 2, fontSize: 1 }}>
+          {shortenAddress(account)}
+        </Text>
+      </Button>
 
       <Box
         sx={{
@@ -52,11 +50,13 @@ export const UserAccount: React.FC = () => {
       >
         <Icon name="wallet" size="lg" />
 
-        {([
-          [COLLATERAL_COIN, accountBalance],
-          [COIN, Decimal.from(hchfBalance || 0)],
-          [GT, Decimal.from(hlqtBalance)]
-        ] as const).map(([currency, balance], i) => (
+        {(
+          [
+            [COLLATERAL_COIN, accountBalance],
+            [COIN, Decimal.from(hchfBalance || 0)],
+            [GT, Decimal.from(hlqtBalance)]
+          ] as const
+        ).map(([currency, balance], i) => (
           <Flex key={i} sx={{ ml: 3, flexDirection: "column" }}>
             <Heading sx={{ fontSize: 1 }}>{currency}</Heading>
             <Text sx={{ fontSize: 1 }}>{balance.prettify()}</Text>

@@ -1,13 +1,13 @@
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { WagmiProvider, createConfig, fallback, http } from "wagmi";
-import { createWeb3Modal } from '@web3modal/wagmi/react'
+import { WagmiProvider } from "wagmi";
+import { createWeb3Modal } from "@web3modal/wagmi/react";
 // import { injected } from "wagmi/connectors";
 import { useHederaChains } from "./hedera/wagmi-chains";
 // import { ConnectKitProvider, getDefaultConfig, getDefaultConnectors } from "connectkit";
-import { Flex, Heading, ThemeUIProvider, Paragraph, Link } from "theme-ui";
+import { Flex, Heading, ThemeUIProvider } from "theme-ui";
 // import { createWeb3Modal } from '@web3modal/wagmi/react'
-import { defaultWagmiConfig } from '@web3modal/wagmi/react/config'
+import { defaultWagmiConfig } from "@web3modal/wagmi/react/config";
 import { AuthenticationProvider, LoginForm } from "./authentication";
 import { LiquityProvider } from "./hooks/LiquityContext";
 import { WalletConnector } from "./components/WalletConnector";
@@ -19,16 +19,18 @@ import theme from "./theme";
 // import { DisposableWalletProvider } from "./testUtils/DisposableWalletProvider";
 import { LiquityFrontend } from "./LiquityFrontend";
 import { AppLoader } from "./components/AppLoader";
-import { useAsyncValue } from "./hooks/AsyncValue";
+import { TransactionProvider } from "./components/Transaction";
+import { useConfiguration } from "./configuration";
+import { Web3Modal } from "@web3modal/wagmi";
 
 // const isDemoMode = import.meta.env.VITE_APP_DEMO_MODE === "true";
 
 const metadata = {
-  name: 'Liquity',
-  description: 'Liquity',
-  url: 'http://localhost:5173', // origin must match your domain & subdomain
-  icons: ['']
-}
+  name: "Liquity",
+  description: "Liquity",
+  url: "http://localhost:5173", // origin must match your domain & subdomain
+  icons: [""]
+};
 
 // if (isDemoMode) {
 //   const ethereum = new DisposableWalletProvider(
@@ -45,7 +47,6 @@ getConfig().then(config => {
   // console.log(config);
   Object.assign(window, { config });
 });
-
 
 const UnsupportedNetworkFallback: React.FC = () => {
   return (
@@ -65,61 +66,63 @@ const UnsupportedNetworkFallback: React.FC = () => {
       {/* {availableNetworks.length ? (
         <p>Please switch to {(availableNetworks)}.</p>
       ) : ( */}
-        <p>No chains or deployments have been configured.</p>
+      <p>No chains or deployments have been configured.</p>
       {/* )} */}
     </Flex>
   );
 };
 
-const queryClient = new QueryClient();
-
 const App = () => {
   const loader = <AppLoader />;
   const chains = useHederaChains();
-  const config = useAsyncValue(getConfig);
+  const { walletConnectProjectId } = useConfiguration();
+
+  const wagmiConfig = useMemo(() => {
+    const wagmiConfig = defaultWagmiConfig({
+      chains,
+      projectId: walletConnectProjectId,
+      metadata
+    });
+
+    return wagmiConfig;
+  }, [chains, walletConnectProjectId]);
+
   const [modalCreated, setModalCreated] = useState(false);
-
   useEffect(() => {
-    if (config.loaded) {
-      const wagmiConfigs = defaultWagmiConfig({
-        chains,
-        projectId: config.value.walletConnectProjectId,
-        metadata,
-      })
+    createWeb3Modal({
+      wagmiConfig: wagmiConfig,
+      projectId: walletConnectProjectId,
+      enableAnalytics: true, // Optional - defaults to your Cloud configuration
+      enableOnramp: true // Optional - false as default
+    });
 
-      createWeb3Modal({
-        wagmiConfig: wagmiConfigs,
-        projectId: config.value.walletConnectProjectId,
-        enableAnalytics: true, // Optional - defaults to your Cloud configuration
-        enableOnramp: true // Optional - false as default
-      })
+    setModalCreated(true);
+  }, [wagmiConfig, walletConnectProjectId]);
 
-      setModalCreated(true);
-    }
-  }, [config])
+  const queryClient = new QueryClient();
 
   return (
     <ThemeUIProvider theme={theme}>
       <AuthenticationProvider loginForm={<LoginForm />}>
-      {config.loaded && modalCreated && (
-        <WagmiProvider
-          config={defaultWagmiConfig({chains, projectId: config.value.walletConnectProjectId, metadata})}
-        >
-          <QueryClientProvider client={queryClient}>
-            <WalletConnector loader={loader}>
-              <LiquityProvider
-                loader={loader}
-                unsupportedNetworkFallback={<UnsupportedNetworkFallback />}
-                unsupportedMainnetFallback={<UnsupportedNetworkFallback />}
-              >
-                {/* <TransactionProvider> */}
-                  <LiquityFrontend loader={loader} />
-                {/* </TransactionProvider> */}
-              </LiquityProvider>
-            </WalletConnector>
-          </QueryClientProvider>
-        </WagmiProvider>
-      )}
+        {!modalCreated ? (
+          loader
+        ) : (
+          <WagmiProvider config={wagmiConfig}>
+            <QueryClientProvider client={queryClient}>
+              <WalletConnector loader={loader}>
+                <LiquityProvider
+                  loader={loader}
+                  unsupportedNetworkFallback={<UnsupportedNetworkFallback />}
+                  unsupportedMainnetFallback={<UnsupportedNetworkFallback />}
+                >
+                  <TransactionProvider>
+                    <LiquityFrontend loader={loader} />
+                  </TransactionProvider>
+                </LiquityProvider>
+              </WalletConnector>
+            </QueryClientProvider>
+          </WagmiProvider>
+        )}
       </AuthenticationProvider>
     </ThemeUIProvider>
   );

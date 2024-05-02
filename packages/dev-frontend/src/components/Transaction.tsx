@@ -1,11 +1,14 @@
-import React, { useState, useContext, useEffect, useCallback } from "react";
+import React, { useState, useContext, useEffect, useCallback, ReactNode } from "react";
 import { Provider, TransactionResponse, TransactionReceipt } from "@ethersproject/abstract-provider";
 import { hexDataSlice, hexDataLength } from "@ethersproject/bytes";
 import { defaultAbiCoder } from "@ethersproject/abi";
 
 import "react-circular-progressbar/dist/styles.css";
 
-import { EthersTransactionOverrides, EthersTransactionFailedError as EthersTransactionCancelledError } from "@liquity/lib-ethers";
+import {
+  EthersTransactionOverrides,
+  EthersTransactionFailedError as EthersTransactionCancelledError
+} from "@liquity/lib-ethers";
 import { SentLiquityTransaction, LiquityReceipt } from "@liquity/lib-base";
 
 import { useLiquity } from "../hooks/LiquityContext";
@@ -64,7 +67,7 @@ const TransactionContext = React.createContext<
   [TransactionState, (state: TransactionState) => void] | undefined
 >(undefined);
 
-export const TransactionProvider: React.FC = ({ children }) => {
+export const TransactionProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const transactionState = useState<TransactionState>({ type: "idle" });
   return (
     <TransactionContext.Provider value={transactionState}>{children}</TransactionContext.Provider>

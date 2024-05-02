@@ -1,5 +1,5 @@
 // import { Chain } from "@wagmi/core";
-import { hedera, hederaTestnet, hederaPreviewnet } from "wagmi/chains";
+import { hedera, hederaTestnet, hederaPreviewnet, Chain } from "wagmi/chains";
 import { useChainId } from "wagmi";
 import { enabledChainIds } from "../configuration/enabled_chains";
 import { deployments } from "../configuration/deployments";
@@ -19,9 +19,9 @@ const chainsWithDeployment = enabledChains.filter(chain =>
 );
 
 export const getChainFromId = (chainId: number) => {
-  const chain = chains.find(chain => chain.id === chainId);
+  const chain = chainsWithDeployment.find(chain => chain.id === chainId);
   if (!chain) {
-    const errorMessage = `chain id ${chainId} does not belong to a hedera chain. pass one of ${chains
+    const errorMessage = `chain id ${chainId} does not belong to a hedera chain. pass one of ${chainsWithDeployment
       .map(chain => `${chain.id} (${chain.name})`)
       .join(", ")}.`;
     console.error(errorMessage, "received:", { chainId });
@@ -31,20 +31,27 @@ export const getChainFromId = (chainId: number) => {
   return chain;
 };
 
-export const useHederaChains = () => {
-  return chains;
+const hasOneOrMoreElements = <Type>(elements: Type[]): elements is [Type, ...Type[]] =>
+  !!elements[0];
+
+export const useHederaChains = (): [Chain, ...Chain[]] => {
+  if (!hasOneOrMoreElements(chainsWithDeployment)) {
+    throw new Error("no hedera chains have been enabled or no deployments have been configured.");
+  }
+
+  return chainsWithDeployment;
 };
 
 export const useHederaChain = () => {
   const chainId = useChainId();
 
-  console.log(chainId, 'chain ID config')
+  console.log(chainId, "chain ID config");
 
   if (chainId === undefined) {
     return null;
   }
 
-  const hederaChain = chains.find(chain => chain.id === chainId);
+  const hederaChain = chainsWithDeployment.find(chain => chain.id === chainId);
   if (!hederaChain) {
     return null;
   }
