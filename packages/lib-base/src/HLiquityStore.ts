@@ -29,10 +29,10 @@ export interface LiquityStoreBaseState {
   hchfBalance: Decimal;
 
   /** HCHF HST Token address */
-  hchfTokenAddress: string,
+  hchfTokenAddress: string;
 
   /** HLQT HST Token address */
-  hlqtTokenAddress: string,
+  hlqtTokenAddress: string;
 
   /** User's HLQT token balance. */
   hlqtBalance: Decimal;
@@ -196,11 +196,16 @@ const showFrontendStatus = (x: FrontendStatus) =>
     ? '{ status: "unregistered" }'
     : `{ status: "registered", kickbackRate: ${x.kickbackRate} }`;
 
-const wrap = <A extends unknown[], R>(f: (...args: A) => R) => (...args: A) => f(...args);
+const wrap =
+  <A extends unknown[], R>(f: (...args: A) => R) =>
+  (...args: A) =>
+    f(...args);
 
 const difference = <T>(a: T, b: T) =>
   Object.fromEntries(
-    Object.entries(a).filter(([key, value]) => value !== (b as Record<string, unknown>)[key])
+    Object.entries(a as Record<string, unknown>).filter(
+      ([key, value]) => value !== (b as Record<string, unknown>)[key]
+    )
   ) as Partial<T>;
 
 /**
@@ -246,7 +251,52 @@ export abstract class HLiquityStore<T = unknown> {
    * See {@link LiquityStoreState} for the list of properties returned.
    */
   get state(): LiquityStoreState<T> {
-    return Object.assign({}, this._baseState, this._derivedState, this._extraState);
+    const defaultState: LiquityStoreState = {
+      _feesInNormalMode: new Fees(0, 0, 0, new Date(0), new Date(0), false),
+      _riskiestTroveBeforeRedistribution: new TroveWithPendingRedistribution("", "nonExistent"),
+      borrowingRate: Decimal.from(0),
+      accountBalance: Decimal.from(0),
+      collateralSurplusBalance: Decimal.from(0),
+      fees: new Fees(0, 0, 0, new Date(0), new Date(0), false),
+      frontend: {
+        status: "registered",
+        kickbackRate: Decimal.from(0)
+      },
+      haveUndercollateralizedTroves: false,
+      hchfBalance: Decimal.from(0),
+      hchfInStabilityPool: Decimal.from(0),
+      hchfTokenAddress: "",
+      hlqtBalance: Decimal.from(0),
+      hlqtStake: new HLQTStake(),
+      hlqtTokenAddress: "",
+      liquidityMiningHLQTReward: Decimal.from(0),
+      liquidityMiningStake: Decimal.from(0),
+      numberOfTroves: 0,
+      ownFrontend: {
+        status: "registered",
+        kickbackRate: Decimal.from(0)
+      },
+      price: Decimal.from(0),
+      redemptionRate: Decimal.from(0),
+      remainingLiquidityMiningHLQTReward: Decimal.from(0),
+      remainingStabilityPoolHLQTReward: Decimal.from(0),
+      stabilityDeposit: new StabilityDeposit(
+        Decimal.from(0),
+        Decimal.from(0),
+        Decimal.from(0),
+        Decimal.from(0),
+        ""
+      ),
+      total: new Trove(),
+      totalRedistributed: new Trove(),
+      totalStakedHLQT: Decimal.from(0),
+      totalStakedUniTokens: Decimal.from(0),
+      trove: new UserTrove("", "nonExistent"),
+      troveBeforeRedistribution: new TroveWithPendingRedistribution("", "nonExistent"),
+      uniTokenAllowance: Decimal.from(0),
+      uniTokenBalance: Decimal.from(0)
+    };
+    return Object.assign(defaultState, this._baseState, this._derivedState, this._extraState);
   }
 
   /** @internal */
@@ -273,19 +323,12 @@ export abstract class HLiquityStore<T = unknown> {
     };
   }
 
+  public abstract refresh(): Promise<void>;
+
   private _cancelUpdateIfScheduled() {
     if (this._updateTimeoutId !== undefined) {
       clearTimeout(this._updateTimeoutId);
     }
-  }
-
-  private _scheduleUpdate() {
-    this._cancelUpdateIfScheduled();
-
-    this._updateTimeoutId = setTimeout(() => {
-      this._updateTimeoutId = undefined;
-      this._update();
-    }, 30000);
   }
 
   private _logUpdate<U>(name: string, next: U, show?: (next: U) => string): U {
@@ -366,17 +409,17 @@ export abstract class HLiquityStore<T = unknown> {
       ),
 
       hchfTokenAddress: this._updateIfChanged(
-          strictEquals,
-          "hchfTokenAddress",
-          baseState.hchfTokenAddress,
-          baseStateUpdate.hchfTokenAddress
+        strictEquals,
+        "hchfTokenAddress",
+        baseState.hchfTokenAddress,
+        baseStateUpdate.hchfTokenAddress
       ),
 
       hlqtTokenAddress: this._updateIfChanged(
-          strictEquals,
-          "hlqtTokenAddress",
-          baseState.hlqtTokenAddress,
-          baseStateUpdate.hlqtTokenAddress
+        strictEquals,
+        "hlqtTokenAddress",
+        baseState.hlqtTokenAddress,
+        baseStateUpdate.hlqtTokenAddress
       ),
 
       hlqtBalance: this._updateIfChanged(
@@ -577,6 +620,12 @@ export abstract class HLiquityStore<T = unknown> {
     const uniqueListener = wrap(listener);
 
     this._listeners.add(uniqueListener);
+    const currentState = this.state;
+    listener({
+      newState: currentState,
+      oldState: currentState,
+      stateChange: {}
+    });
 
     return () => {
       this._listeners.delete(uniqueListener);
@@ -592,11 +641,11 @@ export abstract class HLiquityStore<T = unknown> {
     this._extraState = extraState;
     this._loaded = true;
 
-    this._scheduleUpdate();
-
     if (this.onLoaded) {
       this.onLoaded();
     }
+
+    this._update();
   }
 
   /** @internal */
@@ -619,8 +668,6 @@ export abstract class HLiquityStore<T = unknown> {
       assert(this._extraState);
       this._extraState = this._reduceExtra(this._extraState, extraStateUpdate);
     }
-
-    this._scheduleUpdate();
 
     this._notify({
       newState: this.state,
