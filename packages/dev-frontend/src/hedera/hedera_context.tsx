@@ -1,7 +1,7 @@
 import { createContext, useContext, useMemo, useState } from "react";
 import { BigNumber } from "ethers";
 import { useHederaChain } from "./wagmi-chains";
-import { useAccount, useSigner } from "wagmi";
+import { useAccount, useWalletClient } from "wagmi";
 import { TokenId } from "@hashgraph/sdk";
 import { fetchTokens } from "./mirrornode";
 import { approveSpender, associateWithToken, dissociateFromToken } from "./consent";
@@ -37,7 +37,7 @@ interface HederaToken {
 }
 
 export const HederaTokensProvider: React.FC = ({ children }) => {
-  const signerResult = useSigner();
+  const signerResult = useWalletClient();
   const account = useAccount();
   const hederaChain = useHederaChain();
   const deployment = useDeployment();

@@ -1,4 +1,8 @@
+import { AddressZero } from "@ethersproject/constants";
+import { isAddress, getAddress } from "@ethersproject/address";
+
 export type LiquityFrontendConfig = {
+  frontendTag: string;
   infuraApiKey?: string;
   alchemyApiKey?: string;
   testnetOnly?: boolean;
@@ -6,7 +10,8 @@ export type LiquityFrontendConfig = {
 };
 
 const defaultConfig: LiquityFrontendConfig = {
-  walletConnectProjectId: "b16efb4fd41473c0f45dbad8efa15a00"
+  frontendTag: AddressZero,
+  walletConnectProjectId: "a2812cdc5339ab6ec2b9d865ef94239d"
 };
 
 function hasKey<K extends string>(o: object, k: K): o is Record<K, unknown> {
@@ -17,6 +22,17 @@ const parseConfig = (json: unknown): LiquityFrontendConfig => {
   const config = { ...defaultConfig };
 
   if (typeof json === "object" && json !== null) {
+    if (hasKey(json, "frontendTag") && json.frontendTag !== "") {
+      const { frontendTag } = json;
+
+      if (typeof frontendTag === "string" && isAddress(frontendTag)) {
+        config.frontendTag = getAddress(frontendTag);
+      } else {
+        console.error("Malformed frontendTag:");
+        console.log(frontendTag);
+      }
+    }
+
     if (hasKey(json, "infuraApiKey") && json.infuraApiKey !== "") {
       const { infuraApiKey } = json;
 

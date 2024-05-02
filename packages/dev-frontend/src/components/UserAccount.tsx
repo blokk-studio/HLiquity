@@ -11,7 +11,7 @@ import { shortenAddress } from "../utils/shortenAddress";
 import { Icon } from "./Icon";
 import { useBondView } from "./Bonds/context/BondViewContext";
 import { useBondAddresses } from "./Bonds/context/BondAddressesContext";
-import { ConnectKitButton } from "connectkit";
+// import { ConnectKitButton } from "connectkit";
 
 const select = ({ accountBalance, hchfBalance, hlqtBalance }: LiquityStoreState) => ({
   accountBalance,
@@ -29,7 +29,7 @@ export const UserAccount: React.FC = () => {
 
   return (
     <Flex>
-      <ConnectKitButton.Custom>
+      {/* <ConnectKitButton.Custom>
         {connectKit => (
           <Button
             variant="outline"
@@ -42,7 +42,7 @@ export const UserAccount: React.FC = () => {
             </Text>
           </Button>
         )}
-      </ConnectKitButton.Custom>
+      </ConnectKitButton.Custom> */}
 
       <Box
         sx={{

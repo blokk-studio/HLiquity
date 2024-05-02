@@ -1,15 +1,17 @@
 import React, { createContext, useContext, useEffect, useMemo, useState } from "react";
 import { Provider } from "@ethersproject/abstract-provider";
-import { FallbackProvider } from "@ethersproject/providers";
-import { useProvider, useSigner, useAccount, useChainId } from "wagmi";
+import { Web3Provider } from "@ethersproject/providers";
+import { useClient, useAccount, useChainId, useWalletClient } from "wagmi";
 
-import { BlockPolledLiquityStore, EthersLiquity, EthersLiquityWithStore } from "@liquity/lib-ethers";
+import {
+  BlockPolledLiquityStore,
+  EthersLiquity,
+  EthersLiquityWithStore,
+  _connectByChainId
+} from "@liquity/lib-ethers";
 
 import { LiquityFrontendConfig, getConfig } from "../config";
 import { BatchedProvider } from "../providers/BatchingProvider";
-import { useDeployment } from "../configuration/deployments";
-import { Signer } from "ethers";
-import { _LiquityDeploymentJSON } from "@liquity/lib-ethers/dist/src/contracts";
 
 type LiquityContextValue = {
   config: LiquityFrontendConfig;
@@ -20,61 +22,11 @@ type LiquityContextValue = {
 
 const LiquityContext = createContext<LiquityContextValue | undefined>(undefined);
 
-type LiquityProviderProps = {
+type LiquityProviderProps = React.PropsWithChildren<{
   loader?: React.ReactNode;
   unsupportedNetworkFallback?: React.ReactNode;
   unsupportedMainnetFallback?: React.ReactNode;
-};
-
-// TODO: move the config to env variables. no clue why this is a json file.
-const useConfig = () => {
-  const [config, setConfig] = useState<LiquityFrontendConfig>();
-  useEffect(() => {
-    getConfig().then(setConfig);
-  }, []);
-
-  return config;
-};
-
-interface NonNullableLiquityProviderProps {
-  config: LiquityFrontendConfig;
-  provider: Provider;
-  signer: Signer;
-  userAddress: `0x${string}`;
-  chainId: number;
-  deployment: _LiquityDeploymentJSON;
-}
-
-const NonNullableLiquityProvider: React.FC<NonNullableLiquityProviderProps> = ({
-  children,
-  config,
-  provider,
-  signer,
-  userAddress,
-  chainId,
-  deployment
-}) => {
-  const liquity = useMemo(() => {
-    const { frontendTag } = deployment;
-    const liquity = EthersLiquity.fromConnectionOptionsWithBlockPolledStore({
-      chainId,
-      deployment,
-      provider,
-      signer,
-      frontendTag,
-      userAddress
-    });
-    liquity.store.logging = true;
-
-    return liquity;
-  }, [provider, signer, userAddress, chainId, deployment]);
-
-  return (
-    <LiquityContext.Provider value={{ config, account: userAddress, provider: provider, liquity }}>
-      {children}
-    </LiquityContext.Provider>
-  );
-};
+}>;
 
 export const LiquityProvider: React.FC<LiquityProviderProps> = ({
   children,
@@ -82,14 +34,59 @@ export const LiquityProvider: React.FC<LiquityProviderProps> = ({
   unsupportedNetworkFallback,
   unsupportedMainnetFallback
 }) => {
-  const wagmiProvider = useProvider<FallbackProvider>();
-  const signer = useSigner();
-  const account = useAccount();
   const chainId = useChainId();
-  const config = useConfig();
-  const deployment = useDeployment();
+  const client = useClient();
 
-  if (!config || !wagmiProvider || !signer.data || !account.address) {
+  const provider =
+    client &&
+    new Web3Provider(
+      (method, params) =>
+        client.request({
+          method: method as any,
+          params: params as any
+        }),
+      chainId
+    );
+
+  const account = useAccount();
+  const walletClient = useWalletClient();
+
+  const signer =
+    account.address &&
+    walletClient.data &&
+    new Web3Provider(
+      (method, params) =>
+        walletClient.data.request({
+          method: method as any,
+          params: params as any
+        }),
+      chainId
+    ).getSigner(account.address);
+
+  const [config, setConfig] = useState<LiquityFrontendConfig>();
+
+  const connection = useMemo(() => {
+    if (config && provider && signer && account.address) {
+      const batchedProvider = new BatchedProvider(provider, chainId);
+      // batchedProvider._debugLog = true;
+
+      try {
+        return _connectByChainId(batchedProvider, signer, chainId, {
+          userAddress: account.address,
+          frontendTag: config.frontendTag,
+          useStore: "blockPolled"
+        });
+      } catch (err) {
+        console.error(err);
+      }
+    }
+  }, [config, provider, signer, account.address, chainId]);
+
+  useEffect(() => {
+    getConfig().then(setConfig);
+  }, []);
+
+  if (!config || !provider || !signer || !account.address) {
     return <>{loader}</>;
   }
 
@@ -97,23 +94,19 @@ export const LiquityProvider: React.FC<LiquityProviderProps> = ({
     return <>{unsupportedMainnetFallback}</>;
   }
 
-  if (!deployment) {
+  if (!connection) {
     return <>{unsupportedNetworkFallback}</>;
   }
 
-  const provider = new BatchedProvider(wagmiProvider, chainId, 20000);
+  const liquity = EthersLiquity._from(connection);
+  liquity.store.logging = true;
 
   return (
-    <NonNullableLiquityProvider
-      chainId={chainId}
-      config={config}
-      deployment={deployment}
-      provider={provider}
-      signer={signer.data}
-      userAddress={account.address}
+    <LiquityContext.Provider
+      value={{ config, account: account.address, provider: connection.provider, liquity }}
     >
       {children}
-    </NonNullableLiquityProvider>
+    </LiquityContext.Provider>
   );
 };
 

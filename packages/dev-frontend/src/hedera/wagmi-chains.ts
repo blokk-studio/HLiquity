@@ -1,86 +1,15 @@
-import { Chain } from "@wagmi/core";
-import { useNetwork } from "wagmi";
+// import { Chain } from "@wagmi/core";
+import { hedera, hederaTestnet, hederaPreviewnet } from "wagmi/chains";
+import { useChainId } from "wagmi";
 import { enabledChainIds } from "../configuration/enabled_chains";
 import { deployments } from "../configuration/deployments";
 
-interface HederaChain extends Chain {
-  apiBaseUrl: string;
-  color: `#${string}`;
-}
+// interface HederaChain extends Chain {
+//   apiBaseUrl: string;
+//   color: `#${string}`;
+// }
 
-export const testnet: HederaChain = {
-  id: 0x128,
-  name: "Hedera Testnet",
-  nativeCurrency: {
-    name: "HBAR",
-    symbol: "HBAR",
-    decimals: 18
-  },
-  network: "hederaTestnet",
-  rpcUrls: {
-    default: {
-      http: ["https://testnet.hashio.io/api"],
-      webSocket: ["wss://testnet.hashio.io/ws"]
-    },
-    public: {
-      http: ["https://testnet.hashio.io/api"],
-      webSocket: ["wss://testnet.hashio.io/ws"]
-    }
-  },
-  testnet: true,
-  apiBaseUrl: "https://testnet.mirrornode.hedera.com/api/v1",
-  color: "#e302ab"
-};
-
-export const previewnet: HederaChain = {
-  id: 0x129,
-  name: "Hedera Previewnet",
-  nativeCurrency: {
-    name: "HBAR",
-    symbol: "HBAR",
-    decimals: 18
-  },
-  network: "hederaPreviewnet",
-  rpcUrls: {
-    default: {
-      http: ["https://previewnet.hashio.io/api"],
-      webSocket: ["wss://previewnet.hashio.io/ws"]
-    },
-    public: {
-      http: ["https://previewnet.hashio.io/api"],
-      webSocket: ["wss://previewnet.hashio.io/ws"]
-    }
-  },
-  testnet: true,
-  apiBaseUrl: "https://previewnet.mirrornode.hedera.com/api/v1",
-  color: "#e47a2e"
-};
-
-export const mainnet: HederaChain = {
-  id: 0x127,
-  name: "Hedera Mainnet",
-  nativeCurrency: {
-    name: "HBAR",
-    symbol: "HBAR",
-    decimals: 18
-  },
-  network: "hedera",
-  rpcUrls: {
-    default: {
-      http: ["https://mainnet.hashio.io/api"],
-      webSocket: ["wss://mainnet.hashio.io/ws"]
-    },
-    public: {
-      http: ["https://mainnet.hashio.io/api"],
-      webSocket: ["wss://mainnet.hashio.io/ws"]
-    }
-  },
-  testnet: true,
-  apiBaseUrl: "https://mainnet-public.mirrornode.hedera.com/api/v1",
-  color: "#1896b2"
-};
-
-const chains = [mainnet, previewnet, testnet];
+const chains = [hedera, hederaTestnet, hederaPreviewnet] as const;
 
 const enabledChainIdsSet = new Set(enabledChainIds);
 const enabledChains = chains.filter(chain => enabledChainIdsSet.has(chain.id));
@@ -103,13 +32,14 @@ export const getChainFromId = (chainId: number) => {
 };
 
 export const useHederaChains = () => {
-  return chainsWithDeployment;
+  return chains;
 };
 
 export const useHederaChain = () => {
-  const network = useNetwork();
+  const chainId = useChainId();
 
-  const chainId = network.chain?.id;
+  console.log(chainId, 'chain ID config')
+
   if (chainId === undefined) {
     return null;
   }

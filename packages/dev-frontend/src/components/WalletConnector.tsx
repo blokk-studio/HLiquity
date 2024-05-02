@@ -1,20 +1,30 @@
 /** @jsxImportSource theme-ui */
-import { ConnectKitButton } from "connectkit";
 import { Box, Button, Flex, Heading, Paragraph } from "theme-ui";
 import { Icon } from "./Icon";
 import { useTranslation } from "react-i18next";
+import { useAccount } from "wagmi";
+import { useWeb3Modal } from '@web3modal/wagmi/react';
 
-type WalletConnectorProps = {
+type WalletConnectorProps = React.PropsWithChildren<{
   loader?: React.ReactNode;
-};
+}>;
 
 export const WalletConnector: React.FC<WalletConnectorProps> = ({ children }) => {
   const { t } = useTranslation();
+  const { isConnected } = useAccount();
+  const { open } = useWeb3Modal();
+
+  const handleOpen = () => {
+    try{
+      open();
+    } catch(_e){
+      open();
+    }
+  }
 
   return (
-    <ConnectKitButton.Custom>
-      {connectKit =>
-        connectKit.isConnected ? (
+    <>
+      { isConnected ? (
           children
         ) : (
           <Flex
@@ -44,14 +54,13 @@ export const WalletConnector: React.FC<WalletConnectorProps> = ({ children }) =>
                 {t("startScreen.introText.3")}
               </span>
             </Paragraph>
-
-            <Button onClick={connectKit.show} sx={{ marginTop: "4rem", alignSelf: "center" }}>
+            <Button onClick={handleOpen} sx={{ marginTop: "4rem", alignSelf: "center" }}>
               <Icon name="plug" size="lg" />
               <Box sx={{ ml: 2 }}>{t("startScreen.connectWallet")}</Box>
             </Button>
           </Flex>
         )
       }
-    </ConnectKitButton.Custom>
+    </>
   );
 };
