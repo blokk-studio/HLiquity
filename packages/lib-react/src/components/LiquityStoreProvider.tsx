@@ -10,25 +10,24 @@ type LiquityStoreProviderProps = {
 
 export const LiquityStoreProvider: React.FC<LiquityStoreProviderProps> = ({
   store,
-  loader,
-  children
+  children,
+  loader
 }) => {
-  const [loadedStore, setLoadedStore] = useState<HLiquityStore>();
+  const [isStoreLoaded, setIsStoreLoaded] = useState(false);
 
   useEffect(() => {
-    store.onLoaded = () => setLoadedStore(store);
-    const stop = store.start();
+    store.onLoaded = () => setIsStoreLoaded(true);
+    store.refresh();
 
     return () => {
       store.onLoaded = undefined;
-      setLoadedStore(undefined);
-      stop();
+      setIsStoreLoaded(false);
     };
   }, [store]);
 
-  if (!loadedStore) {
+  if (!isStoreLoaded) {
     return <>{loader}</>;
   }
 
-  return <LiquityStoreContext.Provider value={loadedStore}>{children}</LiquityStoreContext.Provider>;
+  return <LiquityStoreContext.Provider value={store}>{children}</LiquityStoreContext.Provider>;
 };
