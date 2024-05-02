@@ -3,7 +3,6 @@ import { Trove, TroveWithPendingRedistribution, UserTrove } from "./Trove";
 import { StabilityDeposit } from "./StabilityDeposit";
 import { Fees } from "./Fees";
 import { HLQTStake } from "./HLQTStake";
-import {EthersCallOverrides} from "@liquity/lib-ethers/src/types";
 
 /**
  * Represents whether an address has been registered as a Liquity frontend.
@@ -123,15 +122,13 @@ export interface ReadableLiquity {
    * Get the address of the HST Token of HCHF (HCHF)
    *
    */
-  getHCHFTokenAddress(): Promise<string>
-
+  getHCHFTokenAddress(): Promise<string>;
 
   /**
    * Get the address of the HST Token of HLQT
    *
    */
-  getHLQTTokenAddress(): Promise<string>
-
+  getHLQTTokenAddress(): Promise<string>;
 
   /**
    * Get the amount of HLQT held by an address.
