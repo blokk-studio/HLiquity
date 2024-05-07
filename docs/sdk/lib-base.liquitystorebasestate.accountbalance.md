@@ -6,7 +6,7 @@
 
 User's native currency balance (e.g. Ether).
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 accountBalance: Decimal;

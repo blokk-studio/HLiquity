@@ -6,7 +6,7 @@
 
 The amount of HLQT that's staked.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 readonly stakedHLQT: Decimal;

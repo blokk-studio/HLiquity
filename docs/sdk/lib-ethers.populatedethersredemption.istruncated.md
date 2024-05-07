@@ -6,7 +6,7 @@
 
 Whether `redeemableHCHFAmount` is less than `attemptedHCHFAmount`<!-- -->.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 readonly isTruncated: boolean;

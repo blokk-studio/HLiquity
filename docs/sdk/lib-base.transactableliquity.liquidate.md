@@ -6,7 +6,7 @@
 
 Liquidate one or more undercollateralized Troves.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 liquidate(address: string | string[]): Promise<LiquidationDetails>;
@@ -14,11 +14,40 @@ liquidate(address: string | string[]): Promise<LiquidationDetails>;
 
 ## Parameters
 
-|  Parameter | Type | Description |
-|  --- | --- | --- |
-|  address | string \| string\[\] | Address or array of addresses whose Troves to liquidate. |
+<table><thead><tr><th>
 
-<b>Returns:</b>
+Parameter
+
+
+</th><th>
+
+Type
+
+
+</th><th>
+
+Description
+
+
+</th></tr></thead>
+<tbody><tr><td>
+
+address
+
+
+</td><td>
+
+string \| string\[\]
+
+
+</td><td>
+
+Address or array of addresses whose Troves to liquidate.
+
+
+</td></tr>
+</tbody></table>
+**Returns:**
 
 Promise&lt;[LiquidationDetails](./lib-base.liquidationdetails.md)<!-- -->&gt;
 

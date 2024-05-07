@@ -4,7 +4,7 @@
 
 ## TroveWithPendingRedistribution.applyRedistribution() method
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 applyRedistribution(totalRedistributed: Trove): UserTrove;
@@ -12,11 +12,38 @@ applyRedistribution(totalRedistributed: Trove): UserTrove;
 
 ## Parameters
 
-|  Parameter | Type | Description |
-|  --- | --- | --- |
-|  totalRedistributed | [Trove](./lib-base.trove.md) |  |
+<table><thead><tr><th>
 
-<b>Returns:</b>
+Parameter
+
+
+</th><th>
+
+Type
+
+
+</th><th>
+
+Description
+
+
+</th></tr></thead>
+<tbody><tr><td>
+
+totalRedistributed
+
+
+</td><td>
+
+[Trove](./lib-base.trove.md)
+
+
+</td><td>
+
+
+</td></tr>
+</tbody></table>
+**Returns:**
 
 [UserTrove](./lib-base.usertrove.md)
 

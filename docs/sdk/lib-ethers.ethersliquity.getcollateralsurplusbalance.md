@@ -6,7 +6,7 @@
 
 Get the amount of leftover collateral available for withdrawal by an address.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 getCollateralSurplusBalance(address?: string, overrides?: EthersCallOverrides): Promise<Decimal>;
@@ -14,12 +14,52 @@ getCollateralSurplusBalance(address?: string, overrides?: EthersCallOverrides): 
 
 ## Parameters
 
-|  Parameter | Type | Description |
-|  --- | --- | --- |
-|  address | string |  |
-|  overrides | [EthersCallOverrides](./lib-ethers.etherscalloverrides.md) |  |
+<table><thead><tr><th>
 
-<b>Returns:</b>
+Parameter
+
+
+</th><th>
+
+Type
+
+
+</th><th>
+
+Description
+
+
+</th></tr></thead>
+<tbody><tr><td>
+
+address
+
+
+</td><td>
+
+string
+
+
+</td><td>
+
+
+</td></tr>
+<tr><td>
+
+overrides
+
+
+</td><td>
+
+[EthersCallOverrides](./lib-ethers.etherscalloverrides.md)
+
+
+</td><td>
+
+
+</td></tr>
+</tbody></table>
+**Returns:**
 
 Promise&lt;[Decimal](./lib-base.decimal.md)<!-- -->&gt;
 

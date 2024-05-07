@@ -6,7 +6,7 @@
 
 Amount of HLQT the user has earned through mining liquidity.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 liquidityMiningHLQTReward: Decimal;

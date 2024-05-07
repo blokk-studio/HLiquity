@@ -1,117 +1,86 @@
-import React, { createContext, useContext, useEffect, useMemo, useState } from "react";
-import { Provider } from "@ethersproject/abstract-provider";
-import { FallbackProvider } from "@ethersproject/providers";
-import { useProvider, useSigner, useAccount, useChainId } from "wagmi";
-
-import { BlockPolledLiquityStore, EthersLiquity, EthersLiquityWithStore } from "@liquity/lib-ethers";
-
-import { LiquityFrontendConfig, getConfig } from "../config";
-import { BatchedProvider } from "../providers/BatchingProvider";
+import React, { createContext, useContext, useMemo } from "react";
 import { useDeployment } from "../configuration/deployments";
-import { Signer } from "ethers";
 import { _LiquityDeploymentJSON } from "@liquity/lib-ethers/dist/src/contracts";
+import { ReadableLiquity } from "@liquity/lib-base";
+import { HederaChain, useHederaChain } from "../hedera/wagmi-chains";
+import { useHashConnect, useHashConnectSessionData } from "../components/HashConnectProvider";
+import { HashgraphLiquity } from "@liquity/lib-hashgraph";
+import { getConsumer, getLoader } from "../optional_context";
 
-type LiquityContextValue = {
-  config: LiquityFrontendConfig;
+export type LiquityContextValue = {
   account: string;
-  provider: Provider;
-  liquity: EthersLiquityWithStore<BlockPolledLiquityStore>;
+  liquity: ReadableLiquity;
 };
 
-const LiquityContext = createContext<LiquityContextValue | undefined>(undefined);
+export const LiquityContext = createContext<LiquityContextValue | null>(null);
 
 type LiquityProviderProps = {
-  loader?: React.ReactNode;
   unsupportedNetworkFallback?: React.ReactNode;
   unsupportedMainnetFallback?: React.ReactNode;
 };
 
-// TODO: move the config to env variables. no clue why this is a json file.
-const useConfig = () => {
-  const [config, setConfig] = useState<LiquityFrontendConfig>();
-  useEffect(() => {
-    getConfig().then(setConfig);
-  }, []);
-
-  return config;
-};
-
 interface NonNullableLiquityProviderProps {
-  config: LiquityFrontendConfig;
-  provider: Provider;
-  signer: Signer;
-  userAddress: `0x${string}`;
-  chainId: number;
   deployment: _LiquityDeploymentJSON;
+  chain: HederaChain;
 }
 
 const NonNullableLiquityProvider: React.FC<NonNullableLiquityProviderProps> = ({
   children,
-  config,
-  provider,
-  signer,
-  userAddress,
-  chainId,
-  deployment
+  deployment,
+  chain
 }) => {
-  const liquity = useMemo(() => {
-    const { frontendTag } = deployment;
-    const liquity = EthersLiquity.fromConnectionOptionsWithBlockPolledStore({
-      chainId,
-      deployment,
-      provider,
-      signer,
-      frontendTag,
-      userAddress
-    });
-    liquity.store.logging = true;
+  const hashConnectSessionData = useHashConnectSessionData();
+  const hashConnect = useHashConnect();
 
-    return liquity;
-  }, [provider, signer, userAddress, chainId, deployment]);
+  const liquity = useMemo(() => {
+    const rpcUrl = chain.rpcUrls.default.http[0] as `https://${string}`;
+
+    const hashgraphLiquity = HashgraphLiquity.fromEvmAddresses({
+      userAccountAddress: hashConnectSessionData.userAccountEvmAddress,
+      deploymentAddresses: deployment.addresses as Record<string, `0x${string}`>,
+      totalStabilityPoolHlqtReward: parseInt(deployment.totalStabilityPoolHLQTReward),
+      frontendAddress: deployment.frontendTag,
+      userHashConnect: hashConnect,
+      rpcUrl
+    });
+
+    Object.assign(hashgraphLiquity, { connection: deployment });
+
+    return hashgraphLiquity;
+  }, [deployment, chain, hashConnectSessionData, hashConnect]);
 
   return (
-    <LiquityContext.Provider value={{ config, account: userAddress, provider: provider, liquity }}>
+    <LiquityContext.Provider
+      value={{ account: hashConnectSessionData.userAccountEvmAddress, liquity }}
+    >
       {children}
     </LiquityContext.Provider>
   );
 };
 
+export const OptionalLiquityConsumer = LiquityContext.Consumer;
+export const LiquityConsumer = getConsumer(LiquityContext, {
+  errorMessage: `the liquity context hasn't been set. make sure you have <LiquityProvider> and <LiquityLoader> as ancestors of this <LiquityConsumer>.`
+});
+export const LiquityLoader = getLoader(LiquityContext);
+
 export const LiquityProvider: React.FC<LiquityProviderProps> = ({
   children,
-  loader,
-  unsupportedNetworkFallback,
-  unsupportedMainnetFallback
+  unsupportedNetworkFallback
 }) => {
-  const wagmiProvider = useProvider<FallbackProvider>();
-  const signer = useSigner();
-  const account = useAccount();
-  const chainId = useChainId();
-  const config = useConfig();
   const deployment = useDeployment();
-
-  if (!config || !wagmiProvider || !signer.data || !account.address) {
-    return <>{loader}</>;
-  }
-
-  if (config.testnetOnly && chainId === 1) {
-    return <>{unsupportedMainnetFallback}</>;
-  }
+  const chain = useHederaChain();
 
   if (!deployment) {
     return <>{unsupportedNetworkFallback}</>;
   }
 
-  const provider = new BatchedProvider(wagmiProvider, chainId, 20000);
+  if (!chain) {
+    return <>{unsupportedNetworkFallback}</>;
+  }
 
   return (
-    <NonNullableLiquityProvider
-      chainId={chainId}
-      config={config}
-      deployment={deployment}
-      provider={provider}
-      signer={signer.data}
-      userAddress={account.address}
-    >
+    <NonNullableLiquityProvider deployment={deployment} chain={chain}>
       {children}
     </NonNullableLiquityProvider>
   );

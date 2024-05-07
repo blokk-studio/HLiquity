@@ -6,22 +6,117 @@
 
 Ethers-based  that updates state whenever there's a new block.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 export declare class BlockPolledLiquityStore extends HLiquityStore<BlockPolledLiquityStoreExtraState> 
 ```
-<b>Extends:</b> [HLiquityStore](./lib-base.hliquitystore.md)<!-- -->&lt;[BlockPolledLiquityStoreExtraState](./lib-ethers.blockpolledliquitystoreextrastate.md)<!-- -->&gt;
+**Extends:** [HLiquityStore](./lib-base.hliquitystore.md)<!-- -->&lt;[BlockPolledLiquityStoreExtraState](./lib-ethers.blockpolledliquitystoreextrastate.md)<!-- -->&gt;
 
 ## Constructors
 
-|  Constructor | Modifiers | Description |
-|  --- | --- | --- |
-|  [(constructor)(readable)](./lib-ethers.blockpolledliquitystore._constructor_.md) |  | Constructs a new instance of the <code>BlockPolledLiquityStore</code> class |
+<table><thead><tr><th>
+
+Constructor
+
+
+</th><th>
+
+Modifiers
+
+
+</th><th>
+
+Description
+
+
+</th></tr></thead>
+<tbody><tr><td>
+
+[(constructor)(readable)](./lib-ethers.blockpolledliquitystore._constructor_.md)
+
+
+</td><td>
+
+
+</td><td>
+
+Constructs a new instance of the `BlockPolledLiquityStore` class
+
+
+</td></tr>
+</tbody></table>
 
 ## Properties
 
-|  Property | Modifiers | Type | Description |
-|  --- | --- | --- | --- |
-|  [connection](./lib-ethers.blockpolledliquitystore.connection.md) |  | [EthersLiquityConnection](./lib-ethers.ethersliquityconnection.md) |  |
+<table><thead><tr><th>
 
+Property
+
+
+</th><th>
+
+Modifiers
+
+
+</th><th>
+
+Type
+
+
+</th><th>
+
+Description
+
+
+</th></tr></thead>
+<tbody><tr><td>
+
+[connection](./lib-ethers.blockpolledliquitystore.connection.md)
+
+
+</td><td>
+
+
+</td><td>
+
+[EthersLiquityConnection](./lib-ethers.ethersliquityconnection.md)
+
+
+</td><td>
+
+
+</td></tr>
+</tbody></table>
+
+## Methods
+
+<table><thead><tr><th>
+
+Method
+
+
+</th><th>
+
+Modifiers
+
+
+</th><th>
+
+Description
+
+
+</th></tr></thead>
+<tbody><tr><td>
+
+[refresh()](./lib-ethers.blockpolledliquitystore.refresh.md)
+
+
+</td><td>
+
+
+</td><td>
+
+
+</td></tr>
+</tbody></table>

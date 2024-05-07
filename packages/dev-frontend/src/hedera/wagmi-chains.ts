@@ -3,7 +3,7 @@ import { useNetwork } from "wagmi";
 import { enabledChainIds } from "../configuration/enabled_chains";
 import { deployments } from "../configuration/deployments";
 
-interface HederaChain extends Chain {
+export interface HederaChain extends Chain {
   apiBaseUrl: string;
   color: `#${string}`;
 }
@@ -116,6 +116,8 @@ export const useHederaChains = () => {
 
 export const useHederaChain = () => {
   const network = useNetwork();
+
+  return testnet;
 
   const chainId = network.chain?.id;
   if (chainId === undefined) {

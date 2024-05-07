@@ -6,7 +6,7 @@
 
 Details of a [liquidate()](./lib-base.transactableliquity.liquidate.md) or [liquidateUpTo()](./lib-base.transactableliquity.liquidateupto.md) transaction.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 export interface LiquidationDetails 
@@ -14,10 +14,101 @@ export interface LiquidationDetails
 
 ## Properties
 
-|  Property | Type | Description |
-|  --- | --- | --- |
-|  [collateralGasCompensation](./lib-base.liquidationdetails.collateralgascompensation.md) | [Decimal](./lib-base.decimal.md) | Amount of native currency (e.g. Ether) paid to the liquidator as gas compensation. |
-|  [hchfGasCompensation](./lib-base.liquidationdetails.hchfgascompensation.md) | [Decimal](./lib-base.decimal.md) | Amount of HCHF paid to the liquidator as gas compensation. |
-|  [liquidatedAddresses](./lib-base.liquidationdetails.liquidatedaddresses.md) | string\[\] | Addresses whose Troves were liquidated by the transaction. |
-|  [totalLiquidated](./lib-base.liquidationdetails.totalliquidated.md) | [Trove](./lib-base.trove.md) | Total collateral liquidated and debt cleared by the transaction. |
+<table><thead><tr><th>
 
+Property
+
+
+</th><th>
+
+Modifiers
+
+
+</th><th>
+
+Type
+
+
+</th><th>
+
+Description
+
+
+</th></tr></thead>
+<tbody><tr><td>
+
+[collateralGasCompensation](./lib-base.liquidationdetails.collateralgascompensation.md)
+
+
+</td><td>
+
+
+</td><td>
+
+[Decimal](./lib-base.decimal.md)
+
+
+</td><td>
+
+Amount of native currency (e.g. Ether) paid to the liquidator as gas compensation.
+
+
+</td></tr>
+<tr><td>
+
+[hchfGasCompensation](./lib-base.liquidationdetails.hchfgascompensation.md)
+
+
+</td><td>
+
+
+</td><td>
+
+[Decimal](./lib-base.decimal.md)
+
+
+</td><td>
+
+Amount of HCHF paid to the liquidator as gas compensation.
+
+
+</td></tr>
+<tr><td>
+
+[liquidatedAddresses](./lib-base.liquidationdetails.liquidatedaddresses.md)
+
+
+</td><td>
+
+
+</td><td>
+
+string\[\]
+
+
+</td><td>
+
+Addresses whose Troves were liquidated by the transaction.
+
+
+</td></tr>
+<tr><td>
+
+[totalLiquidated](./lib-base.liquidationdetails.totalliquidated.md)
+
+
+</td><td>
+
+
+</td><td>
+
+[Trove](./lib-base.trove.md)
+
+
+</td><td>
+
+Total collateral liquidated and debt cleared by the transaction.
+
+
+</td></tr>
+</tbody></table>

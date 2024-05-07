@@ -6,7 +6,7 @@
 
 Adjust existing Trove by repaying some of its debt.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 repayHCHF(amount: Decimalish): Promise<SentLiquityTransaction<S, LiquityReceipt<R, TroveAdjustmentDetails>>>;
@@ -14,11 +14,40 @@ repayHCHF(amount: Decimalish): Promise<SentLiquityTransaction<S, LiquityReceipt<
 
 ## Parameters
 
-|  Parameter | Type | Description |
-|  --- | --- | --- |
-|  amount | [Decimalish](./lib-base.decimalish.md) | The amount of HCHF to repay. |
+<table><thead><tr><th>
 
-<b>Returns:</b>
+Parameter
+
+
+</th><th>
+
+Type
+
+
+</th><th>
+
+Description
+
+
+</th></tr></thead>
+<tbody><tr><td>
+
+amount
+
+
+</td><td>
+
+[Decimalish](./lib-base.decimalish.md)
+
+
+</td><td>
+
+The amount of HCHF to repay.
+
+
+</td></tr>
+</tbody></table>
+**Returns:**
 
 Promise&lt;[SentLiquityTransaction](./lib-base.sentliquitytransaction.md)<!-- -->&lt;S, [LiquityReceipt](./lib-base.liquityreceipt.md)<!-- -->&lt;R, [TroveAdjustmentDetails](./lib-base.troveadjustmentdetails.md)<!-- -->&gt;&gt;&gt;
 
@@ -28,6 +57,5 @@ Equivalent to:
 
 ```typescript
 adjustTrove({ repayHCHF: amount })
-
 ```
 

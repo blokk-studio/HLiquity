@@ -6,7 +6,7 @@
 
 Date when the Liquity contracts were deployed.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 readonly deploymentDate: Date;

@@ -6,7 +6,7 @@
 
 Amount of leftover collateral available for withdrawal to the user.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 collateralSurplusBalance: Decimal;

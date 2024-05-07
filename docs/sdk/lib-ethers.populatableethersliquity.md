@@ -6,45 +6,399 @@
 
 Ethers-based implementation of [PopulatableLiquity](./lib-base.populatableliquity.md)<!-- -->.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 export declare class PopulatableEthersLiquity implements PopulatableLiquity<EthersTransactionReceipt, EthersTransactionResponse, EthersPopulatedTransaction> 
 ```
-<b>Implements:</b> [PopulatableLiquity](./lib-base.populatableliquity.md)<!-- -->&lt;[EthersTransactionReceipt](./lib-ethers.etherstransactionreceipt.md)<!-- -->, [EthersTransactionResponse](./lib-ethers.etherstransactionresponse.md)<!-- -->, [EthersPopulatedTransaction](./lib-ethers.etherspopulatedtransaction.md)<!-- -->&gt;
+**Implements:** [PopulatableLiquity](./lib-base.populatableliquity.md)<!-- -->&lt;[EthersTransactionReceipt](./lib-ethers.etherstransactionreceipt.md)<!-- -->, [EthersTransactionResponse](./lib-ethers.etherstransactionresponse.md)<!-- -->, [EthersPopulatedTransaction](./lib-ethers.etherspopulatedtransaction.md)<!-- -->&gt;
 
 ## Constructors
 
-|  Constructor | Modifiers | Description |
-|  --- | --- | --- |
-|  [(constructor)(readable)](./lib-ethers.populatableethersliquity._constructor_.md) |  | Constructs a new instance of the <code>PopulatableEthersLiquity</code> class |
+<table><thead><tr><th>
+
+Constructor
+
+
+</th><th>
+
+Modifiers
+
+
+</th><th>
+
+Description
+
+
+</th></tr></thead>
+<tbody><tr><td>
+
+[(constructor)(readable)](./lib-ethers.populatableethersliquity._constructor_.md)
+
+
+</td><td>
+
+
+</td><td>
+
+Constructs a new instance of the `PopulatableEthersLiquity` class
+
+
+</td></tr>
+</tbody></table>
 
 ## Methods
 
-|  Method | Modifiers | Description |
-|  --- | --- | --- |
-|  [adjustTrove(params, maxBorrowingRate, overrides)](./lib-ethers.populatableethersliquity.adjusttrove.md) |  | Adjust existing Trove by changing its collateral, debt, or both. |
-|  [approveUniTokens(allowance, overrides)](./lib-ethers.populatableethersliquity.approveunitokens.md) |  | Allow the liquidity mining contract to use Uniswap ETH/HCHF LP tokens for [staking](./lib-base.transactableliquity.stakeunitokens.md)<!-- -->. |
-|  [borrowHCHF(amount, maxBorrowingRate, overrides)](./lib-ethers.populatableethersliquity.borrowhchf.md) |  | Adjust existing Trove by borrowing more HCHF. |
-|  [claimCollateralSurplus(overrides)](./lib-ethers.populatableethersliquity.claimcollateralsurplus.md) |  | Claim leftover collateral after a liquidation or redemption. |
-|  [closeTrove(overrides)](./lib-ethers.populatableethersliquity.closetrove.md) |  | Close existing Trove by repaying all debt and withdrawing all collateral. |
-|  [depositCollateral(amount, overrides)](./lib-ethers.populatableethersliquity.depositcollateral.md) |  | Adjust existing Trove by depositing more collateral. |
-|  [depositHCHFInStabilityPool(amount, frontendTag, overrides)](./lib-ethers.populatableethersliquity.deposithchfinstabilitypool.md) |  | Make a new Stability Deposit, or top up existing one. |
-|  [exitLiquidityMining(overrides)](./lib-ethers.populatableethersliquity.exitliquiditymining.md) |  | Withdraw all staked LP tokens from liquidity mining and claim reward. |
-|  [liquidate(address, overrides)](./lib-ethers.populatableethersliquity.liquidate.md) |  | Liquidate one or more undercollateralized Troves. |
-|  [liquidateUpTo(maximumNumberOfTrovesToLiquidate, overrides)](./lib-ethers.populatableethersliquity.liquidateupto.md) |  | Liquidate the least collateralized Troves up to a maximum number. |
-|  [openTrove(params, maxBorrowingRate, overrides)](./lib-ethers.populatableethersliquity.opentrove.md) |  | Open a new Trove by depositing collateral and borrowing HCHF. |
-|  [redeemHCHF(amount, maxRedemptionRate, overrides)](./lib-ethers.populatableethersliquity.redeemhchf.md) |  | Redeem HCHF to native currency (e.g. Ether) at face value. |
-|  [registerFrontend(kickbackRate, overrides)](./lib-ethers.populatableethersliquity.registerfrontend.md) |  | Register current wallet address as a Liquity frontend. |
-|  [repayHCHF(amount, overrides)](./lib-ethers.populatableethersliquity.repayhchf.md) |  | Adjust existing Trove by repaying some of its debt. |
-|  [stakeHLQT(amount, overrides)](./lib-ethers.populatableethersliquity.stakehlqt.md) |  | Stake HLQT to start earning fee revenue or increase existing stake. |
-|  [stakeUniTokens(amount, overrides)](./lib-ethers.populatableethersliquity.stakeunitokens.md) |  | Stake Uniswap ETH/HCHF LP tokens to participate in liquidity mining and earn HLQT. |
-|  [transferCollateralGainToTrove(overrides)](./lib-ethers.populatableethersliquity.transfercollateralgaintotrove.md) |  | Transfer [collateral gain](./lib-base.stabilitydeposit.collateralgain.md) from Stability Deposit to Trove. |
-|  [unstakeHLQT(amount, overrides)](./lib-ethers.populatableethersliquity.unstakehlqt.md) |  | Withdraw HLQT from staking. |
-|  [unstakeUniTokens(amount, overrides)](./lib-ethers.populatableethersliquity.unstakeunitokens.md) |  | Withdraw Uniswap ETH/HCHF LP tokens from liquidity mining. |
-|  [withdrawCollateral(amount, overrides)](./lib-ethers.populatableethersliquity.withdrawcollateral.md) |  | Adjust existing Trove by withdrawing some of its collateral. |
-|  [withdrawGainsFromStabilityPool(overrides)](./lib-ethers.populatableethersliquity.withdrawgainsfromstabilitypool.md) |  | Withdraw [collateral gain](./lib-base.stabilitydeposit.collateralgain.md) and [HLQT reward](./lib-base.stabilitydeposit.hlqtreward.md) from Stability Deposit. |
-|  [withdrawGainsFromStaking(overrides)](./lib-ethers.populatableethersliquity.withdrawgainsfromstaking.md) |  | Withdraw [collateral gain](./lib-base.hlqtstake.collateralgain.md) and [HCHF gain](./lib-base.hlqtstake.hchfgain.md) from HLQT stake. |
-|  [withdrawHCHFFromStabilityPool(amount, overrides)](./lib-ethers.populatableethersliquity.withdrawhchffromstabilitypool.md) |  | Withdraw HCHF from Stability Deposit. |
-|  [withdrawHLQTRewardFromLiquidityMining(overrides)](./lib-ethers.populatableethersliquity.withdrawhlqtrewardfromliquiditymining.md) |  | Withdraw HLQT that has been earned by mining liquidity. |
+<table><thead><tr><th>
 
+Method
+
+
+</th><th>
+
+Modifiers
+
+
+</th><th>
+
+Description
+
+
+</th></tr></thead>
+<tbody><tr><td>
+
+[adjustTrove(params, maxBorrowingRate, overrides)](./lib-ethers.populatableethersliquity.adjusttrove.md)
+
+
+</td><td>
+
+
+</td><td>
+
+Adjust existing Trove by changing its collateral, debt, or both.
+
+
+</td></tr>
+<tr><td>
+
+[approveUniTokens(allowance, overrides)](./lib-ethers.populatableethersliquity.approveunitokens.md)
+
+
+</td><td>
+
+
+</td><td>
+
+Allow the liquidity mining contract to use Uniswap ETH/HCHF LP tokens for [staking](./lib-base.transactableliquity.stakeunitokens.md)<!-- -->.
+
+
+</td></tr>
+<tr><td>
+
+[borrowHCHF(amount, maxBorrowingRate, overrides)](./lib-ethers.populatableethersliquity.borrowhchf.md)
+
+
+</td><td>
+
+
+</td><td>
+
+Adjust existing Trove by borrowing more HCHF.
+
+
+</td></tr>
+<tr><td>
+
+[claimCollateralSurplus(overrides)](./lib-ethers.populatableethersliquity.claimcollateralsurplus.md)
+
+
+</td><td>
+
+
+</td><td>
+
+Claim leftover collateral after a liquidation or redemption.
+
+
+</td></tr>
+<tr><td>
+
+[closeTrove(overrides)](./lib-ethers.populatableethersliquity.closetrove.md)
+
+
+</td><td>
+
+
+</td><td>
+
+Close existing Trove by repaying all debt and withdrawing all collateral.
+
+
+</td></tr>
+<tr><td>
+
+[depositCollateral(amount, overrides)](./lib-ethers.populatableethersliquity.depositcollateral.md)
+
+
+</td><td>
+
+
+</td><td>
+
+Adjust existing Trove by depositing more collateral.
+
+
+</td></tr>
+<tr><td>
+
+[depositHCHFInStabilityPool(amount, frontendTag, overrides)](./lib-ethers.populatableethersliquity.deposithchfinstabilitypool.md)
+
+
+</td><td>
+
+
+</td><td>
+
+Make a new Stability Deposit, or top up existing one.
+
+
+</td></tr>
+<tr><td>
+
+[exitLiquidityMining(overrides)](./lib-ethers.populatableethersliquity.exitliquiditymining.md)
+
+
+</td><td>
+
+
+</td><td>
+
+Withdraw all staked LP tokens from liquidity mining and claim reward.
+
+
+</td></tr>
+<tr><td>
+
+[liquidate(address, overrides)](./lib-ethers.populatableethersliquity.liquidate.md)
+
+
+</td><td>
+
+
+</td><td>
+
+Liquidate one or more undercollateralized Troves.
+
+
+</td></tr>
+<tr><td>
+
+[liquidateUpTo(maximumNumberOfTrovesToLiquidate, overrides)](./lib-ethers.populatableethersliquity.liquidateupto.md)
+
+
+</td><td>
+
+
+</td><td>
+
+Liquidate the least collateralized Troves up to a maximum number.
+
+
+</td></tr>
+<tr><td>
+
+[openTrove(params, maxBorrowingRate, overrides)](./lib-ethers.populatableethersliquity.opentrove.md)
+
+
+</td><td>
+
+
+</td><td>
+
+Open a new Trove by depositing collateral and borrowing HCHF.
+
+
+</td></tr>
+<tr><td>
+
+[redeemHCHF(amount, maxRedemptionRate, overrides)](./lib-ethers.populatableethersliquity.redeemhchf.md)
+
+
+</td><td>
+
+
+</td><td>
+
+Redeem HCHF to native currency (e.g. Ether) at face value.
+
+
+</td></tr>
+<tr><td>
+
+[registerFrontend(kickbackRate, overrides)](./lib-ethers.populatableethersliquity.registerfrontend.md)
+
+
+</td><td>
+
+
+</td><td>
+
+Register current wallet address as a Liquity frontend.
+
+
+</td></tr>
+<tr><td>
+
+[repayHCHF(amount, overrides)](./lib-ethers.populatableethersliquity.repayhchf.md)
+
+
+</td><td>
+
+
+</td><td>
+
+Adjust existing Trove by repaying some of its debt.
+
+
+</td></tr>
+<tr><td>
+
+[stakeHLQT(amount, overrides)](./lib-ethers.populatableethersliquity.stakehlqt.md)
+
+
+</td><td>
+
+
+</td><td>
+
+Stake HLQT to start earning fee revenue or increase existing stake.
+
+
+</td></tr>
+<tr><td>
+
+[stakeUniTokens(amount, overrides)](./lib-ethers.populatableethersliquity.stakeunitokens.md)
+
+
+</td><td>
+
+
+</td><td>
+
+Stake Uniswap ETH/HCHF LP tokens to participate in liquidity mining and earn HLQT.
+
+
+</td></tr>
+<tr><td>
+
+[transferCollateralGainToTrove(overrides)](./lib-ethers.populatableethersliquity.transfercollateralgaintotrove.md)
+
+
+</td><td>
+
+
+</td><td>
+
+Transfer [collateral gain](./lib-base.stabilitydeposit.collateralgain.md) from Stability Deposit to Trove.
+
+
+</td></tr>
+<tr><td>
+
+[unstakeHLQT(amount, overrides)](./lib-ethers.populatableethersliquity.unstakehlqt.md)
+
+
+</td><td>
+
+
+</td><td>
+
+Withdraw HLQT from staking.
+
+
+</td></tr>
+<tr><td>
+
+[unstakeUniTokens(amount, overrides)](./lib-ethers.populatableethersliquity.unstakeunitokens.md)
+
+
+</td><td>
+
+
+</td><td>
+
+Withdraw Uniswap ETH/HCHF LP tokens from liquidity mining.
+
+
+</td></tr>
+<tr><td>
+
+[withdrawCollateral(amount, overrides)](./lib-ethers.populatableethersliquity.withdrawcollateral.md)
+
+
+</td><td>
+
+
+</td><td>
+
+Adjust existing Trove by withdrawing some of its collateral.
+
+
+</td></tr>
+<tr><td>
+
+[withdrawGainsFromStabilityPool(overrides)](./lib-ethers.populatableethersliquity.withdrawgainsfromstabilitypool.md)
+
+
+</td><td>
+
+
+</td><td>
+
+Withdraw [collateral gain](./lib-base.stabilitydeposit.collateralgain.md) and [HLQT reward](./lib-base.stabilitydeposit.hlqtreward.md) from Stability Deposit.
+
+
+</td></tr>
+<tr><td>
+
+[withdrawGainsFromStaking(overrides)](./lib-ethers.populatableethersliquity.withdrawgainsfromstaking.md)
+
+
+</td><td>
+
+
+</td><td>
+
+Withdraw [collateral gain](./lib-base.hlqtstake.collateralgain.md) and [HCHF gain](./lib-base.hlqtstake.hchfgain.md) from HLQT stake.
+
+
+</td></tr>
+<tr><td>
+
+[withdrawHCHFFromStabilityPool(amount, overrides)](./lib-ethers.populatableethersliquity.withdrawhchffromstabilitypool.md)
+
+
+</td><td>
+
+
+</td><td>
+
+Withdraw HCHF from Stability Deposit.
+
+
+</td></tr>
+<tr><td>
+
+[withdrawHLQTRewardFromLiquidityMining(overrides)](./lib-ethers.populatableethersliquity.withdrawhlqtrewardfromliquiditymining.md)
+
+
+</td><td>
+
+
+</td><td>
+
+Withdraw HLQT that has been earned by mining liquidity.
+
+
+</td></tr>
+</tbody></table>

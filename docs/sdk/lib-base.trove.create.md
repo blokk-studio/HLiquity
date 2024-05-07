@@ -6,7 +6,7 @@
 
 Calculate the result of an [openTrove()](./lib-base.transactableliquity.opentrove.md) transaction.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 static create(params: TroveCreationParams<Decimalish>, borrowingRate?: Decimalish): Trove;
@@ -14,12 +14,56 @@ static create(params: TroveCreationParams<Decimalish>, borrowingRate?: Decimalis
 
 ## Parameters
 
-|  Parameter | Type | Description |
-|  --- | --- | --- |
-|  params | [TroveCreationParams](./lib-base.trovecreationparams.md)<!-- -->&lt;[Decimalish](./lib-base.decimalish.md)<!-- -->&gt; | Parameters of the transaction. |
-|  borrowingRate | [Decimalish](./lib-base.decimalish.md) | Borrowing rate to use when calculating the Trove's debt. |
+<table><thead><tr><th>
 
-<b>Returns:</b>
+Parameter
+
+
+</th><th>
+
+Type
+
+
+</th><th>
+
+Description
+
+
+</th></tr></thead>
+<tbody><tr><td>
+
+params
+
+
+</td><td>
+
+[TroveCreationParams](./lib-base.trovecreationparams.md)<!-- -->&lt;[Decimalish](./lib-base.decimalish.md)<!-- -->&gt;
+
+
+</td><td>
+
+Parameters of the transaction.
+
+
+</td></tr>
+<tr><td>
+
+borrowingRate
+
+
+</td><td>
+
+[Decimalish](./lib-base.decimalish.md)
+
+
+</td><td>
+
+Borrowing rate to use when calculating the Trove's debt.
+
+
+</td></tr>
+</tbody></table>
+**Returns:**
 
 [Trove](./lib-base.trove.md)
 

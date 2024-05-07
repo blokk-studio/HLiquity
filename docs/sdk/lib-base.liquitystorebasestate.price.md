@@ -6,7 +6,7 @@
 
 Current price of the native currency (e.g. Ether) in USD.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 price: Decimal;

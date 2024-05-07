@@ -6,7 +6,7 @@
 
 Whether the collateralization ratio is less than the [CRITICAL\_COLLATERAL\_RATIO](./lib-base.critical_collateral_ratio.md) at a given price.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 collateralRatioIsBelowCritical(price: Decimalish): boolean;
@@ -14,11 +14,38 @@ collateralRatioIsBelowCritical(price: Decimalish): boolean;
 
 ## Parameters
 
-|  Parameter | Type | Description |
-|  --- | --- | --- |
-|  price | [Decimalish](./lib-base.decimalish.md) |  |
+<table><thead><tr><th>
 
-<b>Returns:</b>
+Parameter
+
+
+</th><th>
+
+Type
+
+
+</th><th>
+
+Description
+
+
+</th></tr></thead>
+<tbody><tr><td>
+
+price
+
+
+</td><td>
+
+[Decimalish](./lib-base.decimalish.md)
+
+
+</td><td>
+
+
+</td></tr>
+</tbody></table>
+**Returns:**
 
 boolean
 
@@ -33,6 +60,5 @@ const price = await liquity.getPrice();
 if (total.collateralRatioIsBelowCritical(price)) {
   // Recovery mode is active
 }
-
 ```
 

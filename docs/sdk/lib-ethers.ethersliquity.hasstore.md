@@ -6,12 +6,12 @@
 
 Check whether this `EthersLiquity` is an [EthersLiquityWithStore](./lib-ethers.ethersliquitywithstore.md)<!-- -->.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 hasStore(): this is EthersLiquityWithStore;
 ```
-<b>Returns:</b>
+**Returns:**
 
 this is [EthersLiquityWithStore](./lib-ethers.ethersliquitywithstore.md)
 

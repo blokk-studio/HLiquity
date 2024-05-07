@@ -6,7 +6,7 @@
 
 Get the amount of HLQT held by an address.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 getHLQTBalance(address?: string): Promise<Decimal>;
@@ -14,11 +14,40 @@ getHLQTBalance(address?: string): Promise<Decimal>;
 
 ## Parameters
 
-|  Parameter | Type | Description |
-|  --- | --- | --- |
-|  address | string | Address whose balance should be retrieved. |
+<table><thead><tr><th>
 
-<b>Returns:</b>
+Parameter
+
+
+</th><th>
+
+Type
+
+
+</th><th>
+
+Description
+
+
+</th></tr></thead>
+<tbody><tr><td>
+
+address
+
+
+</td><td>
+
+string
+
+
+</td><td>
+
+Address whose balance should be retrieved.
+
+
+</td></tr>
+</tbody></table>
+**Returns:**
 
 Promise&lt;[Decimal](./lib-base.decimal.md)<!-- -->&gt;
 

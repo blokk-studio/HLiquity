@@ -6,7 +6,7 @@
 
 HLQT HST Token address
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 hlqtTokenAddress: string;

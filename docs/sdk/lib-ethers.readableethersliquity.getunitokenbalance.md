@@ -6,7 +6,7 @@
 
 Get the amount of Uniswap ETH/HCHF LP tokens held by an address.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 getUniTokenBalance(address?: string, overrides?: EthersCallOverrides): Promise<Decimal>;
@@ -14,12 +14,54 @@ getUniTokenBalance(address?: string, overrides?: EthersCallOverrides): Promise<D
 
 ## Parameters
 
-|  Parameter | Type | Description |
-|  --- | --- | --- |
-|  address | string | Address whose balance should be retrieved. |
-|  overrides | [EthersCallOverrides](./lib-ethers.etherscalloverrides.md) |  |
+<table><thead><tr><th>
 
-<b>Returns:</b>
+Parameter
+
+
+</th><th>
+
+Type
+
+
+</th><th>
+
+Description
+
+
+</th></tr></thead>
+<tbody><tr><td>
+
+address
+
+
+</td><td>
+
+string
+
+
+</td><td>
+
+Address whose balance should be retrieved.
+
+
+</td></tr>
+<tr><td>
+
+overrides
+
+
+</td><td>
+
+[EthersCallOverrides](./lib-ethers.etherscalloverrides.md)
+
+
+</td><td>
+
+
+</td></tr>
+</tbody></table>
+**Returns:**
 
 Promise&lt;[Decimal](./lib-base.decimal.md)<!-- -->&gt;
 

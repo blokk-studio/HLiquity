@@ -4,7 +4,7 @@
 
 ## UserTrove.equals() method
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 equals(that: UserTrove): boolean;
@@ -12,11 +12,38 @@ equals(that: UserTrove): boolean;
 
 ## Parameters
 
-|  Parameter | Type | Description |
-|  --- | --- | --- |
-|  that | [UserTrove](./lib-base.usertrove.md) |  |
+<table><thead><tr><th>
 
-<b>Returns:</b>
+Parameter
+
+
+</th><th>
+
+Type
+
+
+</th><th>
+
+Description
+
+
+</th></tr></thead>
+<tbody><tr><td>
+
+that
+
+
+</td><td>
+
+[UserTrove](./lib-base.usertrove.md)
+
+
+</td><td>
+
+
+</td></tr>
+</tbody></table>
+**Returns:**
 
 boolean
 

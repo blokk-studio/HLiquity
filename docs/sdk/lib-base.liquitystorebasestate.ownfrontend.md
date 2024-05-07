@@ -6,7 +6,7 @@
 
 Status of user's own frontend.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 ownFrontend: FrontendStatus;

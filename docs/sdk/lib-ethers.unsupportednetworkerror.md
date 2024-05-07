@@ -6,12 +6,12 @@
 
 Thrown when trying to connect to a network where Liquity is not deployed.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 export declare class UnsupportedNetworkError extends Error 
 ```
-<b>Extends:</b> Error
+**Extends:** Error
 
 ## Remarks
 
@@ -21,7 +21,44 @@ The constructor for this class is marked as internal. Third-party code should no
 
 ## Properties
 
-|  Property | Modifiers | Type | Description |
-|  --- | --- | --- | --- |
-|  [chainId](./lib-ethers.unsupportednetworkerror.chainid.md) |  | number | Chain ID of the unsupported network. |
+<table><thead><tr><th>
 
+Property
+
+
+</th><th>
+
+Modifiers
+
+
+</th><th>
+
+Type
+
+
+</th><th>
+
+Description
+
+
+</th></tr></thead>
+<tbody><tr><td>
+
+[chainId](./lib-ethers.unsupportednetworkerror.chainid.md)
+
+
+</td><td>
+
+
+</td><td>
+
+number
+
+
+</td><td>
+
+Chain ID of the unsupported network.
+
+
+</td></tr>
+</tbody></table>

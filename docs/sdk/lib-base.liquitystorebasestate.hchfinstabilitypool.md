@@ -6,7 +6,7 @@
 
 Total amount of HCHF currently deposited in the Stability Pool.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 hchfInStabilityPool: Decimal;

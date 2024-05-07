@@ -6,7 +6,7 @@
 
 Make a new Stability Deposit, or top up existing one.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 depositHCHFInStabilityPool(amount: Decimalish, frontendTag?: string): Promise<StabilityDepositChangeDetails>;
@@ -14,12 +14,56 @@ depositHCHFInStabilityPool(amount: Decimalish, frontendTag?: string): Promise<St
 
 ## Parameters
 
-|  Parameter | Type | Description |
-|  --- | --- | --- |
-|  amount | [Decimalish](./lib-base.decimalish.md) | Amount of HCHF to add to new or existing deposit. |
-|  frontendTag | string | Address that should receive a share of this deposit's HLQT rewards. |
+<table><thead><tr><th>
 
-<b>Returns:</b>
+Parameter
+
+
+</th><th>
+
+Type
+
+
+</th><th>
+
+Description
+
+
+</th></tr></thead>
+<tbody><tr><td>
+
+amount
+
+
+</td><td>
+
+[Decimalish](./lib-base.decimalish.md)
+
+
+</td><td>
+
+Amount of HCHF to add to new or existing deposit.
+
+
+</td></tr>
+<tr><td>
+
+frontendTag
+
+
+</td><td>
+
+string
+
+
+</td><td>
+
+Address that should receive a share of this deposit's HLQT rewards.
+
+
+</td></tr>
+</tbody></table>
+**Returns:**
 
 Promise&lt;[StabilityDepositChangeDetails](./lib-base.stabilitydepositchangedetails.md)<!-- -->&gt;
 

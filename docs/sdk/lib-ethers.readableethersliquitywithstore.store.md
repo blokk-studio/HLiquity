@@ -6,7 +6,7 @@
 
 An object that implements HLiquityStore.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 readonly store: T;

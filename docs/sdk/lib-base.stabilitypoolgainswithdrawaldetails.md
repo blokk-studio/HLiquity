@@ -6,7 +6,7 @@
 
 Details of a [withdrawGainsFromStabilityPool()](./lib-base.transactableliquity.withdrawgainsfromstabilitypool.md) transaction.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 export interface StabilityPoolGainsWithdrawalDetails 
@@ -14,10 +14,101 @@ export interface StabilityPoolGainsWithdrawalDetails
 
 ## Properties
 
-|  Property | Type | Description |
-|  --- | --- | --- |
-|  [collateralGain](./lib-base.stabilitypoolgainswithdrawaldetails.collateralgain.md) | [Decimal](./lib-base.decimal.md) | Amount of native currency (e.g. Ether) paid out to the depositor in this transaction. |
-|  [hchfLoss](./lib-base.stabilitypoolgainswithdrawaldetails.hchfloss.md) | [Decimal](./lib-base.decimal.md) | Amount of HCHF burned from the deposit by liquidations since the last modification. |
-|  [hlqtReward](./lib-base.stabilitypoolgainswithdrawaldetails.hlqtreward.md) | [Decimal](./lib-base.decimal.md) | Amount of HLQT rewarded to the depositor in this transaction. |
-|  [newHCHFDeposit](./lib-base.stabilitypoolgainswithdrawaldetails.newhchfdeposit.md) | [Decimal](./lib-base.decimal.md) | Amount of HCHF in the deposit directly after this transaction. |
+<table><thead><tr><th>
 
+Property
+
+
+</th><th>
+
+Modifiers
+
+
+</th><th>
+
+Type
+
+
+</th><th>
+
+Description
+
+
+</th></tr></thead>
+<tbody><tr><td>
+
+[collateralGain](./lib-base.stabilitypoolgainswithdrawaldetails.collateralgain.md)
+
+
+</td><td>
+
+
+</td><td>
+
+[Decimal](./lib-base.decimal.md)
+
+
+</td><td>
+
+Amount of native currency (e.g. Ether) paid out to the depositor in this transaction.
+
+
+</td></tr>
+<tr><td>
+
+[hchfLoss](./lib-base.stabilitypoolgainswithdrawaldetails.hchfloss.md)
+
+
+</td><td>
+
+
+</td><td>
+
+[Decimal](./lib-base.decimal.md)
+
+
+</td><td>
+
+Amount of HCHF burned from the deposit by liquidations since the last modification.
+
+
+</td></tr>
+<tr><td>
+
+[hlqtReward](./lib-base.stabilitypoolgainswithdrawaldetails.hlqtreward.md)
+
+
+</td><td>
+
+
+</td><td>
+
+[Decimal](./lib-base.decimal.md)
+
+
+</td><td>
+
+Amount of HLQT rewarded to the depositor in this transaction.
+
+
+</td></tr>
+<tr><td>
+
+[newHCHFDeposit](./lib-base.stabilitypoolgainswithdrawaldetails.newhchfdeposit.md)
+
+
+</td><td>
+
+
+</td><td>
+
+[Decimal](./lib-base.decimal.md)
+
+
+</td><td>
+
+Amount of HCHF in the deposit directly after this transaction.
+
+
+</td></tr>
+</tbody></table>

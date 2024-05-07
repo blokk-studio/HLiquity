@@ -6,7 +6,7 @@
 
 User's stability deposit.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 stabilityDeposit: StabilityDeposit;

@@ -4,7 +4,7 @@
 
 ## Trove.setDebt() method
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 setDebt(debt: Decimalish): Trove;
@@ -12,11 +12,38 @@ setDebt(debt: Decimalish): Trove;
 
 ## Parameters
 
-|  Parameter | Type | Description |
-|  --- | --- | --- |
-|  debt | [Decimalish](./lib-base.decimalish.md) |  |
+<table><thead><tr><th>
 
-<b>Returns:</b>
+Parameter
+
+
+</th><th>
+
+Type
+
+
+</th><th>
+
+Description
+
+
+</th></tr></thead>
+<tbody><tr><td>
+
+debt
+
+
+</td><td>
+
+[Decimalish](./lib-base.decimalish.md)
+
+
+</td><td>
+
+
+</td></tr>
+</tbody></table>
+**Returns:**
 
 [Trove](./lib-base.trove.md)
 

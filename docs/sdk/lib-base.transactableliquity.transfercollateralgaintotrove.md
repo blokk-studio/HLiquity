@@ -6,12 +6,12 @@
 
 Transfer [collateral gain](./lib-base.stabilitydeposit.collateralgain.md) from Stability Deposit to Trove.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 transferCollateralGainToTrove(): Promise<CollateralGainTransferDetails>;
 ```
-<b>Returns:</b>
+**Returns:**
 
 Promise&lt;[CollateralGainTransferDetails](./lib-base.collateralgaintransferdetails.md)<!-- -->&gt;
 

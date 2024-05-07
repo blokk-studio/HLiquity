@@ -6,7 +6,7 @@
 
 Calculate the parameters of an [openTrove()](./lib-base.transactableliquity.opentrove.md) transaction that will result in the given Trove.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 static recreate(that: Trove, borrowingRate?: Decimalish): TroveCreationParams<Decimal>;
@@ -14,12 +14,56 @@ static recreate(that: Trove, borrowingRate?: Decimalish): TroveCreationParams<De
 
 ## Parameters
 
-|  Parameter | Type | Description |
-|  --- | --- | --- |
-|  that | [Trove](./lib-base.trove.md) | The Trove to recreate. |
-|  borrowingRate | [Decimalish](./lib-base.decimalish.md) | Current borrowing rate. |
+<table><thead><tr><th>
 
-<b>Returns:</b>
+Parameter
+
+
+</th><th>
+
+Type
+
+
+</th><th>
+
+Description
+
+
+</th></tr></thead>
+<tbody><tr><td>
+
+that
+
+
+</td><td>
+
+[Trove](./lib-base.trove.md)
+
+
+</td><td>
+
+The Trove to recreate.
+
+
+</td></tr>
+<tr><td>
+
+borrowingRate
+
+
+</td><td>
+
+[Decimalish](./lib-base.decimalish.md)
+
+
+</td><td>
+
+Current borrowing rate.
+
+
+</td></tr>
+</tbody></table>
+**Returns:**
 
 [TroveCreationParams](./lib-base.trovecreationparams.md)<!-- -->&lt;[Decimal](./lib-base.decimal.md)<!-- -->&gt;
 

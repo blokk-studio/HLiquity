@@ -6,7 +6,7 @@
 
 Maximum amount of HCHF that is currently redeemable from `attemptedHCHFAmount`<!-- -->.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 readonly redeemableHCHFAmount: Decimal;

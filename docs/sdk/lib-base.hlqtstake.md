@@ -6,7 +6,7 @@
 
 Represents a user's HLQT stake and accrued gains.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 export declare class HLQTStake 
@@ -20,18 +20,161 @@ The constructor for this class is marked as internal. Third-party code should no
 
 ## Properties
 
-|  Property | Modifiers | Type | Description |
-|  --- | --- | --- | --- |
-|  [collateralGain](./lib-base.hlqtstake.collateralgain.md) |  | [Decimal](./lib-base.decimal.md) | Collateral gain available to withdraw. |
-|  [hchfGain](./lib-base.hlqtstake.hchfgain.md) |  | [Decimal](./lib-base.decimal.md) | HCHF gain available to withdraw. |
-|  [isEmpty](./lib-base.hlqtstake.isempty.md) |  | boolean |  |
-|  [stakedHLQT](./lib-base.hlqtstake.stakedhlqt.md) |  | [Decimal](./lib-base.decimal.md) | The amount of HLQT that's staked. |
+<table><thead><tr><th>
+
+Property
+
+
+</th><th>
+
+Modifiers
+
+
+</th><th>
+
+Type
+
+
+</th><th>
+
+Description
+
+
+</th></tr></thead>
+<tbody><tr><td>
+
+[collateralGain](./lib-base.hlqtstake.collateralgain.md)
+
+
+</td><td>
+
+
+</td><td>
+
+[Decimal](./lib-base.decimal.md)
+
+
+</td><td>
+
+Collateral gain available to withdraw.
+
+
+</td></tr>
+<tr><td>
+
+[hchfGain](./lib-base.hlqtstake.hchfgain.md)
+
+
+</td><td>
+
+
+</td><td>
+
+[Decimal](./lib-base.decimal.md)
+
+
+</td><td>
+
+HCHF gain available to withdraw.
+
+
+</td></tr>
+<tr><td>
+
+[isEmpty](./lib-base.hlqtstake.isempty.md)
+
+
+</td><td>
+
+
+</td><td>
+
+boolean
+
+
+</td><td>
+
+
+</td></tr>
+<tr><td>
+
+[stakedHLQT](./lib-base.hlqtstake.stakedhlqt.md)
+
+
+</td><td>
+
+
+</td><td>
+
+[Decimal](./lib-base.decimal.md)
+
+
+</td><td>
+
+The amount of HLQT that's staked.
+
+
+</td></tr>
+</tbody></table>
 
 ## Methods
 
-|  Method | Modifiers | Description |
-|  --- | --- | --- |
-|  [apply(change)](./lib-base.hlqtstake.apply.md) |  | Apply a [HLQTStakeChange](./lib-base.hlqtstakechange.md) to this <code>HLQTStake</code>. |
-|  [equals(that)](./lib-base.hlqtstake.equals.md) |  | Compare to another instance of <code>HLQTStake</code>. |
-|  [whatChanged(thatStakedHLQT)](./lib-base.hlqtstake.whatchanged.md) |  | Calculate the difference between this <code>HLQTStake</code> and <code>thatStakedHLQT</code>. |
+<table><thead><tr><th>
 
+Method
+
+
+</th><th>
+
+Modifiers
+
+
+</th><th>
+
+Description
+
+
+</th></tr></thead>
+<tbody><tr><td>
+
+[apply(change)](./lib-base.hlqtstake.apply.md)
+
+
+</td><td>
+
+
+</td><td>
+
+Apply a [HLQTStakeChange](./lib-base.hlqtstakechange.md) to this `HLQTStake`<!-- -->.
+
+
+</td></tr>
+<tr><td>
+
+[equals(that)](./lib-base.hlqtstake.equals.md)
+
+
+</td><td>
+
+
+</td><td>
+
+Compare to another instance of `HLQTStake`<!-- -->.
+
+
+</td></tr>
+<tr><td>
+
+[whatChanged(thatStakedHLQT)](./lib-base.hlqtstake.whatchanged.md)
+
+
+</td><td>
+
+
+</td><td>
+
+Calculate the difference between this `HLQTStake` and `thatStakedHLQT`<!-- -->.
+
+
+</td></tr>
+</tbody></table>

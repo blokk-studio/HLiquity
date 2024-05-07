@@ -6,7 +6,7 @@
 
 Get the liquidity mining contract's allowance of a holder's Uniswap ETH/HCHF LP tokens.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 getUniTokenAllowance(address?: string): Promise<Decimal>;
@@ -14,11 +14,40 @@ getUniTokenAllowance(address?: string): Promise<Decimal>;
 
 ## Parameters
 
-|  Parameter | Type | Description |
-|  --- | --- | --- |
-|  address | string | Address holding the Uniswap ETH/HCHF LP tokens. |
+<table><thead><tr><th>
 
-<b>Returns:</b>
+Parameter
+
+
+</th><th>
+
+Type
+
+
+</th><th>
+
+Description
+
+
+</th></tr></thead>
+<tbody><tr><td>
+
+address
+
+
+</td><td>
+
+string
+
+
+</td><td>
+
+Address holding the Uniswap ETH/HCHF LP tokens.
+
+
+</td></tr>
+</tbody></table>
+**Returns:**
 
 Promise&lt;[Decimal](./lib-base.decimal.md)<!-- -->&gt;
 

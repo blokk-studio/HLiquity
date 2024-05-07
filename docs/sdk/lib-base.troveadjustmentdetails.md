@@ -6,7 +6,7 @@
 
 Details of an [adjustTrove()](./lib-base.transactableliquity.adjusttrove.md) transaction.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 export interface TroveAdjustmentDetails 
@@ -14,9 +14,82 @@ export interface TroveAdjustmentDetails
 
 ## Properties
 
-|  Property | Type | Description |
-|  --- | --- | --- |
-|  [fee](./lib-base.troveadjustmentdetails.fee.md) | [Decimal](./lib-base.decimal.md) | Amount of HCHF added to the Trove's debt as borrowing fee. |
-|  [newTrove](./lib-base.troveadjustmentdetails.newtrove.md) | [Trove](./lib-base.trove.md) | New state of the adjusted Trove directly after the transaction. |
-|  [params](./lib-base.troveadjustmentdetails.params.md) | [TroveAdjustmentParams](./lib-base.troveadjustmentparams.md)<!-- -->&lt;[Decimal](./lib-base.decimal.md)<!-- -->&gt; | Parameters of the adjustment. |
+<table><thead><tr><th>
 
+Property
+
+
+</th><th>
+
+Modifiers
+
+
+</th><th>
+
+Type
+
+
+</th><th>
+
+Description
+
+
+</th></tr></thead>
+<tbody><tr><td>
+
+[fee](./lib-base.troveadjustmentdetails.fee.md)
+
+
+</td><td>
+
+
+</td><td>
+
+[Decimal](./lib-base.decimal.md)
+
+
+</td><td>
+
+Amount of HCHF added to the Trove's debt as borrowing fee.
+
+
+</td></tr>
+<tr><td>
+
+[newTrove](./lib-base.troveadjustmentdetails.newtrove.md)
+
+
+</td><td>
+
+
+</td><td>
+
+[Trove](./lib-base.trove.md)
+
+
+</td><td>
+
+New state of the adjusted Trove directly after the transaction.
+
+
+</td></tr>
+<tr><td>
+
+[params](./lib-base.troveadjustmentdetails.params.md)
+
+
+</td><td>
+
+
+</td><td>
+
+[TroveAdjustmentParams](./lib-base.troveadjustmentparams.md)<!-- -->&lt;[Decimal](./lib-base.decimal.md)<!-- -->&gt;
+
+
+</td><td>
+
+Parameters of the adjustment.
+
+
+</td></tr>
+</tbody></table>

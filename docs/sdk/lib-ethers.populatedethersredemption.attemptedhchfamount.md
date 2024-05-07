@@ -6,7 +6,7 @@
 
 Amount of HCHF the redeemer is trying to redeem.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 readonly attemptedHCHFAmount: Decimal;

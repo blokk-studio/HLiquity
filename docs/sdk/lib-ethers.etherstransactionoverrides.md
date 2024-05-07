@@ -6,7 +6,7 @@
 
 Optional parameters taken by [EthersLiquity](./lib-ethers.ethersliquity.md) transaction functions.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 export interface EthersTransactionOverrides 
@@ -14,10 +14,101 @@ export interface EthersTransactionOverrides
 
 ## Properties
 
-|  Property | Type | Description |
-|  --- | --- | --- |
-|  [from?](./lib-ethers.etherstransactionoverrides.from.md) | string | <i>(Optional)</i> |
-|  [gasLimit?](./lib-ethers.etherstransactionoverrides.gaslimit.md) | BigNumberish | <i>(Optional)</i> |
-|  [gasPrice?](./lib-ethers.etherstransactionoverrides.gasprice.md) | BigNumberish | <i>(Optional)</i> |
-|  [nonce?](./lib-ethers.etherstransactionoverrides.nonce.md) | BigNumberish | <i>(Optional)</i> |
+<table><thead><tr><th>
 
+Property
+
+
+</th><th>
+
+Modifiers
+
+
+</th><th>
+
+Type
+
+
+</th><th>
+
+Description
+
+
+</th></tr></thead>
+<tbody><tr><td>
+
+[from?](./lib-ethers.etherstransactionoverrides.from.md)
+
+
+</td><td>
+
+
+</td><td>
+
+string
+
+
+</td><td>
+
+_(Optional)_
+
+
+</td></tr>
+<tr><td>
+
+[gasLimit?](./lib-ethers.etherstransactionoverrides.gaslimit.md)
+
+
+</td><td>
+
+
+</td><td>
+
+BigNumberish
+
+
+</td><td>
+
+_(Optional)_
+
+
+</td></tr>
+<tr><td>
+
+[gasPrice?](./lib-ethers.etherstransactionoverrides.gasprice.md)
+
+
+</td><td>
+
+
+</td><td>
+
+BigNumberish
+
+
+</td><td>
+
+_(Optional)_
+
+
+</td></tr>
+<tr><td>
+
+[nonce?](./lib-ethers.etherstransactionoverrides.nonce.md)
+
+
+</td><td>
+
+
+</td><td>
+
+BigNumberish
+
+
+</td><td>
+
+_(Optional)_
+
+
+</td></tr>
+</tbody></table>

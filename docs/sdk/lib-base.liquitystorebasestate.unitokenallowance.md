@@ -6,7 +6,7 @@
 
 The liquidity mining contract's allowance of user's Uniswap ETH/HCHF LP tokens.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 uniTokenAllowance: Decimal;

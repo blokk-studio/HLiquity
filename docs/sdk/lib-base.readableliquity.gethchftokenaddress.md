@@ -6,12 +6,12 @@
 
 Get the address of the HST Token of HCHF (HCHF)
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 getHCHFTokenAddress(): Promise<string>;
 ```
-<b>Returns:</b>
+**Returns:**
 
 Promise&lt;string&gt;
 

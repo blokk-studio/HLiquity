@@ -6,7 +6,7 @@
 
 Calculate the result of an [adjustTrove()](./lib-base.transactableliquity.adjusttrove.md) transaction on this Trove.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 adjust(params: TroveAdjustmentParams<Decimalish>, borrowingRate?: Decimalish): Trove;
@@ -14,12 +14,56 @@ adjust(params: TroveAdjustmentParams<Decimalish>, borrowingRate?: Decimalish): T
 
 ## Parameters
 
-|  Parameter | Type | Description |
-|  --- | --- | --- |
-|  params | [TroveAdjustmentParams](./lib-base.troveadjustmentparams.md)<!-- -->&lt;[Decimalish](./lib-base.decimalish.md)<!-- -->&gt; | Parameters of the transaction. |
-|  borrowingRate | [Decimalish](./lib-base.decimalish.md) | Borrowing rate to use when adding to the Trove's debt. |
+<table><thead><tr><th>
 
-<b>Returns:</b>
+Parameter
+
+
+</th><th>
+
+Type
+
+
+</th><th>
+
+Description
+
+
+</th></tr></thead>
+<tbody><tr><td>
+
+params
+
+
+</td><td>
+
+[TroveAdjustmentParams](./lib-base.troveadjustmentparams.md)<!-- -->&lt;[Decimalish](./lib-base.decimalish.md)<!-- -->&gt;
+
+
+</td><td>
+
+Parameters of the transaction.
+
+
+</td></tr>
+<tr><td>
+
+borrowingRate
+
+
+</td><td>
+
+[Decimalish](./lib-base.decimalish.md)
+
+
+</td><td>
+
+Borrowing rate to use when adding to the Trove's debt.
+
+
+</td></tr>
+</tbody></table>
+**Returns:**
 
 [Trove](./lib-base.trove.md)
 

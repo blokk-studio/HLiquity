@@ -6,12 +6,12 @@
 
 A redemption transaction that has been prepared for sending.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 export interface PopulatedRedemption<P = unknown, S = unknown, R = unknown> extends PopulatedLiquityTransaction<P, SentLiquityTransaction<S, LiquityReceipt<R, RedemptionDetails>>> 
 ```
-<b>Extends:</b> [PopulatedLiquityTransaction](./lib-base.populatedliquitytransaction.md)<!-- -->&lt;P, [SentLiquityTransaction](./lib-base.sentliquitytransaction.md)<!-- -->&lt;S, [LiquityReceipt](./lib-base.liquityreceipt.md)<!-- -->&lt;R, [RedemptionDetails](./lib-base.redemptiondetails.md)<!-- -->&gt;&gt;&gt;
+**Extends:** [PopulatedLiquityTransaction](./lib-base.populatedliquitytransaction.md)<!-- -->&lt;P, [SentLiquityTransaction](./lib-base.sentliquitytransaction.md)<!-- -->&lt;S, [LiquityReceipt](./lib-base.liquityreceipt.md)<!-- -->&lt;R, [RedemptionDetails](./lib-base.redemptiondetails.md)<!-- -->&gt;&gt;&gt;
 
 ## Remarks
 
@@ -21,15 +21,108 @@ When [redeemHCHF()](./lib-base.populatableliquity.redeemhchf.md) is called with 
 
 ## Properties
 
-|  Property | Type | Description |
-|  --- | --- | --- |
-|  [attemptedHCHFAmount](./lib-base.populatedredemption.attemptedhchfamount.md) | [Decimal](./lib-base.decimal.md) | Amount of HCHF the redeemer is trying to redeem. |
-|  [isTruncated](./lib-base.populatedredemption.istruncated.md) | boolean | Whether <code>redeemableHCHFAmount</code> is less than <code>attemptedHCHFAmount</code>. |
-|  [redeemableHCHFAmount](./lib-base.populatedredemption.redeemablehchfamount.md) | [Decimal](./lib-base.decimal.md) | Maximum amount of HCHF that is currently redeemable from <code>attemptedHCHFAmount</code>. |
+<table><thead><tr><th>
+
+Property
+
+
+</th><th>
+
+Modifiers
+
+
+</th><th>
+
+Type
+
+
+</th><th>
+
+Description
+
+
+</th></tr></thead>
+<tbody><tr><td>
+
+[attemptedHCHFAmount](./lib-base.populatedredemption.attemptedhchfamount.md)
+
+
+</td><td>
+
+
+</td><td>
+
+[Decimal](./lib-base.decimal.md)
+
+
+</td><td>
+
+Amount of HCHF the redeemer is trying to redeem.
+
+
+</td></tr>
+<tr><td>
+
+[isTruncated](./lib-base.populatedredemption.istruncated.md)
+
+
+</td><td>
+
+
+</td><td>
+
+boolean
+
+
+</td><td>
+
+Whether `redeemableHCHFAmount` is less than `attemptedHCHFAmount`<!-- -->.
+
+
+</td></tr>
+<tr><td>
+
+[redeemableHCHFAmount](./lib-base.populatedredemption.redeemablehchfamount.md)
+
+
+</td><td>
+
+
+</td><td>
+
+[Decimal](./lib-base.decimal.md)
+
+
+</td><td>
+
+Maximum amount of HCHF that is currently redeemable from `attemptedHCHFAmount`<!-- -->.
+
+
+</td></tr>
+</tbody></table>
 
 ## Methods
 
-|  Method | Description |
-|  --- | --- |
-|  [increaseAmountByMinimumNetDebt(maxRedemptionRate)](./lib-base.populatedredemption.increaseamountbyminimumnetdebt.md) | Prepare a new transaction by increasing the attempted amount to the next lowest redeemable value. |
+<table><thead><tr><th>
 
+Method
+
+
+</th><th>
+
+Description
+
+
+</th></tr></thead>
+<tbody><tr><td>
+
+[increaseAmountByMinimumNetDebt(maxRedemptionRate)](./lib-base.populatedredemption.increaseamountbyminimumnetdebt.md)
+
+
+</td><td>
+
+Prepare a new transaction by increasing the attempted amount to the next lowest redeemable value.
+
+
+</td></tr>
+</tbody></table>

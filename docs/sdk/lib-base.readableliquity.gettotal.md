@@ -6,12 +6,12 @@
 
 Get the total amount of collateral and debt in the Liquity system.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 getTotal(): Promise<Trove>;
 ```
-<b>Returns:</b>
+**Returns:**
 
 Promise&lt;[Trove](./lib-base.trove.md)<!-- -->&gt;
 

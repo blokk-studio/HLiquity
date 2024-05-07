@@ -6,7 +6,7 @@
 
 Amount of HCHF in the deposit directly after this transaction.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 newHCHFDeposit: Decimal;

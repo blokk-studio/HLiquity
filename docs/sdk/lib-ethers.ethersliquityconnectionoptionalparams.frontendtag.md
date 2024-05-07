@@ -6,7 +6,7 @@
 
 Address that will receive HLQT rewards from newly created Stability Deposits by default.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 readonly frontendTag?: string;

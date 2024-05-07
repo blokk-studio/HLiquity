@@ -6,7 +6,7 @@
 
 Calculate the difference between this `HLQTStake` and `thatStakedHLQT`<!-- -->.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 whatChanged(thatStakedHLQT: Decimalish): HLQTStakeChange<Decimal> | undefined;
@@ -14,11 +14,38 @@ whatChanged(thatStakedHLQT: Decimalish): HLQTStakeChange<Decimal> | undefined;
 
 ## Parameters
 
-|  Parameter | Type | Description |
-|  --- | --- | --- |
-|  thatStakedHLQT | [Decimalish](./lib-base.decimalish.md) |  |
+<table><thead><tr><th>
 
-<b>Returns:</b>
+Parameter
+
+
+</th><th>
+
+Type
+
+
+</th><th>
+
+Description
+
+
+</th></tr></thead>
+<tbody><tr><td>
+
+thatStakedHLQT
+
+
+</td><td>
+
+[Decimalish](./lib-base.decimalish.md)
+
+
+</td><td>
+
+
+</td></tr>
+</tbody></table>
+**Returns:**
 
 [HLQTStakeChange](./lib-base.hlqtstakechange.md)<!-- -->&lt;[Decimal](./lib-base.decimal.md)<!-- -->&gt; \| undefined
 

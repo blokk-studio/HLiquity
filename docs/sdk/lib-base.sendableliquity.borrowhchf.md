@@ -6,7 +6,7 @@
 
 Adjust existing Trove by borrowing more HCHF.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 borrowHCHF(amount: Decimalish, maxBorrowingRate?: Decimalish): Promise<SentLiquityTransaction<S, LiquityReceipt<R, TroveAdjustmentDetails>>>;
@@ -14,12 +14,56 @@ borrowHCHF(amount: Decimalish, maxBorrowingRate?: Decimalish): Promise<SentLiqui
 
 ## Parameters
 
-|  Parameter | Type | Description |
-|  --- | --- | --- |
-|  amount | [Decimalish](./lib-base.decimalish.md) | The amount of HCHF to borrow. |
-|  maxBorrowingRate | [Decimalish](./lib-base.decimalish.md) | Maximum acceptable [borrowing rate](./lib-base.fees.borrowingrate.md)<!-- -->. |
+<table><thead><tr><th>
 
-<b>Returns:</b>
+Parameter
+
+
+</th><th>
+
+Type
+
+
+</th><th>
+
+Description
+
+
+</th></tr></thead>
+<tbody><tr><td>
+
+amount
+
+
+</td><td>
+
+[Decimalish](./lib-base.decimalish.md)
+
+
+</td><td>
+
+The amount of HCHF to borrow.
+
+
+</td></tr>
+<tr><td>
+
+maxBorrowingRate
+
+
+</td><td>
+
+[Decimalish](./lib-base.decimalish.md)
+
+
+</td><td>
+
+Maximum acceptable [borrowing rate](./lib-base.fees.borrowingrate.md)<!-- -->.
+
+
+</td></tr>
+</tbody></table>
+**Returns:**
 
 Promise&lt;[SentLiquityTransaction](./lib-base.sentliquitytransaction.md)<!-- -->&lt;S, [LiquityReceipt](./lib-base.liquityreceipt.md)<!-- -->&lt;R, [TroveAdjustmentDetails](./lib-base.troveadjustmentdetails.md)<!-- -->&gt;&gt;&gt;
 
@@ -29,6 +73,5 @@ Equivalent to:
 
 ```typescript
 adjustTrove({ borrowHCHF: amount }, maxBorrowingRate)
-
 ```
 

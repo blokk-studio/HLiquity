@@ -6,7 +6,7 @@
 
 A combination of collateral and debt.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 export declare class Trove 
@@ -18,35 +18,383 @@ The constructor for this class is marked as internal. Third-party code should no
 
 ## Properties
 
-|  Property | Modifiers | Type | Description |
-|  --- | --- | --- | --- |
-|  [collateral](./lib-base.trove.collateral.md) |  | [Decimal](./lib-base.decimal.md) | Amount of native currency (e.g. Ether) collateralized. |
-|  [debt](./lib-base.trove.debt.md) |  | [Decimal](./lib-base.decimal.md) | Amount of HCHF owed. |
-|  [isEmpty](./lib-base.trove.isempty.md) |  | boolean |  |
-|  [netDebt](./lib-base.trove.netdebt.md) |  | [Decimal](./lib-base.decimal.md) | Amount of HCHF that must be repaid to close this Trove. |
+<table><thead><tr><th>
+
+Property
+
+
+</th><th>
+
+Modifiers
+
+
+</th><th>
+
+Type
+
+
+</th><th>
+
+Description
+
+
+</th></tr></thead>
+<tbody><tr><td>
+
+[collateral](./lib-base.trove.collateral.md)
+
+
+</td><td>
+
+
+</td><td>
+
+[Decimal](./lib-base.decimal.md)
+
+
+</td><td>
+
+Amount of native currency (e.g. Ether) collateralized.
+
+
+</td></tr>
+<tr><td>
+
+[debt](./lib-base.trove.debt.md)
+
+
+</td><td>
+
+
+</td><td>
+
+[Decimal](./lib-base.decimal.md)
+
+
+</td><td>
+
+Amount of HCHF owed.
+
+
+</td></tr>
+<tr><td>
+
+[isEmpty](./lib-base.trove.isempty.md)
+
+
+</td><td>
+
+
+</td><td>
+
+boolean
+
+
+</td><td>
+
+
+</td></tr>
+<tr><td>
+
+[netDebt](./lib-base.trove.netdebt.md)
+
+
+</td><td>
+
+
+</td><td>
+
+[Decimal](./lib-base.decimal.md)
+
+
+</td><td>
+
+Amount of HCHF that must be repaid to close this Trove.
+
+
+</td></tr>
+</tbody></table>
 
 ## Methods
 
-|  Method | Modifiers | Description |
-|  --- | --- | --- |
-|  [add(that)](./lib-base.trove.add.md) |  |  |
-|  [addCollateral(collateral)](./lib-base.trove.addcollateral.md) |  |  |
-|  [addDebt(debt)](./lib-base.trove.adddebt.md) |  |  |
-|  [adjust(params, borrowingRate)](./lib-base.trove.adjust.md) |  | Calculate the result of an [adjustTrove()](./lib-base.transactableliquity.adjusttrove.md) transaction on this Trove. |
-|  [adjustTo(that, borrowingRate)](./lib-base.trove.adjustto.md) |  | Calculate the parameters of an [adjustTrove()](./lib-base.transactableliquity.adjusttrove.md) transaction that will change this Trove into the given Trove. |
-|  [apply(change, borrowingRate)](./lib-base.trove.apply.md) |  | Make a new Trove by applying a [TroveChange](./lib-base.trovechange.md) to this Trove. |
-|  [collateralRatio(price)](./lib-base.trove.collateralratio.md) |  | Calculate the Trove's collateralization ratio at a given price. |
-|  [collateralRatioIsBelowCritical(price)](./lib-base.trove.collateralratioisbelowcritical.md) |  | Whether the collateralization ratio is less than the [CRITICAL\_COLLATERAL\_RATIO](./lib-base.critical_collateral_ratio.md) at a given price. |
-|  [collateralRatioIsBelowMinimum(price)](./lib-base.trove.collateralratioisbelowminimum.md) |  | Whether the Trove is undercollateralized at a given price. |
-|  [create(params, borrowingRate)](./lib-base.trove.create.md) | <code>static</code> | Calculate the result of an [openTrove()](./lib-base.transactableliquity.opentrove.md) transaction. |
-|  [equals(that)](./lib-base.trove.equals.md) |  |  |
-|  [isOpenableInRecoveryMode(price)](./lib-base.trove.isopenableinrecoverymode.md) |  | Whether the Trove is sufficiently collateralized to be opened during recovery mode. |
-|  [multiply(multiplier)](./lib-base.trove.multiply.md) |  |  |
-|  [recreate(that, borrowingRate)](./lib-base.trove.recreate.md) | <code>static</code> | Calculate the parameters of an [openTrove()](./lib-base.transactableliquity.opentrove.md) transaction that will result in the given Trove. |
-|  [setCollateral(collateral)](./lib-base.trove.setcollateral.md) |  |  |
-|  [setDebt(debt)](./lib-base.trove.setdebt.md) |  |  |
-|  [subtract(that)](./lib-base.trove.subtract.md) |  |  |
-|  [subtractCollateral(collateral)](./lib-base.trove.subtractcollateral.md) |  |  |
-|  [subtractDebt(debt)](./lib-base.trove.subtractdebt.md) |  |  |
-|  [whatChanged(that, borrowingRate)](./lib-base.trove.whatchanged.md) |  | Calculate the difference between this Trove and another. |
+<table><thead><tr><th>
 
+Method
+
+
+</th><th>
+
+Modifiers
+
+
+</th><th>
+
+Description
+
+
+</th></tr></thead>
+<tbody><tr><td>
+
+[add(that)](./lib-base.trove.add.md)
+
+
+</td><td>
+
+
+</td><td>
+
+
+</td></tr>
+<tr><td>
+
+[addCollateral(collateral)](./lib-base.trove.addcollateral.md)
+
+
+</td><td>
+
+
+</td><td>
+
+
+</td></tr>
+<tr><td>
+
+[addDebt(debt)](./lib-base.trove.adddebt.md)
+
+
+</td><td>
+
+
+</td><td>
+
+
+</td></tr>
+<tr><td>
+
+[adjust(params, borrowingRate)](./lib-base.trove.adjust.md)
+
+
+</td><td>
+
+
+</td><td>
+
+Calculate the result of an [adjustTrove()](./lib-base.transactableliquity.adjusttrove.md) transaction on this Trove.
+
+
+</td></tr>
+<tr><td>
+
+[adjustTo(that, borrowingRate)](./lib-base.trove.adjustto.md)
+
+
+</td><td>
+
+
+</td><td>
+
+Calculate the parameters of an [adjustTrove()](./lib-base.transactableliquity.adjusttrove.md) transaction that will change this Trove into the given Trove.
+
+
+</td></tr>
+<tr><td>
+
+[apply(change, borrowingRate)](./lib-base.trove.apply.md)
+
+
+</td><td>
+
+
+</td><td>
+
+Make a new Trove by applying a [TroveChange](./lib-base.trovechange.md) to this Trove.
+
+
+</td></tr>
+<tr><td>
+
+[collateralRatio(price)](./lib-base.trove.collateralratio.md)
+
+
+</td><td>
+
+
+</td><td>
+
+Calculate the Trove's collateralization ratio at a given price.
+
+
+</td></tr>
+<tr><td>
+
+[collateralRatioIsBelowCritical(price)](./lib-base.trove.collateralratioisbelowcritical.md)
+
+
+</td><td>
+
+
+</td><td>
+
+Whether the collateralization ratio is less than the [CRITICAL\_COLLATERAL\_RATIO](./lib-base.critical_collateral_ratio.md) at a given price.
+
+
+</td></tr>
+<tr><td>
+
+[collateralRatioIsBelowMinimum(price)](./lib-base.trove.collateralratioisbelowminimum.md)
+
+
+</td><td>
+
+
+</td><td>
+
+Whether the Trove is undercollateralized at a given price.
+
+
+</td></tr>
+<tr><td>
+
+[create(params, borrowingRate)](./lib-base.trove.create.md)
+
+
+</td><td>
+
+`static`
+
+
+</td><td>
+
+Calculate the result of an [openTrove()](./lib-base.transactableliquity.opentrove.md) transaction.
+
+
+</td></tr>
+<tr><td>
+
+[equals(that)](./lib-base.trove.equals.md)
+
+
+</td><td>
+
+
+</td><td>
+
+
+</td></tr>
+<tr><td>
+
+[isOpenableInRecoveryMode(price)](./lib-base.trove.isopenableinrecoverymode.md)
+
+
+</td><td>
+
+
+</td><td>
+
+Whether the Trove is sufficiently collateralized to be opened during recovery mode.
+
+
+</td></tr>
+<tr><td>
+
+[multiply(multiplier)](./lib-base.trove.multiply.md)
+
+
+</td><td>
+
+
+</td><td>
+
+
+</td></tr>
+<tr><td>
+
+[recreate(that, borrowingRate)](./lib-base.trove.recreate.md)
+
+
+</td><td>
+
+`static`
+
+
+</td><td>
+
+Calculate the parameters of an [openTrove()](./lib-base.transactableliquity.opentrove.md) transaction that will result in the given Trove.
+
+
+</td></tr>
+<tr><td>
+
+[setCollateral(collateral)](./lib-base.trove.setcollateral.md)
+
+
+</td><td>
+
+
+</td><td>
+
+
+</td></tr>
+<tr><td>
+
+[setDebt(debt)](./lib-base.trove.setdebt.md)
+
+
+</td><td>
+
+
+</td><td>
+
+
+</td></tr>
+<tr><td>
+
+[subtract(that)](./lib-base.trove.subtract.md)
+
+
+</td><td>
+
+
+</td><td>
+
+
+</td></tr>
+<tr><td>
+
+[subtractCollateral(collateral)](./lib-base.trove.subtractcollateral.md)
+
+
+</td><td>
+
+
+</td><td>
+
+
+</td></tr>
+<tr><td>
+
+[subtractDebt(debt)](./lib-base.trove.subtractdebt.md)
+
+
+</td><td>
+
+
+</td><td>
+
+
+</td></tr>
+<tr><td>
+
+[whatChanged(that, borrowingRate)](./lib-base.trove.whatchanged.md)
+
+
+</td><td>
+
+
+</td><td>
+
+Calculate the difference between this Trove and another.
+
+
+</td></tr>
+</tbody></table>

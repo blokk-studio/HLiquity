@@ -6,7 +6,7 @@
 
 Abstract base class of Liquity data store implementations.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 export declare abstract class HLiquityStore<T = unknown> 
@@ -20,16 +20,142 @@ Implemented by [BlockPolledLiquityStore](./lib-ethers.blockpolledliquitystore.md
 
 ## Properties
 
-|  Property | Modifiers | Type | Description |
-|  --- | --- | --- | --- |
-|  [logging](./lib-base.hliquitystore.logging.md) |  | boolean | Turn console logging on/off. |
-|  [onLoaded?](./lib-base.hliquitystore.onloaded.md) |  | () =&gt; void | <i>(Optional)</i> Called after the state is fetched for the first time. |
-|  [state](./lib-base.hliquitystore.state.md) |  | [LiquityStoreState](./lib-base.liquitystorestate.md)<!-- -->&lt;T&gt; | The current store state. |
+<table><thead><tr><th>
+
+Property
+
+
+</th><th>
+
+Modifiers
+
+
+</th><th>
+
+Type
+
+
+</th><th>
+
+Description
+
+
+</th></tr></thead>
+<tbody><tr><td>
+
+[logging](./lib-base.hliquitystore.logging.md)
+
+
+</td><td>
+
+
+</td><td>
+
+boolean
+
+
+</td><td>
+
+Turn console logging on/off.
+
+
+</td></tr>
+<tr><td>
+
+[onLoaded?](./lib-base.hliquitystore.onloaded.md)
+
+
+</td><td>
+
+
+</td><td>
+
+() =&gt; void
+
+
+</td><td>
+
+_(Optional)_ Called after the state is fetched for the first time.
+
+
+</td></tr>
+<tr><td>
+
+[state](./lib-base.hliquitystore.state.md)
+
+
+</td><td>
+
+
+</td><td>
+
+[LiquityStoreState](./lib-base.liquitystorestate.md)<!-- -->&lt;T&gt;
+
+
+</td><td>
+
+The current store state.
+
+
+</td></tr>
+</tbody></table>
 
 ## Methods
 
-|  Method | Modifiers | Description |
-|  --- | --- | --- |
-|  [start()](./lib-base.hliquitystore.start.md) |  | Start monitoring the blockchain for Liquity state changes. |
-|  [subscribe(listener)](./lib-base.hliquitystore.subscribe.md) |  | Register a state change listener. |
+<table><thead><tr><th>
 
+Method
+
+
+</th><th>
+
+Modifiers
+
+
+</th><th>
+
+Description
+
+
+</th></tr></thead>
+<tbody><tr><td>
+
+[refresh()](./lib-base.hliquitystore.refresh.md)
+
+
+</td><td>
+
+
+</td><td>
+
+
+</td></tr>
+<tr><td>
+
+[start()](./lib-base.hliquitystore.start.md)
+
+
+</td><td>
+
+
+</td><td>
+
+Start monitoring the blockchain for Liquity state changes.
+
+
+</td></tr>
+<tr><td>
+
+[subscribe(listener)](./lib-base.hliquitystore.subscribe.md)
+
+
+</td><td>
+
+
+</td><td>
+
+Register a state change listener.
+
+
+</td></tr>
+</tbody></table>

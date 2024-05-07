@@ -6,7 +6,7 @@
 
 Total amount of HLQT allocated for rewarding stability depositors.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 readonly totalStabilityPoolHLQTReward: Decimal;
