@@ -235,12 +235,12 @@ export class HashgraphLiquity extends HLiquityStore implements ReadableLiquity {
           ? this.getFrontendStatus(this.frontendAddress, { blockTag })
           : { status: 'unregistered' as const },
 
-        ...(this.userAccountAddress && false
+        ...(this.userAccountAddress
           ? {
               accountBalance: this.web3.eth
                 .getBalance(this.userAccountAddress, blockTag)
                 .then((bigInt) =>
-                  Decimal.fromBigNumberStringWithPrecision(bigInt.toString(16), 18),
+                  Decimal.fromBigNumberStringWithPrecision(`0x${bigInt.toString(16)}`, 18),
                 ),
               hchfBalance: this.getHCHFBalance(this.userAccountAddress, { blockTag }),
               hchfTokenAddress: this.getHCHFTokenAddress({ blockTag }),
@@ -384,9 +384,10 @@ export class HashgraphLiquity extends HLiquityStore implements ReadableLiquity {
         .call(undefined, options?.blockTag),
     ])
 
-    const userTroveStatus = userTroveStatusFrom(troveResult.status as BackendTroveStatus)
+    const backendTroveStatus = parseInt(troveResult.status.toString())
+    const userTroveStatus = userTroveStatusFrom(parseInt(troveResult.status.toString()))
 
-    if (troveResult.status === BackendTroveStatus.active) {
+    if (backendTroveStatus === BackendTroveStatus.active) {
       const trove = new Trove(decimalify(snapshotResult.ETH), decimalify(snapshotResult.HCHFDebt))
 
       return new TroveWithPendingRedistribution(
