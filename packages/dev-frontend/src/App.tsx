@@ -5,13 +5,7 @@ import { Button, Flex, Heading, ThemeProvider } from "theme-ui";
 import { Global, css } from "@emotion/react";
 
 import getDefaultClient from "./connectkit/defaultClient";
-import {
-  OptionalLiquityConsumer,
-  LiquityLoader,
-  LiquityProvider,
-  LiquityConsumer
-} from "./hooks/LiquityContext";
-import { WalletConnector } from "./components/WalletConnector";
+import { LiquityProvider, LiquityConsumer } from "./hooks/LiquityContext";
 import { TransactionProvider } from "./components/Transaction";
 import { Icon } from "./components/Icon";
 import { getConfig } from "./config";
@@ -32,9 +26,8 @@ import {
   HashConnectConsumer,
   HashConnectLoader,
   HashConnectSessionDataConsumer,
-  OptionalHashConnectSessionDataConsumer
+  HashConnectSessionDataLoader
 } from "./components/HashConnectProvider";
-import { HashgraphLiquityProvider } from "./components/HashgraphLiquityProvider";
 import { LiquityStoreProvider } from "@liquity/lib-react";
 
 const isDemoMode = import.meta.env.VITE_APP_DEMO_MODE === "true";
@@ -148,72 +141,75 @@ const App = () => {
       <AuthenticationProvider loginForm={<LoginForm />}>
         <WagmiConfig client={client}>
           <ConnectKitProvider options={{ hideBalance: true }}>
-            {/* <WalletConnector loader={<AppLoader content={<Heading>Loading wallets</Heading>} />}> */}
             <HashConnectProvider walletConnectProjectId={config.value.walletConnectProjectId}>
               <HashConnectLoader
                 loader={<AppLoader content={<Heading>Loading HashPack</Heading>} />}
               >
-                <HashConnectConsumer>
-                  {hashConnect => (
-                    <OptionalHashConnectSessionDataConsumer>
-                      {sessionData =>
-                        !sessionData ? (
-                          <Flex
-                            sx={{
-                              minHeight: "100%",
-                              flexDirection: "column",
-                              justifyContent: "center",
-                              marginInline: "clamp(2rem, 100%, 50% - 12rem)"
-                            }}
-                          >
-                            <Button
-                              sx={{ alignSelf: "center" }}
-                              onClick={() => hashConnect.openPairingModal()}
+                <HashConnectSessionDataLoader
+                  loader={<AppLoader content={<Heading>Loading HashPack</Heading>} />}
+                >
+                  <HashConnectConsumer>
+                    {hashConnect => (
+                      <HashConnectSessionDataConsumer>
+                        {sessionData => {
+                          if (sessionData.connectionState !== "Paired") {
+                            <Flex
+                              sx={{
+                                minHeight: "100%",
+                                flexDirection: "column",
+                                justifyContent: "center",
+                                marginInline: "clamp(2rem, 100%, 50% - 12rem)"
+                              }}
                             >
-                              Connect HashPack
-                            </Button>
-                          </Flex>
-                        ) : (
-                          <TransactionProvider>
-                            <HederaTokensProvider>
-                              <LiquityProvider
-                                loader={<AppLoader content={<Heading>Loading HLiquity</Heading>} />}
-                                unsupportedNetworkFallback={
-                                  <UnsupportedNetworkFallback availableNetworks={chains} />
-                                }
-                                unsupportedMainnetFallback={
-                                  <UnsupportedNetworkFallback availableNetworks={chains} />
-                                }
+                              <Button
+                                sx={{ alignSelf: "center" }}
+                                onClick={() => hashConnect.openPairingModal()}
                               >
-                                <LiquityConsumer>
-                                  {liquityContext => {
-                                    if (!liquityContext) {
-                                      return;
-                                    }
+                                Connect HashPack
+                              </Button>
+                            </Flex>;
+                          }
 
-                                    return (
-                                      <LiquityStoreProvider
-                                        store={liquityContext.liquity}
-                                        loader={
-                                          <AppLoader content={<Heading>Loading data</Heading>} />
-                                        }
-                                      >
-                                        <LiquityFrontend />
-                                      </LiquityStoreProvider>
-                                    );
-                                  }}
-                                </LiquityConsumer>
-                              </LiquityProvider>
-                            </HederaTokensProvider>
-                          </TransactionProvider>
-                        )
-                      }
-                    </OptionalHashConnectSessionDataConsumer>
-                  )}
-                </HashConnectConsumer>
+                          return (
+                            <TransactionProvider>
+                              <HederaTokensProvider>
+                                <LiquityProvider
+                                  unsupportedNetworkFallback={
+                                    <UnsupportedNetworkFallback availableNetworks={chains} />
+                                  }
+                                  unsupportedMainnetFallback={
+                                    <UnsupportedNetworkFallback availableNetworks={chains} />
+                                  }
+                                >
+                                  <LiquityConsumer>
+                                    {liquityContext => {
+                                      if (!liquityContext) {
+                                        return;
+                                      }
+
+                                      return (
+                                        <LiquityStoreProvider
+                                          store={liquityContext.store}
+                                          loader={
+                                            <AppLoader content={<Heading>Loading data</Heading>} />
+                                          }
+                                        >
+                                          <LiquityFrontend />
+                                        </LiquityStoreProvider>
+                                      );
+                                    }}
+                                  </LiquityConsumer>
+                                </LiquityProvider>
+                              </HederaTokensProvider>
+                            </TransactionProvider>
+                          );
+                        }}
+                      </HashConnectSessionDataConsumer>
+                    )}
+                  </HashConnectConsumer>
+                </HashConnectSessionDataLoader>
               </HashConnectLoader>
             </HashConnectProvider>
-            {/* </WalletConnector> */}
           </ConnectKitProvider>
         </WagmiConfig>
       </AuthenticationProvider>
