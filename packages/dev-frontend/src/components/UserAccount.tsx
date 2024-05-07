@@ -21,11 +21,7 @@ const select = ({ accountBalance, hchfBalance, hlqtBalance }: LiquityStoreState)
 
 export const UserAccount: React.FC = () => {
   const { account } = useLiquity();
-  const { accountBalance, hchfBalance: realHchfBalance, hlqtBalance } = useLiquitySelector(select);
-  const { hchfBalance: customHchfBalance } = useBondView();
-  const { LUSD_OVERRIDE_ADDRESS } = useBondAddresses();
-
-  const hchfBalance = LUSD_OVERRIDE_ADDRESS === null ? realHchfBalance : customHchfBalance;
+  const { accountBalance, hchfBalance, hlqtBalance } = useLiquitySelector(select);
 
   return (
     <Flex>
