@@ -9,6 +9,8 @@ import { useLiquity } from "../hooks/LiquityContext";
 import { shortenAddress } from "../utils/shortenAddress";
 
 import { Icon } from "./Icon";
+import { useHashConnect } from "./HashConnectProvider";
+import { t } from "../i18n";
 
 const select = ({ accountBalance, hchfBalance, hlqtBalance }: LiquityStoreState) => ({
   accountBalance,
@@ -19,15 +21,28 @@ const select = ({ accountBalance, hchfBalance, hlqtBalance }: LiquityStoreState)
 export const UserAccount: React.FC = () => {
   const { account } = useLiquity();
   const { accountBalance, hchfBalance, hlqtBalance } = useLiquitySelector(select);
+  const hashConnect = useHashConnect();
 
   return (
     <Flex>
-      <Button variant="outline" sx={{ alignItems: "center", p: 2, mr: 3 }} disabled>
-        <Icon name="user-circle" size="lg" />
-        <Text as="span" sx={{ ml: 2, fontSize: 1 }}>
-          {shortenAddress(account)}
-        </Text>
-      </Button>
+      <Box>
+        <Box>
+          <Icon name="user-circle" size="lg" />
+          <Text as="span" sx={{ ml: 2, fontSize: 1 }}>
+            {shortenAddress(account)}
+          </Text>
+        </Box>
+
+        <Button
+          variant="outline"
+          sx={{ alignItems: "center", p: 2, mr: 3 }}
+          onClick={() => {
+            hashConnect.disconnect();
+          }}
+        >
+          {t("userAccount.disconnectHashPack")}
+        </Button>
+      </Box>
 
       <Box
         sx={{
