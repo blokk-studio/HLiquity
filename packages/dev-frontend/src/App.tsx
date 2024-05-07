@@ -1,7 +1,7 @@
 import React from "react";
 import { Chain, createClient, WagmiConfig } from "wagmi";
 import { ConnectKitProvider } from "connectkit";
-import { Button, Flex, Heading, ThemeProvider } from "theme-ui";
+import { Flex, Heading, ThemeProvider } from "theme-ui";
 import { Global, css } from "@emotion/react";
 
 import getDefaultClient from "./connectkit/defaultClient";
@@ -18,17 +18,16 @@ import { useAsyncValue } from "./hooks/AsyncValue";
 import { useHederaChains } from "./hedera/wagmi-chains";
 import { AuthenticationProvider, LoginForm } from "./authentication";
 import { HederaTokensProvider } from "./hedera/hedera_context";
-import { Lexicon } from "./lexicon";
 import { useConfiguration } from "./configuration";
 import "./App.scss";
 import {
   HashConnectProvider,
-  HashConnectConsumer,
   HashConnectLoader,
-  HashConnectSessionDataConsumer,
-  HashConnectSessionDataLoader
+  HashConnectSessionDataLoader,
+  HashConnectConnectionStateConsumer
 } from "./components/HashConnectProvider";
 import { LiquityStoreProvider } from "@liquity/lib-react";
+import { WalletConnector } from "./components/WalletConnector";
 
 const isDemoMode = import.meta.env.VITE_APP_DEMO_MODE === "true";
 
@@ -87,28 +86,6 @@ const UnsupportedNetworkFallback: React.FC<{ availableNetworks: Chain[] }> = ({
   );
 };
 
-const jsonifyLexicon = (lexicon: Record<string, Lexicon>) => {
-  const entries = Object.entries(lexicon).map(([lexiconKey, value]) => {
-    const jsonKey = lexiconKey
-      .split("_")
-      .map((string, index) => {
-        if (index === 0) {
-          return string.toLowerCase();
-        }
-
-        const firstLetter = string.substring(0, 1);
-        const rest = string.substring(1);
-
-        return `${firstLetter.toUpperCase()}${rest.toLowerCase()}`;
-      })
-      .join("");
-
-    return [jsonKey, value];
-  });
-
-  return Object.fromEntries(entries);
-};
-
 const App = () => {
   const config = useAsyncValue(getConfig);
   const chains = useHederaChains();
@@ -143,71 +120,53 @@ const App = () => {
           <ConnectKitProvider options={{ hideBalance: true }}>
             <HashConnectProvider walletConnectProjectId={config.value.walletConnectProjectId}>
               <HashConnectLoader
-                loader={<AppLoader content={<Heading>Loading HashPack</Heading>} />}
+                loader={<AppLoader content={<Heading>Setting up HashPack</Heading>} />}
               >
-                <HashConnectSessionDataLoader
-                  loader={<AppLoader content={<Heading>Loading HashPack</Heading>} />}
-                >
-                  <HashConnectConsumer>
-                    {hashConnect => (
-                      <HashConnectSessionDataConsumer>
-                        {sessionData => {
-                          if (sessionData.connectionState !== "Paired") {
-                            <Flex
-                              sx={{
-                                minHeight: "100%",
-                                flexDirection: "column",
-                                justifyContent: "center",
-                                marginInline: "clamp(2rem, 100%, 50% - 12rem)"
-                              }}
+                <HashConnectConnectionStateConsumer>
+                  {connectionState => {
+                    if (connectionState !== "Paired") {
+                      return <WalletConnector />;
+                    }
+
+                    return (
+                      <HashConnectSessionDataLoader
+                        loader={<AppLoader content={<Heading>Setting up HashPack</Heading>} />}
+                      >
+                        <TransactionProvider>
+                          <HederaTokensProvider>
+                            <LiquityProvider
+                              unsupportedNetworkFallback={
+                                <UnsupportedNetworkFallback availableNetworks={chains} />
+                              }
+                              unsupportedMainnetFallback={
+                                <UnsupportedNetworkFallback availableNetworks={chains} />
+                              }
                             >
-                              <Button
-                                sx={{ alignSelf: "center" }}
-                                onClick={() => hashConnect.openPairingModal()}
-                              >
-                                Connect HashPack
-                              </Button>
-                            </Flex>;
-                          }
+                              <LiquityConsumer>
+                                {liquityContext => {
+                                  if (!liquityContext) {
+                                    return;
+                                  }
 
-                          return (
-                            <TransactionProvider>
-                              <HederaTokensProvider>
-                                <LiquityProvider
-                                  unsupportedNetworkFallback={
-                                    <UnsupportedNetworkFallback availableNetworks={chains} />
-                                  }
-                                  unsupportedMainnetFallback={
-                                    <UnsupportedNetworkFallback availableNetworks={chains} />
-                                  }
-                                >
-                                  <LiquityConsumer>
-                                    {liquityContext => {
-                                      if (!liquityContext) {
-                                        return;
+                                  return (
+                                    <LiquityStoreProvider
+                                      store={liquityContext.store}
+                                      loader={
+                                        <AppLoader content={<Heading>Loading data</Heading>} />
                                       }
-
-                                      return (
-                                        <LiquityStoreProvider
-                                          store={liquityContext.store}
-                                          loader={
-                                            <AppLoader content={<Heading>Loading data</Heading>} />
-                                          }
-                                        >
-                                          <LiquityFrontend />
-                                        </LiquityStoreProvider>
-                                      );
-                                    }}
-                                  </LiquityConsumer>
-                                </LiquityProvider>
-                              </HederaTokensProvider>
-                            </TransactionProvider>
-                          );
-                        }}
-                      </HashConnectSessionDataConsumer>
-                    )}
-                  </HashConnectConsumer>
-                </HashConnectSessionDataLoader>
+                                    >
+                                      <LiquityFrontend />
+                                    </LiquityStoreProvider>
+                                  );
+                                }}
+                              </LiquityConsumer>
+                            </LiquityProvider>
+                          </HederaTokensProvider>
+                        </TransactionProvider>
+                      </HashConnectSessionDataLoader>
+                    );
+                  }}
+                </HashConnectConnectionStateConsumer>
               </HashConnectLoader>
             </HashConnectProvider>
           </ConnectKitProvider>

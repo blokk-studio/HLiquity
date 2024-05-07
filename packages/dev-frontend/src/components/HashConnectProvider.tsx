@@ -1,9 +1,10 @@
-import { createContext, useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 import { DappMetadata, HashConnect, SessionData, HashConnectConnectionState } from "hashconnect";
 import { LedgerId } from "@hashgraph/sdk";
 import { getConsumer, getHook, getLoader, getOptionalHook } from "../optional_context";
 import { Flex, Heading, Paragraph } from "theme-ui";
 import { Icon } from "./Icon";
+import { t } from "../i18n";
 
 const appMetadata: DappMetadata = {
   description: "Decentralized borrowing Protocol on Hedera",
@@ -31,7 +32,6 @@ export const useHashConnect = getHook(hashConnectContext, {
 
 interface ExtendedHashConnectSessionData extends SessionData {
   userAccountEvmAddress: `0x${string}`;
-  connectionState: HashConnectConnectionState;
 }
 const hashConnectSessionDataContext = createContext<ExtendedHashConnectSessionData | null>(null);
 
@@ -45,14 +45,17 @@ export const useHashConnectSessionData = getHook(hashConnectSessionDataContext, 
   errorMessage: `the hashconnect session data hasn't been set in the context. make sure you have <HashConnectProvider> and <HashConnectSessionDataLoader> as ancestors of the components you call useHashConnectSessionData() in.`
 });
 
+const hashConnectConnectionStateContext = createContext(HashConnectConnectionState.Disconnected);
+export const useHashConnectConnectionState = () => useContext(hashConnectConnectionStateContext);
+export const HashConnectConnectionStateConsumer = hashConnectConnectionStateContext.Consumer;
+
 export const HashConnectProvider: React.FC<{ walletConnectProjectId: string }> = props => {
   const [hashConnect, setHashConnect] = useState<HashConnect | null>(null);
-  const [sessionData, setSessionData] = useState<SessionData | null>(null);
-  const [userAccountEvmAddress, setUserAccountEvmAddress] = useState<`0x${string}` | null>(null);
-  const [hashConnectError, setHashConnectError] = useState<Error | null>(null);
+  const [sessionData, setSessionData] = useState<ExtendedHashConnectSessionData | null>(null);
   const [connectionState, setConnectionState] = useState<HashConnectConnectionState>(
     HashConnectConnectionState.Disconnected
   );
+  const [hashConnectError, setHashConnectError] = useState<Error | null>(null);
 
   const setUpHashConnect = async (options: { walletConnectProjectId: string }) => {
     // TODO: handle all chains
@@ -74,33 +77,45 @@ export const HashConnectProvider: React.FC<{ walletConnectProjectId: string }> =
       );
       const { evm_address }: { evm_address: `0x${string}` } = await response.json();
 
-      setSessionData(data);
-      setUserAccountEvmAddress(evm_address);
+      const extendedSessionData: ExtendedHashConnectSessionData = {
+        ...data,
+        userAccountEvmAddress: evm_address
+      };
+
+      setSessionData(extendedSessionData);
     };
-    const unsetHashConnect = () => {
-      hashConnect.disconnectionEvent.off(unsetHashConnect);
+    const destroyHashConnect = () => {
       hashConnect.connectionStatusChangeEvent.off(updateConnectionState);
+      hashConnect.pairingEvent.off(updateSessionData);
+      hashConnect.disconnectionEvent.off(destroyHashConnect);
+
       setHashConnect(null);
       setSessionData(null);
-      setUserAccountEvmAddress(null);
       setConnectionState(HashConnectConnectionState.Disconnected);
+      setHashConnectError(null);
     };
 
     hashConnect.connectionStatusChangeEvent.on(updateConnectionState);
     hashConnect.pairingEvent.on(updateSessionData);
-    hashConnect.disconnectionEvent.on(unsetHashConnect);
+    hashConnect.disconnectionEvent.on(destroyHashConnect);
 
-    await hashConnect.init();
-
-    return hashConnect;
+    return { hashConnect, destroyHashConnect };
   };
 
   useEffect(() => {
+    let destroyEffect: () => void = () => undefined;
+
     const effect = async () => {
       try {
-        const hashConnect = await setUpHashConnect({
+        destroyEffect();
+
+        const { hashConnect, destroyHashConnect } = await setUpHashConnect({
           walletConnectProjectId: props.walletConnectProjectId
         });
+
+        destroyEffect = () => {
+          destroyHashConnect();
+        };
 
         const setUpHashConnectAgain = () => {
           hashConnect.disconnectionEvent.off(setUpHashConnectAgain);
@@ -109,21 +124,19 @@ export const HashConnectProvider: React.FC<{ walletConnectProjectId: string }> =
         };
 
         hashConnect.disconnectionEvent.on(setUpHashConnectAgain);
-        hashConnect.pairingEvent.on(pairingEvent => console.debug({ pairingEvent }));
-        hashConnect.disconnectionEvent.on(disconnectionEvent =>
-          console.debug({ disconnectionEvent })
-        );
-        hashConnect.connectionStatusChangeEvent.on(connectionStatusChangeEvent =>
-          console.debug({ connectionStatusChangeEvent })
-        );
+
+        await hashConnect.init();
 
         setHashConnect(hashConnect);
       } catch (error: unknown) {
+        setHashConnect(null);
         setHashConnectError(error as Error);
       }
     };
 
     effect();
+
+    return destroyEffect;
   }, [props.walletConnectProjectId]);
 
   if (hashConnectError) {
@@ -138,14 +151,12 @@ export const HashConnectProvider: React.FC<{ walletConnectProjectId: string }> =
       >
         <Heading sx={{ display: "flex", gap: "1rem", alignItems: "center" }}>
           <Icon name="exclamation-triangle" />
-          Something went wrong
+          {t("hashPackError.heading")}
         </Heading>
-        <Paragraph sx={{ marginTop: "1rem" }}>
-          Couldn't connect to HashPack. Please reload the page.
-        </Paragraph>
+        <Paragraph sx={{ marginTop: "1rem" }}>{t("hashPackError.infoText")}</Paragraph>
 
         <details style={{ marginTop: "3rem", width: "100%" }}>
-          <summary>Error details</summary>
+          <summary>{t("hashPackError.errorDetails")}</summary>
 
           <p>{hashConnectError.message}</p>
         </details>
@@ -153,20 +164,13 @@ export const HashConnectProvider: React.FC<{ walletConnectProjectId: string }> =
     );
   }
 
-  let sessionDataValue: ExtendedHashConnectSessionData | null = null;
-  if (sessionData && userAccountEvmAddress) {
-    sessionDataValue = {
-      ...sessionData,
-      userAccountEvmAddress,
-      connectionState
-    };
-  }
-
   return (
     <hashConnectContext.Provider value={hashConnect}>
-      <hashConnectSessionDataContext.Provider value={sessionDataValue}>
-        {props.children}
-      </hashConnectSessionDataContext.Provider>
+      <hashConnectConnectionStateContext.Provider value={connectionState}>
+        <hashConnectSessionDataContext.Provider value={sessionData}>
+          {props.children}
+        </hashConnectSessionDataContext.Provider>
+      </hashConnectConnectionStateContext.Provider>
     </hashConnectContext.Provider>
   );
 };

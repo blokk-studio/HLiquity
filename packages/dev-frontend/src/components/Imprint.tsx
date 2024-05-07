@@ -7,20 +7,20 @@ const listSX = {
   "& a": {
     display: "block",
     mb: 16,
-    fontSize: 20,
+    fontSize: 20
   },
   "& span": {
     display: "block",
     mb: 16,
-    fontSize: 20,
-  },
-}
+    fontSize: 20
+  }
+};
 
 export const Imprint: React.FC = () => {
-  const [email, setEmail] = useState('')
+  const [email, setEmail] = useState("");
   useEffect(() => {
-    setEmail(atob('aGVsbG9AYmxva2suc3R1ZGlv'))
-  }, [])
+    setEmail(atob("aGVsbG9AYmxva2suc3R1ZGlv"));
+  }, []);
 
   return (
     <ul sx={{ p: 0, listStyleType: "none", display: "inline-flex" }}>
@@ -56,5 +56,5 @@ export const Imprint: React.FC = () => {
         <Link href="/">GitHub</Link>
       </li>
     </ul>
-  )
+  );
 };
