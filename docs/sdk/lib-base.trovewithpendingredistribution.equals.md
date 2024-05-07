@@ -4,7 +4,7 @@
 
 ## TroveWithPendingRedistribution.equals() method
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 equals(that: TroveWithPendingRedistribution): boolean;
@@ -12,11 +12,38 @@ equals(that: TroveWithPendingRedistribution): boolean;
 
 ## Parameters
 
-|  Parameter | Type | Description |
-|  --- | --- | --- |
-|  that | [TroveWithPendingRedistribution](./lib-base.trovewithpendingredistribution.md) |  |
+<table><thead><tr><th>
 
-<b>Returns:</b>
+Parameter
+
+
+</th><th>
+
+Type
+
+
+</th><th>
+
+Description
+
+
+</th></tr></thead>
+<tbody><tr><td>
+
+that
+
+
+</td><td>
+
+[TroveWithPendingRedistribution](./lib-base.trovewithpendingredistribution.md)
+
+
+</td><td>
+
+
+</td></tr>
+</tbody></table>
+**Returns:**
 
 boolean
 

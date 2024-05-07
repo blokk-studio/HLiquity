@@ -6,7 +6,7 @@
 
 Details of an [openTrove()](./lib-base.transactableliquity.opentrove.md) transaction.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 export interface TroveCreationDetails 
@@ -14,9 +14,82 @@ export interface TroveCreationDetails
 
 ## Properties
 
-|  Property | Type | Description |
-|  --- | --- | --- |
-|  [fee](./lib-base.trovecreationdetails.fee.md) | [Decimal](./lib-base.decimal.md) | Amount of HCHF added to the Trove's debt as borrowing fee. |
-|  [newTrove](./lib-base.trovecreationdetails.newtrove.md) | [Trove](./lib-base.trove.md) | The Trove that was created by the transaction. |
-|  [params](./lib-base.trovecreationdetails.params.md) | [TroveCreationParams](./lib-base.trovecreationparams.md)<!-- -->&lt;[Decimal](./lib-base.decimal.md)<!-- -->&gt; | How much was deposited and borrowed. |
+<table><thead><tr><th>
 
+Property
+
+
+</th><th>
+
+Modifiers
+
+
+</th><th>
+
+Type
+
+
+</th><th>
+
+Description
+
+
+</th></tr></thead>
+<tbody><tr><td>
+
+[fee](./lib-base.trovecreationdetails.fee.md)
+
+
+</td><td>
+
+
+</td><td>
+
+[Decimal](./lib-base.decimal.md)
+
+
+</td><td>
+
+Amount of HCHF added to the Trove's debt as borrowing fee.
+
+
+</td></tr>
+<tr><td>
+
+[newTrove](./lib-base.trovecreationdetails.newtrove.md)
+
+
+</td><td>
+
+
+</td><td>
+
+[Trove](./lib-base.trove.md)
+
+
+</td><td>
+
+The Trove that was created by the transaction.
+
+
+</td></tr>
+<tr><td>
+
+[params](./lib-base.trovecreationdetails.params.md)
+
+
+</td><td>
+
+
+</td><td>
+
+[TroveCreationParams](./lib-base.trovecreationparams.md)<!-- -->&lt;[Decimal](./lib-base.decimal.md)<!-- -->&gt;
+
+
+</td><td>
+
+How much was deposited and borrowed.
+
+
+</td></tr>
+</tbody></table>

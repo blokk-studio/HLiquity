@@ -6,7 +6,7 @@
 
 Stake HLQT to start earning fee revenue or increase existing stake.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 stakeHLQT(amount: Decimalish): Promise<PopulatedLiquityTransaction<P, SentLiquityTransaction<S, LiquityReceipt<R, void>>>>;
@@ -14,14 +14,44 @@ stakeHLQT(amount: Decimalish): Promise<PopulatedLiquityTransaction<P, SentLiquit
 
 ## Parameters
 
-| Parameter | Type                                   | Description                                     |
-| --------- | -------------------------------------- | ----------------------------------------------- |
-| amount    | [Decimalish](./lib-base.decimalish.md) | Amount of HLQT to add to new or existing stake. |
+<table><thead><tr><th>
 
-<b>Returns:</b>
+Parameter
+
+
+</th><th>
+
+Type
+
+
+</th><th>
+
+Description
+
+
+</th></tr></thead>
+<tbody><tr><td>
+
+amount
+
+
+</td><td>
+
+[Decimalish](./lib-base.decimalish.md)
+
+
+</td><td>
+
+Amount of HLQT to add to new or existing stake.
+
+
+</td></tr>
+</tbody></table>
+**Returns:**
 
 Promise&lt;[PopulatedLiquityTransaction](./lib-base.populatedliquitytransaction.md)<!-- -->&lt;P, [SentLiquityTransaction](./lib-base.sentliquitytransaction.md)<!-- -->&lt;S, [LiquityReceipt](./lib-base.liquityreceipt.md)<!-- -->&lt;R, void&gt;&gt;&gt;&gt;
 
 ## Remarks
 
 As a side-effect, the transaction will also pay out an existing HLQT stake's [collateral gain](./lib-base.hlqtstake.collateralgain.md) and [HCHF gain](./lib-base.hlqtstake.hchfgain.md)<!-- -->.
+

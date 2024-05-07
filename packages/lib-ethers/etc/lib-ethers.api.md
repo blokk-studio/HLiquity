@@ -4,11 +4,17 @@
 
 ```ts
 
+import { BigNumber } from '@ethersproject/bignumber';
 import { BigNumberish } from '@ethersproject/bignumber';
 import { BlockTag } from '@ethersproject/abstract-provider';
+import { CallOverrides } from '@ethersproject/contracts';
 import { CollateralGainTransferDetails } from '@liquity/lib-base';
+import { Contract } from '@ethersproject/contracts';
+import { ContractInterface } from '@ethersproject/contracts';
+import { ContractTransaction } from '@ethersproject/contracts';
 import { Decimal } from '@liquity/lib-base';
 import { Decimalish } from '@liquity/lib-base';
+import { EventFilter } from '@ethersproject/contracts';
 import { FailedReceipt } from '@liquity/lib-base';
 import { Fees } from '@liquity/lib-base';
 import { FrontendStatus } from '@liquity/lib-base';
@@ -17,8 +23,12 @@ import { HLQTStake } from '@liquity/lib-base';
 import { LiquidationDetails } from '@liquity/lib-base';
 import { LiquityReceipt } from '@liquity/lib-base';
 import { LiquityStoreState } from '@liquity/lib-base';
+import { Log } from '@ethersproject/abstract-provider';
+import { LogDescription } from '@ethersproject/abi';
 import { MinedReceipt } from '@liquity/lib-base';
 import { ObservableLiquity } from '@liquity/lib-base';
+import { Overrides } from '@ethersproject/contracts';
+import { PayableOverrides } from '@ethersproject/contracts';
 import { PopulatableLiquity } from '@liquity/lib-base';
 import { PopulatedLiquityTransaction } from '@liquity/lib-base';
 import { PopulatedRedemption } from '@liquity/lib-base';
@@ -55,6 +65,8 @@ export class BlockPolledLiquityStore extends HLiquityStore<BlockPolledLiquitySto
     protected _doStart(): () => void;
     // @internal @override (undocumented)
     protected _reduceExtra(oldState: BlockPolledLiquityStoreExtraState, stateUpdate: Partial<BlockPolledLiquityStoreExtraState>): BlockPolledLiquityStoreExtraState;
+    // (undocumented)
+    refresh(): Promise<void>;
 }
 
 // @public
@@ -114,6 +126,8 @@ export class EthersLiquity implements ReadableEthersLiquity, TransactableLiquity
     }): EthersLiquityWithStore<BlockPolledLiquityStore>;
     // @internal (undocumented)
     static _from(connection: EthersLiquityConnection): EthersLiquity;
+    // (undocumented)
+    static fromConnectionOptionsWithBlockPolledStore(options: Omit<EthersLiquityConnectionOptions, "useStore">): EthersLiquityWithStore<BlockPolledLiquityStore>;
     // @internal (undocumented)
     _getActivePool(overrides?: EthersCallOverrides): Promise<Trove>;
     // (undocumented)
@@ -479,7 +493,7 @@ export const _redeemMaxIterations = 70;
 
 // @public
 export class SendableEthersLiquity implements SendableLiquity<EthersTransactionReceipt, EthersTransactionResponse> {
-    constructor(populatable: PopulatableEthersLiquity);
+    constructor(populatable: PopulatableEthersLiquity, store?: HLiquityStore);
     // (undocumented)
     adjustTrove(params: TroveAdjustmentParams<Decimalish>, maxBorrowingRate?: Decimalish, overrides?: EthersTransactionOverrides): Promise<SentEthersLiquityTransaction<TroveAdjustmentDetails>>;
     // (undocumented)
@@ -510,6 +524,8 @@ export class SendableEthersLiquity implements SendableLiquity<EthersTransactionR
     registerFrontend(kickbackRate: Decimalish, overrides?: EthersTransactionOverrides): Promise<SentEthersLiquityTransaction<void>>;
     // (undocumented)
     repayHCHF(amount: Decimalish, overrides?: EthersTransactionOverrides): Promise<SentEthersLiquityTransaction<TroveAdjustmentDetails>>;
+    // (undocumented)
+    sendTransaction: <T>(tx: PopulatedEthersLiquityTransaction<T>) => Promise<SentEthersLiquityTransaction<T>>;
     // @internal (undocumented)
     setPrice(price: Decimalish, overrides?: EthersTransactionOverrides): Promise<SentEthersLiquityTransaction<void>>;
     // (undocumented)

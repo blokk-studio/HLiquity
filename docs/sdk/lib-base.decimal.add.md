@@ -4,7 +4,7 @@
 
 ## Decimal.add() method
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 add(addend: Decimalish): Decimal;
@@ -12,11 +12,38 @@ add(addend: Decimalish): Decimal;
 
 ## Parameters
 
-|  Parameter | Type | Description |
-|  --- | --- | --- |
-|  addend | [Decimalish](./lib-base.decimalish.md) |  |
+<table><thead><tr><th>
 
-<b>Returns:</b>
+Parameter
+
+
+</th><th>
+
+Type
+
+
+</th><th>
+
+Description
+
+
+</th></tr></thead>
+<tbody><tr><td>
+
+addend
+
+
+</td><td>
+
+[Decimalish](./lib-base.decimalish.md)
+
+
+</td><td>
+
+
+</td></tr>
+</tbody></table>
+**Returns:**
 
 [Decimal](./lib-base.decimal.md)
 

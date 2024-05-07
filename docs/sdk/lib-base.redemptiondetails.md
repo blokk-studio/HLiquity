@@ -6,7 +6,7 @@
 
 Details of a [redeemHCHF()](./lib-base.transactableliquity.redeemhchf.md) transaction.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 export interface RedemptionDetails 
@@ -14,10 +14,101 @@ export interface RedemptionDetails
 
 ## Properties
 
-|  Property | Type | Description |
-|  --- | --- | --- |
-|  [actualHCHFAmount](./lib-base.redemptiondetails.actualhchfamount.md) | [Decimal](./lib-base.decimal.md) | Amount of HCHF that was actually redeemed by the transaction. |
-|  [attemptedHCHFAmount](./lib-base.redemptiondetails.attemptedhchfamount.md) | [Decimal](./lib-base.decimal.md) | Amount of HCHF the redeemer tried to redeem. |
-|  [collateralTaken](./lib-base.redemptiondetails.collateraltaken.md) | [Decimal](./lib-base.decimal.md) | Amount of collateral (e.g. Ether) taken from Troves by the transaction. |
-|  [fee](./lib-base.redemptiondetails.fee.md) | [Decimal](./lib-base.decimal.md) | Amount of native currency (e.g. Ether) deducted as fee from collateral taken. |
+<table><thead><tr><th>
 
+Property
+
+
+</th><th>
+
+Modifiers
+
+
+</th><th>
+
+Type
+
+
+</th><th>
+
+Description
+
+
+</th></tr></thead>
+<tbody><tr><td>
+
+[actualHCHFAmount](./lib-base.redemptiondetails.actualhchfamount.md)
+
+
+</td><td>
+
+
+</td><td>
+
+[Decimal](./lib-base.decimal.md)
+
+
+</td><td>
+
+Amount of HCHF that was actually redeemed by the transaction.
+
+
+</td></tr>
+<tr><td>
+
+[attemptedHCHFAmount](./lib-base.redemptiondetails.attemptedhchfamount.md)
+
+
+</td><td>
+
+
+</td><td>
+
+[Decimal](./lib-base.decimal.md)
+
+
+</td><td>
+
+Amount of HCHF the redeemer tried to redeem.
+
+
+</td></tr>
+<tr><td>
+
+[collateralTaken](./lib-base.redemptiondetails.collateraltaken.md)
+
+
+</td><td>
+
+
+</td><td>
+
+[Decimal](./lib-base.decimal.md)
+
+
+</td><td>
+
+Amount of collateral (e.g. Ether) taken from Troves by the transaction.
+
+
+</td></tr>
+<tr><td>
+
+[fee](./lib-base.redemptiondetails.fee.md)
+
+
+</td><td>
+
+
+</td><td>
+
+[Decimal](./lib-base.decimal.md)
+
+
+</td><td>
+
+Amount of native currency (e.g. Ether) deducted as fee from collateral taken.
+
+
+</td></tr>
+</tbody></table>

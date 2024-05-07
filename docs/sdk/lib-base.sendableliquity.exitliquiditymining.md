@@ -6,12 +6,12 @@
 
 Withdraw all staked LP tokens from liquidity mining and claim reward.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 exitLiquidityMining(): Promise<SentLiquityTransaction<S, LiquityReceipt<R, void>>>;
 ```
-<b>Returns:</b>
+**Returns:**
 
 Promise&lt;[SentLiquityTransaction](./lib-base.sentliquitytransaction.md)<!-- -->&lt;S, [LiquityReceipt](./lib-base.liquityreceipt.md)<!-- -->&lt;R, void&gt;&gt;&gt;
 

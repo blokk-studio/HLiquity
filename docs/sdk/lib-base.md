@@ -6,73 +6,650 @@
 
 ## Classes
 
-|  Class | Description |
-|  --- | --- |
-|  [Decimal](./lib-base.decimal.md) | Fixed-point decimal bignumber with 18 digits of precision. |
-|  [Fees](./lib-base.fees.md) | Calculator for fees. |
-|  [HLiquityStore](./lib-base.hliquitystore.md) | Abstract base class of Liquity data store implementations. |
-|  [HLQTStake](./lib-base.hlqtstake.md) | Represents a user's HLQT stake and accrued gains. |
-|  [StabilityDeposit](./lib-base.stabilitydeposit.md) | A Stability Deposit and its accrued gains. |
-|  [TransactionFailedError](./lib-base.transactionfailederror.md) | Thrown by [TransactableLiquity](./lib-base.transactableliquity.md) functions in case of transaction failure. |
-|  [Trove](./lib-base.trove.md) | A combination of collateral and debt. |
-|  [TroveWithPendingRedistribution](./lib-base.trovewithpendingredistribution.md) | A Trove in its state after the last direct modification. |
-|  [UserTrove](./lib-base.usertrove.md) | A Trove that is associated with a single owner. |
+<table><thead><tr><th>
+
+Class
+
+
+</th><th>
+
+Description
+
+
+</th></tr></thead>
+<tbody><tr><td>
+
+[Decimal](./lib-base.decimal.md)
+
+
+</td><td>
+
+Fixed-point decimal bignumber with 18 digits of precision.
+
+
+</td></tr>
+<tr><td>
+
+[Fees](./lib-base.fees.md)
+
+
+</td><td>
+
+Calculator for fees.
+
+
+</td></tr>
+<tr><td>
+
+[HLiquityStore](./lib-base.hliquitystore.md)
+
+
+</td><td>
+
+Abstract base class of Liquity data store implementations.
+
+
+</td></tr>
+<tr><td>
+
+[HLQTStake](./lib-base.hlqtstake.md)
+
+
+</td><td>
+
+Represents a user's HLQT stake and accrued gains.
+
+
+</td></tr>
+<tr><td>
+
+[StabilityDeposit](./lib-base.stabilitydeposit.md)
+
+
+</td><td>
+
+A Stability Deposit and its accrued gains.
+
+
+</td></tr>
+<tr><td>
+
+[TransactionFailedError](./lib-base.transactionfailederror.md)
+
+
+</td><td>
+
+Thrown by [TransactableLiquity](./lib-base.transactableliquity.md) functions in case of transaction failure.
+
+
+</td></tr>
+<tr><td>
+
+[Trove](./lib-base.trove.md)
+
+
+</td><td>
+
+A combination of collateral and debt.
+
+
+</td></tr>
+<tr><td>
+
+[TroveWithPendingRedistribution](./lib-base.trovewithpendingredistribution.md)
+
+
+</td><td>
+
+A Trove in its state after the last direct modification.
+
+
+</td></tr>
+<tr><td>
+
+[UserTrove](./lib-base.usertrove.md)
+
+
+</td><td>
+
+A Trove that is associated with a single owner.
+
+
+</td></tr>
+</tbody></table>
 
 ## Interfaces
 
-|  Interface | Description |
-|  --- | --- |
-|  [CollateralGainTransferDetails](./lib-base.collateralgaintransferdetails.md) | Details of a [transferCollateralGainToTrove()](./lib-base.transactableliquity.transfercollateralgaintotrove.md) transaction. |
-|  [LiquidationDetails](./lib-base.liquidationdetails.md) | Details of a [liquidate()](./lib-base.transactableliquity.liquidate.md) or [liquidateUpTo()](./lib-base.transactableliquity.liquidateupto.md) transaction. |
-|  [LiquityStoreBaseState](./lib-base.liquitystorebasestate.md) | State variables read from the blockchain. |
-|  [LiquityStoreDerivedState](./lib-base.liquitystorederivedstate.md) | State variables derived from [LiquityStoreBaseState](./lib-base.liquitystorebasestate.md)<!-- -->. |
-|  [LiquityStoreListenerParams](./lib-base.liquitystorelistenerparams.md) | Parameters passed to [HLiquityStore](./lib-base.hliquitystore.md) listeners. |
-|  [PopulatableLiquity](./lib-base.populatableliquity.md) | Prepare Liquity transactions for sending. |
-|  [PopulatedLiquityTransaction](./lib-base.populatedliquitytransaction.md) | A transaction that has been prepared for sending. |
-|  [PopulatedRedemption](./lib-base.populatedredemption.md) | A redemption transaction that has been prepared for sending. |
-|  [ReadableLiquity](./lib-base.readableliquity.md) | Read the state of the Liquity protocol. |
-|  [RedemptionDetails](./lib-base.redemptiondetails.md) | Details of a [redeemHCHF()](./lib-base.transactableliquity.redeemhchf.md) transaction. |
-|  [SendableLiquity](./lib-base.sendableliquity.md) | Send Liquity transactions. |
-|  [SentLiquityTransaction](./lib-base.sentliquitytransaction.md) | A transaction that has already been sent. |
-|  [StabilityDepositChangeDetails](./lib-base.stabilitydepositchangedetails.md) | Details of a [depositHCHFInStabilityPool()](./lib-base.transactableliquity.deposithchfinstabilitypool.md) or [withdrawHCHFFromStabilityPool()](./lib-base.transactableliquity.withdrawhchffromstabilitypool.md) transaction. |
-|  [StabilityPoolGainsWithdrawalDetails](./lib-base.stabilitypoolgainswithdrawaldetails.md) | Details of a [withdrawGainsFromStabilityPool()](./lib-base.transactableliquity.withdrawgainsfromstabilitypool.md) transaction. |
-|  [TransactableLiquity](./lib-base.transactableliquity.md) | Send Liquity transactions and wait for them to succeed. |
-|  [TroveAdjustmentDetails](./lib-base.troveadjustmentdetails.md) | Details of an [adjustTrove()](./lib-base.transactableliquity.adjusttrove.md) transaction. |
-|  [TroveClosureDetails](./lib-base.troveclosuredetails.md) | Details of a [closeTrove()](./lib-base.transactableliquity.closetrove.md) transaction. |
-|  [TroveCreationDetails](./lib-base.trovecreationdetails.md) | Details of an [openTrove()](./lib-base.transactableliquity.opentrove.md) transaction. |
-|  [TroveListingParams](./lib-base.trovelistingparams.md) | Parameters of the [getTroves()](./lib-base.readableliquity.gettroves_1.md) function. |
+<table><thead><tr><th>
+
+Interface
+
+
+</th><th>
+
+Description
+
+
+</th></tr></thead>
+<tbody><tr><td>
+
+[CollateralGainTransferDetails](./lib-base.collateralgaintransferdetails.md)
+
+
+</td><td>
+
+Details of a [transferCollateralGainToTrove()](./lib-base.transactableliquity.transfercollateralgaintotrove.md) transaction.
+
+
+</td></tr>
+<tr><td>
+
+[LiquidationDetails](./lib-base.liquidationdetails.md)
+
+
+</td><td>
+
+Details of a [liquidate()](./lib-base.transactableliquity.liquidate.md) or [liquidateUpTo()](./lib-base.transactableliquity.liquidateupto.md) transaction.
+
+
+</td></tr>
+<tr><td>
+
+[LiquityStoreBaseState](./lib-base.liquitystorebasestate.md)
+
+
+</td><td>
+
+State variables read from the blockchain.
+
+
+</td></tr>
+<tr><td>
+
+[LiquityStoreDerivedState](./lib-base.liquitystorederivedstate.md)
+
+
+</td><td>
+
+State variables derived from [LiquityStoreBaseState](./lib-base.liquitystorebasestate.md)<!-- -->.
+
+
+</td></tr>
+<tr><td>
+
+[LiquityStoreListenerParams](./lib-base.liquitystorelistenerparams.md)
+
+
+</td><td>
+
+Parameters passed to [HLiquityStore](./lib-base.hliquitystore.md) listeners.
+
+
+</td></tr>
+<tr><td>
+
+[PopulatableLiquity](./lib-base.populatableliquity.md)
+
+
+</td><td>
+
+Prepare Liquity transactions for sending.
+
+
+</td></tr>
+<tr><td>
+
+[PopulatedLiquityTransaction](./lib-base.populatedliquitytransaction.md)
+
+
+</td><td>
+
+A transaction that has been prepared for sending.
+
+
+</td></tr>
+<tr><td>
+
+[PopulatedRedemption](./lib-base.populatedredemption.md)
+
+
+</td><td>
+
+A redemption transaction that has been prepared for sending.
+
+
+</td></tr>
+<tr><td>
+
+[ReadableLiquity](./lib-base.readableliquity.md)
+
+
+</td><td>
+
+Read the state of the Liquity protocol.
+
+
+</td></tr>
+<tr><td>
+
+[RedemptionDetails](./lib-base.redemptiondetails.md)
+
+
+</td><td>
+
+Details of a [redeemHCHF()](./lib-base.transactableliquity.redeemhchf.md) transaction.
+
+
+</td></tr>
+<tr><td>
+
+[SendableLiquity](./lib-base.sendableliquity.md)
+
+
+</td><td>
+
+Send Liquity transactions.
+
+
+</td></tr>
+<tr><td>
+
+[SentLiquityTransaction](./lib-base.sentliquitytransaction.md)
+
+
+</td><td>
+
+A transaction that has already been sent.
+
+
+</td></tr>
+<tr><td>
+
+[StabilityDepositChangeDetails](./lib-base.stabilitydepositchangedetails.md)
+
+
+</td><td>
+
+Details of a [depositHCHFInStabilityPool()](./lib-base.transactableliquity.deposithchfinstabilitypool.md) or [withdrawHCHFFromStabilityPool()](./lib-base.transactableliquity.withdrawhchffromstabilitypool.md) transaction.
+
+
+</td></tr>
+<tr><td>
+
+[StabilityPoolGainsWithdrawalDetails](./lib-base.stabilitypoolgainswithdrawaldetails.md)
+
+
+</td><td>
+
+Details of a [withdrawGainsFromStabilityPool()](./lib-base.transactableliquity.withdrawgainsfromstabilitypool.md) transaction.
+
+
+</td></tr>
+<tr><td>
+
+[TransactableLiquity](./lib-base.transactableliquity.md)
+
+
+</td><td>
+
+Send Liquity transactions and wait for them to succeed.
+
+
+</td></tr>
+<tr><td>
+
+[TroveAdjustmentDetails](./lib-base.troveadjustmentdetails.md)
+
+
+</td><td>
+
+Details of an [adjustTrove()](./lib-base.transactableliquity.adjusttrove.md) transaction.
+
+
+</td></tr>
+<tr><td>
+
+[TroveClosureDetails](./lib-base.troveclosuredetails.md)
+
+
+</td><td>
+
+Details of a [closeTrove()](./lib-base.transactableliquity.closetrove.md) transaction.
+
+
+</td></tr>
+<tr><td>
+
+[TroveCreationDetails](./lib-base.trovecreationdetails.md)
+
+
+</td><td>
+
+Details of an [openTrove()](./lib-base.transactableliquity.opentrove.md) transaction.
+
+
+</td></tr>
+<tr><td>
+
+[TroveListingParams](./lib-base.trovelistingparams.md)
+
+
+</td><td>
+
+Parameters of the [getTroves()](./lib-base.readableliquity.gettroves_1.md) function.
+
+
+</td></tr>
+</tbody></table>
 
 ## Variables
 
-|  Variable | Description |
-|  --- | --- |
-|  [CRITICAL\_COLLATERAL\_RATIO](./lib-base.critical_collateral_ratio.md) | Total collateral ratio below which recovery mode is triggered. |
-|  [HCHF\_LIQUIDATION\_RESERVE](./lib-base.hchf_liquidation_reserve.md) | Amount of HCHF that's reserved for compensating the liquidator of a Trove. |
-|  [HCHF\_MINIMUM\_DEBT](./lib-base.hchf_minimum_debt.md) | A Trove must always have at least this much debt. |
-|  [HCHF\_MINIMUM\_NET\_DEBT](./lib-base.hchf_minimum_net_debt.md) | A Trove must always have at least this much debt on top of the [liquidation reserve](./lib-base.hchf_liquidation_reserve.md)<!-- -->. |
-|  [MAXIMUM\_BORROWING\_RATE](./lib-base.maximum_borrowing_rate.md) | Value that the [borrowing rate](./lib-base.fees.borrowingrate.md) will never exceed. |
-|  [MINIMUM\_BORROWING\_RATE](./lib-base.minimum_borrowing_rate.md) | Value that the [borrowing rate](./lib-base.fees.borrowingrate.md) will never decay below. |
-|  [MINIMUM\_COLLATERAL\_RATIO](./lib-base.minimum_collateral_ratio.md) | Collateral ratio below which a Trove can be liquidated in normal mode. |
-|  [MINIMUM\_REDEMPTION\_RATE](./lib-base.minimum_redemption_rate.md) | Value that the [redemption rate](./lib-base.fees.redemptionrate.md) will never decay below. |
+<table><thead><tr><th>
+
+Variable
+
+
+</th><th>
+
+Description
+
+
+</th></tr></thead>
+<tbody><tr><td>
+
+[BETA](./lib-base.beta.md)
+
+
+</td><td>
+
+
+</td></tr>
+<tr><td>
+
+[CRITICAL\_COLLATERAL\_RATIO](./lib-base.critical_collateral_ratio.md)
+
+
+</td><td>
+
+Total collateral ratio below which recovery mode is triggered.
+
+
+</td></tr>
+<tr><td>
+
+[HCHF\_LIQUIDATION\_RESERVE](./lib-base.hchf_liquidation_reserve.md)
+
+
+</td><td>
+
+Amount of HCHF that's reserved for compensating the liquidator of a Trove.
+
+
+</td></tr>
+<tr><td>
+
+[HCHF\_MINIMUM\_DEBT](./lib-base.hchf_minimum_debt.md)
+
+
+</td><td>
+
+A Trove must always have at least this much debt.
+
+
+</td></tr>
+<tr><td>
+
+[HCHF\_MINIMUM\_NET\_DEBT](./lib-base.hchf_minimum_net_debt.md)
+
+
+</td><td>
+
+A Trove must always have at least this much debt on top of the [liquidation reserve](./lib-base.hchf_liquidation_reserve.md)<!-- -->.
+
+
+</td></tr>
+<tr><td>
+
+[MAXIMUM\_BORROWING\_RATE](./lib-base.maximum_borrowing_rate.md)
+
+
+</td><td>
+
+Value that the [borrowing rate](./lib-base.fees.borrowingrate.md) will never exceed.
+
+
+</td></tr>
+<tr><td>
+
+[MINIMUM\_BORROWING\_RATE](./lib-base.minimum_borrowing_rate.md)
+
+
+</td><td>
+
+Value that the [borrowing rate](./lib-base.fees.borrowingrate.md) will never decay below.
+
+
+</td></tr>
+<tr><td>
+
+[MINIMUM\_COLLATERAL\_RATIO](./lib-base.minimum_collateral_ratio.md)
+
+
+</td><td>
+
+Collateral ratio below which a Trove can be liquidated in normal mode.
+
+
+</td></tr>
+<tr><td>
+
+[MINIMUM\_REDEMPTION\_RATE](./lib-base.minimum_redemption_rate.md)
+
+
+</td><td>
+
+Value that the [redemption rate](./lib-base.fees.redemptionrate.md) will never decay below.
+
+
+</td></tr>
+<tr><td>
+
+[MINUTE\_DECAY\_FACTOR](./lib-base.minute_decay_factor.md)
+
+
+</td><td>
+
+
+</td></tr>
+</tbody></table>
 
 ## Type Aliases
 
-|  Type Alias | Description |
-|  --- | --- |
-|  [Decimalish](./lib-base.decimalish.md) | Types that can be converted into a Decimal. |
-|  [FailedReceipt](./lib-base.failedreceipt.md) | Indicates that the transaction has been mined, but it failed. |
-|  [FrontendStatus](./lib-base.frontendstatus.md) | Represents whether an address has been registered as a Liquity frontend. |
-|  [HLQTStakeChange](./lib-base.hlqtstakechange.md) | Represents the change between two states of an HLQT Stake. |
-|  [LiquityReceipt](./lib-base.liquityreceipt.md) | One of either a [PendingReceipt](./lib-base.pendingreceipt.md)<!-- -->, a [FailedReceipt](./lib-base.failedreceipt.md) or a [SuccessfulReceipt](./lib-base.successfulreceipt.md)<!-- -->. |
-|  [LiquityStoreState](./lib-base.liquitystorestate.md) | Type of [HLiquityStore](./lib-base.hliquitystore.md)<!-- -->'s [state](./lib-base.hliquitystore.state.md)<!-- -->. |
-|  [MinedReceipt](./lib-base.minedreceipt.md) | Either a [FailedReceipt](./lib-base.failedreceipt.md) or a [SuccessfulReceipt](./lib-base.successfulreceipt.md)<!-- -->. |
-|  [PendingReceipt](./lib-base.pendingreceipt.md) | Indicates that the transaction hasn't been mined yet. |
-|  [StabilityDepositChange](./lib-base.stabilitydepositchange.md) | Represents the change between two Stability Deposit states. |
-|  [SuccessfulReceipt](./lib-base.successfulreceipt.md) | Indicates that the transaction has succeeded. |
-|  [TroveAdjustmentParams](./lib-base.troveadjustmentparams.md) | Parameters of an [adjustTrove()](./lib-base.transactableliquity.adjusttrove.md) transaction. |
-|  [TroveChange](./lib-base.trovechange.md) | Represents the change between two Trove states. |
-|  [TroveClosureParams](./lib-base.troveclosureparams.md) | Parameters of a [closeTrove()](./lib-base.transactableliquity.closetrove.md) transaction. |
-|  [TroveCreationError](./lib-base.trovecreationerror.md) | Describes why a Trove could not be created. |
-|  [TroveCreationParams](./lib-base.trovecreationparams.md) | Parameters of an [openTrove()](./lib-base.transactableliquity.opentrove.md) transaction. |
-|  [UserTroveStatus](./lib-base.usertrovestatus.md) | Represents whether a UserTrove is open or not, or why it was closed. |
+<table><thead><tr><th>
 
+Type Alias
+
+
+</th><th>
+
+Description
+
+
+</th></tr></thead>
+<tbody><tr><td>
+
+[Decimalish](./lib-base.decimalish.md)
+
+
+</td><td>
+
+Types that can be converted into a Decimal.
+
+
+</td></tr>
+<tr><td>
+
+[FailedReceipt](./lib-base.failedreceipt.md)
+
+
+</td><td>
+
+Indicates that the transaction has been mined, but it failed.
+
+
+</td></tr>
+<tr><td>
+
+[FrontendStatus](./lib-base.frontendstatus.md)
+
+
+</td><td>
+
+Represents whether an address has been registered as a Liquity frontend.
+
+
+</td></tr>
+<tr><td>
+
+[HLQTStakeChange](./lib-base.hlqtstakechange.md)
+
+
+</td><td>
+
+Represents the change between two states of an HLQT Stake.
+
+
+</td></tr>
+<tr><td>
+
+[LiquityReceipt](./lib-base.liquityreceipt.md)
+
+
+</td><td>
+
+One of either a [PendingReceipt](./lib-base.pendingreceipt.md)<!-- -->, a [FailedReceipt](./lib-base.failedreceipt.md) or a [SuccessfulReceipt](./lib-base.successfulreceipt.md)<!-- -->.
+
+
+</td></tr>
+<tr><td>
+
+[LiquityStoreState](./lib-base.liquitystorestate.md)
+
+
+</td><td>
+
+Type of [HLiquityStore](./lib-base.hliquitystore.md)<!-- -->'s [state](./lib-base.hliquitystore.state.md)<!-- -->.
+
+
+</td></tr>
+<tr><td>
+
+[MinedReceipt](./lib-base.minedreceipt.md)
+
+
+</td><td>
+
+Either a [FailedReceipt](./lib-base.failedreceipt.md) or a [SuccessfulReceipt](./lib-base.successfulreceipt.md)<!-- -->.
+
+
+</td></tr>
+<tr><td>
+
+[PendingReceipt](./lib-base.pendingreceipt.md)
+
+
+</td><td>
+
+Indicates that the transaction hasn't been mined yet.
+
+
+</td></tr>
+<tr><td>
+
+[StabilityDepositChange](./lib-base.stabilitydepositchange.md)
+
+
+</td><td>
+
+Represents the change between two Stability Deposit states.
+
+
+</td></tr>
+<tr><td>
+
+[SuccessfulReceipt](./lib-base.successfulreceipt.md)
+
+
+</td><td>
+
+Indicates that the transaction has succeeded.
+
+
+</td></tr>
+<tr><td>
+
+[TroveAdjustmentParams](./lib-base.troveadjustmentparams.md)
+
+
+</td><td>
+
+Parameters of an [adjustTrove()](./lib-base.transactableliquity.adjusttrove.md) transaction.
+
+
+</td></tr>
+<tr><td>
+
+[TroveChange](./lib-base.trovechange.md)
+
+
+</td><td>
+
+Represents the change between two Trove states.
+
+
+</td></tr>
+<tr><td>
+
+[TroveClosureParams](./lib-base.troveclosureparams.md)
+
+
+</td><td>
+
+Parameters of a [closeTrove()](./lib-base.transactableliquity.closetrove.md) transaction.
+
+
+</td></tr>
+<tr><td>
+
+[TroveCreationError](./lib-base.trovecreationerror.md)
+
+
+</td><td>
+
+Describes why a Trove could not be created.
+
+
+</td></tr>
+<tr><td>
+
+[TroveCreationParams](./lib-base.trovecreationparams.md)
+
+
+</td><td>
+
+Parameters of an [openTrove()](./lib-base.transactableliquity.opentrove.md) transaction.
+
+
+</td></tr>
+<tr><td>
+
+[UserTroveStatus](./lib-base.usertrovestatus.md)
+
+
+</td><td>
+
+Represents whether a UserTrove is open or not, or why it was closed.
+
+
+</td></tr>
+</tbody></table>

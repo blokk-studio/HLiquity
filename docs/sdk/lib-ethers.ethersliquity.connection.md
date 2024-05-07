@@ -6,7 +6,7 @@
 
 Information about the connection to the Liquity protocol.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 readonly connection: EthersLiquityConnection;

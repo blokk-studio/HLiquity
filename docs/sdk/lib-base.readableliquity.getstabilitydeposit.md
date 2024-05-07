@@ -6,7 +6,7 @@
 
 Get the current state of a Stability Deposit.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 getStabilityDeposit(address?: string): Promise<StabilityDeposit>;
@@ -14,11 +14,40 @@ getStabilityDeposit(address?: string): Promise<StabilityDeposit>;
 
 ## Parameters
 
-|  Parameter | Type | Description |
-|  --- | --- | --- |
-|  address | string | Address that owns the Stability Deposit. |
+<table><thead><tr><th>
 
-<b>Returns:</b>
+Parameter
+
+
+</th><th>
+
+Type
+
+
+</th><th>
+
+Description
+
+
+</th></tr></thead>
+<tbody><tr><td>
+
+address
+
+
+</td><td>
+
+string
+
+
+</td><td>
+
+Address that owns the Stability Deposit.
+
+
+</td></tr>
+</tbody></table>
+**Returns:**
 
 Promise&lt;[StabilityDeposit](./lib-base.stabilitydeposit.md)<!-- -->&gt;
 

@@ -6,7 +6,7 @@
 
 Total collateral and debt in the Liquity system.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 total: Trove;

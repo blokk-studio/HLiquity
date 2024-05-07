@@ -4,6 +4,9 @@
 
 ```ts
 
+// @public (undocumented)
+export const BETA: Decimal;
+
 // @internal (undocumented)
 export class _CachedReadableLiquity<T extends unknown[]> implements _ReadableLiquityWithExtraParams<T> {
     constructor(readable: _ReadableLiquityWithExtraParams<T>, cache: _LiquityReadCache<T>);
@@ -107,6 +110,8 @@ export class Decimal {
     static from(decimalish: Decimalish): Decimal;
     // (undocumented)
     static fromBigNumberString(bigNumberString: string): Decimal;
+    // (undocumented)
+    static fromBigNumberStringWithPrecision(bigNumberString: string, precision: number): Decimal;
     // (undocumented)
     gt(that: Decimalish): boolean;
     // (undocumented)
@@ -246,6 +251,8 @@ export abstract class HLiquityStore<T = unknown> {
     onLoaded?: () => void;
     // @internal (undocumented)
     protected abstract _reduceExtra(extraState: T, extraStateUpdate: Partial<T>): T;
+    // (undocumented)
+    abstract refresh(): Promise<void>;
     start(): () => void;
     get state(): LiquityStoreState<T>;
     subscribe(listener: (params: LiquityStoreListenerParams<T>) => void): () => void;
@@ -370,6 +377,9 @@ export const MINIMUM_COLLATERAL_RATIO: Decimal;
 
 // @public
 export const MINIMUM_REDEMPTION_RATE: Decimal;
+
+// @public (undocumented)
+export const MINUTE_DECAY_FACTOR: Decimal;
 
 // @internal (undocumented)
 export type _NoCollateralChange = _NoCollateralDeposit & _NoCollateralWithdrawal;

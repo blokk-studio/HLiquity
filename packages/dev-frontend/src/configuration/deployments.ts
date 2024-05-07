@@ -1,13 +1,51 @@
-import { _LiquityDeploymentJSON } from "@liquity/lib-ethers/dist/src/contracts";
+import { useHederaChain } from "../hedera/wagmi-chains";
 import { enabledChainIds } from "./enabled_chains";
 import { useChainId } from "wagmi";
+
+export type Address = `0x${string}`;
+
+export type DeploymentAddressesKey =
+  | "activePool"
+  | "borrowerOperations"
+  | "troveManager"
+  | "hchfToken"
+  | "collSurplusPool"
+  | "communityIssuance"
+  | "defaultPool"
+  | "hlqtToken"
+  | "hintHelpers"
+  | "lockupContractFactory"
+  | "hlqtStaking"
+  | "multiTroveGetter"
+  | "priceFeed"
+  | "sortedTroves"
+  | "stabilityPool"
+  | "gasPool"
+  | "unipool";
+// | 'uniToken'
+
+export interface Deployment {
+  readonly chainId: number;
+  readonly addresses: Record<DeploymentAddressesKey, Address>;
+  readonly version: string;
+  readonly deploymentDate: number;
+  readonly bootstrapPeriod: number;
+  readonly totalStabilityPoolHLQTReward: string;
+  readonly liquidityMiningHLQTRewardRate: string;
+  readonly _priceFeedIsTestnet: boolean;
+  readonly _uniTokenIsMock: boolean;
+  readonly _isDev: boolean;
+  readonly hchfTokenAddress: Address;
+  readonly hlqtTokenAddress: Address;
+  readonly frontendTag: Address;
+}
 
 const parseDeploymentsFromEnv = (
   enabledChainIds: number[],
   env: Record<string, string>
-): _LiquityDeploymentJSON[] => {
+): Deployment[] => {
   // parse deployments
-  const deployments: _LiquityDeploymentJSON[] = [];
+  const deployments: Deployment[] = [];
   for (const chainId of enabledChainIds) {
     const deploymentJsonString: string | undefined = env[`VITE_CHAIN_${chainId}_DEPLOYMENT`];
 
@@ -19,7 +57,7 @@ const parseDeploymentsFromEnv = (
     }
 
     try {
-      const deployment: _LiquityDeploymentJSON = JSON.parse(deploymentJsonString);
+      const deployment: Deployment = JSON.parse(deploymentJsonString);
       deployments.push(deployment);
     } catch (error: unknown) {
       console.warn(
@@ -42,7 +80,18 @@ export const useDeployments = () => {
 
 /** returns the deployment for the chain that is currently selected by wagmi */
 export const useDeployment = () => {
-  const chainId = useChainId();
+  const chain = useHederaChain();
+
+  if (!chain) {
+    const errorMessage = `i need a chain to get a deployment. useHederaChain() returned ${JSON.stringify(
+      chain
+    )}`;
+    console.error(errorMessage, { deployments });
+
+    return null;
+  }
+
+  const chainId = chain.id;
   const deployment = deployments.find(deployment => deployment.chainId === chainId);
 
   if (!deployment) {

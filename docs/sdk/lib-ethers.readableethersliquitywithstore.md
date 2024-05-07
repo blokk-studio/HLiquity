@@ -6,16 +6,53 @@
 
 Variant of [ReadableEthersLiquity](./lib-ethers.readableethersliquity.md) that exposes a [HLiquityStore](./lib-base.hliquitystore.md)<!-- -->.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 export interface ReadableEthersLiquityWithStore<T extends HLiquityStore = HLiquityStore> extends ReadableEthersLiquity 
 ```
-<b>Extends:</b> [ReadableEthersLiquity](./lib-ethers.readableethersliquity.md)
+**Extends:** [ReadableEthersLiquity](./lib-ethers.readableethersliquity.md)
 
 ## Properties
 
-|  Property | Type | Description |
-|  --- | --- | --- |
-|  [store](./lib-ethers.readableethersliquitywithstore.store.md) | T | An object that implements HLiquityStore. |
+<table><thead><tr><th>
 
+Property
+
+
+</th><th>
+
+Modifiers
+
+
+</th><th>
+
+Type
+
+
+</th><th>
+
+Description
+
+
+</th></tr></thead>
+<tbody><tr><td>
+
+[store](./lib-ethers.readableethersliquitywithstore.store.md)
+
+
+</td><td>
+
+
+</td><td>
+
+T
+
+
+</td><td>
+
+An object that implements HLiquityStore.
+
+
+</td></tr>
+</tbody></table>

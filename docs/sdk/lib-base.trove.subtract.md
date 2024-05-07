@@ -4,7 +4,7 @@
 
 ## Trove.subtract() method
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 subtract(that: Trove): Trove;
@@ -12,11 +12,38 @@ subtract(that: Trove): Trove;
 
 ## Parameters
 
-|  Parameter | Type | Description |
-|  --- | --- | --- |
-|  that | [Trove](./lib-base.trove.md) |  |
+<table><thead><tr><th>
 
-<b>Returns:</b>
+Parameter
+
+
+</th><th>
+
+Type
+
+
+</th><th>
+
+Description
+
+
+</th></tr></thead>
+<tbody><tr><td>
+
+that
+
+
+</td><td>
+
+[Trove](./lib-base.trove.md)
+
+
+</td><td>
+
+
+</td></tr>
+</tbody></table>
+**Returns:**
 
 [Trove](./lib-base.trove.md)
 

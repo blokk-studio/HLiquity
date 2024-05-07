@@ -6,12 +6,12 @@
 
 Type of [HLiquityStore](./lib-base.hliquitystore.md)<!-- -->'s [state](./lib-base.hliquitystore.state.md)<!-- -->.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 export declare type LiquityStoreState<T = unknown> = LiquityStoreBaseState & LiquityStoreDerivedState & T;
 ```
-<b>References:</b> [LiquityStoreBaseState](./lib-base.liquitystorebasestate.md)<!-- -->, [LiquityStoreDerivedState](./lib-base.liquitystorederivedstate.md)
+**References:** [LiquityStoreBaseState](./lib-base.liquitystorebasestate.md)<!-- -->, [LiquityStoreDerivedState](./lib-base.liquitystorederivedstate.md)
 
 ## Remarks
 

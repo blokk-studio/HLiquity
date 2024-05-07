@@ -6,7 +6,7 @@
 
 Calculator for fees.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 export declare class Fees 
@@ -20,9 +20,62 @@ The constructor for this class is marked as internal. Third-party code should no
 
 ## Methods
 
-|  Method | Modifiers | Description |
-|  --- | --- | --- |
-|  [borrowingRate(when)](./lib-base.fees.borrowingrate.md) |  | Calculate the current borrowing rate. |
-|  [equals(that)](./lib-base.fees.equals.md) |  | Compare to another instance of <code>Fees</code>. |
-|  [redemptionRate(redeemedFractionOfSupply, when)](./lib-base.fees.redemptionrate.md) |  | Calculate the current redemption rate. |
+<table><thead><tr><th>
 
+Method
+
+
+</th><th>
+
+Modifiers
+
+
+</th><th>
+
+Description
+
+
+</th></tr></thead>
+<tbody><tr><td>
+
+[borrowingRate(when)](./lib-base.fees.borrowingrate.md)
+
+
+</td><td>
+
+
+</td><td>
+
+Calculate the current borrowing rate.
+
+
+</td></tr>
+<tr><td>
+
+[equals(that)](./lib-base.fees.equals.md)
+
+
+</td><td>
+
+
+</td><td>
+
+Compare to another instance of `Fees`<!-- -->.
+
+
+</td></tr>
+<tr><td>
+
+[redemptionRate(redeemedFractionOfSupply, when)](./lib-base.fees.redemptionrate.md)
+
+
+</td><td>
+
+
+</td><td>
+
+Calculate the current redemption rate.
+
+
+</td></tr>
+</tbody></table>

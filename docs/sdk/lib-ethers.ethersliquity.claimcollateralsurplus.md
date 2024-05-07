@@ -6,7 +6,7 @@
 
 Claim leftover collateral after a liquidation or redemption.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 claimCollateralSurplus(overrides?: EthersTransactionOverrides): Promise<void>;
@@ -14,11 +14,38 @@ claimCollateralSurplus(overrides?: EthersTransactionOverrides): Promise<void>;
 
 ## Parameters
 
-|  Parameter | Type | Description |
-|  --- | --- | --- |
-|  overrides | [EthersTransactionOverrides](./lib-ethers.etherstransactionoverrides.md) |  |
+<table><thead><tr><th>
 
-<b>Returns:</b>
+Parameter
+
+
+</th><th>
+
+Type
+
+
+</th><th>
+
+Description
+
+
+</th></tr></thead>
+<tbody><tr><td>
+
+overrides
+
+
+</td><td>
+
+[EthersTransactionOverrides](./lib-ethers.etherstransactionoverrides.md)
+
+
+</td><td>
+
+
+</td></tr>
+</tbody></table>
+**Returns:**
 
 Promise&lt;void&gt;
 

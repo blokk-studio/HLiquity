@@ -6,7 +6,7 @@
 
 Calculate the current borrowing rate.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 borrowingRate(when?: Date): Decimal;
@@ -14,11 +14,40 @@ borrowingRate(when?: Date): Decimal;
 
 ## Parameters
 
-|  Parameter | Type | Description |
-|  --- | --- | --- |
-|  when | Date | Optional timestamp that can be used to calculate what the borrowing rate would decay to at a point of time in the future. |
+<table><thead><tr><th>
 
-<b>Returns:</b>
+Parameter
+
+
+</th><th>
+
+Type
+
+
+</th><th>
+
+Description
+
+
+</th></tr></thead>
+<tbody><tr><td>
+
+when
+
+
+</td><td>
+
+Date
+
+
+</td><td>
+
+Optional timestamp that can be used to calculate what the borrowing rate would decay to at a point of time in the future.
+
+
+</td></tr>
+</tbody></table>
+**Returns:**
 
 [Decimal](./lib-base.decimal.md)
 
@@ -37,6 +66,5 @@ const fees = await liquity.getFees();
 const borrowedHCHFAmount = 100;
 const borrowingRate = fees.borrowingRate();
 const borrowingFeeHCHF = borrowingRate.mul(borrowedHCHFAmount);
-
 ```
 

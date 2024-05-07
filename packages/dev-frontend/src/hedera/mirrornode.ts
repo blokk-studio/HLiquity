@@ -1,6 +1,9 @@
+import { ContractId } from "@hashgraph/sdk";
+
 interface HederaApiToken {
   token_id: `0.0.${string}`;
 }
+
 interface HederaApiTokensData {
   tokens: HederaApiToken[];
 }
@@ -41,4 +44,17 @@ export const fetchTokens = async (options: {
   });
 
   return tokens;
+};
+
+const getMirrorNode = (options: { baseUrl: string }) => {
+  const { baseUrl } = options;
+  const callContract = async (options: { contractId: ContractId }) => {
+    const body = {};
+    const response = await fetch(`${baseUrl}/contracts/call`, {
+      method: "post",
+      body: JSON.stringify(body)
+    });
+  };
+
+  return {};
 };

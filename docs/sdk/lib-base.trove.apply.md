@@ -6,7 +6,7 @@
 
 Make a new Trove by applying a [TroveChange](./lib-base.trovechange.md) to this Trove.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 apply(change: TroveChange<Decimal> | undefined, borrowingRate?: Decimalish): Trove;
@@ -14,12 +14,56 @@ apply(change: TroveChange<Decimal> | undefined, borrowingRate?: Decimalish): Tro
 
 ## Parameters
 
-|  Parameter | Type | Description |
-|  --- | --- | --- |
-|  change | [TroveChange](./lib-base.trovechange.md)<!-- -->&lt;[Decimal](./lib-base.decimal.md)<!-- -->&gt; \| undefined | The change to apply. |
-|  borrowingRate | [Decimalish](./lib-base.decimalish.md) | Borrowing rate to use when adding a borrowed amount to the Trove's debt. |
+<table><thead><tr><th>
 
-<b>Returns:</b>
+Parameter
+
+
+</th><th>
+
+Type
+
+
+</th><th>
+
+Description
+
+
+</th></tr></thead>
+<tbody><tr><td>
+
+change
+
+
+</td><td>
+
+[TroveChange](./lib-base.trovechange.md)<!-- -->&lt;[Decimal](./lib-base.decimal.md)<!-- -->&gt; \| undefined
+
+
+</td><td>
+
+The change to apply.
+
+
+</td></tr>
+<tr><td>
+
+borrowingRate
+
+
+</td><td>
+
+[Decimalish](./lib-base.decimalish.md)
+
+
+</td><td>
+
+Borrowing rate to use when adding a borrowed amount to the Trove's debt.
+
+
+</td></tr>
+</tbody></table>
+**Returns:**
 
 [Trove](./lib-base.trove.md)
 

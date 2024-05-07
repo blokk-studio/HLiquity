@@ -6,7 +6,7 @@
 
 Register current wallet address as a Liquity frontend.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 registerFrontend(kickbackRate: Decimalish): Promise<void>;
@@ -14,11 +14,40 @@ registerFrontend(kickbackRate: Decimalish): Promise<void>;
 
 ## Parameters
 
-|  Parameter | Type | Description |
-|  --- | --- | --- |
-|  kickbackRate | [Decimalish](./lib-base.decimalish.md) | The portion of HLQT rewards to pass onto users of the frontend (between 0 and 1). |
+<table><thead><tr><th>
 
-<b>Returns:</b>
+Parameter
+
+
+</th><th>
+
+Type
+
+
+</th><th>
+
+Description
+
+
+</th></tr></thead>
+<tbody><tr><td>
+
+kickbackRate
+
+
+</td><td>
+
+[Decimalish](./lib-base.decimalish.md)
+
+
+</td><td>
+
+The portion of HLQT rewards to pass onto users of the frontend (between 0 and 1).
+
+
+</td></tr>
+</tbody></table>
+**Returns:**
 
 Promise&lt;void&gt;
 

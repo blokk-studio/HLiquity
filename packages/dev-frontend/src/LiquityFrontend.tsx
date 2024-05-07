@@ -26,11 +26,7 @@ import { Imprint } from "./components/Imprint";
 import { AutomaticDevelopmentDebugMenu } from "./components/DevelopmentDebugMenu";
 import { Dashboard } from "./pages/Dashboard";
 
-type LiquityFrontendProps = {
-  loader?: React.ReactNode;
-};
-
-export const LiquityFrontend: React.FC<LiquityFrontendProps> = ({ loader }) => {
+export const LiquityFrontend: React.FC = () => {
   const { account: accountAddress, provider, liquity } = useLiquity();
 
   // For console tinkering ;-)
@@ -45,46 +41,44 @@ export const LiquityFrontend: React.FC<LiquityFrontendProps> = ({ loader }) => {
   });
 
   return (
-    <LiquityStoreProvider {...{ loader }} store={liquity.store}>
-      {
-        <Router>
-          <TroveViewProvider>
-            <StabilityViewProvider>
-              <StakingViewProvider>
-                <BondsProvider>
-                  <Flex sx={{ flexDirection: "column", minHeight: "100%" }}>
-                    <Header>
-                      <UserAccount />
-                      <SystemStatsPopup />
-                    </Header>
+    <>
+      <Router>
+        <TroveViewProvider>
+          <StabilityViewProvider>
+            <StakingViewProvider>
+              <BondsProvider>
+                <Flex sx={{ flexDirection: "column", minHeight: "100%" }}>
+                  <Header>
+                    <UserAccount />
+                    <SystemStatsPopup />
+                  </Header>
 
-                    <Container
-                      variant="main"
-                      sx={{
-                        display: "flex",
-                        flexGrow: 1,
-                        flexDirection: "column",
-                        alignItems: "center"
-                      }}
-                    >
-                      <PageSwitcher>
-                        <Switch>
-                          <Route path="/" exact>
-                            <Dashboard />
-                          </Route>
-                          <Route path="/risky-troves">
-                            <RiskyTrovesPage />
-                          </Route>
-                        </Switch>
-                      </PageSwitcher>
-                    </Container>
-                  </Flex>
-                </BondsProvider>
-              </StakingViewProvider>
-            </StabilityViewProvider>
-          </TroveViewProvider>
-        </Router>
-      }
+                  <Container
+                    variant="main"
+                    sx={{
+                      display: "flex",
+                      flexGrow: 1,
+                      flexDirection: "column",
+                      alignItems: "center"
+                    }}
+                  >
+                    <PageSwitcher>
+                      <Switch>
+                        <Route path="/" exact>
+                          <Dashboard />
+                        </Route>
+                        <Route path="/risky-troves">
+                          <RiskyTrovesPage />
+                        </Route>
+                      </Switch>
+                    </PageSwitcher>
+                  </Container>
+                </Flex>
+              </BondsProvider>
+            </StakingViewProvider>
+          </StabilityViewProvider>
+        </TroveViewProvider>
+      </Router>
 
       <footer sx={{ marginInline: "clamp(2rem, 100%, 50% - 38rem)", paddingBottom: "2rem" }}>
         <Imprint />
@@ -92,6 +86,6 @@ export const LiquityFrontend: React.FC<LiquityFrontendProps> = ({ loader }) => {
 
       <TransactionMonitor />
       <AutomaticDevelopmentDebugMenu />
-    </LiquityStoreProvider>
+    </>
   );
 };

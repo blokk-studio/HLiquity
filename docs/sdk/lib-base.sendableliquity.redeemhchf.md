@@ -6,7 +6,7 @@
 
 Redeem HCHF to native currency (e.g. Ether) at face value.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 redeemHCHF(amount: Decimalish, maxRedemptionRate?: Decimalish): Promise<SentLiquityTransaction<S, LiquityReceipt<R, RedemptionDetails>>>;
@@ -14,12 +14,56 @@ redeemHCHF(amount: Decimalish, maxRedemptionRate?: Decimalish): Promise<SentLiqu
 
 ## Parameters
 
-|  Parameter | Type | Description |
-|  --- | --- | --- |
-|  amount | [Decimalish](./lib-base.decimalish.md) | Amount of HCHF to be redeemed. |
-|  maxRedemptionRate | [Decimalish](./lib-base.decimalish.md) | Maximum acceptable [redemption rate](./lib-base.fees.redemptionrate.md)<!-- -->. |
+<table><thead><tr><th>
 
-<b>Returns:</b>
+Parameter
+
+
+</th><th>
+
+Type
+
+
+</th><th>
+
+Description
+
+
+</th></tr></thead>
+<tbody><tr><td>
+
+amount
+
+
+</td><td>
+
+[Decimalish](./lib-base.decimalish.md)
+
+
+</td><td>
+
+Amount of HCHF to be redeemed.
+
+
+</td></tr>
+<tr><td>
+
+maxRedemptionRate
+
+
+</td><td>
+
+[Decimalish](./lib-base.decimalish.md)
+
+
+</td><td>
+
+Maximum acceptable [redemption rate](./lib-base.fees.redemptionrate.md)<!-- -->.
+
+
+</td></tr>
+</tbody></table>
+**Returns:**
 
 Promise&lt;[SentLiquityTransaction](./lib-base.sentliquitytransaction.md)<!-- -->&lt;S, [LiquityReceipt](./lib-base.liquityreceipt.md)<!-- -->&lt;R, [RedemptionDetails](./lib-base.redemptiondetails.md)<!-- -->&gt;&gt;&gt;
 

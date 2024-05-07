@@ -6,12 +6,12 @@
 
 Information about a connection to the Liquity protocol.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 export interface EthersLiquityConnection extends EthersLiquityConnectionOptionalParams 
 ```
-<b>Extends:</b> [EthersLiquityConnectionOptionalParams](./lib-ethers.ethersliquityconnectionoptionalparams.md)
+**Extends:** [EthersLiquityConnectionOptionalParams](./lib-ethers.ethersliquityconnectionoptionalparams.md)
 
 ## Remarks
 
@@ -21,15 +21,196 @@ Exposed through [ReadableEthersLiquity.connection](./lib-ethers.readableethersli
 
 ## Properties
 
-|  Property | Type | Description |
-|  --- | --- | --- |
-|  [addresses](./lib-ethers.ethersliquityconnection.addresses.md) | Record&lt;string, string&gt; | A mapping of Liquity contracts' names to their addresses. |
-|  [bootstrapPeriod](./lib-ethers.ethersliquityconnection.bootstrapperiod.md) | number | Time period (in seconds) after <code>deploymentDate</code> during which redemptions are disabled. |
-|  [chainId](./lib-ethers.ethersliquityconnection.chainid.md) | number | Chain ID of the connected network. |
-|  [deploymentDate](./lib-ethers.ethersliquityconnection.deploymentdate.md) | Date | Date when the Liquity contracts were deployed. |
-|  [liquidityMiningHLQTRewardRate](./lib-ethers.ethersliquityconnection.liquiditymininghlqtrewardrate.md) | [Decimal](./lib-base.decimal.md) | Amount of HLQT collectively rewarded to stakers of the liquidity mining pool per second. |
-|  [provider](./lib-ethers.ethersliquityconnection.provider.md) | [EthersProvider](./lib-ethers.ethersprovider.md) | Ethers <code>Provider</code> used for connecting to the network. |
-|  [signer?](./lib-ethers.ethersliquityconnection.signer.md) | [EthersSigner](./lib-ethers.etherssigner.md) | <i>(Optional)</i> Ethers <code>Signer</code> used for sending transactions. |
-|  [totalStabilityPoolHLQTReward](./lib-ethers.ethersliquityconnection.totalstabilitypoolhlqtreward.md) | [Decimal](./lib-base.decimal.md) | Total amount of HLQT allocated for rewarding stability depositors. |
-|  [version](./lib-ethers.ethersliquityconnection.version.md) | string | Version of the Liquity contracts (Git commit hash). |
+<table><thead><tr><th>
 
+Property
+
+
+</th><th>
+
+Modifiers
+
+
+</th><th>
+
+Type
+
+
+</th><th>
+
+Description
+
+
+</th></tr></thead>
+<tbody><tr><td>
+
+[addresses](./lib-ethers.ethersliquityconnection.addresses.md)
+
+
+</td><td>
+
+
+</td><td>
+
+Record&lt;string, string&gt;
+
+
+</td><td>
+
+A mapping of Liquity contracts' names to their addresses.
+
+
+</td></tr>
+<tr><td>
+
+[bootstrapPeriod](./lib-ethers.ethersliquityconnection.bootstrapperiod.md)
+
+
+</td><td>
+
+
+</td><td>
+
+number
+
+
+</td><td>
+
+Time period (in seconds) after `deploymentDate` during which redemptions are disabled.
+
+
+</td></tr>
+<tr><td>
+
+[chainId](./lib-ethers.ethersliquityconnection.chainid.md)
+
+
+</td><td>
+
+
+</td><td>
+
+number
+
+
+</td><td>
+
+Chain ID of the connected network.
+
+
+</td></tr>
+<tr><td>
+
+[deploymentDate](./lib-ethers.ethersliquityconnection.deploymentdate.md)
+
+
+</td><td>
+
+
+</td><td>
+
+Date
+
+
+</td><td>
+
+Date when the Liquity contracts were deployed.
+
+
+</td></tr>
+<tr><td>
+
+[liquidityMiningHLQTRewardRate](./lib-ethers.ethersliquityconnection.liquiditymininghlqtrewardrate.md)
+
+
+</td><td>
+
+
+</td><td>
+
+[Decimal](./lib-base.decimal.md)
+
+
+</td><td>
+
+Amount of HLQT collectively rewarded to stakers of the liquidity mining pool per second.
+
+
+</td></tr>
+<tr><td>
+
+[provider](./lib-ethers.ethersliquityconnection.provider.md)
+
+
+</td><td>
+
+
+</td><td>
+
+[EthersProvider](./lib-ethers.ethersprovider.md)
+
+
+</td><td>
+
+Ethers `Provider` used for connecting to the network.
+
+
+</td></tr>
+<tr><td>
+
+[signer?](./lib-ethers.ethersliquityconnection.signer.md)
+
+
+</td><td>
+
+
+</td><td>
+
+[EthersSigner](./lib-ethers.etherssigner.md)
+
+
+</td><td>
+
+_(Optional)_ Ethers `Signer` used for sending transactions.
+
+
+</td></tr>
+<tr><td>
+
+[totalStabilityPoolHLQTReward](./lib-ethers.ethersliquityconnection.totalstabilitypoolhlqtreward.md)
+
+
+</td><td>
+
+
+</td><td>
+
+[Decimal](./lib-base.decimal.md)
+
+
+</td><td>
+
+Total amount of HLQT allocated for rewarding stability depositors.
+
+
+</td></tr>
+<tr><td>
+
+[version](./lib-ethers.ethersliquityconnection.version.md)
+
+
+</td><td>
+
+
+</td><td>
+
+string
+
+
+</td><td>
+
+Version of the Liquity contracts (Git commit hash).
+
+
+</td></tr>
+</tbody></table>

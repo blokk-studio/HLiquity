@@ -6,7 +6,7 @@
 
 Amount of native currency (e.g. Ether) received in exchange for the used-up HCHF.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 readonly collateralGain: Decimal;

@@ -4,7 +4,7 @@
 
 ## Decimal.fromBigNumberString() method
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 static fromBigNumberString(bigNumberString: string): Decimal;
@@ -12,11 +12,38 @@ static fromBigNumberString(bigNumberString: string): Decimal;
 
 ## Parameters
 
-|  Parameter | Type | Description |
-|  --- | --- | --- |
-|  bigNumberString | string |  |
+<table><thead><tr><th>
 
-<b>Returns:</b>
+Parameter
+
+
+</th><th>
+
+Type
+
+
+</th><th>
+
+Description
+
+
+</th></tr></thead>
+<tbody><tr><td>
+
+bigNumberString
+
+
+</td><td>
+
+string
+
+
+</td><td>
+
+
+</td></tr>
+</tbody></table>
+**Returns:**
 
 [Decimal](./lib-base.decimal.md)
 

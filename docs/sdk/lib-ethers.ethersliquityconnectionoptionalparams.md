@@ -6,7 +6,7 @@
 
 Optional parameters of [ReadableEthersLiquity.connect()](./lib-ethers.readableethersliquity.connect_1.md) and [EthersLiquity.connect()](./lib-ethers.ethersliquity.connect_1.md)<!-- -->.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 export interface EthersLiquityConnectionOptionalParams 
@@ -14,9 +14,82 @@ export interface EthersLiquityConnectionOptionalParams
 
 ## Properties
 
-|  Property | Type | Description |
-|  --- | --- | --- |
-|  [frontendTag?](./lib-ethers.ethersliquityconnectionoptionalparams.frontendtag.md) | string | <i>(Optional)</i> Address that will receive HLQT rewards from newly created Stability Deposits by default. |
-|  [userAddress?](./lib-ethers.ethersliquityconnectionoptionalparams.useraddress.md) | string | <i>(Optional)</i> Address whose Trove, Stability Deposit, HLQT Stake and balances will be read by default. |
-|  [useStore?](./lib-ethers.ethersliquityconnectionoptionalparams.usestore.md) | [EthersLiquityStoreOption](./lib-ethers.ethersliquitystoreoption.md) | <i>(Optional)</i> Create a  and expose it as the <code>store</code> property. |
+<table><thead><tr><th>
 
+Property
+
+
+</th><th>
+
+Modifiers
+
+
+</th><th>
+
+Type
+
+
+</th><th>
+
+Description
+
+
+</th></tr></thead>
+<tbody><tr><td>
+
+[frontendTag?](./lib-ethers.ethersliquityconnectionoptionalparams.frontendtag.md)
+
+
+</td><td>
+
+
+</td><td>
+
+string
+
+
+</td><td>
+
+_(Optional)_ Address that will receive HLQT rewards from newly created Stability Deposits by default.
+
+
+</td></tr>
+<tr><td>
+
+[userAddress?](./lib-ethers.ethersliquityconnectionoptionalparams.useraddress.md)
+
+
+</td><td>
+
+
+</td><td>
+
+string
+
+
+</td><td>
+
+_(Optional)_ Address whose Trove, Stability Deposit, HLQT Stake and balances will be read by default.
+
+
+</td></tr>
+<tr><td>
+
+[useStore?](./lib-ethers.ethersliquityconnectionoptionalparams.usestore.md)
+
+
+</td><td>
+
+
+</td><td>
+
+[EthersLiquityStoreOption](./lib-ethers.ethersliquitystoreoption.md)
+
+
+</td><td>
+
+_(Optional)_ Create a  and expose it as the `store` property.
+
+
+</td></tr>
+</tbody></table>

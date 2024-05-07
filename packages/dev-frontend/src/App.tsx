@@ -1,11 +1,16 @@
 import React from "react";
 import { Chain, createClient, WagmiConfig } from "wagmi";
 import { ConnectKitProvider } from "connectkit";
-import { Flex, Heading, ThemeProvider } from "theme-ui";
+import { Button, Flex, Heading, ThemeProvider } from "theme-ui";
 import { Global, css } from "@emotion/react";
 
 import getDefaultClient from "./connectkit/defaultClient";
-import { LiquityProvider } from "./hooks/LiquityContext";
+import {
+  OptionalLiquityConsumer,
+  LiquityLoader,
+  LiquityProvider,
+  LiquityConsumer
+} from "./hooks/LiquityContext";
 import { WalletConnector } from "./components/WalletConnector";
 import { TransactionProvider } from "./components/Transaction";
 import { Icon } from "./components/Icon";
@@ -22,6 +27,15 @@ import { HederaTokensProvider } from "./hedera/hedera_context";
 import { Lexicon } from "./lexicon";
 import { useConfiguration } from "./configuration";
 import "./App.scss";
+import {
+  HashConnectProvider,
+  HashConnectConsumer,
+  HashConnectLoader,
+  HashConnectSessionDataConsumer,
+  OptionalHashConnectSessionDataConsumer
+} from "./components/HashConnectProvider";
+import { HashgraphLiquityProvider } from "./components/HashgraphLiquityProvider";
+import { LiquityStoreProvider } from "@liquity/lib-react";
 
 const isDemoMode = import.meta.env.VITE_APP_DEMO_MODE === "true";
 
@@ -111,7 +125,6 @@ const App = () => {
     return <ThemeProvider theme={theme} />;
   }
 
-  const loader = <AppLoader />;
   const client = createClient(
     getDefaultClient({
       appName: "Liquity",
@@ -124,34 +137,83 @@ const App = () => {
     <ThemeProvider theme={theme}>
       <Global
         styles={css`
-        @font-face {
-          font-family: "museo";
-          src: url('fonts/Museo_Sans_Cyrl_300.ttf') format("truetype");
-          font-style: normal;
-          font-weight: 300;
-        }
-      `}
+          @font-face {
+            font-family: "museo";
+            src: url("fonts/Museo_Sans_Cyrl_300.ttf") format("truetype");
+            font-style: normal;
+            font-weight: 300;
+          }
+        `}
       />
       <AuthenticationProvider loginForm={<LoginForm />}>
         <WagmiConfig client={client}>
           <ConnectKitProvider options={{ hideBalance: true }}>
-            <WalletConnector loader={loader}>
-              <LiquityProvider
-                loader={loader}
-                unsupportedNetworkFallback={
-                  <UnsupportedNetworkFallback availableNetworks={chains} />
-                }
-                unsupportedMainnetFallback={
-                  <UnsupportedNetworkFallback availableNetworks={chains} />
-                }
+            {/* <WalletConnector loader={<AppLoader content={<Heading>Loading wallets</Heading>} />}> */}
+            <HashConnectProvider walletConnectProjectId={config.value.walletConnectProjectId}>
+              <HashConnectLoader
+                loader={<AppLoader content={<Heading>Loading HashPack</Heading>} />}
               >
-                <TransactionProvider>
-                  <HederaTokensProvider>
-                    <LiquityFrontend loader={loader} />
-                  </HederaTokensProvider>
-                </TransactionProvider>
-              </LiquityProvider>
-            </WalletConnector>
+                <HashConnectConsumer>
+                  {hashConnect => (
+                    <OptionalHashConnectSessionDataConsumer>
+                      {sessionData =>
+                        !sessionData ? (
+                          <Flex
+                            sx={{
+                              minHeight: "100%",
+                              flexDirection: "column",
+                              justifyContent: "center",
+                              marginInline: "clamp(2rem, 100%, 50% - 12rem)"
+                            }}
+                          >
+                            <Button
+                              sx={{ alignSelf: "center" }}
+                              onClick={() => hashConnect.openPairingModal()}
+                            >
+                              Connect HashPack
+                            </Button>
+                          </Flex>
+                        ) : (
+                          <TransactionProvider>
+                            <HederaTokensProvider>
+                              <LiquityProvider
+                                loader={<AppLoader content={<Heading>Loading HLiquity</Heading>} />}
+                                unsupportedNetworkFallback={
+                                  <UnsupportedNetworkFallback availableNetworks={chains} />
+                                }
+                                unsupportedMainnetFallback={
+                                  <UnsupportedNetworkFallback availableNetworks={chains} />
+                                }
+                              >
+                                <LiquityConsumer>
+                                  {liquityContext => {
+                                    if (!liquityContext) {
+                                      return;
+                                    }
+
+                                    return (
+                                      <LiquityStoreProvider
+                                        store={liquityContext.liquity}
+                                        loader={
+                                          <AppLoader content={<Heading>Loading data</Heading>} />
+                                        }
+                                      >
+                                        <LiquityFrontend />
+                                      </LiquityStoreProvider>
+                                    );
+                                  }}
+                                </LiquityConsumer>
+                              </LiquityProvider>
+                            </HederaTokensProvider>
+                          </TransactionProvider>
+                        )
+                      }
+                    </OptionalHashConnectSessionDataConsumer>
+                  )}
+                </HashConnectConsumer>
+              </HashConnectLoader>
+            </HashConnectProvider>
+            {/* </WalletConnector> */}
           </ConnectKitProvider>
         </WagmiConfig>
       </AuthenticationProvider>

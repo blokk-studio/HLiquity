@@ -6,7 +6,7 @@
 
 Apply a [HLQTStakeChange](./lib-base.hlqtstakechange.md) to this `HLQTStake`<!-- -->.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 apply(change: HLQTStakeChange<Decimalish> | undefined): Decimal;
@@ -14,11 +14,38 @@ apply(change: HLQTStakeChange<Decimalish> | undefined): Decimal;
 
 ## Parameters
 
-|  Parameter | Type | Description |
-|  --- | --- | --- |
-|  change | [HLQTStakeChange](./lib-base.hlqtstakechange.md)<!-- -->&lt;[Decimalish](./lib-base.decimalish.md)<!-- -->&gt; \| undefined |  |
+<table><thead><tr><th>
 
-<b>Returns:</b>
+Parameter
+
+
+</th><th>
+
+Type
+
+
+</th><th>
+
+Description
+
+
+</th></tr></thead>
+<tbody><tr><td>
+
+change
+
+
+</td><td>
+
+[HLQTStakeChange](./lib-base.hlqtstakechange.md)<!-- -->&lt;[Decimalish](./lib-base.decimalish.md)<!-- -->&gt; \| undefined
+
+
+</td><td>
+
+
+</td></tr>
+</tbody></table>
+**Returns:**
 
 [Decimal](./lib-base.decimal.md)
 

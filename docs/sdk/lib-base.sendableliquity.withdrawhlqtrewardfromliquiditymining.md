@@ -6,12 +6,12 @@
 
 Withdraw HLQT that has been earned by mining liquidity.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 withdrawHLQTRewardFromLiquidityMining(): Promise<SentLiquityTransaction<S, LiquityReceipt<R, void>>>;
 ```
-<b>Returns:</b>
+**Returns:**
 
 Promise&lt;[SentLiquityTransaction](./lib-base.sentliquitytransaction.md)<!-- -->&lt;S, [LiquityReceipt](./lib-base.liquityreceipt.md)<!-- -->&lt;R, void&gt;&gt;&gt;
 

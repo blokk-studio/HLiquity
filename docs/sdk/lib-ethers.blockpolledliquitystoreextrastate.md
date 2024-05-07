@@ -6,7 +6,7 @@
 
 Extra state added to [LiquityStoreState](./lib-base.liquitystorestate.md) by [BlockPolledLiquityStore](./lib-ethers.blockpolledliquitystore.md)<!-- -->.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 export interface BlockPolledLiquityStoreExtraState 
@@ -14,8 +14,63 @@ export interface BlockPolledLiquityStoreExtraState
 
 ## Properties
 
-|  Property | Type | Description |
-|  --- | --- | --- |
-|  [blockTag?](./lib-ethers.blockpolledliquitystoreextrastate.blocktag.md) | number | <i>(Optional)</i> Number of block that the store state was fetched from. |
-|  [blockTimestamp](./lib-ethers.blockpolledliquitystoreextrastate.blocktimestamp.md) | number | Timestamp of latest block (number of seconds since epoch). |
+<table><thead><tr><th>
 
+Property
+
+
+</th><th>
+
+Modifiers
+
+
+</th><th>
+
+Type
+
+
+</th><th>
+
+Description
+
+
+</th></tr></thead>
+<tbody><tr><td>
+
+[blockTag?](./lib-ethers.blockpolledliquitystoreextrastate.blocktag.md)
+
+
+</td><td>
+
+
+</td><td>
+
+number
+
+
+</td><td>
+
+_(Optional)_ Number of block that the store state was fetched from.
+
+
+</td></tr>
+<tr><td>
+
+[blockTimestamp](./lib-ethers.blockpolledliquitystoreextrastate.blocktimestamp.md)
+
+
+</td><td>
+
+
+</td><td>
+
+number
+
+
+</td><td>
+
+Timestamp of latest block (number of seconds since epoch).
+
+
+</td></tr>
+</tbody></table>

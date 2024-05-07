@@ -6,7 +6,7 @@
 
 User's HCHF token balance.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 hchfBalance: Decimal;

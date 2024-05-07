@@ -6,7 +6,7 @@
 
 User's HLQT token balance.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 hlqtBalance: Decimal;

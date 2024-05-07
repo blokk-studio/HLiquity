@@ -6,7 +6,7 @@
 
 User's HLQT stake.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 hlqtStake: HLQTStake;

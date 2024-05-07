@@ -6,7 +6,7 @@
 
 Represents whether an address has been registered as a Liquity frontend.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 export declare type FrontendStatus = {
@@ -16,7 +16,7 @@ export declare type FrontendStatus = {
     kickbackRate: Decimal;
 };
 ```
-<b>References:</b> [Decimal](./lib-base.decimal.md)
+**References:** [Decimal](./lib-base.decimal.md)
 
 ## Remarks
 

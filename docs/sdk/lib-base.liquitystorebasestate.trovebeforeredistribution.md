@@ -6,7 +6,7 @@
 
 User's Trove in its state after the last direct modification.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 troveBeforeRedistribution: TroveWithPendingRedistribution;

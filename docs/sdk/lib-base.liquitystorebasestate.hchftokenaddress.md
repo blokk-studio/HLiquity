@@ -6,7 +6,7 @@
 
 HCHF HST Token address
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 hchfTokenAddress: string;

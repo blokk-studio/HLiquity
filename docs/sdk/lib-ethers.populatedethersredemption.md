@@ -6,14 +6,14 @@
 
 A redemption transaction that has been prepared for sending.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 export declare class PopulatedEthersRedemption extends PopulatedEthersLiquityTransaction<RedemptionDetails> implements PopulatedRedemption<EthersPopulatedTransaction, EthersTransactionResponse, EthersTransactionReceipt> 
 ```
-<b>Extends:</b> [PopulatedEthersLiquityTransaction](./lib-ethers.populatedethersliquitytransaction.md)<!-- -->&lt;[RedemptionDetails](./lib-base.redemptiondetails.md)<!-- -->&gt;
+**Extends:** [PopulatedEthersLiquityTransaction](./lib-ethers.populatedethersliquitytransaction.md)<!-- -->&lt;[RedemptionDetails](./lib-base.redemptiondetails.md)<!-- -->&gt;
 
-<b>Implements:</b> [PopulatedRedemption](./lib-base.populatedredemption.md)<!-- -->&lt;[EthersPopulatedTransaction](./lib-ethers.etherspopulatedtransaction.md)<!-- -->, [EthersTransactionResponse](./lib-ethers.etherstransactionresponse.md)<!-- -->, [EthersTransactionReceipt](./lib-ethers.etherstransactionreceipt.md)<!-- -->&gt;
+**Implements:** [PopulatedRedemption](./lib-base.populatedredemption.md)<!-- -->&lt;[EthersPopulatedTransaction](./lib-ethers.etherspopulatedtransaction.md)<!-- -->, [EthersTransactionResponse](./lib-ethers.etherstransactionresponse.md)<!-- -->, [EthersTransactionReceipt](./lib-ethers.etherstransactionreceipt.md)<!-- -->&gt;
 
 ## Remarks
 
@@ -23,15 +23,116 @@ When [redeemHCHF()](./lib-base.populatableliquity.redeemhchf.md) is called with 
 
 ## Properties
 
-|  Property | Modifiers | Type | Description |
-|  --- | --- | --- | --- |
-|  [attemptedHCHFAmount](./lib-ethers.populatedethersredemption.attemptedhchfamount.md) |  | [Decimal](./lib-base.decimal.md) | Amount of HCHF the redeemer is trying to redeem. |
-|  [isTruncated](./lib-ethers.populatedethersredemption.istruncated.md) |  | boolean | Whether <code>redeemableHCHFAmount</code> is less than <code>attemptedHCHFAmount</code>. |
-|  [redeemableHCHFAmount](./lib-ethers.populatedethersredemption.redeemablehchfamount.md) |  | [Decimal](./lib-base.decimal.md) | Maximum amount of HCHF that is currently redeemable from <code>attemptedHCHFAmount</code>. |
+<table><thead><tr><th>
+
+Property
+
+
+</th><th>
+
+Modifiers
+
+
+</th><th>
+
+Type
+
+
+</th><th>
+
+Description
+
+
+</th></tr></thead>
+<tbody><tr><td>
+
+[attemptedHCHFAmount](./lib-ethers.populatedethersredemption.attemptedhchfamount.md)
+
+
+</td><td>
+
+
+</td><td>
+
+[Decimal](./lib-base.decimal.md)
+
+
+</td><td>
+
+Amount of HCHF the redeemer is trying to redeem.
+
+
+</td></tr>
+<tr><td>
+
+[isTruncated](./lib-ethers.populatedethersredemption.istruncated.md)
+
+
+</td><td>
+
+
+</td><td>
+
+boolean
+
+
+</td><td>
+
+Whether `redeemableHCHFAmount` is less than `attemptedHCHFAmount`<!-- -->.
+
+
+</td></tr>
+<tr><td>
+
+[redeemableHCHFAmount](./lib-ethers.populatedethersredemption.redeemablehchfamount.md)
+
+
+</td><td>
+
+
+</td><td>
+
+[Decimal](./lib-base.decimal.md)
+
+
+</td><td>
+
+Maximum amount of HCHF that is currently redeemable from `attemptedHCHFAmount`<!-- -->.
+
+
+</td></tr>
+</tbody></table>
 
 ## Methods
 
-|  Method | Modifiers | Description |
-|  --- | --- | --- |
-|  [increaseAmountByMinimumNetDebt(maxRedemptionRate)](./lib-ethers.populatedethersredemption.increaseamountbyminimumnetdebt.md) |  | Prepare a new transaction by increasing the attempted amount to the next lowest redeemable value. |
+<table><thead><tr><th>
 
+Method
+
+
+</th><th>
+
+Modifiers
+
+
+</th><th>
+
+Description
+
+
+</th></tr></thead>
+<tbody><tr><td>
+
+[increaseAmountByMinimumNetDebt(maxRedemptionRate)](./lib-ethers.populatedethersredemption.increaseamountbyminimumnetdebt.md)
+
+
+</td><td>
+
+
+</td><td>
+
+Prepare a new transaction by increasing the attempted amount to the next lowest redeemable value.
+
+
+</td></tr>
+</tbody></table>

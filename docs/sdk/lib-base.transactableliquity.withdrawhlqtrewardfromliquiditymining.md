@@ -6,12 +6,12 @@
 
 Withdraw HLQT that has been earned by mining liquidity.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 withdrawHLQTRewardFromLiquidityMining(): Promise<void>;
 ```
-<b>Returns:</b>
+**Returns:**
 
 Promise&lt;void&gt;
 

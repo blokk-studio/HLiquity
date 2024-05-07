@@ -98,7 +98,7 @@ contract TroveManager is LiquityBase, Ownable, CheckContract, ITroveManager {
     * An ETH gain of ( stake * [L_ETH - L_ETH(0)] )
     * A HCHFDebt increase  of ( stake * [L_HCHFDebt - L_HCHFDebt(0)] )
     *
-    * Where L_ETH(0) and L_HCHFDebt(0) are snapshots of L_ETH and L_HCHFDebt for the active Trove taken at the instant the stake was made
+    * Where L_ETH(0) and L_HCHFDebt(0) are snapshots of L_ETH and L_HCHFDebt for the active  taken at the instant the stake was made
     */
     uint public L_ETH;
     uint public L_HCHFDebt;

@@ -6,12 +6,12 @@
 
 Get the total amount of HLQT currently staked.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 getTotalStakedHLQT(): Promise<Decimal>;
 ```
-<b>Returns:</b>
+**Returns:**
 
 Promise&lt;[Decimal](./lib-base.decimal.md)<!-- -->&gt;
 

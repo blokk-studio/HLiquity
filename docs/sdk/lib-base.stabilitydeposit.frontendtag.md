@@ -6,7 +6,7 @@
 
 Address of frontend through which this Stability Deposit was made.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 readonly frontendTag: string;

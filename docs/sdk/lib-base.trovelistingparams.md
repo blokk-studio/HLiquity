@@ -6,7 +6,7 @@
 
 Parameters of the [getTroves()](./lib-base.readableliquity.gettroves_1.md) function.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 export interface TroveListingParams 
@@ -14,10 +14,101 @@ export interface TroveListingParams
 
 ## Properties
 
-|  Property | Type | Description |
-|  --- | --- | --- |
-|  [beforeRedistribution?](./lib-base.trovelistingparams.beforeredistribution.md) | boolean | <i>(Optional)</i> When set to <code>true</code>, the retrieved Troves won't include the liquidation shares received since the last time they were directly modified. |
-|  [first](./lib-base.trovelistingparams.first.md) | number | Number of Troves to retrieve. |
-|  [sortedBy](./lib-base.trovelistingparams.sortedby.md) | "ascendingCollateralRatio" \| "descendingCollateralRatio" | How the Troves should be sorted. |
-|  [startingAt?](./lib-base.trovelistingparams.startingat.md) | number | <i>(Optional)</i> Index of the first Trove to retrieve from the sorted list. |
+<table><thead><tr><th>
 
+Property
+
+
+</th><th>
+
+Modifiers
+
+
+</th><th>
+
+Type
+
+
+</th><th>
+
+Description
+
+
+</th></tr></thead>
+<tbody><tr><td>
+
+[beforeRedistribution?](./lib-base.trovelistingparams.beforeredistribution.md)
+
+
+</td><td>
+
+
+</td><td>
+
+boolean
+
+
+</td><td>
+
+_(Optional)_ When set to `true`<!-- -->, the retrieved Troves won't include the liquidation shares received since the last time they were directly modified.
+
+
+</td></tr>
+<tr><td>
+
+[first](./lib-base.trovelistingparams.first.md)
+
+
+</td><td>
+
+
+</td><td>
+
+number
+
+
+</td><td>
+
+Number of Troves to retrieve.
+
+
+</td></tr>
+<tr><td>
+
+[sortedBy](./lib-base.trovelistingparams.sortedby.md)
+
+
+</td><td>
+
+
+</td><td>
+
+"ascendingCollateralRatio" \| "descendingCollateralRatio"
+
+
+</td><td>
+
+How the Troves should be sorted.
+
+
+</td></tr>
+<tr><td>
+
+[startingAt?](./lib-base.trovelistingparams.startingat.md)
+
+
+</td><td>
+
+
+</td><td>
+
+number
+
+
+</td><td>
+
+_(Optional)_ Index of the first Trove to retrieve from the sorted list.
+
+
+</td></tr>
+</tbody></table>

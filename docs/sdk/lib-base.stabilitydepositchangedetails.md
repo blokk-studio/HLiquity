@@ -6,16 +6,53 @@
 
 Details of a [depositHCHFInStabilityPool()](./lib-base.transactableliquity.deposithchfinstabilitypool.md) or [withdrawHCHFFromStabilityPool()](./lib-base.transactableliquity.withdrawhchffromstabilitypool.md) transaction.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 export interface StabilityDepositChangeDetails extends StabilityPoolGainsWithdrawalDetails 
 ```
-<b>Extends:</b> [StabilityPoolGainsWithdrawalDetails](./lib-base.stabilitypoolgainswithdrawaldetails.md)
+**Extends:** [StabilityPoolGainsWithdrawalDetails](./lib-base.stabilitypoolgainswithdrawaldetails.md)
 
 ## Properties
 
-|  Property | Type | Description |
-|  --- | --- | --- |
-|  [change](./lib-base.stabilitydepositchangedetails.change.md) | [StabilityDepositChange](./lib-base.stabilitydepositchange.md)<!-- -->&lt;[Decimal](./lib-base.decimal.md)<!-- -->&gt; | Change that was made to the deposit by this transaction. |
+<table><thead><tr><th>
 
+Property
+
+
+</th><th>
+
+Modifiers
+
+
+</th><th>
+
+Type
+
+
+</th><th>
+
+Description
+
+
+</th></tr></thead>
+<tbody><tr><td>
+
+[change](./lib-base.stabilitydepositchangedetails.change.md)
+
+
+</td><td>
+
+
+</td><td>
+
+[StabilityDepositChange](./lib-base.stabilitydepositchange.md)<!-- -->&lt;[Decimal](./lib-base.decimal.md)<!-- -->&gt;
+
+
+</td><td>
+
+Change that was made to the deposit by this transaction.
+
+
+</td></tr>
+</tbody></table>

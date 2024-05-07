@@ -6,7 +6,7 @@
 
 Get the current state of a Trove.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 getTrove(address?: string): Promise<UserTrove>;
@@ -14,11 +14,40 @@ getTrove(address?: string): Promise<UserTrove>;
 
 ## Parameters
 
-|  Parameter | Type | Description |
-|  --- | --- | --- |
-|  address | string | Address that owns the Trove. |
+<table><thead><tr><th>
 
-<b>Returns:</b>
+Parameter
+
+
+</th><th>
+
+Type
+
+
+</th><th>
+
+Description
+
+
+</th></tr></thead>
+<tbody><tr><td>
+
+address
+
+
+</td><td>
+
+string
+
+
+</td><td>
+
+Address that owns the Trove.
+
+
+</td></tr>
+</tbody></table>
+**Returns:**
 
 Promise&lt;[UserTrove](./lib-base.usertrove.md)<!-- -->&gt;
 

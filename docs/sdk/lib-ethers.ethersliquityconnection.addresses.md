@@ -6,7 +6,7 @@
 
 A mapping of Liquity contracts' names to their addresses.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 readonly addresses: Record<string, string>;

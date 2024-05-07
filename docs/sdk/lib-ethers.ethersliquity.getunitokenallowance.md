@@ -6,7 +6,7 @@
 
 Get the liquidity mining contract's allowance of a holder's Uniswap ETH/HCHF LP tokens.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 getUniTokenAllowance(address?: string, overrides?: EthersCallOverrides): Promise<Decimal>;
@@ -14,12 +14,54 @@ getUniTokenAllowance(address?: string, overrides?: EthersCallOverrides): Promise
 
 ## Parameters
 
-|  Parameter | Type | Description |
-|  --- | --- | --- |
-|  address | string | Address holding the Uniswap ETH/HCHF LP tokens. |
-|  overrides | [EthersCallOverrides](./lib-ethers.etherscalloverrides.md) |  |
+<table><thead><tr><th>
 
-<b>Returns:</b>
+Parameter
+
+
+</th><th>
+
+Type
+
+
+</th><th>
+
+Description
+
+
+</th></tr></thead>
+<tbody><tr><td>
+
+address
+
+
+</td><td>
+
+string
+
+
+</td><td>
+
+Address holding the Uniswap ETH/HCHF LP tokens.
+
+
+</td></tr>
+<tr><td>
+
+overrides
+
+
+</td><td>
+
+[EthersCallOverrides](./lib-ethers.etherscalloverrides.md)
+
+
+</td><td>
+
+
+</td></tr>
+</tbody></table>
+**Returns:**
 
 Promise&lt;[Decimal](./lib-base.decimal.md)<!-- -->&gt;
 

@@ -6,7 +6,7 @@
 
 Connect to the Liquity protocol and create an `EthersLiquity` object.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 static connect(signerOrProvider: EthersSigner | EthersProvider, optionalParams?: EthersLiquityConnectionOptionalParams): Promise<EthersLiquity>;
@@ -14,12 +14,56 @@ static connect(signerOrProvider: EthersSigner | EthersProvider, optionalParams?:
 
 ## Parameters
 
-|  Parameter | Type | Description |
-|  --- | --- | --- |
-|  signerOrProvider | [EthersSigner](./lib-ethers.etherssigner.md) \| [EthersProvider](./lib-ethers.ethersprovider.md) | Ethers <code>Signer</code> or <code>Provider</code> to use for connecting to the Ethereum network. |
-|  optionalParams | [EthersLiquityConnectionOptionalParams](./lib-ethers.ethersliquityconnectionoptionalparams.md) | Optional parameters that can be used to customize the connection. |
+<table><thead><tr><th>
 
-<b>Returns:</b>
+Parameter
+
+
+</th><th>
+
+Type
+
+
+</th><th>
+
+Description
+
+
+</th></tr></thead>
+<tbody><tr><td>
+
+signerOrProvider
+
+
+</td><td>
+
+[EthersSigner](./lib-ethers.etherssigner.md) \| [EthersProvider](./lib-ethers.ethersprovider.md)
+
+
+</td><td>
+
+Ethers `Signer` or `Provider` to use for connecting to the Ethereum network.
+
+
+</td></tr>
+<tr><td>
+
+optionalParams
+
+
+</td><td>
+
+[EthersLiquityConnectionOptionalParams](./lib-ethers.ethersliquityconnectionoptionalparams.md)
+
+
+</td><td>
+
+Optional parameters that can be used to customize the connection.
+
+
+</td></tr>
+</tbody></table>
+**Returns:**
 
 Promise&lt;[EthersLiquity](./lib-ethers.ethersliquity.md)<!-- -->&gt;
 
