@@ -17,8 +17,8 @@ export const Imprint: React.FC = () => {
         https://blokk.studio/
       </a>
       {email && (
-        <a href="mailto:hello@blokk.studio" target="_blank">
-          hello@blokk.studio
+        <a href={`mailto:${email}`} target="_blank">
+          {email}
         </a>
       )}
     </address>
