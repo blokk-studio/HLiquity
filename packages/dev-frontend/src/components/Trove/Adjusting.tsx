@@ -45,7 +45,7 @@ const selector = (state: LiquityStoreState) => {
 };
 
 const TRANSACTION_ID = "trove-adjustment";
-const GAS_ROOM_ETH = Decimal.from(0.1);
+const TX_MAX_COSTS = Decimal.from(40);
 
 const feeFrom = (original: Trove, edited: Trove, borrowingRate: Decimal): Decimal => {
   const change = original.whatChanged(edited, borrowingRate);
@@ -138,8 +138,8 @@ export const Adjusting: React.FC = () => {
   const maxBorrowingRate = borrowingRate.add(0.005);
   const updatedTrove = isDirty ? new Trove(collateral, totalDebt) : trove;
   const feePct = new Percent(borrowingRate);
-  const availableEth = accountBalance.gt(GAS_ROOM_ETH)
-    ? accountBalance.sub(GAS_ROOM_ETH)
+  const availableEth = accountBalance.gt(accountBalance.sub(TX_MAX_COSTS))
+    ? accountBalance.sub(TX_MAX_COSTS)
     : Decimal.ZERO;
   const maxCollateral = trove.collateral.add(availableEth);
   const collateralMaxedOut = collateral.eq(maxCollateral);
