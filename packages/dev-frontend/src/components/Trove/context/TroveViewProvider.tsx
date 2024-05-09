@@ -3,6 +3,7 @@ import { useLiquitySelector } from "@liquity/lib-react";
 import { LiquityStoreState, UserTroveStatus } from "@liquity/lib-base";
 import { TroveViewContext } from "./TroveViewContext";
 import type { TroveView, TroveEvent } from "./types";
+import { useLiquity } from "../../../hooks/LiquityContext";
 
 type TroveEventTransitions = Record<TroveView, Partial<Record<TroveEvent, TroveView>>>;
 
@@ -80,13 +81,15 @@ const select = ({ trove: { status } }: LiquityStoreState) => status;
 export const TroveViewProvider: React.FC = props => {
   const { children } = props;
   const troveStatus = useLiquitySelector(select);
+  const { liquity } = useLiquity();
 
   const [view, setView] = useState<TroveView>(getInitialView(troveStatus));
   const viewRef = useRef<TroveView>(view);
 
   const dispatchEvent = useCallback((event: TroveEvent) => {
     const nextView = transition(viewRef.current, event);
-
+    liquity.store.refresh();
+    
     console.log(
       "dispatchEvent() [current-view, event, next-view]",
       viewRef.current,

@@ -3,6 +3,7 @@ import { useLiquitySelector } from "@liquity/lib-react";
 import { LiquityStoreState, StabilityDeposit } from "@liquity/lib-base";
 import { StabilityViewContext } from "./StabilityViewContext";
 import type { StabilityView, StabilityEvent } from "./types";
+import { useLiquity } from "../../../hooks/LiquityContext";
 
 type StabilityEventTransitions = Record<
   StabilityView,
@@ -43,12 +44,14 @@ const select = ({ stabilityDeposit }: LiquityStoreState): StabilityDeposit => st
 export const StabilityViewProvider: React.FC = props => {
   const { children } = props;
   const stabilityDeposit = useLiquitySelector(select);
+  const { liquity } = useLiquity();
 
   const [view, setView] = useState<StabilityView>(getInitialView(stabilityDeposit));
   const viewRef = useRef<StabilityView>(view);
 
   const dispatchEvent = useCallback((event: StabilityEvent) => {
     const nextView = transition(viewRef.current, event);
+    liquity.store.refresh();
 
     console.log(
       "dispatchEvent() [current-view, event, next-view]",
