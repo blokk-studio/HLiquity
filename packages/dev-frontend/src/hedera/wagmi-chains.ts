@@ -19,15 +19,15 @@ export const testnet: HederaChain = {
   network: "hederaTestnet",
   rpcUrls: {
     default: {
-      http: ["https://pool.arkhia.io/hedera/testnet/json-rpc/v1/eQ9f74x2yQs02vvfa2dO05te79u0S7s5"],
+      http: ["https://starter.arkhia.io/hedera/testnet/json-rpc/v1/7542b249WGllfVd4Gf7l8bf18V1G8fWW"],
       webSocket: [
-        "wss://pool.arkhia.io/hedera/testnet/watchtower/v1/eQ9f74x2yQs02vvfa2dO05te79u0S7s5"
+        "wss://starter.arkhia.io/hedera/testnet/watchtower/v1/7542b249WGllfVd4Gf7l8bf18V1G8fWW"
       ]
     },
     public: {
-      http: ["https://pool.arkhia.io/hedera/testnet/json-rpc/v1/eQ9f74x2yQs02vvfa2dO05te79u0S7s5"],
+      http: ["https://starter.arkhia.io/hedera/testnet/json-rpc/v1/7542b249WGllfVd4Gf7l8bf18V1G8fWW"],
       webSocket: [
-        "wss://pool.arkhia.io/hedera/testnet/watchtower/v1/eQ9f74x2yQs02vvfa2dO05te79u0S7s5"
+        "wss://starter.arkhia.io/hedera/testnet/watchtower/v1/7542b249WGllfVd4Gf7l8bf18V1G8fWW"
       ]
     }
   },
@@ -71,15 +71,15 @@ export const mainnet: HederaChain = {
   network: "hedera",
   rpcUrls: {
     default: {
-      http: ["https://pool.arkhia.io/hedera/mainnet/json-rpc/v1/eQ9f74x2yQs02vvfa2dO05te79u0S7s5"],
+      http: ["https://starter.arkhia.io/hedera/mainnet/json-rpc/v1/7542b249WGllfVd4Gf7l8bf18V1G8fWW"],
       webSocket: [
-        "wss://pool.arkhia.io/hedera/mainnet/watchtower/v1/eQ9f74x2yQs02vvfa2dO05te79u0S7s5"
+        "wss://starter.arkhia.io/hedera/mainnet/watchtower/v1/7542b249WGllfVd4Gf7l8bf18V1G8fWW"
       ]
     },
     public: {
-      http: ["https://pool.arkhia.io/hedera/mainnet/json-rpc/v1/eQ9f74x2yQs02vvfa2dO05te79u0S7s5"],
+      http: ["https://starter.arkhia.io/hedera/mainnet/json-rpc/v1/7542b249WGllfVd4Gf7l8bf18V1G8fWW"],
       webSocket: [
-        "wss://pool.arkhia.io/hedera/mainnet/watchtower/v1/eQ9f74x2yQs02vvfa2dO05te79u0S7s5"
+        "wss://starter.arkhia.io/hedera/mainnet/watchtower/v1/7542b249WGllfVd4Gf7l8bf18V1G8fWW"
       ]
     }
   },
