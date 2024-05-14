@@ -1,23 +1,30 @@
-import { useEffect, useReducer } from "react";
+import { useEffect, useState } from "react";
 
-import { LiquityStoreState } from "@liquity/lib-base";
+import { LiquityStoreListenerParams, LiquityStoreState } from "@liquity/lib-base";
 
 import { equals } from "../utils/equals";
 import { useLiquityStore } from "./useLiquityStore";
 
 export const useLiquitySelector = <S, T>(select: (state: LiquityStoreState<T>) => S): S => {
   const store = useLiquityStore<T>();
-  const [, rerender] = useReducer(() => ({}), {});
+  const [selectedState, setSelectedState] = useState<S>(select(store.state));
 
-  useEffect(
-    () =>
-      store.subscribe(({ newState, oldState }) => {
-        if (!equals(select(newState), select(oldState))) {
-          rerender();
-        }
-      }),
-    [store, select]
-  );
+  useEffect(() => {
+    const subscriber = (stateUpdate: LiquityStoreListenerParams<T>) => {
+      const selectedNewState = select(stateUpdate.newState);
+      const selectedOldState = select(stateUpdate.oldState);
 
-  return select(store.state);
+      if (equals(selectedNewState, selectedOldState)) {
+        return;
+      }
+
+      setSelectedState(selectedNewState);
+    };
+
+    const unsubscribe = store.subscribe(subscriber);
+
+    return unsubscribe;
+  }, [store, select]);
+
+  return selectedState;
 };

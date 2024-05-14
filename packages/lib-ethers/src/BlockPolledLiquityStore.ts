@@ -232,6 +232,16 @@ export class BlockPolledLiquityStore extends HLiquityStore<BlockPolledLiquitySto
     };
   }
 
+  public async refresh(): Promise<void> {
+    const state = await this._get();
+
+    if (this._loaded) {
+      this._update(...state);
+    } else {
+      this._load(...state);
+    }
+  }
+
   /** @internal @override */
   protected _reduceExtra(
     oldState: BlockPolledLiquityStoreExtraState,

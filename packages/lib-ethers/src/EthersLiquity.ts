@@ -92,7 +92,10 @@ export class EthersLiquity implements ReadableEthersLiquity, TransactableLiquity
     this._readable = readable;
     this.connection = readable.connection;
     this.populate = new PopulatableEthersLiquity(readable);
-    this.send = new SendableEthersLiquity(this.populate);
+    this.send = new SendableEthersLiquity(
+      this.populate,
+      readable.hasStore('blockPolled') ? readable.store : undefined
+    );
   }
 
   static fromConnectionOptionsWithBlockPolledStore(
