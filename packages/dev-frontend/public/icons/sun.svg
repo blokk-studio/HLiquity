@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 10 10" fill="none">
+    <script xmlns="" />
+    <path d="M5 0V10" stroke="black" />
+    <path d="M8.53516 1.46387L1.46409 8.53493" stroke="black" />
+    <path d="M8.53516 8.53516L1.46409 1.46409" stroke="black" />
+    <path d="M10 5L0 5" stroke="black" />
+    <path
+        d="M1.25 5C1.25 2.92893 2.92893 1.25 5 1.25C7.07107 1.25 8.75 2.92893 8.75 5C8.75 7.07107 7.07107 8.75 5 8.75C2.92893 8.75 1.25 7.07107 1.25 5Z"
+        fill="white" />
+    <path
+        d="M2 5C2 3.34314 3.34314 2 5 2C6.65685 2 8 3.34314 8 5C8 6.65685 6.65685 8 5 8C3.34314 8 2 6.65685 2 5Z"
+        fill="black" />
+    <script xmlns="" />
+</svg>

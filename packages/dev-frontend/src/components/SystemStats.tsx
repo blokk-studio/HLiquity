@@ -33,6 +33,12 @@ const Balances: React.FC = () => {
   );
 };
 
+const chainKeys = {
+  295: "mainnet",
+  296: "testnet",
+  297: "previewnet",
+}
+
 type SystemStatsProps = {
   variant?: string;
   showBalances?: boolean;
@@ -82,6 +88,11 @@ export const SystemStats: React.FC<SystemStatsProps> = ({ variant = "info", show
   const kickbackRatePct = frontendTag === AddressZero ? "100" : kickbackRate?.mul(100).prettify();
   const chain = useHederaChain();
   const deployment = useDeployment();
+
+  const getHederaLink = (tokenId: string, chainId?: number) => {
+    return `https://hashscan.io/${chainKeys[chainId] || 'testnet'}/token/${tokenId}`
+  }
+
 
   return (
     <Card {...{ variant }}>
@@ -177,9 +188,8 @@ export const SystemStats: React.FC<SystemStatsProps> = ({ variant = "info", show
           Frontend version:{" "}
           {import.meta.env.VITE_APP_VERSION ? (
             <Link
-              href={`https://github.com/blokk-studio/HLiquity/commit/${
-                import.meta.env.VITE_APP_VERSION
-              }`}
+              href={`https://github.com/blokk-studio/HLiquity/commit/${import.meta.env.VITE_APP_VERSION
+                }`}
             >
               {import.meta.env.VITE_APP_VERSION.substring(0, 7)}
             </Link>
@@ -209,27 +219,9 @@ export const SystemStats: React.FC<SystemStatsProps> = ({ variant = "info", show
         <Box sx={{ fontSize: 0 }}>
           HCHF Token ID:{" "}
           {deployment ? (
-            <Tooltip
-              message={
-                <Card variant="tooltip">
-                  <header sx={{ fontWeight: "700", display: "block" }}>HCHF Token</header>
-                  <span sx={{ display: "block" }}>
-                    Hedera ID:{" "}
-                    <span sx={{ fontWeight: "700" }}>
-                      {TokenId.fromSolidityAddress(deployment.hchfTokenAddress).toString()}
-                    </span>
-                  </span>
-                  <span sx={{ display: "block" }}>
-                    EVM Address:{" "}
-                    <span sx={{ fontWeight: "700" }}>{deployment.hchfTokenAddress}</span>
-                  </span>
-                </Card>
-              }
-            >
-              <span sx={{ fontWeight: "700" }}>
-                {TokenId.fromSolidityAddress(deployment.hchfTokenAddress).toString()}
-              </span>
-            </Tooltip>
+            <Link href={getHederaLink(deployment.hchfTokenAddress, chain?.id)}>
+              {TokenId.fromSolidityAddress(deployment.hchfTokenAddress).toString()}
+            </Link>
           ) : (
             <>unknown</>
           )}
@@ -237,21 +229,9 @@ export const SystemStats: React.FC<SystemStatsProps> = ({ variant = "info", show
         <Box sx={{ fontSize: 0 }}>
           HLQT Token ID:{" "}
           {deployment ? (
-            <Tooltip
-              message={
-                <Card variant="tooltip">
-                  <header sx={{ fontWeight: "700", display: "block" }}>HLQT Token</header>
-                  <span sx={{ display: "block" }}>
-                    Hedera ID: {TokenId.fromSolidityAddress(deployment.hlqtTokenAddress).toString()}
-                  </span>
-                  <span sx={{ display: "block" }}>EVM Address: {deployment.hlqtTokenAddress}</span>
-                </Card>
-              }
-            >
-              <span sx={{ fontWeight: "700" }}>
-                {TokenId.fromSolidityAddress(deployment.hlqtTokenAddress).toString()}
-              </span>
-            </Tooltip>
+            <Link href={getHederaLink(deployment.hlqtTokenAddress, chain?.id)}>
+              {TokenId.fromSolidityAddress(deployment.hlqtTokenAddress).toString()}
+            </Link>
           ) : (
             <>unknown</>
           )}
