@@ -386,8 +386,14 @@ export const Adjusting: React.FC = () => {
               loading={isTransactionPending}
             >
               {stableTroveChange?.params.borrowHCHF
-                ? `Borrow ${stableTroveChange?.params.borrowHCHF?.toString(2)} HCHF`
-                : `Repay ${stableTroveChange?.params.repayHCHF?.toString(2)} HCHF`}
+                ? `Borrow ${stableTroveChange?.params.borrowHCHF.toString(2)} HCHF`
+                : stableTroveChange?.params.repayHCHF
+                ? `Repay ${stableTroveChange?.params.repayHCHF.toString(2)} HCHF`
+                : stableTroveChange?.params.depositCollateral
+                ? `Deposit ${stableTroveChange?.params.depositCollateral.toString(2)} HBAR`
+                : stableTroveChange?.params.withdrawCollateral
+                ? `Withdraw ${stableTroveChange?.params.withdrawCollateral.toString(2)} HBAR`
+                : "Adjust trove"}
             </TroveAction>
           ) : (
             <Button disabled>Confirm</Button>
