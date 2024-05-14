@@ -2,6 +2,7 @@ import React from "react";
 import { Chain, createClient, WagmiConfig } from "wagmi";
 import { ConnectKitProvider } from "connectkit";
 import { Flex, Heading, ThemeProvider } from "theme-ui";
+import { Global, css } from "@emotion/react";
 
 import getDefaultClient from "./connectkit/defaultClient";
 import { LiquityProvider } from "./hooks/LiquityContext";
@@ -20,6 +21,7 @@ import { AuthenticationProvider, LoginForm } from "./authentication";
 import { HederaTokensProvider } from "./hedera/hedera_context";
 import { Lexicon } from "./lexicon";
 import { useConfiguration } from "./configuration";
+import "./App.scss";
 
 const isDemoMode = import.meta.env.VITE_APP_DEMO_MODE === "true";
 
@@ -120,6 +122,16 @@ const App = () => {
 
   return (
     <ThemeProvider theme={theme}>
+      <Global
+        styles={css`
+        @font-face {
+          font-family: "museo";
+          src: url('fonts/Museo_Sans_Cyrl_300.ttf') format("truetype");
+          font-style: normal;
+          font-weight: 300;
+        }
+      `}
+      />
       <AuthenticationProvider loginForm={<LoginForm />}>
         <WagmiConfig client={client}>
           <ConnectKitProvider options={{ hideBalance: true }}>

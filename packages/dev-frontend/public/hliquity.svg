@@ -2,8 +2,8 @@
 <svg xmlns="http://www.w3.org/2000/svg" height="105.692" viewBox="0 0 105.692 105.692" width="105.692">
   <defs>
     <linearGradient gradientUnits="objectBoundingBox" id="linear-gradient" x1="0.5" x2="0.5" y2="1">
-      <stop offset="0" stop-color="#0385df"/>
-      <stop offset="1" stop-color="#0a629d"/>
+      <stop offset="0" stop-color="#000"/>
+      <stop offset="1" stop-color="#000"/>
     </linearGradient>
   </defs>
   <g data-name="Group 26" id="Group_26" transform="translate(-355.065 -384.089)">

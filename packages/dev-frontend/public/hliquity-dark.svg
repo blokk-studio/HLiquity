@@ -2,8 +2,8 @@
 <svg xmlns="http://www.w3.org/2000/svg" height="105.692" viewBox="0 0 105.692 105.692" width="105.692">
   <defs>
     <linearGradient gradientUnits="objectBoundingBox" id="linear-gradient" x1="0.5" x2="0.5" y2="1">
-      <stop offset="0" stop-color="#000"/>
-      <stop offset="1" stop-color="#000"/>
+      <stop offset="0" stop-color="#fff"/>
+      <stop offset="1" stop-color="#fff"/>
     </linearGradient>
   </defs>
   <g data-name="Group 26" id="Group_26" transform="translate(-355.065 -384.089)">
@@ -12,8 +12,8 @@
     </g>
     <g data-name="Group 24" id="Group_24" transform="translate(107.784 -43.49)">
       <g data-name="Group 25" id="Group_25">
-        <path d="M266.318,334.509h-5.877V293.23h5.874v12.4h25.944v-12.4h5.879V334.5h-5.876V321.8H266.318Zm26.2-24.057h-25.91V317h25.91Z" data-name="Path 13" fill="#fff" id="Path_13" transform="translate(10.84 166.35)"/>
-        <rect data-name="Rectangle 25" fill="#fff" height="5.959" id="Rectangle_25" transform="translate(303.577 494.899)" width="30.873"/>
+        <path d="M266.318,334.509h-5.877V293.23h5.874v12.4h25.944v-12.4h5.879V334.5h-5.876V321.8H266.318Zm26.2-24.057h-25.91V317h25.91Z" data-name="Path 13" fill="#000" id="Path_13" transform="translate(10.84 166.35)"/>
+        <rect data-name="Rectangle 25" fill="#000" height="5.959" id="Rectangle_25" transform="translate(303.577 494.899)" width="30.873"/>
       </g>
     </g>
   </g>

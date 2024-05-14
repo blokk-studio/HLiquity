@@ -8,32 +8,47 @@ const baseColors = {
   lightGreen: "#78dcb1",
   yellow: "#fd9d28",
   red: "#dc2c10",
-  lightRed: "#ff755f"
+  lightRed: "#ff755f",
+  white: "#fff",
+  black: "#000",
 };
 
 const colors = {
-  primary: baseColors.blue,
-  secondary: baseColors.purple,
+  primary: baseColors.black,
+  secondary: baseColors.white,
   accent: baseColors.cyan,
 
   success: baseColors.green,
   successHover: baseColors.lightGreen,
   warning: baseColors.yellow,
   danger: baseColors.red,
-  dangerHover: baseColors.lightRed,
+  dangerHover: "gray",
   info: baseColors.blue,
+  buttonShadow: "#0000003D",
   invalid: "pink",
 
-  text: "#293147",
+  text: "#primary",
   background: "white",
   muted: "#eaebed",
-  highlight: "#efeffe"
+  highlight: "#efeffe",
+
+  modes: {
+    dark: {
+      text: baseColors.white,
+      background: baseColors.black,
+      primary: baseColors.white,
+      secondary: baseColors.black,
+      buttonShadow: "#ffffff3D",
+      info: baseColors.cyan,
+    }
+  }
 };
 
 const buttonBase: ThemeUIStyleObject = {
   display: "flex",
   alignItems: "center",
   justifyContent: "center",
+  fontSize: 4,
 
   ":enabled": { cursor: "pointer" }
 };
@@ -41,13 +56,13 @@ const buttonBase: ThemeUIStyleObject = {
 const button: ThemeUIStyleObject = {
   ...buttonBase,
 
-  px: "32px",
-  py: "12px",
-
-  color: "white",
-  border: 1,
-
-  fontWeight: "bold",
+  px: "12px",
+  py: "5px",
+  // transition: "box-shadow .5s, border .2s",
+  color: "primary",
+  borderRadius: 2,
+  fontWeight: "regular",
+  fontFamily: "inherit",
 
   ":disabled": {
     opacity: 0.5
@@ -60,7 +75,6 @@ const buttonOutline = (color: string, hoverColor: string): ThemeUIStyleObject =>
   background: "none",
 
   ":enabled:hover": {
-    color: "background",
     bg: hoverColor,
     borderColor: hoverColor
   }
@@ -81,9 +95,9 @@ const iconButton: ThemeUIStyleObject = {
   }
 };
 
-const cardHeadingFontSize = 18.7167;
+const cardHeadingFontSize = 30;
 
-const cardGapX = [0, 3, 4];
+const cardGapX = [3, 3, 4];
 const cardGapY = [3, 3, 4];
 
 const card: ThemeUIStyleObject = {
@@ -98,8 +112,8 @@ const infoCard: ThemeUIStyleObject = {
 
   padding: 3,
 
-  borderColor: "rgba(122,199,240,0.4)",
-  background: "linear-gradient(200deg, #d4d9fc, #cae9f9)",
+  // borderColor: "rgba(122,199,240,0.4)",
+  // background: "linear-gradient(200deg, #d4d9fc, #cae9f9)",
 
   h2: {
     mb: 2,
@@ -144,7 +158,7 @@ const modalOverlay: ThemeUIStyleObject = {
 };
 
 const headerGradient: ThemeUIStyleObject = {
-  background: `linear-gradient(90deg, ${colors.background}, ${colors.muted})`
+  // background: `linear-gradient(90deg, ${colors.background}, ${colors.muted})`
 };
 
 const theme: Theme = {
@@ -154,6 +168,7 @@ const theme: Theme = {
 
   fonts: {
     body: [
+      "museo",
       "system-ui",
       "-apple-system",
       "BlinkMacSystemFont",
@@ -199,12 +214,14 @@ const theme: Theme = {
     primary: {
       ...button,
 
-      bg: "primary",
-      borderColor: "primary",
+      bg: "secondary",
+      borderColor: "secondary",
+      boxShadow: `inset 0 0 0 1px var(--theme-ui-colors-primary)`,
 
       ":enabled:hover": {
         bg: "secondary",
-        borderColor: "secondary"
+        borderColor: "secondary",
+        boxShadow: `4px 4px 20px var(--theme-ui-colors-buttonShadow), inset 0 0 0 2px var(--theme-ui-colors-primary)`,
       }
     },
 
@@ -215,9 +232,15 @@ const theme: Theme = {
 
     cancel: {
       ...button,
-      ...buttonOutline("text", "text"),
+      ...buttonOutline("text", "secondary"),
 
-      opacity: 0.8
+      opacity: 0.8,
+
+      ":enabled:hover": {
+        bg: "secondary",
+        borderColor: "secondary",
+        boxShadow: `4px 4px 20px var(--theme-ui-colors-buttonShadow), inset 0 0 0 2px var(--theme-ui-colors-primary)`,
+      }
     },
 
     danger: {
@@ -287,7 +310,7 @@ const theme: Theme = {
         py: 2,
         pr: 2,
 
-        bg: "muted",
+        // bg: "muted",
 
         fontSize: cardHeadingFontSize
       }
@@ -325,6 +348,21 @@ const theme: Theme = {
   },
 
   forms: {
+    switch: {
+      backgroundColor: 'primary',
+      mr: 0,
+      ml: 3,
+      pr: 0,
+
+      '&:checked': {
+        backgroundColor: 'primary'
+      },
+
+      'input:checked ~ & > div': {
+        backgroundColor: 'secondary',
+      },
+    },
+
     label: {
       ...formBase
     },
@@ -359,6 +397,7 @@ const theme: Theme = {
       display: "flex",
       justifyContent: "space-between",
       alignItems: "stretch",
+      bg: "secondary",
 
       position: ["fixed", "relative"],
       top: 0,
@@ -387,7 +426,7 @@ const theme: Theme = {
       width: "100%",
       maxWidth: "1280px",
       mx: "auto",
-      mt: ["40px", 0],
+      mt: ["60px", 0],
       mb: ["40px", "40px"],
       px: cardGapX
     },
@@ -399,7 +438,7 @@ const theme: Theme = {
     },
 
     left: {
-      pr: cardGapX,
+      pr: [0, 3, 4],
       width: ["100%", "58%"]
     },
 
@@ -442,7 +481,7 @@ const theme: Theme = {
 
       display: ["block", "none"],
 
-      bg: "rgba(255, 255, 255, 0.8)"
+      bg: "secondary"
     },
 
     infoMessage: {
@@ -491,9 +530,8 @@ const theme: Theme = {
 
     a: {
       color: "primary",
-      ":hover": { color: "accent" },
+      ":hover": { fontWeight: "bold" },
       textDecoration: "none",
-      fontWeight: "bold"
     },
 
     progress: {
@@ -511,7 +549,7 @@ const theme: Theme = {
       letterSpacing: "2px",
       width: ["100%", "auto"],
       mt: [3, "auto"]
-    }
+    },
   }
 };
 

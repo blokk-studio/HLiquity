@@ -117,8 +117,8 @@ export const Opening: React.FC = () => {
       status: hasAssociatedWithHchf
         ? "success"
         : hchfAssociationLoadingState === "error"
-        ? "danger"
-        : hchfAssociationLoadingState,
+          ? "danger"
+          : hchfAssociationLoadingState,
       description: hasAssociatedWithHchf
         ? "You've already consented to receiving HCHF."
         : "You have to consent to receiving HCHF tokens before you can use HLiquity."
@@ -155,12 +155,12 @@ export const Opening: React.FC = () => {
         <EditableRow
           label="Collateral"
           inputId="trove-collateral"
-          amount={collateral.prettify(4)}
-          maxAmount={maxCollateral.toString()}
+          amount={collateral.prettify()}
+          maxAmount={maxCollateral.toString(2)}
           maxedOut={collateralMaxedOut}
           editingState={editingState}
           unit={COLLATERAL_COIN}
-          editedAmount={collateral.toString(4)}
+          editedAmount={collateral.toString(2)}
           setEditedAmount={(amount: string) => setCollateral(Decimal.from(amount))}
         />
 

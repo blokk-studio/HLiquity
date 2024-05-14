@@ -6,6 +6,7 @@ import { useLiquitySelector } from "@liquity/lib-react";
 
 import { Icon } from "./Icon";
 import { SystemStats } from "./SystemStats";
+import ThemeSwitcher from "./ThemeSwitcher";
 
 const select = ({ total, price }: LiquityStoreState) => ({ total, price });
 
@@ -22,10 +23,11 @@ export const SystemStatsPopup: React.FC = () => {
         variant="icon"
         sx={{
           position: "relative",
-          display: ["block", "none"]
+          display: ["block", "none"],
+          mt: 1,
         }}
       >
-        <Icon name="info-circle" size="2x" />
+        <Icon name="info-circle" size="lg" />
 
         {total.collateralRatioIsBelowCritical(price) && (
           <Flex
@@ -47,6 +49,8 @@ export const SystemStatsPopup: React.FC = () => {
           </Flex>
         )}
       </Button>
+
+      <ThemeSwitcher />
 
       {systemStatsOpen && (
         <Container

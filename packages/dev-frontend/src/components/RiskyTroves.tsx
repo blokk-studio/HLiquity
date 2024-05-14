@@ -170,7 +170,7 @@ export const RiskyTroves: React.FC<RiskyTrovesProps> = ({ pageSize }) => {
               </Abbreviation>
 
               <Button variant="titleIcon" onClick={previousPage} disabled={clampedPage <= 0}>
-                <Icon name="chevron-left" size="lg" />
+                <Icon name="chevron-left" size="sm" />
               </Button>
 
               <Button
@@ -178,7 +178,7 @@ export const RiskyTroves: React.FC<RiskyTrovesProps> = ({ pageSize }) => {
                 onClick={nextPage}
                 disabled={clampedPage >= numberOfPages - 1}
               >
-                <Icon name="chevron-right" size="lg" />
+                <Icon name="chevron-right" size="sm" />
               </Button>
             </>
           )}
@@ -188,7 +188,7 @@ export const RiskyTroves: React.FC<RiskyTrovesProps> = ({ pageSize }) => {
             sx={{ opacity: loading ? 0 : 1, ml: [0, 3] }}
             onClick={forceReload}
           >
-            <Icon name="redo" size="lg" />
+            <Icon name="redo" size="sm" />
           </Button>
         </Flex>
       </Heading>
@@ -307,8 +307,8 @@ export const RiskyTroves: React.FC<RiskyTrovesProps> = ({ pageSize }) => {
                               collateralRatio.gt(CRITICAL_COLLATERAL_RATIO)
                                 ? "success"
                                 : collateralRatio.gt(1.2)
-                                ? "warning"
-                                : "danger"
+                                  ? "warning"
+                                  : "danger"
                             }
                           >
                             {new Percent(collateralRatio).prettify()}
@@ -322,11 +322,11 @@ export const RiskyTroves: React.FC<RiskyTrovesProps> = ({ pageSize }) => {
                           requires={[
                             recoveryMode
                               ? liquidatableInRecoveryMode(
-                                  trove,
-                                  price,
-                                  totalCollateralRatio,
-                                  hchfInStabilityPool
-                                )
+                                trove,
+                                price,
+                                totalCollateralRatio,
+                                hchfInStabilityPool
+                              )
                               : liquidatableInNormalMode(trove, price)
                           ]}
                           send={liquity.send.liquidate.bind(liquity.send, trove.ownerAddress)}

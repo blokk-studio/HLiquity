@@ -1,0 +1,82 @@
+.theme-switcher {
+    justify-self: end;
+    position: relative;
+    width: 40px;
+    display: inline-flex;
+    align-items: center;
+    margin-left: 20px;
+
+    .switcher--label {
+        background-color: #fff;
+        border-radius: 50px;
+        bottom: 15px;
+        cursor: pointer;
+        height: 24px;
+        position: absolute;
+        top: 12px;
+        width: 100%
+    }
+
+    .switcher--input {
+        display: none;
+        position: absolute
+    }
+
+    .switcher--slider {
+        border-radius: 50px;
+        height: 100%;
+        position: absolute;
+        transition: .3s;
+        width: 100%
+    }
+
+    .switcher--slider:before {
+        align-items: center;
+        background-color: #000;
+        background-image: url("/icons/moon.svg");
+        background-position: 50%;
+        background-repeat: no-repeat;
+        background-size: 10px 10px;
+        border-radius: 50%;
+        content: " ";
+        display: flex;
+        height: 22px;
+        justify-content: center;
+        left: 2px;
+        position: absolute;
+        top: 1px;
+        transition: .3s;
+        width: 22px
+    }
+
+    .switcher--input:checked~.switcher--slider {
+        background-color: #000
+    }
+
+    .switcher--input:checked~.switcher--slider:before {
+        background-color: #fff;
+        background-image: url("/icons/sun.svg");
+        background-position: 50%;
+        background-repeat: no-repeat;
+        background-size: 10px 10px;
+        content: " ";
+        transform: translateX(15px)
+    }
+}
+
+.switcher-header {
+    box-sizing: border-box;
+    margin: 0;
+    min-width: 0;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    margin-inline: clamp(2rem, 100%, 40% - 16rem);
+    height: 38px;
+
+    .switcher-container {
+        display: flex;
+        justify-content: flex-end;
+        height: 100%;
+    }
+}

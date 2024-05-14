@@ -43,7 +43,7 @@ export const LiquidationManager: React.FC = () => {
               }}
             >
               <Button variant="dangerIcon">
-                <Icon name="trash" size="lg" />
+                <Icon name="trash" size="sm" />
               </Button>
             </Transaction>
           </Flex>

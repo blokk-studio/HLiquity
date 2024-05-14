@@ -30,7 +30,7 @@ export const ReadOnlyTrove: React.FC = () => {
           <DisabledEditableRow
             label="Collateral"
             inputId="trove-collateral"
-            amount={trove.collateral.prettify(4)}
+            amount={trove.collateral.prettify()}
             unit={COLLATERAL_COIN}
           />
 
