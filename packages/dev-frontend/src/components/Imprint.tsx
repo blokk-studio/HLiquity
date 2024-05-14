@@ -32,8 +32,14 @@ export const Imprint: React.FC = () => {
           <span>Dammstrasse 16</span>
           <span>6300 Zug</span>
           <span>Switzerland</span>
-          <Link href="https://blokk.studio/">https://blokk.studio/</Link>
-          {email && <Link href="mailto:hello@blokk.studio">hello@blokk.studio</Link>}
+          <Link href="https://blokk.studio/" target="_blank">
+            https://blokk.studio/
+          </Link>
+          {email && (
+            <Link href={`mailto:${email}`} target="_blank">
+              {email}
+            </Link>
+          )}
         </address>
       </li>
       <li sx={listSX}>

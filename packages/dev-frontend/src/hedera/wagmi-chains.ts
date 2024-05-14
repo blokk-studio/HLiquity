@@ -19,12 +19,16 @@ export const testnet: HederaChain = {
   network: "hederaTestnet",
   rpcUrls: {
     default: {
-      http: ["https://testnet.hashio.io/api"],
-      webSocket: ["wss://testnet.hashio.io/ws"]
+      http: ["https://starter.arkhia.io/hedera/testnet/json-rpc/v1/7542b249WGllfVd4Gf7l8bf18V1G8fWW"],
+      webSocket: [
+        "wss://starter.arkhia.io/hedera/testnet/watchtower/v1/7542b249WGllfVd4Gf7l8bf18V1G8fWW"
+      ]
     },
     public: {
-      http: ["https://testnet.hashio.io/api"],
-      webSocket: ["wss://testnet.hashio.io/ws"]
+      http: ["https://starter.arkhia.io/hedera/testnet/json-rpc/v1/7542b249WGllfVd4Gf7l8bf18V1G8fWW"],
+      webSocket: [
+        "wss://starter.arkhia.io/hedera/testnet/watchtower/v1/7542b249WGllfVd4Gf7l8bf18V1G8fWW"
+      ]
     }
   },
   testnet: true,
@@ -67,12 +71,16 @@ export const mainnet: HederaChain = {
   network: "hedera",
   rpcUrls: {
     default: {
-      http: ["https://mainnet.hashio.io/api"],
-      webSocket: ["wss://mainnet.hashio.io/ws"]
+      http: ["https://starter.arkhia.io/hedera/mainnet/json-rpc/v1/7542b249WGllfVd4Gf7l8bf18V1G8fWW"],
+      webSocket: [
+        "wss://starter.arkhia.io/hedera/mainnet/watchtower/v1/7542b249WGllfVd4Gf7l8bf18V1G8fWW"
+      ]
     },
     public: {
-      http: ["https://mainnet.hashio.io/api"],
-      webSocket: ["wss://mainnet.hashio.io/ws"]
+      http: ["https://starter.arkhia.io/hedera/mainnet/json-rpc/v1/7542b249WGllfVd4Gf7l8bf18V1G8fWW"],
+      webSocket: [
+        "wss://starter.arkhia.io/hedera/mainnet/watchtower/v1/7542b249WGllfVd4Gf7l8bf18V1G8fWW"
+      ]
     }
   },
   testnet: true,
