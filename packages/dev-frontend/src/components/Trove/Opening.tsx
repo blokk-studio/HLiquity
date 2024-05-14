@@ -60,7 +60,7 @@ export const Opening: React.FC = () => {
   const totalDebt = borrowAmount.add(HCHF_LIQUIDATION_RESERVE).add(fee);
   const isDirty = !collateral.isZero || !borrowAmount.isZero;
   const trove = isDirty ? new Trove(collateral, totalDebt) : EMPTY_TROVE;
-  const maxCollateral = accountBalance.gt(accountBalance.sub(TX_MAX_COSTS))
+  const maxCollateral = accountBalance.gt(TX_MAX_COSTS)
     ? accountBalance.sub(TX_MAX_COSTS)
     : Decimal.ZERO;
   const collateralMaxedOut = collateral.eq(maxCollateral);
@@ -117,8 +117,8 @@ export const Opening: React.FC = () => {
       status: hasAssociatedWithHchf
         ? "success"
         : hchfAssociationLoadingState === "error"
-          ? "danger"
-          : hchfAssociationLoadingState,
+        ? "danger"
+        : hchfAssociationLoadingState,
       description: hasAssociatedWithHchf
         ? "You've already consented to receiving HCHF."
         : "You have to consent to receiving HCHF tokens before you can use HLiquity."
