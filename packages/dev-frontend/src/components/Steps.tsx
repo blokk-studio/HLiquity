@@ -70,6 +70,7 @@ export const Steps: React.FunctionComponent<{ steps: Step[]; sx?: ThemeUIStyleOb
         paddingLeft: "0",
         display: "flex",
         margin: 0,
+        fontSize: "18px",
         ...sx
       }}
     >

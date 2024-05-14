@@ -39,6 +39,7 @@ const colors = {
       primary: baseColors.white,
       secondary: baseColors.black,
       buttonShadow: "#ffffff3D",
+      info: baseColors.cyan,
     }
   }
 };
@@ -96,7 +97,7 @@ const iconButton: ThemeUIStyleObject = {
 
 const cardHeadingFontSize = 30;
 
-const cardGapX = [0, 3, 4];
+const cardGapX = [3, 3, 4];
 const cardGapY = [3, 3, 4];
 
 const card: ThemeUIStyleObject = {
@@ -437,7 +438,7 @@ const theme: Theme = {
     },
 
     left: {
-      pr: cardGapX,
+      pr: [0, 3, 4],
       width: ["100%", "58%"]
     },
 
