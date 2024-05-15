@@ -131,6 +131,7 @@ export const StakingManager: React.FC = () => {
   const hlqtBalance = useLiquitySelector(selectLQTYBalance);
 
   const change = originalStake.whatChanged(editedLQTY);
+  console.log(change, 'change')
   const [validChange, description] = !change
     ? [undefined, undefined]
     : change.stakeHLQT?.gt(hlqtBalance)
@@ -182,7 +183,7 @@ export const StakingManager: React.FC = () => {
       throw new Error(errorMessage);
     }
 
-    const contractAddress = addresses.hlqtToken as `0x${string}`;
+    const contractAddress = addresses.unipool as `0x${string}`; // TODO change to SaucerSwapPool when ready
     const tokenAddress = deployment.hlqtTokenAddress;
     const amount = BigNumber.from(validChange.stakeHLQT.bigNumber);
 
@@ -220,7 +221,7 @@ export const StakingManager: React.FC = () => {
 
   return (
     <StakingEditor
-      title={"Staking"}
+      title={"SaucerSwap LP Staking"}
       {...{ originalStake, editedLQTY, dispatch }}
       transactionSteps={transactionSteps}
     >
