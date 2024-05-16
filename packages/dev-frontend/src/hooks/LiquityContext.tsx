@@ -37,6 +37,7 @@ const NonNullableLiquityProvider: React.FC<NonNullableLiquityProviderProps> = ({
     const rpcUrl = chain.rpcUrls.default.http[0] as `https://${string}`;
 
     const hashgraphLiquity = HashgraphLiquity.fromEvmAddresses({
+      userAccountId: hashConnectSessionData.userAccountId,
       userAccountAddress: hashConnectSessionData.userAccountEvmAddress,
       deploymentAddresses: deployment.addresses as Record<string, `0x${string}`>,
       totalStabilityPoolHlqtReward: parseInt(deployment.totalStabilityPoolHLQTReward),

@@ -5,7 +5,10 @@ import { defaultAbiCoder } from "@ethersproject/abi";
 
 import "react-circular-progressbar/dist/styles.css";
 
-import { EthersTransactionOverrides, EthersTransactionFailedError as EthersTransactionCancelledError } from "@liquity/lib-ethers";
+import {
+  EthersTransactionOverrides,
+  EthersTransactionFailedError as EthersTransactionCancelledError
+} from "@liquity/lib-ethers";
 import { SentLiquityTransaction, LiquityReceipt } from "@liquity/lib-base";
 
 import { useLiquity } from "../hooks/LiquityContext";
@@ -254,7 +257,7 @@ export const TransactionMonitor: React.FC = () => {
           finished = true;
 
           if (receipt.status === "succeeded") {
-            console.log(`${receipt}`);
+            console.log({ receipt });
 
             setTransactionState({
               type: "confirmedOneShot",

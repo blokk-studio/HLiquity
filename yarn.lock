@@ -2225,6 +2225,8 @@ __metadata:
     "@liquity/lib-base": "workspace:^"
     "@typescript-eslint/eslint-plugin": ^7.6.0
     "@typescript-eslint/parser": ^7.6.0
+    bignumber.js: 9.1.2
+    emittery: ^1.0.3
     eslint: ^9.0.0
     hashconnect: ^3.0.13
     prettier: ^3.2.5
@@ -8251,17 +8253,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"bignumber.js@npm:9.1.2, bignumber.js@npm:^9.1.1":
+  version: 9.1.2
+  resolution: "bignumber.js@npm:9.1.2"
+  checksum: 582c03af77ec9cb0ebd682a373ee6c66475db94a4325f92299621d544aa4bd45cb45fd60001610e94aef8ae98a0905fa538241d9638d4422d57abbeeac6fadaf
+  languageName: node
+  linkType: hard
+
 "bignumber.js@npm:^7.2.1":
   version: 7.2.1
   resolution: "bignumber.js@npm:7.2.1"
   checksum: c4eab705fb3293170f248f13f38a06d24591710864632f78b1637d361feaf07ce782cc6ea23c6984c8ddb030ad1883b813a251448527d55650b403e6f2cc7e67
-  languageName: node
-  linkType: hard
-
-"bignumber.js@npm:^9.1.1":
-  version: 9.1.2
-  resolution: "bignumber.js@npm:9.1.2"
-  checksum: 582c03af77ec9cb0ebd682a373ee6c66475db94a4325f92299621d544aa4bd45cb45fd60001610e94aef8ae98a0905fa538241d9638d4422d57abbeeac6fadaf
   languageName: node
   linkType: hard
 
@@ -11420,6 +11422,13 @@ __metadata:
   version: 0.0.3
   resolution: "emitter-mixin@npm:0.0.3"
   checksum: c26a076b71d8fc6976b7cee907567cf62437ceb01bdbcf7046437bd09b45260c9ca3a6eb93a407a2acffe233e452601325575be1157fefcdb06c9b9d6c6d88ad
+  languageName: node
+  linkType: hard
+
+"emittery@npm:^1.0.3":
+  version: 1.0.3
+  resolution: "emittery@npm:1.0.3"
+  checksum: c9e760431294a546dacc236e563ee29cc650374696ef5f824a465a4a7c584ca2c0046885a3e5d7cd3d9592713200c82f4a4ded11d0b49c06cb5bb587dedc46b4
   languageName: node
   linkType: hard
 
