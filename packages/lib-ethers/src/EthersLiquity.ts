@@ -160,8 +160,8 @@ export class EthersLiquity implements ReadableEthersLiquity, TransactableLiquity
    */
   hasStore(store: "blockPolled"): this is EthersLiquityWithStore<BlockPolledLiquityStore>;
 
-  hasStore(): boolean {
-    return false;
+  hasStore(): this is EthersLiquityWithStore {
+    return true;
   }
 
   /** {@inheritDoc @liquity/lib-base#ReadableLiquity.getTotalRedistributed} */
@@ -632,7 +632,8 @@ export interface EthersLiquityWithStore<T extends HLiquityStore = HLiquityStore>
 
 class _EthersLiquityWithStore<T extends HLiquityStore = HLiquityStore>
   extends EthersLiquity
-  implements EthersLiquityWithStore<T> {
+  implements EthersLiquityWithStore<T>
+{
   readonly store: T;
 
   constructor(readable: ReadableEthersLiquityWithStore<T>) {

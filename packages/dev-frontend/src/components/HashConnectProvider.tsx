@@ -1,6 +1,6 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { DappMetadata, HashConnect, SessionData, HashConnectConnectionState } from "hashconnect";
-import { LedgerId } from "@hashgraph/sdk";
+import { AccountId, LedgerId } from "@hashgraph/sdk";
 import { getConsumer, getHook, getLoader, getOptionalHook } from "../optional_context";
 import { Flex, Heading, Paragraph } from "theme-ui";
 import { Icon } from "./Icon";
@@ -31,6 +31,9 @@ export const useHashConnect = getHook(hashConnectContext, {
 });
 
 interface ExtendedHashConnectSessionData extends SessionData {
+  /** the currently selected account id to use for all operations */
+  userAccountId: AccountId;
+  /** the evm address of the currently selected account id */
   userAccountEvmAddress: `0x${string}`;
 }
 const hashConnectSessionDataContext = createContext<ExtendedHashConnectSessionData | null>(null);
@@ -70,15 +73,17 @@ export const HashConnectProvider: React.FC<{ walletConnectProjectId: string }> =
       setConnectionState(connectionState);
     };
     const updateSessionData = async (data: SessionData) => {
-      const [userAccountId] = data.accountIds;
+      const [userAccountIdString] = data.accountIds;
+      const userAccountId = AccountId.fromString(userAccountIdString);
       // TODO: handle all chains
       const response = await fetch(
-        `https://testnet.mirrornode.hedera.com/api/v1/accounts/${userAccountId.toString()}`
+        `https://testnet.mirrornode.hedera.com/api/v1/accounts/${userAccountIdString}`
       );
       const { evm_address }: { evm_address: `0x${string}` } = await response.json();
 
       const extendedSessionData: ExtendedHashConnectSessionData = {
         ...data,
+        userAccountId,
         userAccountEvmAddress: evm_address
       };
 

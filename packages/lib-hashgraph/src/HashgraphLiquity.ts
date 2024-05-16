@@ -1,26 +1,47 @@
 import {
   BETA,
   Decimal,
+  Decimalish,
   Fees,
   FrontendStatus,
   HLQTStake,
   HLiquityStore,
+  LiquityReceipt,
   LiquityStoreBaseState,
+  LiquityStoreState,
   MINUTE_DECAY_FACTOR,
+  MinedReceipt,
+  PopulatableLiquity,
+  PopulatedLiquityTransaction,
   ReadableLiquity,
+  SendableLiquity,
+  SentLiquityTransaction,
   StabilityDeposit,
   Trove,
+  TroveAdjustmentDetails,
+  TroveAdjustmentParams,
   TroveListingParams,
   TroveWithPendingRedistribution,
   UserTrove,
-  UserTroveStatus,
+  _normalizeTroveAdjustment,
 } from '@liquity/lib-base'
+import { BigNumber } from 'bignumber.js'
 import { HashConnect } from 'hashconnect'
 import Web3, { Contract, MatchPrimitiveType } from 'web3'
 
 import { Address } from './address'
 import { DeploymentAddressesKey } from './deployment'
 // contracts
+import {
+  AccountId,
+  ContractExecuteTransaction,
+  ContractId,
+  Hbar,
+  TransactionReceipt,
+  TransactionResponse,
+} from '@hashgraph/sdk'
+import { default as Emittery } from 'emittery'
+import { EventEmitter } from 'node:events'
 import { ActivePoolAbi, activePoolAbi } from '../abi/ActivePool'
 import { BorrowerOperationsAbi, borrowerOperationsAbi } from '../abi/BorrowerOperations'
 import { CollSurplusPoolAbi, collSurplusPoolAbi } from '../abi/CollSurplusPool'
@@ -38,35 +59,23 @@ import { SortedTrovesAbi, sortedTrovesAbi } from '../abi/SortedTroves'
 import { StabilityPoolAbi, stabilityPoolAbi } from '../abi/StabilityPool'
 import { TroveManagerAbi, troveManagerAbi } from '../abi/TroveManager'
 import { UnipoolAbi, unipoolAbi } from '../abi/Unipool'
+import {
+  TypedContractExecuteTransaction,
+  TypedContractFunctionParameters,
+} from './contract_functions'
+import { LiquityEvents } from './events'
+import { gasForPotentialLastFeeOperationTimeUpdate, gasForPotentialListTraversal } from './gas'
+import { generateTrials } from './hints'
+import { PrefixProperties } from './interface_collision'
+import { asPopulatable } from './populatable'
+import { asSendable } from './sendable'
+import { getLiquityReceiptStatus } from './transactions'
+import { BackendTroveStatus, userTroveStatusFrom } from './trove_status'
+import { getBlockTimestamp } from './web3'
 
 export const getHashgraphLiquity = () => {}
 
 interface HashgraphLiquityStoreState {}
-
-enum BackendTroveStatus {
-  nonExistent,
-  active,
-  closedByOwner,
-  closedByLiquidation,
-  closedByRedemption,
-}
-
-const userTroveStatusFrom = (backendStatus: BackendTroveStatus): UserTroveStatus => {
-  switch (backendStatus) {
-    case BackendTroveStatus.nonExistent:
-      return 'nonExistent'
-    case BackendTroveStatus.active:
-      return 'open'
-    case BackendTroveStatus.closedByOwner:
-      return 'closedByOwner'
-    case BackendTroveStatus.closedByLiquidation:
-      return 'closedByLiquidation'
-    case BackendTroveStatus.closedByRedemption:
-      return 'closedByRedemption'
-  }
-
-  throw new Error(`invalid backendStatus ${backendStatus}`)
-}
 
 const decimalify = (matchPrimitiveType: MatchPrimitiveType<'uint256', unknown>) => {
   const decimal = Decimal.fromBigNumberString(matchPrimitiveType.toString())
@@ -94,51 +103,79 @@ const promiseAllValues = async <T extends Record<string, unknown>>(object: T) =>
 
 const AddressZero = '0x0000000000000000000000000000000000000000'
 
-const getBlockTimestamp = async (web3: Web3, blockTag?: string | number) => {
-  const block = await web3.eth.getBlock(blockTag)
-
-  const blockTimestamp = Number(block.timestamp)
-
-  return blockTimestamp
-}
-
 interface ContractCallOptions {
   blockTag?: string | number
 }
 
-export class HashgraphLiquity extends HLiquityStore implements ReadableLiquity {
-  /* , TransactableLiquity */
+interface TransactionOptions {
+  from?: Address
+}
 
-  // private readonly userAccountId: AccountId
+const defaultBorrowingRateSlippageTolerance = Decimal.from(0.005) // 0.5%
+const defaultRedemptionRateSlippageTolerance = Decimal.from(0.001) // 0.1%
+
+export class HashgraphLiquity
+  extends HLiquityStore<HashgraphLiquityStoreState>
+  implements
+    ReadableLiquity,
+    PrefixProperties<Readonly<SendableLiquity>, 'send'>,
+    PrefixProperties<Readonly<PopulatableLiquity>, 'populate'>,
+    // PrefixProperties<Readonly<TransactableLiquity>, 'transact'>,
+    EventEmitter
+{
+  // TODO: fix shitty interface design lasagna and remove this. use events for the different stages of the transaction.
+  public store: HLiquityStore = this
+  public readonly send: SendableLiquity
+  public readonly populate: PopulatableLiquity
+
+  private readonly eventEmitter: Emittery<LiquityEvents>
+
+  private readonly userAccountId: AccountId
   private readonly userAccountAddress: Address
-  // only use required properties, so that we don't make any mistakes (f.e. taking the account ids from hashconnect rather than the liquity instance)
-  private readonly hashConnect: Pick<HashConnect, 'sendTransaction'>
+  // don't use account ids from the hashconnect instance.
+  private readonly hashConnect: Omit<HashConnect, 'connectedAccountIds'>
   private readonly web3: Web3
   private readonly totalStabilityPoolHlqtReward: Decimal
   private readonly frontendAddress: Address
 
   // contracts
   private readonly activePool: Contract<ActivePoolAbi>
+  private readonly activePoolContractId: ContractId
   private readonly borrowerOperations: Contract<BorrowerOperationsAbi>
+  private readonly borrowerOperationsContractId: ContractId
   private readonly collSurplusPool: Contract<CollSurplusPoolAbi>
+  private readonly collSurplusPoolContractId: ContractId
   private readonly communityIssuance: Contract<CommunityIssuanceAbi>
+  private readonly communityIssuanceContractId: ContractId
   private readonly defaultPool: Contract<DefaultPoolAbi>
+  private readonly defaultPoolContractId: ContractId
   private readonly gasPool: Contract<GasPoolAbi>
+  private readonly gasPoolContractId: ContractId
   private readonly hchfToken: Contract<HCHFTokenAbi>
+  private readonly hchfTokenContractId: ContractId
   private readonly hintHelpers: Contract<HintHelpersAbi>
+  private readonly hintHelpersContractId: ContractId
   private readonly hlqtStaking: Contract<HLQTStakingAbi>
+  private readonly hlqtStakingContractId: ContractId
   private readonly hlqtToken: Contract<HLQTTokenAbi>
-  // private readonly ierc20: Contract<IERC20Abi>
+  private readonly hlqtTokenContractId: ContractId
   private readonly lockupContractFactory: Contract<LockupContractFactoryAbi>
+  private readonly lockupContractFactoryContractId: ContractId
   private readonly multiTroveGetter: Contract<MultiTroveGetterAbi>
+  private readonly multiTroveGetterContractId: ContractId
   private readonly priceFeed: Contract<PriceFeedAbi>
+  private readonly priceFeedContractId: ContractId
   private readonly sortedTroves: Contract<SortedTrovesAbi>
+  private readonly sortedTrovesContractId: ContractId
   private readonly stabilityPool: Contract<StabilityPoolAbi>
+  private readonly stabilityPoolContractId: ContractId
   private readonly troveManager: Contract<TroveManagerAbi>
+  private readonly troveManagerContractId: ContractId
   private readonly unipool: Contract<UnipoolAbi>
+  private readonly unipoolContractId: ContractId
 
   private constructor(options: {
-    // userAccountId: AccountId
+    userAccountId: AccountId
     userAccountAddress: Address
     userHashConnect: HashConnect
     web3: Web3
@@ -146,26 +183,45 @@ export class HashgraphLiquity extends HLiquityStore implements ReadableLiquity {
     frontendAddress: Address
     // contracts
     activePool: Contract<ActivePoolAbi>
+    activePoolContractId: ContractId
     borrowerOperations: Contract<BorrowerOperationsAbi>
+    borrowerOperationsContractId: ContractId
     collSurplusPool: Contract<CollSurplusPoolAbi>
+    collSurplusPoolContractId: ContractId
     communityIssuance: Contract<CommunityIssuanceAbi>
+    communityIssuanceContractId: ContractId
     defaultPool: Contract<DefaultPoolAbi>
+    defaultPoolContractId: ContractId
     gasPool: Contract<GasPoolAbi>
+    gasPoolContractId: ContractId
     hchfToken: Contract<HCHFTokenAbi>
+    hchfTokenContractId: ContractId
     hintHelpers: Contract<HintHelpersAbi>
+    hintHelpersContractId: ContractId
     hlqtStaking: Contract<HLQTStakingAbi>
+    hlqtStakingContractId: ContractId
     hlqtToken: Contract<HLQTTokenAbi>
+    hlqtTokenContractId: ContractId
     lockupContractFactory: Contract<LockupContractFactoryAbi>
+    lockupContractFactoryContractId: ContractId
     multiTroveGetter: Contract<MultiTroveGetterAbi>
+    multiTroveGetterContractId: ContractId
     priceFeed: Contract<PriceFeedAbi>
+    priceFeedContractId: ContractId
     sortedTroves: Contract<SortedTrovesAbi>
+    sortedTrovesContractId: ContractId
     stabilityPool: Contract<StabilityPoolAbi>
+    stabilityPoolContractId: ContractId
     troveManager: Contract<TroveManagerAbi>
+    troveManagerContractId: ContractId
     unipool: Contract<UnipoolAbi>
+    unipoolContractId: ContractId
   }) {
     super()
 
-    // this.userAccountId = options.userAccountId
+    this.eventEmitter = new Emittery()
+
+    this.userAccountId = options.userAccountId
     this.userAccountAddress = options.userAccountAddress
     this.hashConnect = options.userHashConnect
     this.web3 = options.web3
@@ -173,23 +229,58 @@ export class HashgraphLiquity extends HLiquityStore implements ReadableLiquity {
     this.frontendAddress = options.frontendAddress
 
     this.activePool = options.activePool
+    this.activePoolContractId = options.activePoolContractId
+
     this.borrowerOperations = options.borrowerOperations
+    this.borrowerOperationsContractId = options.borrowerOperationsContractId
+
     this.collSurplusPool = options.collSurplusPool
+    this.collSurplusPoolContractId = options.collSurplusPoolContractId
+
     this.communityIssuance = options.communityIssuance
+    this.communityIssuanceContractId = options.communityIssuanceContractId
+
     this.defaultPool = options.defaultPool
+    this.defaultPoolContractId = options.defaultPoolContractId
+
     this.gasPool = options.gasPool
+    this.gasPoolContractId = options.gasPoolContractId
+
     this.hchfToken = options.hchfToken
+    this.hchfTokenContractId = options.hchfTokenContractId
+
     this.hintHelpers = options.hintHelpers
+    this.hintHelpersContractId = options.hintHelpersContractId
+
     this.hlqtStaking = options.hlqtStaking
+    this.hlqtStakingContractId = options.hlqtStakingContractId
+
     this.hlqtToken = options.hlqtToken
-    // this.ierc20 = options.ierc20
+    this.hlqtTokenContractId = options.hlqtTokenContractId
+
     this.lockupContractFactory = options.lockupContractFactory
+    this.lockupContractFactoryContractId = options.lockupContractFactoryContractId
+
     this.multiTroveGetter = options.multiTroveGetter
+    this.multiTroveGetterContractId = options.multiTroveGetterContractId
+
     this.priceFeed = options.priceFeed
+    this.priceFeedContractId = options.priceFeedContractId
+
     this.sortedTroves = options.sortedTroves
+    this.sortedTrovesContractId = options.sortedTrovesContractId
+
     this.stabilityPool = options.stabilityPool
+    this.stabilityPoolContractId = options.stabilityPoolContractId
+
     this.troveManager = options.troveManager
+    this.troveManagerContractId = options.troveManagerContractId
+
     this.unipool = options.unipool
+    this.unipoolContractId = options.unipoolContractId
+
+    this.populate = asPopulatable(this)
+    this.send = asSendable(this)
   }
 
   private async fetchStoreValues(
@@ -234,6 +325,8 @@ export class HashgraphLiquity extends HLiquityStore implements ReadableLiquity {
         frontend: this.frontendAddress
           ? this.getFrontendStatus(this.frontendAddress, { blockTag })
           : { status: 'unregistered' as const },
+        userHasAssociatedWithHchf: false,
+        userHasAssociatedWithHlqt: false,
 
         ...(this.userAccountAddress
           ? {
@@ -335,6 +428,20 @@ export class HashgraphLiquity extends HLiquityStore implements ReadableLiquity {
       ...extraState,
       ...extraStateUpdate,
     }
+  }
+
+  async refresh(): Promise<LiquityStoreState<HashgraphLiquityStoreState>> {
+    const stateUpdates = await this.fetchStoreValues()
+
+    if (this._loaded) {
+      this._update(...stateUpdates)
+
+      return this.state
+    }
+
+    this._load(...stateUpdates)
+
+    return this.state
   }
 
   private getAddressOrUserAddress(address?: Address): Address {
@@ -753,7 +860,7 @@ export class HashgraphLiquity extends HLiquityStore implements ReadableLiquity {
     deploymentAddresses: Record<DeploymentAddressesKey, Address>
     totalStabilityPoolHlqtReward: number
     frontendAddress: Address
-    // userAccountId: AccountId
+    userAccountId: AccountId
     userAccountAddress: Address
     userHashConnect: HashConnect
     rpcUrl: `wss://${string}` | `https://${string}`
@@ -762,59 +869,153 @@ export class HashgraphLiquity extends HLiquityStore implements ReadableLiquity {
     const totalStabilityPoolHlqtReward = Decimal.from(options.totalStabilityPoolHlqtReward)
 
     const activePool = new web3.eth.Contract(activePoolAbi, options.deploymentAddresses.activePool)
+    const activePoolContractId = ContractId.fromEvmAddress(
+      0,
+      0,
+      options.deploymentAddresses.activePool,
+    )
+
     const borrowerOperations = new web3.eth.Contract(
       borrowerOperationsAbi,
       options.deploymentAddresses.borrowerOperations,
     )
+    const borrowerOperationsContractId = ContractId.fromEvmAddress(
+      0,
+      0,
+      options.deploymentAddresses.borrowerOperations,
+    )
+
     const collSurplusPool = new web3.eth.Contract(
       collSurplusPoolAbi,
       options.deploymentAddresses.collSurplusPool,
     )
+    const collSurplusPoolContractId = ContractId.fromEvmAddress(
+      0,
+      0,
+      options.deploymentAddresses.collSurplusPool,
+    )
+
     const communityIssuance = new web3.eth.Contract(
       communityIssuanceAbi,
       options.deploymentAddresses.communityIssuance,
     )
+    const communityIssuanceContractId = ContractId.fromEvmAddress(
+      0,
+      0,
+      options.deploymentAddresses.communityIssuance,
+    )
+
     const defaultPool = new web3.eth.Contract(
       defaultPoolAbi,
       options.deploymentAddresses.defaultPool,
     )
+    const defaultPoolContractId = ContractId.fromEvmAddress(
+      0,
+      0,
+      options.deploymentAddresses.defaultPool,
+    )
+
     const gasPool = new web3.eth.Contract(gasPoolAbi, options.deploymentAddresses.gasPool)
+    const gasPoolContractId = ContractId.fromEvmAddress(0, 0, options.deploymentAddresses.gasPool)
+
     const hchfToken = new web3.eth.Contract(hCHFTokenAbi, options.deploymentAddresses.hchfToken)
+    const hchfTokenContractId = ContractId.fromEvmAddress(
+      0,
+      0,
+      options.deploymentAddresses.hchfToken,
+    )
+
     const hintHelpers = new web3.eth.Contract(
       hintHelpersAbi,
       options.deploymentAddresses.hintHelpers,
     )
+    const hintHelpersContractId = ContractId.fromEvmAddress(
+      0,
+      0,
+      options.deploymentAddresses.hintHelpers,
+    )
+
     const hlqtStaking = new web3.eth.Contract(
       hLQTStakingAbi,
       options.deploymentAddresses.hlqtStaking,
     )
+    const hlqtStakingContractId = ContractId.fromEvmAddress(
+      0,
+      0,
+      options.deploymentAddresses.hlqtStaking,
+    )
+
     const hlqtToken = new web3.eth.Contract(hLQTTokenAbi, options.deploymentAddresses.hlqtToken)
+    const hlqtTokenContractId = ContractId.fromEvmAddress(
+      0,
+      0,
+      options.deploymentAddresses.hlqtToken,
+    )
+
     const lockupContractFactory = new web3.eth.Contract(
       lockupContractFactoryAbi,
       options.deploymentAddresses.lockupContractFactory,
     )
+    const lockupContractFactoryContractId = ContractId.fromEvmAddress(
+      0,
+      0,
+      options.deploymentAddresses.lockupContractFactory,
+    )
+
     const multiTroveGetter = new web3.eth.Contract(
       multiTroveGetterAbi,
       options.deploymentAddresses.multiTroveGetter,
     )
+    const multiTroveGetterContractId = ContractId.fromEvmAddress(
+      0,
+      0,
+      options.deploymentAddresses.multiTroveGetter,
+    )
+
     const priceFeed = new web3.eth.Contract(priceFeedAbi, options.deploymentAddresses.priceFeed)
+    const priceFeedContractId = ContractId.fromEvmAddress(
+      0,
+      0,
+      options.deploymentAddresses.priceFeed,
+    )
+
     const sortedTroves = new web3.eth.Contract(
       sortedTrovesAbi,
       options.deploymentAddresses.sortedTroves,
     )
+    const sortedTrovesContractId = ContractId.fromEvmAddress(
+      0,
+      0,
+      options.deploymentAddresses.sortedTroves,
+    )
+
     const stabilityPool = new web3.eth.Contract(
       stabilityPoolAbi,
       options.deploymentAddresses.stabilityPool,
     )
+    const stabilityPoolContractId = ContractId.fromEvmAddress(
+      0,
+      0,
+      options.deploymentAddresses.stabilityPool,
+    )
+
     const troveManager = new web3.eth.Contract(
       troveManagerAbi,
       options.deploymentAddresses.troveManager,
     )
-    const unipool = new web3.eth.Contract(unipoolAbi, options.deploymentAddresses.unipool)
+    const troveManagerContractId = ContractId.fromEvmAddress(
+      0,
+      0,
+      options.deploymentAddresses.troveManager,
+    )
 
-    const { userHashConnect, userAccountAddress, frontendAddress } = options
+    const unipool = new web3.eth.Contract(unipoolAbi, options.deploymentAddresses.unipool)
+    const unipoolContractId = ContractId.fromEvmAddress(0, 0, options.deploymentAddresses.unipool)
+
+    const { userHashConnect, userAccountId, userAccountAddress, frontendAddress } = options
 
     const hashgraphLiquity = new HashgraphLiquity({
+      userAccountId,
       userAccountAddress,
       userHashConnect,
       web3,
@@ -822,24 +1023,447 @@ export class HashgraphLiquity extends HLiquityStore implements ReadableLiquity {
       frontendAddress,
       // contracts
       collSurplusPool,
+      collSurplusPoolContractId,
       communityIssuance,
+      communityIssuanceContractId,
       defaultPool,
+      defaultPoolContractId,
       gasPool,
+      gasPoolContractId,
       hchfToken,
+      hchfTokenContractId,
       hintHelpers,
+      hintHelpersContractId,
       hlqtStaking,
+      hlqtStakingContractId,
       hlqtToken,
+      hlqtTokenContractId,
       lockupContractFactory,
+      lockupContractFactoryContractId,
       multiTroveGetter,
+      multiTroveGetterContractId,
       priceFeed,
+      priceFeedContractId,
       sortedTroves,
+      sortedTrovesContractId,
       stabilityPool,
+      stabilityPoolContractId,
       activePool,
+      activePoolContractId,
       borrowerOperations,
+      borrowerOperationsContractId,
       troveManager,
+      troveManagerContractId,
       unipool,
+      unipoolContractId,
     })
 
     return hashgraphLiquity
   }
+
+  // event emitter
+  on<Event extends keyof LiquityEvents>(
+    event: Event,
+    listener: (event: LiquityEvents[Event]) => void,
+  ): this {
+    this.eventEmitter.on(event, listener)
+
+    return this
+  }
+
+  addListener<Event extends keyof LiquityEvents>(
+    event: Event,
+    listener: (event: LiquityEvents[Event]) => void,
+  ): this {
+    this.eventEmitter.on(event, listener)
+
+    return this
+  }
+
+  once<Event extends keyof LiquityEvents>(
+    event: Event,
+    listener: (event: LiquityEvents[Event]) => void,
+  ): this {
+    this.eventEmitter.once(event).then(listener)
+
+    return this
+  }
+
+  off<Event extends keyof LiquityEvents>(
+    event: Event,
+    listener: (event: LiquityEvents[Event]) => void,
+  ): this {
+    this.eventEmitter.off(event, listener)
+
+    return this
+  }
+
+  removeListener<Event extends keyof LiquityEvents>(
+    event: Event,
+    listener: (event: LiquityEvents[Event]) => void,
+  ): this {
+    this.eventEmitter.off(event, listener)
+
+    return this
+  }
+
+  removeAllListeners<Event extends keyof LiquityEvents>(event: Event): this {
+    this.eventEmitter.clearListeners(event)
+
+    return this
+  }
+
+  emit<Event extends keyof LiquityEvents>(event: Event, data: LiquityEvents[Event]) {
+    this.eventEmitter.emit(event, data)
+
+    return true
+  }
+
+  listenerCount<Event extends keyof LiquityEvents>(event: Event): number {
+    return this.eventEmitter.listenerCount(event)
+  }
+
+  eventNames(): (keyof LiquityEvents)[] {
+    const eventNames = (['depositCollateral'] as const)
+      .map(
+        (actionName) =>
+          [
+            `${actionName}/transactionSent`,
+            `${actionName}/transactionReceiptReceived`,
+            `${actionName}/storeRefreshedAfterTransactionReceiptReceived`,
+          ] as const,
+      )
+      .flat()
+
+    return eventNames
+  }
+
+  /** @deprecated this is not implemented and will throw an error */
+  setMaxListeners(n: number): this {
+    throw new Error('not implemented as there is no usage of this')
+  }
+
+  /** @deprecated this is not implemented and will throw an error */
+  getMaxListeners(): number {
+    throw new Error('not implemented as there is no usage of this')
+  }
+
+  /** @deprecated this is not implemented and will throw an error */
+  listeners(event: string | symbol): Function[] {
+    throw new Error('not implemented as there is no usage of this')
+  }
+
+  /** @deprecated this is not implemented and will throw an error */
+  rawListeners(event: string | symbol): Function[] {
+    throw new Error('not implemented as there is no usage of this')
+  }
+
+  /** @deprecated this is not implemented and will throw an error */
+  prependListener(event: string | symbol, listener: (...args: any[]) => void): this {
+    throw new Error('not implemented as there is no usage of this')
+  }
+
+  /** @deprecated this is not implemented and will throw an error */
+  prependOnceListener(event: string | symbol, listener: (...args: any[]) => void): this {
+    throw new Error('not implemented as there is no usage of this')
+  }
+
+  private async _findHintsForNominalCollateralRatio(
+    nominalCollateralRatio: Decimal,
+  ): Promise<[Address, Address]> {
+    const numberOfTroves = await this.getNumberOfTroves()
+
+    if (!numberOfTroves) {
+      return [AddressZero, AddressZero]
+    }
+
+    if (nominalCollateralRatio.infinite) {
+      const firstSortedTroveResult = await this.sortedTroves.methods.getFirst().call()
+      return [AddressZero, firstSortedTroveResult as Address]
+    }
+
+    const totalNumberOfTrials = Math.ceil(10 * Math.sqrt(numberOfTroves))
+    const [firstTrials, ...restOfTrials] = generateTrials(totalNumberOfTrials)
+
+    const collectApproxHint = async (
+      previous: {
+        latestRandomSeed: Number
+        results: { diff: Decimal; hintAddress: string }[]
+      },
+      numberOfTrials: number,
+    ) => {
+      const approxHintResult = await this.hintHelpers.methods
+        .getApproxHint(nominalCollateralRatio.hex, numberOfTrials, previous.latestRandomSeed)
+        .call()
+
+      const { hintAddress } = approxHintResult
+      const latestRandomSeed = parseInt(approxHintResult.latestRandomSeed.toString())
+      const diff = decimalify(approxHintResult.diff)
+      const result = {
+        diff,
+        hintAddress,
+      }
+
+      return {
+        latestRandomSeed,
+        results: [...previous.results, result],
+      }
+    }
+
+    const { results } = await restOfTrials.reduce(
+      (previous, numberOfTrials) =>
+        previous.then((state) => collectApproxHint(state, numberOfTrials)),
+      collectApproxHint(
+        { latestRandomSeed: Math.floor(Math.random() * Number.MAX_SAFE_INTEGER), results: [] },
+        firstTrials,
+      ),
+    )
+
+    const { hintAddress } = results.reduce((a, b) => (a.diff.lt(b.diff) ? a : b))
+
+    const findInsertPositionResult = await this.sortedTroves.methods
+      .findInsertPosition(nominalCollateralRatio.hex, hintAddress, hintAddress)
+      .call()
+
+    return [findInsertPositionResult[0] as Address, findInsertPositionResult[1] as Address]
+  }
+
+  // sendable
+  async populateAdjustTrove(
+    params: TroveAdjustmentParams<Decimalish>,
+    maxBorrowingRate?: Decimalish,
+    options?: TransactionOptions,
+  ): Promise<
+    PopulatedLiquityTransaction<
+      ContractExecuteTransaction,
+      SentLiquityTransaction<
+        TransactionResponse,
+        LiquityReceipt<TransactionReceipt, TroveAdjustmentDetails>
+      >
+    >
+  > {
+    const address = this.getAddressOrUserAddress(options?.from)
+
+    const normalized = _normalizeTroveAdjustment(params)
+    const { depositCollateral, withdrawCollateral, borrowHCHF, repayHCHF } = normalized
+
+    const [trove, fees] = await Promise.all([this.getTrove(address), borrowHCHF && this.getFees()])
+
+    const borrowingRate = fees?.borrowingRate()
+    const finalTrove = trove.adjust(normalized, borrowingRate)
+
+    if (finalTrove instanceof TroveWithPendingRedistribution) {
+      throw new Error('Rewards must be applied to this Trove')
+    }
+
+    maxBorrowingRate =
+      maxBorrowingRate !== undefined
+        ? Decimal.from(maxBorrowingRate)
+        : borrowingRate?.add(defaultBorrowingRateSlippageTolerance) ?? Decimal.ZERO
+
+    const hints = await this._findHintsForNominalCollateralRatio(finalTrove._nominalCollateralRatio)
+
+    let amount: Hbar = Hbar.fromTinybars(0)
+    if (depositCollateral !== undefined) {
+      amount = Hbar.fromString(depositCollateral.toString())
+    }
+    let gas = 3000000
+    gas += gasForPotentialListTraversal
+    if (borrowHCHF) {
+      gas += gasForPotentialLastFeeOperationTimeUpdate
+    }
+
+    const functionParameters = TypedContractFunctionParameters<
+      BorrowerOperationsAbi,
+      'adjustTrove'
+    >()
+    functionParameters
+      .addUint256(new BigNumber(maxBorrowingRate.hex))
+      .addUint256(new BigNumber((withdrawCollateral ?? Decimal.ZERO).hex))
+      .addUint256(new BigNumber((borrowHCHF ?? repayHCHF ?? Decimal.ZERO).hex))
+      .addBool(!!borrowHCHF)
+      .addAddress(hints[0])
+      .addAddress(hints[1])
+
+    const unfrozenTransaction = TypedContractExecuteTransaction<BorrowerOperationsAbi>({
+      contractId: this.borrowerOperationsContractId,
+      functionName: 'adjustTrove',
+      functionParameters,
+      hbar: amount,
+      gas,
+    })
+
+    const signer = this.hashConnect.getSigner(this.userAccountId)
+    const rawPopulatedTransaction = await unfrozenTransaction.freezeWithSigner(signer)
+
+    const send = async (): Promise<
+      SentLiquityTransaction<
+        TransactionResponse,
+        LiquityReceipt<TransactionReceipt, TroveAdjustmentDetails>
+      >
+    > => {
+      // TODO: get arkhia websocket to work so we can subscribe to events
+      // const updatedTrovePromise = new Promise<Trove>((resolve, reject) => {
+      //   try {
+      //     const eventEmitter = this.borrowerOperations.events.TroveUpdated()
+      //     const resolveWithData = (eventLog: EventLog) => {
+      //       eventEmitter.off('error', rejectWithError)
+
+      //       const returnValues = eventLog.returnValues as {
+      //         _coll: MatchPrimitiveType<'uint256', unknown>
+      //         _debt: MatchPrimitiveType<'uint256', unknown>
+      //       }
+      //       const trove = new Trove(decimalify(returnValues._coll), decimalify(returnValues._debt))
+
+      //       console.trace({ 'borrowerOperations.events.TroveUpdated() returnValues': returnValues })
+
+      //       resolve(trove)
+      //     }
+      //     const rejectWithError = (error: Error) => {
+      //       eventEmitter.off('data', resolveWithData)
+
+      //       reject(error)
+      //     }
+      //     eventEmitter.once('data', resolveWithData)
+      //     eventEmitter.once('error', rejectWithError)
+      //   } catch (updatedTrovePromiseSetupError) {
+      //   }
+      // })
+      // const paidHchfBorrowingFeePromise = new Promise<Decimal>((resolve, reject) => {
+      //   const eventEmitter = this.borrowerOperations.methods.HCHFBorrowingFeePaid().call()
+      //   const resolveWithData = (eventLog: EventLog) => {
+      //     eventEmitter.off('error', rejectWithError)
+
+      //     const returnValues = eventLog.returnValues as {
+      //       _HCHFFee: MatchPrimitiveType<'uint256', unknown>
+      //     }
+      //     const fee = decimalify(returnValues._HCHFFee)
+
+      //     console.trace({
+      //       'borrowerOperations.events.HCHFBorrowingFeePaid() returnValues': returnValues,
+      //     })
+
+      //     resolve(fee)
+      //   }
+      //   const rejectWithError = (error: Error) => {
+      //     eventEmitter.off('data', resolveWithData)
+
+      //     reject(error)
+      //   }
+      //   eventEmitter.once('data', resolveWithData)
+      //   eventEmitter.once('error', rejectWithError)
+      // })
+
+      const rawSentTransaction = await rawPopulatedTransaction.executeWithSigner(signer)
+
+      const waitForReceipt = async (): Promise<
+        MinedReceipt<TransactionReceipt, TroveAdjustmentDetails>
+      > => {
+        // wait for the receipt before querying
+        const rawReceipt = await rawSentTransaction.getReceiptWithSigner(signer)
+        const newStoreState = await this.refresh()
+        const updatedTrove = newStoreState.trove
+        const paidHchfBorrowingFee = newStoreState.fees.borrowingRate(new Date())
+
+        const details: TroveAdjustmentDetails = {
+          params: normalized,
+          fee: paidHchfBorrowingFee,
+          newTrove: updatedTrove,
+        }
+        const status = getLiquityReceiptStatus(rawReceipt.status)
+
+        if (status === 'pending') {
+          // this should never actually happen
+          throw new Error(
+            'TODO: figure out how to wait for the transaction to not be pending anymore.',
+          )
+        }
+
+        return {
+          status,
+          rawReceipt,
+          details,
+        }
+      }
+
+      return {
+        rawSentTransaction,
+        waitForReceipt,
+        getReceipt: waitForReceipt,
+      }
+    }
+
+    const populatedTransaction: PopulatedLiquityTransaction<
+      ContractExecuteTransaction,
+      SentLiquityTransaction<
+        TransactionResponse,
+        LiquityReceipt<TransactionReceipt, TroveAdjustmentDetails>
+      >
+    > = {
+      rawPopulatedTransaction,
+      send,
+    }
+
+    // TODO: remaining parameters
+    return populatedTransaction
+  }
+
+  async sendAdjustTrove(
+    params: TroveAdjustmentParams<Decimalish>,
+    maxBorrowingRate?: Decimalish,
+    options?: TransactionOptions,
+  ): Promise<
+    SentLiquityTransaction<
+      TransactionResponse,
+      LiquityReceipt<TransactionReceipt, TroveAdjustmentDetails>
+    >
+  > {
+    const populatedAdjustTrove = await this.populateAdjustTrove(params, maxBorrowingRate, options)
+
+    const receipt = await populatedAdjustTrove.send()
+
+    return receipt
+  }
+
+  async populateDepositCollateral(
+    amount: Decimalish,
+    options?: TransactionOptions,
+  ): Promise<
+    PopulatedLiquityTransaction<
+      ContractExecuteTransaction,
+      SentLiquityTransaction<
+        TransactionResponse,
+        LiquityReceipt<TransactionReceipt, TroveAdjustmentDetails>
+      >
+    >
+  > {
+    const populateDepositCollateral = await this.populateAdjustTrove(
+      { depositCollateral: amount },
+      undefined,
+      options,
+    )
+
+    return populateDepositCollateral
+  }
+
+  async sendDepositCollateral(
+    amount: Decimalish,
+    options?: TransactionOptions,
+  ): Promise<
+    SentLiquityTransaction<
+      TransactionResponse,
+      LiquityReceipt<TransactionReceipt, TroveAdjustmentDetails>
+    >
+  > {
+    const populatedDepositCollateral = await this.populateAdjustTrove(
+      { depositCollateral: amount },
+      undefined,
+      options,
+    )
+    const receipt = await populatedDepositCollateral.send()
+
+    return receipt
+  }
+
+  // transactable
 }

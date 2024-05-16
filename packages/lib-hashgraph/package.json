@@ -13,6 +13,8 @@
   "dependencies": {
     "@hashgraph/sdk": "2.41.0",
     "@liquity/lib-base": "workspace:^",
+    "bignumber.js": "9.1.2",
+    "emittery": "^1.0.3",
     "hashconnect": "^3.0.13",
     "web3": "^4.8.0"
   },

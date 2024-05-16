@@ -96,6 +96,7 @@ export interface LiquityStoreBaseState {
   /** Remaining HLQT that will be collectively rewarded to stability depositors. */
   remainingStabilityPoolHLQTReward: Decimal;
 
+  // TODO: remove this from the public interface
   /** @internal */
   _feesInNormalMode: Fees;
 
@@ -105,8 +106,12 @@ export interface LiquityStoreBaseState {
   /** Total amount of HLQT currently staked. */
   totalStakedHLQT: Decimal;
 
+  // TODO: remove this from the public interface
   /** @internal */
   _riskiestTroveBeforeRedistribution: TroveWithPendingRedistribution;
+
+  userHasAssociatedWithHchf: boolean;
+  userHasAssociatedWithHlqt: boolean;
 }
 
 /**
@@ -161,7 +166,8 @@ export interface LiquityStoreDerivedState {
  *
  * @public
  */
-export type LiquityStoreState<T = unknown> = LiquityStoreBaseState & LiquityStoreDerivedState & T;
+export type LiquityStoreState<T extends Record<string, unknown> | unknown = unknown> =
+  LiquityStoreBaseState & LiquityStoreDerivedState & T;
 
 /**
  * Parameters passed to {@link HLiquityStore} listeners.
@@ -294,7 +300,9 @@ export abstract class HLiquityStore<T = unknown> {
       trove: new UserTrove("", "nonExistent"),
       troveBeforeRedistribution: new TroveWithPendingRedistribution("", "nonExistent"),
       uniTokenAllowance: Decimal.from(0),
-      uniTokenBalance: Decimal.from(0)
+      uniTokenBalance: Decimal.from(0),
+      userHasAssociatedWithHchf: false,
+      userHasAssociatedWithHlqt: false
     };
     return Object.assign(defaultState, this._baseState, this._derivedState, this._extraState);
   }
@@ -323,7 +331,7 @@ export abstract class HLiquityStore<T = unknown> {
     };
   }
 
-  public abstract refresh(): Promise<void>;
+  public abstract refresh(): Promise<LiquityStoreState<T>>;
 
   private _cancelUpdateIfScheduled() {
     if (this._updateTimeoutId !== undefined) {
@@ -538,6 +546,20 @@ export abstract class HLiquityStore<T = unknown> {
         equals,
         baseState._riskiestTroveBeforeRedistribution,
         baseStateUpdate._riskiestTroveBeforeRedistribution
+      ),
+
+      userHasAssociatedWithHchf: this._updateIfChanged(
+        (a, b) => a === b,
+        "userHasAssociatedWithHchf",
+        baseState.userHasAssociatedWithHchf,
+        baseStateUpdate.userHasAssociatedWithHchf
+      ),
+
+      userHasAssociatedWithHlqt: this._updateIfChanged(
+        (a, b) => a === b,
+        "userHasAssociatedWithHlqt",
+        baseState.userHasAssociatedWithHlqt,
+        baseStateUpdate.userHasAssociatedWithHlqt
       )
     };
   }
