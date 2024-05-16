@@ -27,6 +27,9 @@ export interface PopulatedLiquityTransaction<
 > {
   /** Implementation-specific populated transaction object. */
   readonly rawPopulatedTransaction: P;
+  // TODO: ExpensiveTroveChangeWarning.tsx uses these, even though they don't exist?
+  readonly gasLimit?: number;
+  readonly gasHeadroom?: number;
 
   /**
    * Send the transaction.

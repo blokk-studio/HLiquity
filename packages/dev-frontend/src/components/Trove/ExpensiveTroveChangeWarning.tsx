@@ -1,14 +1,14 @@
 import React, { useEffect } from "react";
 
-import { Decimal, TroveChange } from "@liquity/lib-base";
-import { PopulatedEthersLiquityTransaction } from "@liquity/lib-ethers";
+import { Decimal, PopulatedLiquityTransaction, TroveChange } from "@liquity/lib-base";
 
 import { useLiquity } from "../../hooks/LiquityContext";
 import { Warning } from "../Warning";
+import { HashgraphLiquity } from "@liquity/lib-hashgraph";
 
 export type GasEstimationState =
   | { type: "idle" | "inProgress" }
-  | { type: "complete"; populatedTx: PopulatedEthersLiquityTransaction };
+  | { type: "complete"; populatedTx: PopulatedLiquityTransaction };
 
 type ExpensiveTroveChangeWarningParams = {
   troveChange?: Exclude<TroveChange<Decimal>, { type: "invalidCreation" }>;
@@ -37,27 +37,26 @@ export const ExpensiveTroveChangeWarning: React.FC<ExpensiveTroveChangeWarningPa
 
       const timeoutId = setTimeout(async () => {
         const populatedTx = await (troveChange.type === "creation"
-          ? liquity.populate.openTrove(troveChange.params,
-            maxBorrowingRate,
-            // TODO: fix?
-            // {
-            //   borrowingFeeDecayToleranceMinutes,
-            // }
+          ? (liquity as HashgraphLiquity).populate.openTrove(
+              troveChange.params,
+              maxBorrowingRate
+              // TODO: fix?
+              // {
+              //   borrowingFeeDecayToleranceMinutes,
+              // }
             )
-          : liquity.populate.adjustTrove(troveChange.params,
-            maxBorrowingRate,
-            // TODO: fix?
-            // {
-            //   borrowingFeeDecayToleranceMinutes
-            // }
+          : (liquity as HashgraphLiquity).populate.adjustTrove(
+              troveChange.params,
+              maxBorrowingRate
+              // TODO: fix?
+              // {
+              //   borrowingFeeDecayToleranceMinutes
+              // }
             ));
 
         if (!cancelled) {
           setGasEstimationState({ type: "complete", populatedTx });
-          console.log(
-            "Estimated TX cost: " +
-              Decimal.from(`${populatedTx.rawPopulatedTransaction.gasLimit}`).prettify(0)
-          );
+          console.log("Estimated TX cost: " + Decimal.from(`${populatedTx.gasLimit}`).prettify(0));
         }
       }, 333);
 
@@ -74,8 +73,8 @@ export const ExpensiveTroveChangeWarning: React.FC<ExpensiveTroveChangeWarningPa
   if (
     troveChange &&
     gasEstimationState.type === "complete" &&
-    'gasHeadroom' in gasEstimationState.populatedTx &&
-    typeof gasEstimationState.populatedTx.gasHeadroom === 'number' &&
+    "gasHeadroom" in gasEstimationState.populatedTx &&
+    typeof gasEstimationState.populatedTx.gasHeadroom === "number" &&
     gasEstimationState.populatedTx.gasHeadroom >= 200000
   ) {
     return troveChange.type === "creation" ? (
