@@ -138,10 +138,10 @@ export const Adjusting: React.FC = () => {
   const maxBorrowingRate = borrowingRate.add(0.005);
   const updatedTrove = isDirty ? new Trove(collateral, totalDebt) : trove;
   const feePct = new Percent(borrowingRate);
-  const availableEth = accountBalance.gt(accountBalance.sub(TX_MAX_COSTS))
+  const availableEth = accountBalance.gt(TX_MAX_COSTS)
     ? accountBalance.sub(TX_MAX_COSTS)
     : Decimal.ZERO;
-  const maxCollateral = trove.collateral.add(availableEth);
+  const maxCollateral = availableEth;
   const collateralMaxedOut = collateral.eq(maxCollateral);
   const collateralRatio =
     !collateral.isZero && !netDebt.isZero ? updatedTrove.collateralRatio(price) : undefined;
@@ -217,8 +217,8 @@ export const Adjusting: React.FC = () => {
       status: hasAssociatedWithHchf
         ? "success"
         : hchfAssociationLoadingState === "error"
-          ? "danger"
-          : hchfAssociationLoadingState,
+        ? "danger"
+        : hchfAssociationLoadingState,
       description: hasAssociatedWithHchf
         ? "You've already consented to receiving HCHF."
         : "You have to consent to receiving HCHF tokens before you can use HLiquity."
@@ -386,8 +386,14 @@ export const Adjusting: React.FC = () => {
               loading={isTransactionPending}
             >
               {stableTroveChange?.params.borrowHCHF
-                ? `Borrow ${stableTroveChange?.params.borrowHCHF?.toString(2)} HCHF`
-                : `Repay ${stableTroveChange?.params.repayHCHF?.toString(2)} HCHF`}
+                ? `Borrow ${stableTroveChange?.params.borrowHCHF.toString(2)} HCHF`
+                : stableTroveChange?.params.repayHCHF
+                ? `Repay ${stableTroveChange?.params.repayHCHF.toString(2)} HCHF`
+                : stableTroveChange?.params.depositCollateral
+                ? `Deposit ${stableTroveChange?.params.depositCollateral.toString(2)} HBAR`
+                : stableTroveChange?.params.withdrawCollateral
+                ? `Withdraw ${stableTroveChange?.params.withdrawCollateral.toString(2)} HBAR`
+                : "Adjust trove"}
             </TroveAction>
           ) : (
             <Button disabled>Confirm</Button>

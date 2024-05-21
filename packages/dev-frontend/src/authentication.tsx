@@ -27,7 +27,9 @@ export const AuthenticationProvider: React.FC<{
     getPasswordCookieValue(document.cookie)
   );
 
-  const authenticated = encodedPassword === import.meta.env.VITE_HLIQUITY_PASSWORD;
+  const authenticated =
+    !import.meta.env.VITE_HLIQUITY_PASSWORD ||
+    encodedPassword === import.meta.env.VITE_HLIQUITY_PASSWORD;
 
   const logIn = (password: string) => {
     const encodedPassword = btoa(password);
