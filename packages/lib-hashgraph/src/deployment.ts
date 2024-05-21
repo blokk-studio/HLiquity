@@ -17,7 +17,7 @@ export type DeploymentAddressesKey =
   | 'sortedTroves'
   | 'stabilityPool'
   | 'gasPool'
-  | 'unipool'
+  | 'saucerSwapPool'
 // | 'uniToken'
 
 export interface Deployment {
