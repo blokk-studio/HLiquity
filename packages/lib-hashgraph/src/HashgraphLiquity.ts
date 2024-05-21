@@ -171,8 +171,8 @@ export class HashgraphLiquity
   private readonly stabilityPoolContractId: ContractId
   private readonly troveManager: Contract<TroveManagerAbi>
   private readonly troveManagerContractId: ContractId
-  private readonly unipool: Contract<UnipoolAbi>
-  private readonly unipoolContractId: ContractId
+  private readonly saucerSwapPool: Contract<UnipoolAbi>
+  private readonly saucerSwapPoolContractId: ContractId
 
   private constructor(options: {
     userAccountId: AccountId
@@ -214,8 +214,8 @@ export class HashgraphLiquity
     stabilityPoolContractId: ContractId
     troveManager: Contract<TroveManagerAbi>
     troveManagerContractId: ContractId
-    unipool: Contract<UnipoolAbi>
-    unipoolContractId: ContractId
+    saucerSwapPool: Contract<UnipoolAbi>
+    saucerSwapPoolContractId: ContractId
   }) {
     super()
 
@@ -276,8 +276,8 @@ export class HashgraphLiquity
     this.troveManager = options.troveManager
     this.troveManagerContractId = options.troveManagerContractId
 
-    this.unipool = options.unipool
-    this.unipoolContractId = options.unipoolContractId
+    this.saucerSwapPool = options.saucerSwapPool
+    this.saucerSwapPoolContractId = options.saucerSwapPoolContractId
 
     this.populate = asPopulatable(this)
     this.send = asSendable(this)
@@ -654,10 +654,10 @@ export class HashgraphLiquity
   async getRemainingLiquidityMiningHLQTReward(options?: { blockTag?: number }): Promise<Decimal> {
     const [totalSupplyResult, rewardRateResult, periodFinishResult, lastUpdateTimeResult, block] =
       await Promise.all([
-        this.unipool.methods.totalSupply().call(undefined, options?.blockTag),
-        this.unipool.methods.rewardRate().call(undefined, options?.blockTag),
-        this.unipool.methods.periodFinish().call(undefined, options?.blockTag),
-        this.unipool.methods.lastUpdateTime().call(undefined, options?.blockTag),
+        this.saucerSwapPool.methods.totalSupply().call(undefined, options?.blockTag),
+        this.saucerSwapPool.methods.rewardRate().call(undefined, options?.blockTag),
+        this.saucerSwapPool.methods.periodFinish().call(undefined, options?.blockTag),
+        this.saucerSwapPool.methods.lastUpdateTime().call(undefined, options?.blockTag),
         this.web3.eth.getBlock(options?.blockTag),
       ])
 
@@ -680,7 +680,7 @@ export class HashgraphLiquity
   ): Promise<Decimal> {
     const addressOrUserAddress = this.getAddressOrUserAddress(address)
 
-    const balanceResult = await this.unipool.methods
+    const balanceResult = await this.saucerSwapPool.methods
       .balanceOf(addressOrUserAddress)
       .call(undefined, options?.blockTag)
     const balance = decimalify(balanceResult)
@@ -689,7 +689,7 @@ export class HashgraphLiquity
   }
 
   async getTotalStakedUniTokens(options?: ContractCallOptions): Promise<Decimal> {
-    const totalSupplyResult = await this.unipool.methods
+    const totalSupplyResult = await this.saucerSwapPool.methods
       .totalSupply()
       .call(undefined, options?.blockTag)
     const totalSupply = decimalify(totalSupplyResult)
@@ -703,7 +703,7 @@ export class HashgraphLiquity
   ): Promise<Decimal> {
     const addressOrUserAddress = this.getAddressOrUserAddress(address)
 
-    const earnedResult = await this.unipool.methods
+    const earnedResult = await this.saucerSwapPool.methods
       .earned(addressOrUserAddress)
       .call(undefined, options?.blockTag)
     const earned = decimalify(earnedResult)
@@ -1009,8 +1009,15 @@ export class HashgraphLiquity
       options.deploymentAddresses.troveManager,
     )
 
-    const unipool = new web3.eth.Contract(unipoolAbi, options.deploymentAddresses.unipool)
-    const unipoolContractId = ContractId.fromEvmAddress(0, 0, options.deploymentAddresses.unipool)
+    const saucerSwapPool = new web3.eth.Contract(
+      unipoolAbi,
+      options.deploymentAddresses.saucerSwapPool,
+    )
+    const saucerSwapPoolContractId = ContractId.fromEvmAddress(
+      0,
+      0,
+      options.deploymentAddresses.saucerSwapPool,
+    )
 
     const { userHashConnect, userAccountId, userAccountAddress, frontendAddress } = options
 
@@ -1054,8 +1061,8 @@ export class HashgraphLiquity
       borrowerOperationsContractId,
       troveManager,
       troveManagerContractId,
-      unipool,
-      unipoolContractId,
+      saucerSwapPool,
+      saucerSwapPoolContractId,
     })
 
     return hashgraphLiquity
