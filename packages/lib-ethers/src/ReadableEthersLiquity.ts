@@ -58,14 +58,14 @@ const userTroveStatusFrom = (backendStatus: BackendTroveStatus): UserTroveStatus
   backendStatus === BackendTroveStatus.nonExistent
     ? "nonExistent"
     : backendStatus === BackendTroveStatus.active
-    ? "open"
-    : backendStatus === BackendTroveStatus.closedByOwner
-    ? "closedByOwner"
-    : backendStatus === BackendTroveStatus.closedByLiquidation
-    ? "closedByLiquidation"
-    : backendStatus === BackendTroveStatus.closedByRedemption
-    ? "closedByRedemption"
-    : panic(new Error(`invalid backendStatus ${backendStatus}`));
+      ? "open"
+      : backendStatus === BackendTroveStatus.closedByOwner
+        ? "closedByOwner"
+        : backendStatus === BackendTroveStatus.closedByLiquidation
+          ? "closedByLiquidation"
+          : backendStatus === BackendTroveStatus.closedByRedemption
+            ? "closedByRedemption"
+            : panic(new Error(`invalid backendStatus ${backendStatus}`));
 
 const decimalify = (bigNumber: BigNumber) => Decimal.fromBigNumberString(bigNumber.toHexString());
 const numberify = (bigNumber: BigNumber) => bigNumber.toNumber();
@@ -123,10 +123,10 @@ export class ReadableEthersLiquity implements ReadableLiquity {
 
     return options.connection.useStore === "blockPolled"
       ? new _BlockPolledReadableEthersLiquity({
-          readable,
-          mirrorNodeBaseUrl: options.mirrorNodeBaseUrl,
-          fetch: options.fetch
-        })
+        readable,
+        mirrorNodeBaseUrl: options.mirrorNodeBaseUrl,
+        fetch: options.fetch
+      })
       : readable;
   }
 
@@ -369,9 +369,9 @@ export class ReadableEthersLiquity implements ReadableLiquity {
     // });
 
     address ??= _requireAddress(this.connection);
-    const { uniToken } = _getContracts(this.connection);
+    const { saucerSwapPool } = _getContracts(this.connection);
 
-    return uniToken.balanceOf(address, { ...overrides }).then(decimalify);
+    return saucerSwapPool.balanceOf(address, { ...overrides }).then(decimalify);
   }
 
   /** {@inheritDoc @liquity/lib-base#ReadableLiquity.getUniTokenAllowance} */
@@ -592,8 +592,7 @@ export interface ReadableEthersLiquityWithStore<T extends HLiquityStore = HLiqui
 }
 
 class BlockPolledLiquityStoreBasedCache
-  implements _LiquityReadCache<[overrides?: EthersCallOverrides]>
-{
+  implements _LiquityReadCache<[overrides?: EthersCallOverrides]> {
   private _store: BlockPolledLiquityStore;
 
   constructor(store: BlockPolledLiquityStore) {
@@ -794,8 +793,7 @@ class BlockPolledLiquityStoreBasedCache
 
 class _BlockPolledReadableEthersLiquity
   extends _CachedReadableLiquity<[overrides?: EthersCallOverrides]>
-  implements ReadableEthersLiquityWithStore<BlockPolledLiquityStore>
-{
+  implements ReadableEthersLiquityWithStore<BlockPolledLiquityStore> {
   readonly connection: EthersLiquityConnection;
   readonly store: BlockPolledLiquityStore;
 

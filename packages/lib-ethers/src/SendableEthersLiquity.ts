@@ -44,11 +44,11 @@ export class SendableEthersLiquity
   sendTransaction = async <T>(tx: PopulatedEthersLiquityTransaction<T>) => {
     console.log('send transaction');
     const response = await tx.send();
-  
+
     if (this._store) {
       this._store.refresh();
     }
-  
+
     return response;
   }
 
@@ -230,7 +230,7 @@ export class SendableEthersLiquity
     allowance?: Decimalish,
     overrides?: EthersTransactionOverrides
   ): Promise<SentEthersLiquityTransaction<void>> {
-    console.log('stage 1', allowance)
+    console.log('stage 1')
     return this._populate.approveUniTokens(allowance, overrides).then(this.sendTransaction);
   }
 

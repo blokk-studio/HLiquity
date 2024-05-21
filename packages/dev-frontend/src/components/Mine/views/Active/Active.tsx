@@ -8,6 +8,7 @@ import { LoadingOverlay } from "../../../LoadingOverlay";
 import { useMyTransactionState } from "../../../Transaction";
 import { DisabledEditableRow, StaticRow } from "../../../Trove/Editor";
 import { useMineView } from "../../context/MineViewContext";
+import { RemainingLQTY } from "../RemainingLQTY";
 import { ClaimReward } from "./ClaimReward";
 import { UnstakeAndClaim } from "../UnstakeAndClaim";
 
@@ -33,7 +34,12 @@ export const Active: React.FC = () => {
   return (
     <Card>
       <Heading>
-        SaucerSwap LP Staking
+        Liquidity mine
+        {!isTransactionPending && (
+          <Flex sx={{ justifyContent: "flex-end" }}>
+            <RemainingLQTY />
+          </Flex>
+        )}
       </Heading>
       <Box sx={{ p: [2, 3] }}>
         <Box>

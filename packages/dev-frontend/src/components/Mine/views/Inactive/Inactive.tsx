@@ -1,15 +1,8 @@
 import React, { useCallback } from "react";
 import { Card, Heading, Box, Flex, Button } from "theme-ui";
+import { InfoMessage } from "../../../InfoMessage";
 import { useMineView } from "../../context/MineViewContext";
-import { StaticRow } from "../../../Trove/Editor";
-import { useLiquitySelector } from "@liquity/lib-react";
-import { LiquityStoreState } from "@liquity/lib-base";
-
-const select = ({ lpReward, liquidityMiningStake, uniTokenAllowance }: LiquityStoreState) => ({
-  lpReward,
-  liquidityMiningStake,
-  uniTokenAllowance,
-});
+import { RemainingLQTY } from "../RemainingLQTY";
 
 export const Inactive: React.FC = () => {
   const { dispatchEvent } = useMineView();
@@ -18,28 +11,22 @@ export const Inactive: React.FC = () => {
     dispatchEvent("STAKE_PRESSED");
   }, [dispatchEvent]);
 
-  const { lpReward, liquidityMiningStake } = useLiquitySelector(select);
-
-  // console.log('lp stats', lpBalance.prettify(), lpEarnings.prettify(), lpReward.prettify(), uniTokenAllowance.prettify());
-
   return (
     <Card>
       <Heading>
-        SaucerSwap LP Staking
+        Liquidity mine
+        <Flex sx={{ justifyContent: "flex-end" }}>
+          <RemainingLQTY />
+        </Flex>
       </Heading>
       <Box sx={{ p: [2, 3] }}>
-      <StaticRow
-        label="Staked"
-        inputId="deposit-share"
-        amount={liquidityMiningStake.prettify()}
-        unit="LP"
-      />
-      <StaticRow
-        label="Reward Per Token"
-        inputId="deposit-share"
-        amount={lpReward.prettify()}
-        unit=""
-      />
+        <InfoMessage title="You aren't mining LQTY">
+          <Flex>You can mine LQTY by staking your Uniswap ETH/LUSD LP tokens</Flex>
+          <Flex sx={{ mt: 2 }}>
+            You can obtain LP tokens by adding liquidity to the ETH/LUSD pool on Uniswap
+          </Flex>
+        </InfoMessage>
+
         <Flex variant="layout.actions">
           <Button onClick={handleStakePressed}>Stake</Button>
         </Flex>

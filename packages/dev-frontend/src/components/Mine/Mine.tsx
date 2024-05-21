@@ -9,8 +9,6 @@ import { useMineView } from "./context/MineViewContext";
 export const Mine: React.FC = props => {
   const { view } = useMineView();
 
-  console.log('mine view', view)
-
   switch (view) {
     case "INACTIVE": {
       return <Inactive {...props} />;

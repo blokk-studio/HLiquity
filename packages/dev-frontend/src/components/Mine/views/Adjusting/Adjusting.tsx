@@ -50,7 +50,7 @@ export const Adjusting: React.FC = () => {
   return (
     <Card>
       <Heading>
-        SaucerSwap LP Staking
+        Liquidity mine
         {isDirty && (
           <Button
             variant="titleIcon"

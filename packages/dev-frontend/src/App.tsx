@@ -17,6 +17,7 @@ import { AppLoader } from "./components/AppLoader";
 import { useAsyncValue } from "./hooks/AsyncValue";
 import { useHederaChains } from "./hooks/chains";
 import { AuthenticationProvider, LoginForm } from "./authentication";
+import { HederaTokensProvider } from "./hedera/hedera_context";
 import { useConfiguration } from "./configuration";
 import "./App.scss";
 import { HashConnectProvider, HashConnectLoader } from "./components/HashConnectProvider";

@@ -67,8 +67,8 @@ const noDetails = () => undefined;
 
 const compose =
   <T, U, V>(f: (_: U) => V, g: (_: T) => U) =>
-  (_: T) =>
-    f(g(_));
+    (_: T) =>
+      f(g(_));
 
 const id = <T>(t: T) => t;
 
@@ -126,8 +126,7 @@ function* generateTrials(totalNumberOfTrials: number) {
  */
 export class SentEthersLiquityTransaction<T = unknown>
   implements
-    SentLiquityTransaction<EthersTransactionResponse, LiquityReceipt<EthersTransactionReceipt, T>>
-{
+  SentLiquityTransaction<EthersTransactionResponse, LiquityReceipt<EthersTransactionReceipt, T>> {
   /** Ethers' representation of a sent transaction. */
   readonly rawSentTransaction: EthersTransactionResponse;
 
@@ -149,8 +148,8 @@ export class SentEthersLiquityTransaction<T = unknown>
     return rawReceipt
       ? rawReceipt.status
         ? _successfulReceipt(rawReceipt, this._parse(rawReceipt), () =>
-            logsToString(rawReceipt, _getContracts(this._connection))
-          )
+          logsToString(rawReceipt, _getContracts(this._connection))
+        )
         : _failedReceipt(rawReceipt)
       : _pendingReceipt;
   }
@@ -183,8 +182,7 @@ export class SentEthersLiquityTransaction<T = unknown>
  */
 export class PopulatedEthersLiquityTransaction<T = unknown>
   implements
-    PopulatedLiquityTransaction<EthersPopulatedTransaction, SentEthersLiquityTransaction<T>>
-{
+  PopulatedLiquityTransaction<EthersPopulatedTransaction, SentEthersLiquityTransaction<T>> {
   /** Unsigned transaction object populated by Ethers. */
   readonly rawPopulatedTransaction: EthersPopulatedTransaction;
 
@@ -220,12 +218,11 @@ export class PopulatedEthersLiquityTransaction<T = unknown>
 export class PopulatedEthersRedemption
   extends PopulatedEthersLiquityTransaction<RedemptionDetails>
   implements
-    PopulatedRedemption<
-      EthersPopulatedTransaction,
-      EthersTransactionResponse,
-      EthersTransactionReceipt
-    >
-{
+  PopulatedRedemption<
+    EthersPopulatedTransaction,
+    EthersTransactionResponse,
+    EthersTransactionReceipt
+  > {
   /** {@inheritDoc @liquity/lib-base#PopulatedRedemption.attemptedHCHFAmount} */
   readonly attemptedHCHFAmount: Decimal;
 
@@ -279,7 +276,7 @@ export class PopulatedEthersRedemption
     if (!this._increaseAmountByMinimumNetDebt) {
       throw new Error(
         "PopulatedEthersRedemption: increaseAmountByMinimumNetDebt() can " +
-          "only be called when amount is truncated"
+        "only be called when amount is truncated"
       );
     }
 
@@ -301,12 +298,11 @@ export interface _TroveChangeWithFees<T> {
  */
 export class PopulatableEthersLiquity
   implements
-    PopulatableLiquity<
-      EthersTransactionReceipt,
-      EthersTransactionResponse,
-      EthersPopulatedTransaction
-    >
-{
+  PopulatableLiquity<
+    EthersTransactionReceipt,
+    EthersTransactionResponse,
+    EthersPopulatedTransaction
+  > {
   private readonly _readable: ReadableEthersLiquity;
 
   constructor(readable: ReadableEthersLiquity) {
@@ -914,10 +910,10 @@ export class PopulatableEthersLiquity
 
         truncatedAmount.lt(attemptedHCHFAmount)
           ? newMaxRedemptionRate =>
-              populateRedemption(
-                truncatedAmount.add(HCHF_MINIMUM_NET_DEBT),
-                newMaxRedemptionRate ?? maxRedemptionRate
-              )
+            populateRedemption(
+              truncatedAmount.add(HCHF_MINIMUM_NET_DEBT),
+              newMaxRedemptionRate ?? maxRedemptionRate
+            )
           : undefined
       );
     };
@@ -1012,10 +1008,10 @@ export class PopulatableEthersLiquity
   ): Promise<PopulatedEthersLiquityTransaction<void>> {
     console.log("approveUniTokens");
     // throw "unitoken";
+    console.log('connection', this._readable.connection);
     const { uniToken, saucerSwapPool } = _getContracts(this._readable.connection);
-    // const newToken = await saucerSwapPool.uniToken();
 
-    console.log('tokens', uniToken, saucerSwapPool, allowance, Decimal.from(allowance ?? Decimal.INFINITY), Decimal.from(allowance ?? Decimal.INFINITY).hex);
+    console.log('tokens', uniToken, saucerSwapPool);
 
     return this._wrapSimpleTransaction(
       await uniToken.estimateAndPopulate.approve(
