@@ -5,53 +5,37 @@ export const asPopulatable = (hashgraphLiquity: HashgraphLiquity): PopulatableLi
   const sendableLiquity: PopulatableLiquity = {
     depositCollateral: hashgraphLiquity.populateDepositCollateral.bind(hashgraphLiquity),
     adjustTrove: hashgraphLiquity.populateAdjustTrove.bind(hashgraphLiquity),
-    // TODO: implement all sendable methods
-    // @ts-expect-error
-    approveUniTokens: () => {},
-    // @ts-expect-error
-    borrowHCHF: () => {},
-    // @ts-expect-error
-    claimCollateralSurplus: () => {},
-    // @ts-expect-error
-    closeTrove: () => {},
-    // @ts-expect-error
-    depositHCHFInStabilityPool: () => {},
-    // @ts-expect-error
-    exitLiquidityMining: () => {},
-    // @ts-expect-error
-    liquidate: () => {},
-    // @ts-expect-error
-    liquidateUpTo: () => {},
-    // @ts-expect-error
-    openTrove: () => {},
-    // @ts-expect-error
-    redeemHCHF: () => {},
-    // @ts-expect-error
-    registerFrontend: () => {},
-    // @ts-expect-error
-    repayHCHF: () => {},
-    // @ts-expect-error
-    setPrice: () => {},
-    // @ts-expect-error
-    stakeHLQT: () => {},
-    // @ts-expect-error
-    stakeUniTokens: () => {},
-    // @ts-expect-error
-    transferCollateralGainToTrove: () => {},
-    // @ts-expect-error
-    unstakeHLQT: () => {},
-    // @ts-expect-error
-    unstakeUniTokens: () => {},
-    // @ts-expect-error
-    withdrawCollateral: () => {},
-    // @ts-expect-error
-    withdrawGainsFromStabilityPool: () => {},
-    // @ts-expect-error
-    withdrawGainsFromStaking: () => {},
-    // @ts-expect-error
-    withdrawHCHFFromStabilityPool: () => {},
-    // @ts-expect-error
-    withdrawHLQTRewardFromLiquidityMining: () => {},
+    approveUniTokens: hashgraphLiquity.populateApproveUniTokens.bind(hashgraphLiquity),
+    // @ts-expect-error overlapping functions, i don't get it
+    borrowHCHF: hashgraphLiquity.populateBorrowHCHF.bind(hashgraphLiquity),
+    claimCollateralSurplus: hashgraphLiquity.populateClaimCollateralSurplus.bind(hashgraphLiquity),
+    closeTrove: hashgraphLiquity.populateCloseTrove.bind(hashgraphLiquity),
+    depositHCHFInStabilityPool:
+      hashgraphLiquity.populateDepositHCHFInStabilityPool.bind(hashgraphLiquity),
+    exitLiquidityMining: hashgraphLiquity.populateExitLiquidityMining.bind(hashgraphLiquity),
+    liquidate: hashgraphLiquity.populateLiquidate.bind(hashgraphLiquity),
+    liquidateUpTo: hashgraphLiquity.populateLiquidateUpTo.bind(hashgraphLiquity),
+    openTrove: hashgraphLiquity.populateOpenTrove.bind(hashgraphLiquity),
+    redeemHCHF: hashgraphLiquity.populateRedeemHCHF.bind(hashgraphLiquity),
+    registerFrontend: hashgraphLiquity.populateRegisterFrontend.bind(hashgraphLiquity),
+    repayHCHF: hashgraphLiquity.populateRepayHCHF.bind(hashgraphLiquity),
+    setPrice: hashgraphLiquity.populateSetPrice.bind(hashgraphLiquity),
+    stakeHLQT: hashgraphLiquity.populateStakeHLQT.bind(hashgraphLiquity),
+    stakeUniTokens: hashgraphLiquity.populateStakeUniTokens.bind(hashgraphLiquity),
+    transferCollateralGainToTrove:
+      hashgraphLiquity.populateTransferCollateralGainToTrove.bind(hashgraphLiquity),
+    unstakeHLQT: hashgraphLiquity.populateUnstakeHLQT.bind(hashgraphLiquity),
+    unstakeUniTokens: hashgraphLiquity.populateUnstakeUniTokens.bind(hashgraphLiquity),
+    withdrawCollateral: hashgraphLiquity.populateWithdrawCollateral.bind(hashgraphLiquity),
+    withdrawGainsFromStabilityPool:
+      hashgraphLiquity.populateWithdrawGainsFromStabilityPool.bind(hashgraphLiquity),
+    withdrawGainsFromStaking:
+      hashgraphLiquity.populateWithdrawGainsFromStaking.bind(hashgraphLiquity),
+    // @ts-expect-error overlapping functions, i don't get it
+    withdrawHCHFFromStabilityPool:
+      hashgraphLiquity.populateWithdrawHCHFFromStabilityPool.bind(hashgraphLiquity),
+    withdrawHLQTRewardFromLiquidityMining:
+      hashgraphLiquity.populateWithdrawHLQTRewardFromLiquidityMining.bind(hashgraphLiquity),
   }
 
   return sendableLiquity
