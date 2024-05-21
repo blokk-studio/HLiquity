@@ -1,29 +1,39 @@
 import {
   BETA,
+  CollateralGainTransferDetails,
   Decimal,
   Decimalish,
   Fees,
   FrontendStatus,
+  HCHF_MINIMUM_NET_DEBT,
   HLQTStake,
   HLiquityStore,
+  LiquidationDetails,
   LiquityReceipt,
   LiquityStoreBaseState,
   LiquityStoreState,
   MINUTE_DECAY_FACTOR,
-  MinedReceipt,
   PopulatableLiquity,
   PopulatedLiquityTransaction,
+  PopulatedRedemption,
   ReadableLiquity,
+  RedemptionDetails,
   SendableLiquity,
   SentLiquityTransaction,
   StabilityDeposit,
+  StabilityDepositChangeDetails,
+  StabilityPoolGainsWithdrawalDetails,
   Trove,
   TroveAdjustmentDetails,
   TroveAdjustmentParams,
+  TroveClosureDetails,
+  TroveCreationDetails,
+  TroveCreationParams,
   TroveListingParams,
   TroveWithPendingRedistribution,
   UserTrove,
   _normalizeTroveAdjustment,
+  _normalizeTroveCreation,
 } from '@liquity/lib-base'
 import { BigNumber } from 'bignumber.js'
 import { HashConnect } from 'hashconnect'
@@ -35,12 +45,12 @@ import { DeploymentAddressesKey } from './deployment'
 import {
   AccountId,
   ContractExecuteTransaction,
-  ContractId,
   Hbar,
   TransactionReceipt,
   TransactionResponse,
 } from '@hashgraph/sdk'
 import { default as Emittery } from 'emittery'
+import { HashConnectSigner } from 'hashconnect/dist/signer'
 import { EventEmitter } from 'node:events'
 import { ActivePoolAbi, activePoolAbi } from '../abi/ActivePool'
 import { BorrowerOperationsAbi, borrowerOperationsAbi } from '../abi/BorrowerOperations'
@@ -52,6 +62,7 @@ import { HCHFTokenAbi, hCHFTokenAbi } from '../abi/HCHFToken'
 import { HLQTStakingAbi, hLQTStakingAbi } from '../abi/HLQTStaking'
 import { HLQTTokenAbi, hLQTTokenAbi } from '../abi/HLQTToken'
 import { HintHelpersAbi, hintHelpersAbi } from '../abi/HintHelpers'
+import { IERC20Abi } from '../abi/IERC20'
 import { LockupContractFactoryAbi, lockupContractFactoryAbi } from '../abi/LockupContractFactory'
 import { MultiTroveGetterAbi, multiTroveGetterAbi } from '../abi/MultiTroveGetter'
 import { PriceFeedAbi, priceFeedAbi } from '../abi/PriceFeed'
@@ -62,14 +73,21 @@ import { UnipoolAbi, unipoolAbi } from '../abi/Unipool'
 import {
   TypedContractExecuteTransaction,
   TypedContractFunctionParameters,
+  TypedContractId,
+  getTypedContractId,
 } from './contract_functions'
 import { LiquityEvents } from './events'
-import { gasForPotentialLastFeeOperationTimeUpdate, gasForPotentialListTraversal } from './gas'
+import {
+  gasForHLQTIssuance,
+  gasForPotentialLastFeeOperationTimeUpdate,
+  gasForPotentialListTraversal,
+  gasForUnipoolRewardUpdate,
+} from './gas'
 import { generateTrials } from './hints'
 import { PrefixProperties } from './interface_collision'
 import { asPopulatable } from './populatable'
 import { asSendable } from './sendable'
-import { getLiquityReceiptStatus } from './transactions'
+import { getPopulatedLiquityTransaction } from './transactions'
 import { BackendTroveStatus, userTroveStatusFrom } from './trove_status'
 import { getBlockTimestamp } from './web3'
 
@@ -113,14 +131,15 @@ interface TransactionOptions {
 
 const defaultBorrowingRateSlippageTolerance = Decimal.from(0.005) // 0.5%
 const defaultRedemptionRateSlippageTolerance = Decimal.from(0.001) // 0.1%
+/** With 70 iterations redemption costs about ~10M gas, and each iteration accounts for ~138k more */
+export const redeemMaxIterations = 70
 
 export class HashgraphLiquity
   extends HLiquityStore<HashgraphLiquityStoreState>
   implements
     ReadableLiquity,
-    PrefixProperties<Readonly<SendableLiquity>, 'send'>,
     PrefixProperties<Readonly<PopulatableLiquity>, 'populate'>,
-    // PrefixProperties<Readonly<TransactableLiquity>, 'transact'>,
+    // TransactableLiquity,
     EventEmitter
 {
   // TODO: fix shitty interface design lasagna and remove this. use events for the different stages of the transaction.
@@ -133,6 +152,7 @@ export class HashgraphLiquity
   private readonly userAccountId: AccountId
   private readonly userAccountAddress: Address
   // don't use account ids from the hashconnect instance.
+  private readonly signer: HashConnectSigner
   private readonly hashConnect: Omit<HashConnect, 'connectedAccountIds'>
   private readonly web3: Web3
   private readonly totalStabilityPoolHlqtReward: Decimal
@@ -140,39 +160,39 @@ export class HashgraphLiquity
 
   // contracts
   private readonly activePool: Contract<ActivePoolAbi>
-  private readonly activePoolContractId: ContractId
+  private readonly activePoolContractId: TypedContractId<ActivePoolAbi>
   private readonly borrowerOperations: Contract<BorrowerOperationsAbi>
-  private readonly borrowerOperationsContractId: ContractId
+  private readonly borrowerOperationsContractId: TypedContractId<BorrowerOperationsAbi>
   private readonly collSurplusPool: Contract<CollSurplusPoolAbi>
-  private readonly collSurplusPoolContractId: ContractId
+  private readonly collSurplusPoolContractId: TypedContractId<CollSurplusPoolAbi>
   private readonly communityIssuance: Contract<CommunityIssuanceAbi>
-  private readonly communityIssuanceContractId: ContractId
+  private readonly communityIssuanceContractId: TypedContractId<CommunityIssuanceAbi>
   private readonly defaultPool: Contract<DefaultPoolAbi>
-  private readonly defaultPoolContractId: ContractId
+  private readonly defaultPoolContractId: TypedContractId<DefaultPoolAbi>
   private readonly gasPool: Contract<GasPoolAbi>
-  private readonly gasPoolContractId: ContractId
+  private readonly gasPoolContractId: TypedContractId<GasPoolAbi>
   private readonly hchfToken: Contract<HCHFTokenAbi>
-  private readonly hchfTokenContractId: ContractId
+  private readonly hchfTokenContractId: TypedContractId<HCHFTokenAbi>
   private readonly hintHelpers: Contract<HintHelpersAbi>
-  private readonly hintHelpersContractId: ContractId
+  private readonly hintHelpersContractId: TypedContractId<HintHelpersAbi>
   private readonly hlqtStaking: Contract<HLQTStakingAbi>
-  private readonly hlqtStakingContractId: ContractId
+  private readonly hlqtStakingContractId: TypedContractId<HLQTStakingAbi>
   private readonly hlqtToken: Contract<HLQTTokenAbi>
-  private readonly hlqtTokenContractId: ContractId
+  private readonly hlqtTokenContractId: TypedContractId<HLQTTokenAbi>
   private readonly lockupContractFactory: Contract<LockupContractFactoryAbi>
-  private readonly lockupContractFactoryContractId: ContractId
+  private readonly lockupContractFactoryContractId: TypedContractId<LockupContractFactoryAbi>
   private readonly multiTroveGetter: Contract<MultiTroveGetterAbi>
-  private readonly multiTroveGetterContractId: ContractId
+  private readonly multiTroveGetterContractId: TypedContractId<MultiTroveGetterAbi>
   private readonly priceFeed: Contract<PriceFeedAbi>
-  private readonly priceFeedContractId: ContractId
+  private readonly priceFeedContractId: TypedContractId<PriceFeedAbi>
   private readonly sortedTroves: Contract<SortedTrovesAbi>
-  private readonly sortedTrovesContractId: ContractId
+  private readonly sortedTrovesContractId: TypedContractId<SortedTrovesAbi>
   private readonly stabilityPool: Contract<StabilityPoolAbi>
-  private readonly stabilityPoolContractId: ContractId
+  private readonly stabilityPoolContractId: TypedContractId<StabilityPoolAbi>
   private readonly troveManager: Contract<TroveManagerAbi>
-  private readonly troveManagerContractId: ContractId
+  private readonly troveManagerContractId: TypedContractId<TroveManagerAbi>
   private readonly saucerSwapPool: Contract<UnipoolAbi>
-  private readonly saucerSwapPoolContractId: ContractId
+  private readonly saucerSwapPoolContractId: TypedContractId<UnipoolAbi>
 
   private constructor(options: {
     userAccountId: AccountId
@@ -183,39 +203,39 @@ export class HashgraphLiquity
     frontendAddress: Address
     // contracts
     activePool: Contract<ActivePoolAbi>
-    activePoolContractId: ContractId
+    activePoolContractId: TypedContractId<ActivePoolAbi>
     borrowerOperations: Contract<BorrowerOperationsAbi>
-    borrowerOperationsContractId: ContractId
+    borrowerOperationsContractId: TypedContractId<BorrowerOperationsAbi>
     collSurplusPool: Contract<CollSurplusPoolAbi>
-    collSurplusPoolContractId: ContractId
+    collSurplusPoolContractId: TypedContractId<CollSurplusPoolAbi>
     communityIssuance: Contract<CommunityIssuanceAbi>
-    communityIssuanceContractId: ContractId
+    communityIssuanceContractId: TypedContractId<CommunityIssuanceAbi>
     defaultPool: Contract<DefaultPoolAbi>
-    defaultPoolContractId: ContractId
+    defaultPoolContractId: TypedContractId<DefaultPoolAbi>
     gasPool: Contract<GasPoolAbi>
-    gasPoolContractId: ContractId
+    gasPoolContractId: TypedContractId<GasPoolAbi>
     hchfToken: Contract<HCHFTokenAbi>
-    hchfTokenContractId: ContractId
+    hchfTokenContractId: TypedContractId<HCHFTokenAbi>
     hintHelpers: Contract<HintHelpersAbi>
-    hintHelpersContractId: ContractId
+    hintHelpersContractId: TypedContractId<HintHelpersAbi>
     hlqtStaking: Contract<HLQTStakingAbi>
-    hlqtStakingContractId: ContractId
+    hlqtStakingContractId: TypedContractId<HLQTStakingAbi>
     hlqtToken: Contract<HLQTTokenAbi>
-    hlqtTokenContractId: ContractId
+    hlqtTokenContractId: TypedContractId<HLQTTokenAbi>
     lockupContractFactory: Contract<LockupContractFactoryAbi>
-    lockupContractFactoryContractId: ContractId
+    lockupContractFactoryContractId: TypedContractId<LockupContractFactoryAbi>
     multiTroveGetter: Contract<MultiTroveGetterAbi>
-    multiTroveGetterContractId: ContractId
+    multiTroveGetterContractId: TypedContractId<MultiTroveGetterAbi>
     priceFeed: Contract<PriceFeedAbi>
-    priceFeedContractId: ContractId
+    priceFeedContractId: TypedContractId<PriceFeedAbi>
     sortedTroves: Contract<SortedTrovesAbi>
-    sortedTrovesContractId: ContractId
+    sortedTrovesContractId: TypedContractId<SortedTrovesAbi>
     stabilityPool: Contract<StabilityPoolAbi>
-    stabilityPoolContractId: ContractId
+    stabilityPoolContractId: TypedContractId<StabilityPoolAbi>
     troveManager: Contract<TroveManagerAbi>
-    troveManagerContractId: ContractId
+    troveManagerContractId: TypedContractId<TroveManagerAbi>
     saucerSwapPool: Contract<UnipoolAbi>
-    saucerSwapPoolContractId: ContractId
+    saucerSwapPoolContractId: TypedContractId<UnipoolAbi>
   }) {
     super()
 
@@ -224,6 +244,7 @@ export class HashgraphLiquity
     this.userAccountId = options.userAccountId
     this.userAccountAddress = options.userAccountAddress
     this.hashConnect = options.userHashConnect
+    this.signer = this.hashConnect.getSigner(this.userAccountId)
     this.web3 = options.web3
     this.totalStabilityPoolHlqtReward = options.totalStabilityPoolHlqtReward
     this.frontendAddress = options.frontendAddress
@@ -869,7 +890,7 @@ export class HashgraphLiquity
     const totalStabilityPoolHlqtReward = Decimal.from(options.totalStabilityPoolHlqtReward)
 
     const activePool = new web3.eth.Contract(activePoolAbi, options.deploymentAddresses.activePool)
-    const activePoolContractId = ContractId.fromEvmAddress(
+    const activePoolContractId = getTypedContractId<ActivePoolAbi>(
       0,
       0,
       options.deploymentAddresses.activePool,
@@ -879,7 +900,7 @@ export class HashgraphLiquity
       borrowerOperationsAbi,
       options.deploymentAddresses.borrowerOperations,
     )
-    const borrowerOperationsContractId = ContractId.fromEvmAddress(
+    const borrowerOperationsContractId = getTypedContractId<BorrowerOperationsAbi>(
       0,
       0,
       options.deploymentAddresses.borrowerOperations,
@@ -889,7 +910,7 @@ export class HashgraphLiquity
       collSurplusPoolAbi,
       options.deploymentAddresses.collSurplusPool,
     )
-    const collSurplusPoolContractId = ContractId.fromEvmAddress(
+    const collSurplusPoolContractId = getTypedContractId<CollSurplusPoolAbi>(
       0,
       0,
       options.deploymentAddresses.collSurplusPool,
@@ -899,7 +920,7 @@ export class HashgraphLiquity
       communityIssuanceAbi,
       options.deploymentAddresses.communityIssuance,
     )
-    const communityIssuanceContractId = ContractId.fromEvmAddress(
+    const communityIssuanceContractId = getTypedContractId<CommunityIssuanceAbi>(
       0,
       0,
       options.deploymentAddresses.communityIssuance,
@@ -909,17 +930,21 @@ export class HashgraphLiquity
       defaultPoolAbi,
       options.deploymentAddresses.defaultPool,
     )
-    const defaultPoolContractId = ContractId.fromEvmAddress(
+    const defaultPoolContractId = getTypedContractId<DefaultPoolAbi>(
       0,
       0,
       options.deploymentAddresses.defaultPool,
     )
 
     const gasPool = new web3.eth.Contract(gasPoolAbi, options.deploymentAddresses.gasPool)
-    const gasPoolContractId = ContractId.fromEvmAddress(0, 0, options.deploymentAddresses.gasPool)
+    const gasPoolContractId = getTypedContractId<GasPoolAbi>(
+      0,
+      0,
+      options.deploymentAddresses.gasPool,
+    )
 
     const hchfToken = new web3.eth.Contract(hCHFTokenAbi, options.deploymentAddresses.hchfToken)
-    const hchfTokenContractId = ContractId.fromEvmAddress(
+    const hchfTokenContractId = getTypedContractId<HCHFTokenAbi>(
       0,
       0,
       options.deploymentAddresses.hchfToken,
@@ -929,7 +954,7 @@ export class HashgraphLiquity
       hintHelpersAbi,
       options.deploymentAddresses.hintHelpers,
     )
-    const hintHelpersContractId = ContractId.fromEvmAddress(
+    const hintHelpersContractId = getTypedContractId<HintHelpersAbi>(
       0,
       0,
       options.deploymentAddresses.hintHelpers,
@@ -939,14 +964,14 @@ export class HashgraphLiquity
       hLQTStakingAbi,
       options.deploymentAddresses.hlqtStaking,
     )
-    const hlqtStakingContractId = ContractId.fromEvmAddress(
+    const hlqtStakingContractId = getTypedContractId<HLQTStakingAbi>(
       0,
       0,
       options.deploymentAddresses.hlqtStaking,
     )
 
     const hlqtToken = new web3.eth.Contract(hLQTTokenAbi, options.deploymentAddresses.hlqtToken)
-    const hlqtTokenContractId = ContractId.fromEvmAddress(
+    const hlqtTokenContractId = getTypedContractId<HLQTTokenAbi>(
       0,
       0,
       options.deploymentAddresses.hlqtToken,
@@ -956,7 +981,7 @@ export class HashgraphLiquity
       lockupContractFactoryAbi,
       options.deploymentAddresses.lockupContractFactory,
     )
-    const lockupContractFactoryContractId = ContractId.fromEvmAddress(
+    const lockupContractFactoryContractId = getTypedContractId<LockupContractFactoryAbi>(
       0,
       0,
       options.deploymentAddresses.lockupContractFactory,
@@ -966,14 +991,14 @@ export class HashgraphLiquity
       multiTroveGetterAbi,
       options.deploymentAddresses.multiTroveGetter,
     )
-    const multiTroveGetterContractId = ContractId.fromEvmAddress(
+    const multiTroveGetterContractId = getTypedContractId<MultiTroveGetterAbi>(
       0,
       0,
       options.deploymentAddresses.multiTroveGetter,
     )
 
     const priceFeed = new web3.eth.Contract(priceFeedAbi, options.deploymentAddresses.priceFeed)
-    const priceFeedContractId = ContractId.fromEvmAddress(
+    const priceFeedContractId = getTypedContractId<PriceFeedAbi>(
       0,
       0,
       options.deploymentAddresses.priceFeed,
@@ -983,7 +1008,7 @@ export class HashgraphLiquity
       sortedTrovesAbi,
       options.deploymentAddresses.sortedTroves,
     )
-    const sortedTrovesContractId = ContractId.fromEvmAddress(
+    const sortedTrovesContractId = getTypedContractId<SortedTrovesAbi>(
       0,
       0,
       options.deploymentAddresses.sortedTroves,
@@ -993,7 +1018,7 @@ export class HashgraphLiquity
       stabilityPoolAbi,
       options.deploymentAddresses.stabilityPool,
     )
-    const stabilityPoolContractId = ContractId.fromEvmAddress(
+    const stabilityPoolContractId = getTypedContractId<StabilityPoolAbi>(
       0,
       0,
       options.deploymentAddresses.stabilityPool,
@@ -1003,7 +1028,7 @@ export class HashgraphLiquity
       troveManagerAbi,
       options.deploymentAddresses.troveManager,
     )
-    const troveManagerContractId = ContractId.fromEvmAddress(
+    const troveManagerContractId = getTypedContractId<TroveManagerAbi>(
       0,
       0,
       options.deploymentAddresses.troveManager,
@@ -1013,7 +1038,7 @@ export class HashgraphLiquity
       unipoolAbi,
       options.deploymentAddresses.saucerSwapPool,
     )
-    const saucerSwapPoolContractId = ContractId.fromEvmAddress(
+    const saucerSwapPoolContractId = getTypedContractId<UnipoolAbi>(
       0,
       0,
       options.deploymentAddresses.saucerSwapPool,
@@ -1175,7 +1200,8 @@ export class HashgraphLiquity
     throw new Error('not implemented as there is no usage of this')
   }
 
-  private async _findHintsForNominalCollateralRatio(
+  // liquity utilities
+  private async findHintsForNominalCollateralRatio(
     nominalCollateralRatio: Decimal,
   ): Promise<[Address, Address]> {
     const numberOfTroves = await this.getNumberOfTroves()
@@ -1235,7 +1261,114 @@ export class HashgraphLiquity
     return [findInsertPositionResult[0] as Address, findInsertPositionResult[1] as Address]
   }
 
-  // sendable
+  // populatable
+  async populateOpenTrove(
+    params: TroveCreationParams<Decimalish>,
+    maxBorrowingRate?: Decimalish,
+    options?: TransactionOptions,
+  ): Promise<
+    PopulatedLiquityTransaction<
+      ContractExecuteTransaction,
+      SentLiquityTransaction<
+        TransactionResponse,
+        LiquityReceipt<TransactionReceipt, TroveCreationDetails>
+      >
+    >
+  > {
+    const normalized = _normalizeTroveCreation(params)
+    const { depositCollateral, borrowHCHF } = normalized
+    const fees = await this.getFees()
+    const borrowingRate = fees.borrowingRate()
+    const newTrove = Trove.create(normalized, borrowingRate)
+
+    const finalMaxBorrowingRate =
+      maxBorrowingRate !== undefined
+        ? Decimal.from(maxBorrowingRate)
+        : borrowingRate.add(defaultBorrowingRateSlippageTolerance)
+
+    const hints = await this.findHintsForNominalCollateralRatio(newTrove._nominalCollateralRatio)
+    const hbar = Hbar.fromString(depositCollateral.toString())
+    const gas = 3000000 + gasForPotentialLastFeeOperationTimeUpdate + gasForPotentialListTraversal
+
+    const functionParameters = TypedContractFunctionParameters<BorrowerOperationsAbi, 'openTrove'>()
+      .addUint256(new BigNumber(finalMaxBorrowingRate.hex))
+      .addUint256(new BigNumber(borrowHCHF.hex))
+      .addAddress(hints[0])
+      .addAddress(hints[1])
+
+    const unfrozenTransaction = TypedContractExecuteTransaction<BorrowerOperationsAbi>({
+      contractId: this.borrowerOperationsContractId,
+      functionName: 'openTrove',
+      functionParameters,
+      hbar,
+      gas,
+    })
+    const rawPopulatedTransaction = await unfrozenTransaction.freezeWithSigner(this.signer)
+
+    const getDetails = async () => {
+      const newStoreState = await this.refresh()
+      const newTrove = newStoreState.trove
+      const paidHchfBorrowingFee = newStoreState.fees.borrowingRate()
+
+      const details: TroveCreationDetails = {
+        params: normalized,
+        fee: paidHchfBorrowingFee,
+        newTrove,
+      }
+
+      return details
+    }
+
+    const populatedLiquityTransaction = getPopulatedLiquityTransaction({
+      rawPopulatedTransaction,
+      signer: this.signer,
+      getDetails,
+    })
+
+    return populatedLiquityTransaction
+  }
+
+  async populateCloseTrove(
+    options?: TransactionOptions,
+  ): Promise<
+    PopulatedLiquityTransaction<
+      ContractExecuteTransaction,
+      SentLiquityTransaction<
+        TransactionResponse,
+        LiquityReceipt<TransactionReceipt, TroveClosureDetails>
+      >
+    >
+  > {
+    const gas = 3000000
+    const unfrozenTransaction = TypedContractExecuteTransaction<BorrowerOperationsAbi>({
+      contractId: this.borrowerOperationsContractId,
+      functionName: 'closeTrove',
+      gas,
+    })
+    const rawPopulatedTransaction = await unfrozenTransaction.freezeWithSigner(this.signer)
+
+    const troveBeforeClosure = this.state.trove
+    const getDetails = async () => {
+      await this.refresh()
+
+      const details: TroveClosureDetails = {
+        params: {
+          withdrawCollateral: troveBeforeClosure.collateral,
+          repayHCHF: troveBeforeClosure.debt,
+        },
+      }
+
+      return details
+    }
+    const populatedEthersLiquityTransaction = getPopulatedLiquityTransaction({
+      rawPopulatedTransaction,
+      signer: this.signer,
+      getDetails,
+    })
+
+    return populatedEthersLiquityTransaction
+  }
+
   async populateAdjustTrove(
     params: TroveAdjustmentParams<Decimalish>,
     maxBorrowingRate?: Decimalish,
@@ -1263,19 +1396,20 @@ export class HashgraphLiquity
       throw new Error('Rewards must be applied to this Trove')
     }
 
-    maxBorrowingRate =
-      maxBorrowingRate !== undefined
-        ? Decimal.from(maxBorrowingRate)
-        : borrowingRate?.add(defaultBorrowingRateSlippageTolerance) ?? Decimal.ZERO
+    const finalMaxBorrowingRate = maxBorrowingRate
+      ? Decimal.from(maxBorrowingRate)
+      : borrowingRate
+        ? borrowingRate.add(defaultBorrowingRateSlippageTolerance)
+        : Decimal.ZERO
 
-    const hints = await this._findHintsForNominalCollateralRatio(finalTrove._nominalCollateralRatio)
+    const hints = await this.findHintsForNominalCollateralRatio(finalTrove._nominalCollateralRatio)
 
-    let amount: Hbar = Hbar.fromTinybars(0)
+    let hbar: Hbar = Hbar.fromTinybars(0)
     if (depositCollateral !== undefined) {
-      amount = Hbar.fromString(depositCollateral.toString())
+      hbar = Hbar.fromString(depositCollateral.toString())
     }
-    let gas = 3000000
-    gas += gasForPotentialListTraversal
+
+    let gas = 3000000 + gasForPotentialListTraversal
     if (borrowHCHF) {
       gas += gasForPotentialLastFeeOperationTimeUpdate
     }
@@ -1284,152 +1418,41 @@ export class HashgraphLiquity
       BorrowerOperationsAbi,
       'adjustTrove'
     >()
-    functionParameters
-      .addUint256(new BigNumber(maxBorrowingRate.hex))
+      .addUint256(new BigNumber(finalMaxBorrowingRate.hex))
       .addUint256(new BigNumber((withdrawCollateral ?? Decimal.ZERO).hex))
       .addUint256(new BigNumber((borrowHCHF ?? repayHCHF ?? Decimal.ZERO).hex))
       .addBool(!!borrowHCHF)
       .addAddress(hints[0])
       .addAddress(hints[1])
-
     const unfrozenTransaction = TypedContractExecuteTransaction<BorrowerOperationsAbi>({
       contractId: this.borrowerOperationsContractId,
       functionName: 'adjustTrove',
       functionParameters,
-      hbar: amount,
+      hbar,
       gas,
     })
+    const rawPopulatedTransaction = await unfrozenTransaction.freezeWithSigner(this.signer)
 
-    const signer = this.hashConnect.getSigner(this.userAccountId)
-    const rawPopulatedTransaction = await unfrozenTransaction.freezeWithSigner(signer)
+    const getDetails = async () => {
+      const newStoreState = await this.refresh()
+      const updatedTrove = newStoreState.trove
+      const paidHchfBorrowingFee = newStoreState.fees.borrowingRate()
 
-    const send = async (): Promise<
-      SentLiquityTransaction<
-        TransactionResponse,
-        LiquityReceipt<TransactionReceipt, TroveAdjustmentDetails>
-      >
-    > => {
-      // TODO: get arkhia websocket to work so we can subscribe to events
-      // const updatedTrovePromise = new Promise<Trove>((resolve, reject) => {
-      //   try {
-      //     const eventEmitter = this.borrowerOperations.events.TroveUpdated()
-      //     const resolveWithData = (eventLog: EventLog) => {
-      //       eventEmitter.off('error', rejectWithError)
-
-      //       const returnValues = eventLog.returnValues as {
-      //         _coll: MatchPrimitiveType<'uint256', unknown>
-      //         _debt: MatchPrimitiveType<'uint256', unknown>
-      //       }
-      //       const trove = new Trove(decimalify(returnValues._coll), decimalify(returnValues._debt))
-
-      //       console.trace({ 'borrowerOperations.events.TroveUpdated() returnValues': returnValues })
-
-      //       resolve(trove)
-      //     }
-      //     const rejectWithError = (error: Error) => {
-      //       eventEmitter.off('data', resolveWithData)
-
-      //       reject(error)
-      //     }
-      //     eventEmitter.once('data', resolveWithData)
-      //     eventEmitter.once('error', rejectWithError)
-      //   } catch (updatedTrovePromiseSetupError) {
-      //   }
-      // })
-      // const paidHchfBorrowingFeePromise = new Promise<Decimal>((resolve, reject) => {
-      //   const eventEmitter = this.borrowerOperations.methods.HCHFBorrowingFeePaid().call()
-      //   const resolveWithData = (eventLog: EventLog) => {
-      //     eventEmitter.off('error', rejectWithError)
-
-      //     const returnValues = eventLog.returnValues as {
-      //       _HCHFFee: MatchPrimitiveType<'uint256', unknown>
-      //     }
-      //     const fee = decimalify(returnValues._HCHFFee)
-
-      //     console.trace({
-      //       'borrowerOperations.events.HCHFBorrowingFeePaid() returnValues': returnValues,
-      //     })
-
-      //     resolve(fee)
-      //   }
-      //   const rejectWithError = (error: Error) => {
-      //     eventEmitter.off('data', resolveWithData)
-
-      //     reject(error)
-      //   }
-      //   eventEmitter.once('data', resolveWithData)
-      //   eventEmitter.once('error', rejectWithError)
-      // })
-
-      const rawSentTransaction = await rawPopulatedTransaction.executeWithSigner(signer)
-
-      const waitForReceipt = async (): Promise<
-        MinedReceipt<TransactionReceipt, TroveAdjustmentDetails>
-      > => {
-        // wait for the receipt before querying
-        const rawReceipt = await rawSentTransaction.getReceiptWithSigner(signer)
-        const newStoreState = await this.refresh()
-        const updatedTrove = newStoreState.trove
-        const paidHchfBorrowingFee = newStoreState.fees.borrowingRate(new Date())
-
-        const details: TroveAdjustmentDetails = {
-          params: normalized,
-          fee: paidHchfBorrowingFee,
-          newTrove: updatedTrove,
-        }
-        const status = getLiquityReceiptStatus(rawReceipt.status)
-
-        if (status === 'pending') {
-          // this should never actually happen
-          throw new Error(
-            'TODO: figure out how to wait for the transaction to not be pending anymore.',
-          )
-        }
-
-        return {
-          status,
-          rawReceipt,
-          details,
-        }
+      const details: TroveAdjustmentDetails = {
+        params: normalized,
+        fee: paidHchfBorrowingFee,
+        newTrove: updatedTrove,
       }
 
-      return {
-        rawSentTransaction,
-        waitForReceipt,
-        getReceipt: waitForReceipt,
-      }
+      return details
     }
-
-    const populatedTransaction: PopulatedLiquityTransaction<
-      ContractExecuteTransaction,
-      SentLiquityTransaction<
-        TransactionResponse,
-        LiquityReceipt<TransactionReceipt, TroveAdjustmentDetails>
-      >
-    > = {
+    const populatedLiquityTransaction = getPopulatedLiquityTransaction({
       rawPopulatedTransaction,
-      send,
-    }
+      signer: this.signer,
+      getDetails,
+    })
 
-    // TODO: remaining parameters
-    return populatedTransaction
-  }
-
-  async sendAdjustTrove(
-    params: TroveAdjustmentParams<Decimalish>,
-    maxBorrowingRate?: Decimalish,
-    options?: TransactionOptions,
-  ): Promise<
-    SentLiquityTransaction<
-      TransactionResponse,
-      LiquityReceipt<TransactionReceipt, TroveAdjustmentDetails>
-    >
-  > {
-    const populatedAdjustTrove = await this.populateAdjustTrove(params, maxBorrowingRate, options)
-
-    const receipt = await populatedAdjustTrove.send()
-
-    return receipt
+    return populatedLiquityTransaction
   }
 
   async populateDepositCollateral(
@@ -1444,8 +1467,71 @@ export class HashgraphLiquity
       >
     >
   > {
-    const populateDepositCollateral = await this.populateAdjustTrove(
+    const populatedLiquityTransaction = await this.populateAdjustTrove(
       { depositCollateral: amount },
+      undefined,
+      options,
+    )
+
+    return populatedLiquityTransaction
+  }
+
+  async populateWithdrawCollateral(
+    amount: Decimalish,
+    options?: TransactionOptions,
+  ): Promise<
+    PopulatedLiquityTransaction<
+      ContractExecuteTransaction,
+      SentLiquityTransaction<
+        TransactionResponse,
+        LiquityReceipt<TransactionReceipt, TroveAdjustmentDetails>
+      >
+    >
+  > {
+    const populatedLiquityTransaction = await this.populateAdjustTrove(
+      { withdrawCollateral: amount },
+      undefined,
+      options,
+    )
+
+    return populatedLiquityTransaction
+  }
+
+  async populateBorrowHCHF(
+    amount: Decimalish,
+    options?: TransactionOptions,
+  ): Promise<
+    PopulatedLiquityTransaction<
+      ContractExecuteTransaction,
+      SentLiquityTransaction<
+        TransactionResponse,
+        LiquityReceipt<TransactionReceipt, TroveAdjustmentDetails>
+      >
+    >
+  > {
+    const populatedLiquityTransaction = await this.populateAdjustTrove(
+      { borrowHCHF: amount },
+      undefined,
+      options,
+    )
+
+    return populatedLiquityTransaction
+  }
+
+  async populateRepayHCHF(
+    amount: Decimalish,
+    options?: TransactionOptions,
+  ): Promise<
+    PopulatedLiquityTransaction<
+      ContractExecuteTransaction,
+      SentLiquityTransaction<
+        TransactionResponse,
+        LiquityReceipt<TransactionReceipt, TroveAdjustmentDetails>
+      >
+    >
+  > {
+    const populateDepositCollateral = await this.populateAdjustTrove(
+      { repayHCHF: amount },
       undefined,
       options,
     )
@@ -1453,24 +1539,861 @@ export class HashgraphLiquity
     return populateDepositCollateral
   }
 
-  async sendDepositCollateral(
+  async populateClaimCollateralSurplus(
+    options?: TransactionOptions,
+  ): Promise<
+    PopulatedLiquityTransaction<
+      ContractExecuteTransaction,
+      SentLiquityTransaction<TransactionResponse, LiquityReceipt<TransactionReceipt, void>>
+    >
+  > {
+    const unfrozenRawPopulatedTransaction = TypedContractExecuteTransaction<BorrowerOperationsAbi>({
+      contractId: this.borrowerOperationsContractId,
+      functionName: 'claimCollateral',
+      gas: 3000000,
+    })
+
+    const rawPopulatedTransaction = await unfrozenRawPopulatedTransaction.freezeWithSigner(
+      this.signer,
+    )
+
+    const populatedLiquityTransaction = getPopulatedLiquityTransaction({
+      rawPopulatedTransaction,
+      signer: this.signer,
+      getDetails: () => undefined,
+    })
+
+    return populatedLiquityTransaction
+  }
+
+  async populateSetPrice(
+    price: Decimalish,
+    options?: TransactionOptions,
+  ): Promise<
+    PopulatedLiquityTransaction<
+      ContractExecuteTransaction,
+      SentLiquityTransaction<TransactionResponse, LiquityReceipt<TransactionReceipt, void>>
+    >
+  > {
+    throw new Error(
+      'setPrice() is not implemented. amend HashgraphLiquity::populateSetPrice to implement it.',
+    )
+    // TODO: pass whether price can be set
+    // if (!false) {
+    //   throw new Error('setPrice() unavailable on this deployment of Liquity')
+    // }
+
+    // const functionParameters = TypedContractFunctionParameters<
+    //   PriceFeedAbi,
+    //   'setPrice'
+    // >().addUint256(new BigNumber(Decimal.from(price).hex))
+
+    // const unfrozenRawPopulatedTransaction = TypedContractExecuteTransaction<PriceFeedAbi>({
+    //   contractId: this.priceFeedContractId,
+    //   gas: 3000000,
+    //   functionName: 'setPrice',
+    // })
+
+    // const rawPopulatedTransaction = await unfrozenRawPopulatedTransaction.freezeWithSigner(
+    //   this.signer,
+    // )
+
+    // const populatedLiquityTransaction = getPopulatedLiquityTransaction({
+    //   rawPopulatedTransaction,
+    //   signer: this.signer,
+    //   getDetails: () => undefined,
+    // })
+
+    // return populatedLiquityTransaction
+  }
+
+  async populateLiquidate(
+    addressOrAddresses: Address | Address[],
+    options?: TransactionOptions,
+  ): Promise<
+    PopulatedLiquityTransaction<
+      ContractExecuteTransaction,
+      SentLiquityTransaction<
+        TransactionResponse,
+        LiquityReceipt<TransactionReceipt, LiquidationDetails>
+      >
+    >
+  > {
+    let unfrozenRawPopulatedTransaction: ContractExecuteTransaction
+    if (Array.isArray(addressOrAddresses)) {
+      // batch-liquidate multiple addresses
+      const functionParameters = TypedContractFunctionParameters<
+        TroveManagerAbi,
+        'batchLiquidateTroves'
+      >().addAddressArray(addressOrAddresses)
+
+      unfrozenRawPopulatedTransaction = TypedContractExecuteTransaction<TroveManagerAbi>({
+        contractId: this.troveManagerContractId,
+        gas: 3000000 + gasForHLQTIssuance,
+        functionName: 'batchLiquidateTroves',
+        functionParameters,
+      })
+    } else {
+      // liquidate single address
+      const functionParameters = TypedContractFunctionParameters<
+        TroveManagerAbi,
+        'liquidate'
+      >().addAddress(addressOrAddresses)
+
+      unfrozenRawPopulatedTransaction = TypedContractExecuteTransaction<TroveManagerAbi>({
+        contractId: this.troveManagerContractId,
+        gas: 3000000 + gasForHLQTIssuance,
+        functionName: 'liquidate',
+        functionParameters,
+      })
+    }
+
+    const rawPopulatedTransaction = await unfrozenRawPopulatedTransaction.freezeWithSigner(
+      this.signer,
+    )
+
+    const getDetails = (): LiquidationDetails => {
+      // TODO: we can't listen to events without websocket
+      const details: LiquidationDetails = {
+        collateralGasCompensation: Decimal.ZERO,
+        hchfGasCompensation: Decimal.ZERO,
+        liquidatedAddresses: Array.isArray(addressOrAddresses)
+          ? addressOrAddresses
+          : [addressOrAddresses],
+        totalLiquidated: new Trove(),
+      }
+
+      return details
+    }
+
+    const populatedLiquityTransaction = getPopulatedLiquityTransaction({
+      rawPopulatedTransaction,
+      signer: this.signer,
+      getDetails,
+    })
+
+    return populatedLiquityTransaction
+  }
+
+  async populateLiquidateUpTo(
+    maximumNumberOfTrovesToLiquidate: number,
+    options?: TransactionOptions,
+  ): Promise<
+    PopulatedLiquityTransaction<
+      ContractExecuteTransaction,
+      SentLiquityTransaction<
+        TransactionResponse,
+        LiquityReceipt<TransactionReceipt, LiquidationDetails>
+      >
+    >
+  > {
+    const functionParameters = TypedContractFunctionParameters<
+      TroveManagerAbi,
+      'liquidateTroves'
+    >().addUint256(new BigNumber(maximumNumberOfTrovesToLiquidate))
+
+    const unfrozenRawPopulatedTransaction = TypedContractExecuteTransaction<TroveManagerAbi>({
+      contractId: this.troveManagerContractId,
+      functionName: 'liquidateTroves',
+      gas: 3000000 + gasForHLQTIssuance,
+      functionParameters,
+    })
+
+    const rawPopulatedTransaction = await unfrozenRawPopulatedTransaction.freezeWithSigner(
+      this.signer,
+    )
+
+    const getDetails = () => {
+      // TODO: we can't listen to events without websocket
+      const details: LiquidationDetails = {
+        collateralGasCompensation: Decimal.ZERO,
+        hchfGasCompensation: Decimal.ZERO,
+        liquidatedAddresses: [],
+        totalLiquidated: new Trove(),
+      }
+
+      return details
+    }
+    const populatedLiquityTransaction = getPopulatedLiquityTransaction({
+      rawPopulatedTransaction,
+      signer: this.signer,
+      getDetails,
+    })
+
+    return populatedLiquityTransaction
+  }
+
+  async populateDepositHCHFInStabilityPool(
+    amount: Decimalish,
+    frontendTag?: Address,
+    options?: TransactionOptions,
+  ): Promise<
+    PopulatedLiquityTransaction<
+      ContractExecuteTransaction,
+      SentLiquityTransaction<
+        TransactionResponse,
+        LiquityReceipt<TransactionReceipt, StabilityDepositChangeDetails>
+      >
+    >
+  > {
+    const frontendAddress = frontendTag ?? this.frontendAddress
+    const functionParameters = TypedContractFunctionParameters<StabilityPoolAbi, 'provideToSP'>()
+      .addUint256(new BigNumber(Decimal.from(amount).hex))
+      .addAddress(frontendAddress)
+
+    const unfrozenRawPopulatedTransaction = TypedContractExecuteTransaction<StabilityPoolAbi>({
+      contractId: this.stabilityPoolContractId,
+      functionName: 'provideToSP',
+      gas: 3000000 + gasForHLQTIssuance,
+      functionParameters,
+    })
+
+    const rawPopulatedTransaction = await unfrozenRawPopulatedTransaction.freezeWithSigner(
+      this.signer,
+    )
+
+    const getDetails = () => {
+      // TODO: we can't listen to events without websocket
+      const details: StabilityDepositChangeDetails = {
+        change: {
+          withdrawAllHCHF: false,
+          withdrawHCHF: Decimal.ZERO,
+        },
+        collateralGain: Decimal.ZERO,
+        hchfLoss: Decimal.ZERO,
+        hlqtReward: Decimal.ZERO,
+        newHCHFDeposit: Decimal.ZERO,
+      }
+
+      return details
+    }
+    const populatedLiquityTransaction = getPopulatedLiquityTransaction({
+      rawPopulatedTransaction,
+      signer: this.signer,
+      getDetails,
+    })
+
+    return populatedLiquityTransaction
+  }
+
+  // @ts-expect-error some weird types here
+  async populateWithdrawHCHFFromStabilityPool(
     amount: Decimalish,
     options?: TransactionOptions,
   ): Promise<
-    SentLiquityTransaction<
-      TransactionResponse,
-      LiquityReceipt<TransactionReceipt, TroveAdjustmentDetails>
+    PopulatedLiquityTransaction<
+      ContractExecuteTransaction,
+      SentLiquityTransaction<
+        TransactionResponse,
+        LiquityReceipt<TransactionReceipt, StabilityPoolGainsWithdrawalDetails>
+      >
     >
   > {
-    const populatedDepositCollateral = await this.populateAdjustTrove(
-      { depositCollateral: amount },
-      undefined,
-      options,
-    )
-    const receipt = await populatedDepositCollateral.send()
+    const functionParameters = TypedContractFunctionParameters<
+      StabilityPoolAbi,
+      'withdrawFromSP'
+    >().addUint256(new BigNumber(Decimal.from(amount).hex))
 
-    return receipt
+    const unfrozenRawPopulatedTransaction = TypedContractExecuteTransaction<StabilityPoolAbi>({
+      contractId: this.stabilityPoolContractId,
+      functionName: 'withdrawFromSP',
+      gas: 3000000 + gasForHLQTIssuance,
+      functionParameters,
+    })
+
+    const rawPopulatedTransaction = await unfrozenRawPopulatedTransaction.freezeWithSigner(
+      this.signer,
+    )
+
+    const getDetails = () => {
+      // TODO: we can't listen to events without websocket
+      const details: StabilityPoolGainsWithdrawalDetails = {
+        collateralGain: Decimal.ZERO,
+        hchfLoss: Decimal.ZERO,
+        hlqtReward: Decimal.ZERO,
+        newHCHFDeposit: Decimal.ZERO,
+      }
+
+      return details
+    }
+    const populatedLiquityTransaction = getPopulatedLiquityTransaction({
+      rawPopulatedTransaction,
+      signer: this.signer,
+      getDetails,
+    })
+
+    return populatedLiquityTransaction
   }
 
-  // transactable
+  async populateWithdrawGainsFromStabilityPool(
+    options?: TransactionOptions,
+  ): Promise<
+    PopulatedLiquityTransaction<
+      ContractExecuteTransaction,
+      SentLiquityTransaction<
+        TransactionResponse,
+        LiquityReceipt<TransactionReceipt, StabilityPoolGainsWithdrawalDetails>
+      >
+    >
+  > {
+    const functionParameters = TypedContractFunctionParameters<
+      StabilityPoolAbi,
+      'withdrawFromSP'
+    >().addUint256(new BigNumber(0))
+
+    const unfrozenRawPopulatedTransaction = TypedContractExecuteTransaction<StabilityPoolAbi>({
+      contractId: this.stabilityPoolContractId,
+      functionName: 'withdrawFromSP',
+      gas: 3000000 + gasForHLQTIssuance,
+      functionParameters,
+    })
+
+    const rawPopulatedTransaction = await unfrozenRawPopulatedTransaction.freezeWithSigner(
+      this.signer,
+    )
+
+    const getDetails = () => {
+      // TODO: we can't listen to events without websocket
+      const details: StabilityPoolGainsWithdrawalDetails = {
+        collateralGain: Decimal.ZERO,
+        hchfLoss: Decimal.ZERO,
+        hlqtReward: Decimal.ZERO,
+        newHCHFDeposit: Decimal.ZERO,
+      }
+
+      return details
+    }
+    const populatedLiquityTransaction = getPopulatedLiquityTransaction({
+      rawPopulatedTransaction,
+      signer: this.signer,
+      getDetails,
+    })
+
+    return populatedLiquityTransaction
+  }
+
+  async populateTransferCollateralGainToTrove(
+    options?: TransactionOptions,
+  ): Promise<
+    PopulatedLiquityTransaction<
+      ContractExecuteTransaction,
+      SentLiquityTransaction<
+        TransactionResponse,
+        LiquityReceipt<TransactionReceipt, CollateralGainTransferDetails>
+      >
+    >
+  > {
+    const address = this.getAddressOrUserAddress(options?.from)
+
+    const [initialTrove, stabilityDeposit] = await Promise.all([
+      this.getTrove(address),
+      this.getStabilityDeposit(address),
+    ])
+
+    const finalTrove = initialTrove.addCollateral(stabilityDeposit.collateralGain)
+
+    if (finalTrove instanceof TroveWithPendingRedistribution) {
+      throw new Error('Rewards must be applied to this Trove')
+    }
+
+    const hints = await this.findHintsForNominalCollateralRatio(finalTrove._nominalCollateralRatio)
+
+    const functionParameters = TypedContractFunctionParameters<
+      StabilityPoolAbi,
+      'withdrawETHGainToTrove'
+    >()
+      .addAddress(hints[0])
+      .addAddress(hints[1])
+
+    const unfrozenRawPopulatedTransaction = TypedContractExecuteTransaction<StabilityPoolAbi>({
+      contractId: this.stabilityPoolContractId,
+      functionName: 'withdrawETHGainToTrove',
+      gas: 3000000 + gasForHLQTIssuance,
+      functionParameters,
+    })
+
+    const rawPopulatedTransaction = await unfrozenRawPopulatedTransaction.freezeWithSigner(
+      this.signer,
+    )
+
+    const getDetails = () => {
+      // TODO: we can't listen to events without websocket
+      const details: CollateralGainTransferDetails = {
+        collateralGain: Decimal.ZERO,
+        hchfLoss: Decimal.ZERO,
+        hlqtReward: Decimal.ZERO,
+        newHCHFDeposit: Decimal.ZERO,
+        newTrove: finalTrove,
+      }
+
+      return details
+    }
+    const populatedLiquityTransaction = getPopulatedLiquityTransaction({
+      rawPopulatedTransaction,
+      signer: this.signer,
+      getDetails,
+    })
+
+    return populatedLiquityTransaction
+  }
+
+  async populateRedeemHCHF(
+    amount: Decimalish,
+    maxRedemptionRate?: Decimalish,
+    options?: TransactionOptions,
+  ): Promise<
+    PopulatedLiquityTransaction<
+      ContractExecuteTransaction,
+      SentLiquityTransaction<
+        TransactionResponse,
+        LiquityReceipt<TransactionReceipt, RedemptionDetails>
+      >
+    > &
+      PopulatedRedemption<ContractExecuteTransaction, TransactionResponse, TransactionReceipt>
+  > {
+    const attemptedHCHFAmount = Decimal.from(amount)
+
+    const [
+      fees,
+      total,
+      [
+        truncatedAmount,
+        firstRedemptionHint,
+        partialRedemptionUpperHint,
+        partialRedemptionLowerHint,
+        partialRedemptionHintNICR,
+      ],
+    ] = await Promise.all([
+      this.getFees(),
+      this.getTotal(),
+      (async () => {
+        {
+          const price = await this.getPrice()
+
+          const redemptionHintsResult = await this.hintHelpers.methods
+            .getRedemptionHints(attemptedHCHFAmount.hex, price.hex, redeemMaxIterations)
+            .call()
+          const { firstRedemptionHint, truncatedHCHFamount } = redemptionHintsResult
+          const partialRedemptionHintNICR = decimalify(
+            redemptionHintsResult.partialRedemptionHintNICR,
+          )
+
+          const [partialRedemptionUpperHint, partialRedemptionLowerHint] =
+            partialRedemptionHintNICR.eq(Decimal.ZERO)
+              ? [AddressZero, AddressZero]
+              : await this.findHintsForNominalCollateralRatio(partialRedemptionHintNICR)
+
+          return [
+            decimalify(truncatedHCHFamount),
+            firstRedemptionHint,
+            partialRedemptionUpperHint,
+            partialRedemptionLowerHint,
+            partialRedemptionHintNICR,
+          ]
+        }
+      })(),
+    ])
+
+    if (truncatedAmount.isZero) {
+      throw new Error(
+        `redeemHCHF: amount too low to redeem (try at least ${HCHF_MINIMUM_NET_DEBT})`,
+      )
+    }
+
+    const defaultMaxRedemptionRate = (amount: Decimal) =>
+      Decimal.min(
+        fees.redemptionRate(amount.div(total.debt)).add(defaultRedemptionRateSlippageTolerance),
+        Decimal.ONE,
+      )
+
+    const populateRedemption = async (
+      attemptedHCHFAmount: Decimal,
+      maxRedemptionRate?: Decimal,
+      truncatedAmount: Decimal = attemptedHCHFAmount,
+      partialRedemptionUpperHint: Address = AddressZero,
+      partialRedemptionLowerHint: Address = AddressZero,
+      partialRedemptionHintNICR: Decimal = Decimal.ZERO,
+    ): Promise<
+      PopulatedLiquityTransaction<
+        ContractExecuteTransaction,
+        SentLiquityTransaction<
+          TransactionResponse,
+          LiquityReceipt<TransactionReceipt, RedemptionDetails>
+        >
+      > &
+        PopulatedRedemption<ContractExecuteTransaction, TransactionResponse, TransactionReceipt>
+    > => {
+      const maxRedemptionRateOrDefault =
+        maxRedemptionRate !== undefined
+          ? Decimal.from(maxRedemptionRate)
+          : defaultMaxRedemptionRate(truncatedAmount)
+
+      const functionParameters = TypedContractFunctionParameters<
+        TroveManagerAbi,
+        'redeemCollateral'
+      >()
+        .addUint256(new BigNumber(truncatedAmount.hex))
+        .addAddress(firstRedemptionHint as Address)
+        .addAddress(partialRedemptionUpperHint as Address)
+        .addAddress(partialRedemptionLowerHint as Address)
+        .addUint256(new BigNumber(partialRedemptionHintNICR.hex))
+        .addUint256(new BigNumber(redeemMaxIterations))
+        .addUint256(new BigNumber(maxRedemptionRateOrDefault.hex))
+      const unfrozenRawPopulatedTransaction = TypedContractExecuteTransaction<TroveManagerAbi>({
+        contractId: this.troveManagerContractId,
+        gas: 3000000 + gasForPotentialLastFeeOperationTimeUpdate,
+        functionName: 'redeemCollateral',
+        functionParameters,
+      })
+
+      const rawPopulatedTransaction = await unfrozenRawPopulatedTransaction.freezeWithSigner(
+        this.signer,
+      )
+
+      const getDetails = () => {
+        // TODO: we can't listen to events without websocket
+        const redemptionDetails: RedemptionDetails = {
+          actualHCHFAmount: Decimal.ZERO,
+          attemptedHCHFAmount: attemptedHCHFAmount,
+          collateralTaken: Decimal.ZERO,
+          fee: Decimal.ZERO,
+        }
+
+        return redemptionDetails
+      }
+      const populatedLiquityTransaction = getPopulatedLiquityTransaction({
+        rawPopulatedTransaction,
+        getDetails,
+        signer: this.signer,
+      })
+
+      const isTruncated = truncatedAmount.lt(attemptedHCHFAmount)
+
+      const newPopulatedRedemptionWithNewMaxRedemptionRate = (newMaxRedemptionRate: Decimalish) => {
+        const resolvedMaxRedemptionRate = newMaxRedemptionRate
+          ? Decimal.from(newMaxRedemptionRate)
+          : maxRedemptionRate
+
+        return populateRedemption(
+          truncatedAmount.add(HCHF_MINIMUM_NET_DEBT),
+          resolvedMaxRedemptionRate,
+        )
+      }
+      const throwMissingTruncationError = () => {
+        throw new Error(
+          'PopulatedRedemption: increaseAmountByMinimumNetDebt() can only be called when amount is truncated',
+        )
+      }
+      const increaseAmountByMinimumNetDebt = isTruncated
+        ? newPopulatedRedemptionWithNewMaxRedemptionRate
+        : throwMissingTruncationError
+
+      const populatedRedemption: PopulatedLiquityTransaction<
+        ContractExecuteTransaction,
+        SentLiquityTransaction<
+          TransactionResponse,
+          LiquityReceipt<TransactionReceipt, RedemptionDetails>
+        >
+      > &
+        PopulatedRedemption<ContractExecuteTransaction, TransactionResponse, TransactionReceipt> = {
+        ...populatedLiquityTransaction,
+        attemptedHCHFAmount,
+        isTruncated,
+        redeemableHCHFAmount: truncatedAmount,
+        increaseAmountByMinimumNetDebt,
+      }
+
+      return populatedRedemption
+    }
+
+    return populateRedemption(
+      attemptedHCHFAmount,
+      maxRedemptionRate ? Decimal.from(maxRedemptionRate) : undefined,
+      truncatedAmount,
+      partialRedemptionUpperHint as Address,
+      partialRedemptionLowerHint as Address,
+      partialRedemptionHintNICR,
+    )
+  }
+
+  async populateStakeHLQT(
+    amount: Decimalish,
+    options?: TransactionOptions,
+  ): Promise<
+    PopulatedLiquityTransaction<
+      ContractExecuteTransaction,
+      SentLiquityTransaction<TransactionResponse, LiquityReceipt<TransactionReceipt, void>>
+    >
+  > {
+    const functionParameters = TypedContractFunctionParameters<
+      HLQTStakingAbi,
+      'stake'
+    >().addUint256(new BigNumber(Decimal.from(amount).hex))
+
+    const unfrozenRawPopulatedTransaction = TypedContractExecuteTransaction<HLQTStakingAbi>({
+      contractId: this.hlqtStakingContractId,
+      functionName: 'stake',
+      gas: 3000000,
+      functionParameters,
+    })
+
+    const rawPopulatedTransaction = await unfrozenRawPopulatedTransaction.freezeWithSigner(
+      this.signer,
+    )
+
+    const getDetails = () => undefined
+    const populatedLiquityTransaction = getPopulatedLiquityTransaction({
+      rawPopulatedTransaction,
+      signer: this.signer,
+      getDetails,
+    })
+
+    return populatedLiquityTransaction
+  }
+
+  async populateUnstakeHLQT(
+    amount: Decimalish,
+    options?: TransactionOptions,
+  ): Promise<
+    PopulatedLiquityTransaction<
+      ContractExecuteTransaction,
+      SentLiquityTransaction<TransactionResponse, LiquityReceipt<TransactionReceipt, void>>
+    >
+  > {
+    const functionParameters = TypedContractFunctionParameters<
+      HLQTStakingAbi,
+      'unstake'
+    >().addUint256(new BigNumber(Decimal.from(amount).hex))
+
+    const unfrozenRawPopulatedTransaction = TypedContractExecuteTransaction<HLQTStakingAbi>({
+      contractId: this.hlqtStakingContractId,
+      functionName: 'unstake',
+      gas: 3000000,
+      functionParameters,
+    })
+
+    const rawPopulatedTransaction = await unfrozenRawPopulatedTransaction.freezeWithSigner(
+      this.signer,
+    )
+
+    const getDetails = () => undefined
+    const populatedLiquityTransaction = getPopulatedLiquityTransaction({
+      rawPopulatedTransaction,
+      signer: this.signer,
+      getDetails,
+    })
+
+    return populatedLiquityTransaction
+  }
+
+  async populateWithdrawGainsFromStaking(
+    options?: TransactionOptions,
+  ): Promise<
+    PopulatedLiquityTransaction<
+      ContractExecuteTransaction,
+      SentLiquityTransaction<TransactionResponse, LiquityReceipt<TransactionReceipt, void>>
+    >
+  > {
+    return this.populateUnstakeHLQT(Decimal.ZERO, options)
+  }
+
+  async populateRegisterFrontend(
+    kickbackRate: Decimalish,
+    options?: TransactionOptions,
+  ): Promise<
+    PopulatedLiquityTransaction<
+      ContractExecuteTransaction,
+      SentLiquityTransaction<TransactionResponse, LiquityReceipt<TransactionReceipt, void>>
+    >
+  > {
+    const functionParameters = TypedContractFunctionParameters<
+      StabilityPoolAbi,
+      'registerFrontEnd'
+    >().addUint256(new BigNumber(Decimal.from(kickbackRate).hex))
+
+    const unfrozenRawPopulatedTransaction = TypedContractExecuteTransaction<StabilityPoolAbi>({
+      contractId: this.stabilityPoolContractId,
+      functionName: 'registerFrontEnd',
+      gas: 3000000,
+      functionParameters,
+    })
+
+    const rawPopulatedTransaction = await unfrozenRawPopulatedTransaction.freezeWithSigner(
+      this.signer,
+    )
+
+    const getDetails = () => undefined
+    const populatedLiquityTransaction = getPopulatedLiquityTransaction({
+      rawPopulatedTransaction,
+      signer: this.signer,
+      getDetails,
+    })
+
+    return populatedLiquityTransaction
+  }
+
+  async populateApproveUniTokens(
+    allowance?: Decimalish,
+    options?: TransactionOptions,
+  ): Promise<
+    PopulatedLiquityTransaction<
+      ContractExecuteTransaction,
+      SentLiquityTransaction<TransactionResponse, LiquityReceipt<TransactionReceipt, void>>
+    >
+  > {
+    if (!allowance) {
+      throw new Error('infinite approvals are disallowed. pass an allowance value to approve.')
+    }
+
+    const uniTokenAddress = await this.saucerSwapPool.methods.uniToken
+      .call(this.saucerSwapPool)
+      .call()
+    const functionParameters = TypedContractFunctionParameters<IERC20Abi, 'approve'>()
+      .addAddress(this.saucerSwapPoolContractId.toSolidityAddress() as Address)
+      .addUint256(new BigNumber(Decimal.from(allowance).hex))
+
+    const unfrozenRawPopulatedTransaction = TypedContractExecuteTransaction<IERC20Abi>({
+      contractId: getTypedContractId<IERC20Abi>(0, 0, uniTokenAddress as Address),
+      functionName: 'approve',
+      gas: 3000000,
+      functionParameters,
+    })
+
+    const rawPopulatedTransaction = await unfrozenRawPopulatedTransaction.freezeWithSigner(
+      this.signer,
+    )
+
+    const getDetails = () => undefined
+    const populatedLiquityTransaction = getPopulatedLiquityTransaction({
+      rawPopulatedTransaction,
+      signer: this.signer,
+      getDetails,
+    })
+
+    return populatedLiquityTransaction
+  }
+
+  async populateStakeUniTokens(
+    amount: Decimalish,
+    options?: TransactionOptions,
+  ): Promise<
+    PopulatedLiquityTransaction<
+      ContractExecuteTransaction,
+      SentLiquityTransaction<TransactionResponse, LiquityReceipt<TransactionReceipt, void>>
+    >
+  > {
+    const functionParameters = TypedContractFunctionParameters<UnipoolAbi, 'stake'>().addUint256(
+      new BigNumber(Decimal.from(amount).hex),
+    )
+
+    const unfrozenRawPopulatedTransaction = TypedContractExecuteTransaction<UnipoolAbi>({
+      contractId: this.saucerSwapPoolContractId,
+      functionName: 'stake',
+      gas: 3000000 + gasForUnipoolRewardUpdate,
+      functionParameters,
+    })
+
+    const rawPopulatedTransaction = await unfrozenRawPopulatedTransaction.freezeWithSigner(
+      this.signer,
+    )
+
+    const getDetails = () => undefined
+    const populatedLiquityTransaction = getPopulatedLiquityTransaction({
+      rawPopulatedTransaction,
+      signer: this.signer,
+      getDetails,
+    })
+
+    return populatedLiquityTransaction
+  }
+
+  async populateUnstakeUniTokens(
+    amount: Decimalish,
+    options?: TransactionOptions,
+  ): Promise<
+    PopulatedLiquityTransaction<
+      ContractExecuteTransaction,
+      SentLiquityTransaction<TransactionResponse, LiquityReceipt<TransactionReceipt, void>>
+    >
+  > {
+    const functionParameters = TypedContractFunctionParameters<UnipoolAbi, 'withdraw'>().addUint256(
+      new BigNumber(Decimal.from(amount).hex),
+    )
+
+    const unfrozenRawPopulatedTransaction = TypedContractExecuteTransaction<UnipoolAbi>({
+      contractId: this.saucerSwapPoolContractId,
+      functionName: 'withdraw',
+      gas: 3000000 + gasForUnipoolRewardUpdate,
+      functionParameters,
+    })
+
+    const rawPopulatedTransaction = await unfrozenRawPopulatedTransaction.freezeWithSigner(
+      this.signer,
+    )
+
+    const getDetails = () => undefined
+    const populatedLiquityTransaction = getPopulatedLiquityTransaction({
+      rawPopulatedTransaction,
+      signer: this.signer,
+      getDetails,
+    })
+
+    return populatedLiquityTransaction
+  }
+
+  async populateWithdrawHLQTRewardFromLiquidityMining(
+    options?: TransactionOptions,
+  ): Promise<
+    PopulatedLiquityTransaction<
+      ContractExecuteTransaction,
+      SentLiquityTransaction<TransactionResponse, LiquityReceipt<TransactionReceipt, void>>
+    >
+  > {
+    const unfrozenRawPopulatedTransaction = TypedContractExecuteTransaction<UnipoolAbi>({
+      contractId: this.saucerSwapPoolContractId,
+      functionName: 'claimReward',
+      gas: 3000000 + gasForUnipoolRewardUpdate,
+    })
+
+    const rawPopulatedTransaction = await unfrozenRawPopulatedTransaction.freezeWithSigner(
+      this.signer,
+    )
+
+    const getDetails = () => undefined
+    const populatedLiquityTransaction = getPopulatedLiquityTransaction({
+      rawPopulatedTransaction,
+      signer: this.signer,
+      getDetails,
+    })
+
+    return populatedLiquityTransaction
+  }
+
+  async populateExitLiquidityMining(
+    options?: TransactionOptions,
+  ): Promise<
+    PopulatedLiquityTransaction<
+      ContractExecuteTransaction,
+      SentLiquityTransaction<TransactionResponse, LiquityReceipt<TransactionReceipt, void>>
+    >
+  > {
+    const unfrozenRawPopulatedTransaction = TypedContractExecuteTransaction<UnipoolAbi>({
+      contractId: this.saucerSwapPoolContractId,
+      functionName: 'withdrawAndClaim',
+      gas: 3000000 + gasForUnipoolRewardUpdate,
+    })
+
+    const rawPopulatedTransaction = await unfrozenRawPopulatedTransaction.freezeWithSigner(
+      this.signer,
+    )
+
+    const getDetails = () => undefined
+    const populatedLiquityTransaction = getPopulatedLiquityTransaction({
+      rawPopulatedTransaction,
+      signer: this.signer,
+      getDetails,
+    })
+
+    return populatedLiquityTransaction
+  }
 }
