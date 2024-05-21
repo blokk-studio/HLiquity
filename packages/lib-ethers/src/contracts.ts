@@ -30,6 +30,8 @@ import sortedTrovesAbi from "../abi/SortedTroves.json";
 import stabilityPoolAbi from "../abi/StabilityPool.json";
 import gasPoolAbi from "../abi/GasPool.json";
 import unipoolAbi from "../abi/Unipool.json";
+import iERC20Abi from "../abi/IERC20.json";
+import erc20MockAbi from "../abi/ERC20Mock.json";
 
 import {
   ActivePool,
@@ -169,6 +171,7 @@ export interface _LiquityContracts {
   gasPool: GasPool;
   saucerSwapPool: Unipool;
   // uniToken: IERC20 | ERC20Mock;
+  uniToken: IERC20 | ERC20Mock;
 }
 
 /** @internal */
@@ -204,8 +207,9 @@ const getAbi = (priceFeedIsTestnet: boolean, uniTokenIsMock: boolean): LiquityCo
   stabilityPool: stabilityPoolAbi,
   gasPool: gasPoolAbi,
   collSurplusPool: collSurplusPoolAbi,
-  saucerSwapPool: unipoolAbi
+  saucerSwapPool: unipoolAbi,
   // uniToken: uniTokenIsMock ? erc20MockAbi : iERC20Abi
+  uniToken: uniTokenIsMock ? erc20MockAbi : iERC20Abi
 });
 
 const mapLiquityContracts = <T, U>(

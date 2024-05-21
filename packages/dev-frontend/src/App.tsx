@@ -19,7 +19,6 @@ import { useAsyncValue } from "./hooks/AsyncValue";
 import { useHederaChains } from "./hedera/wagmi-chains";
 import { AuthenticationProvider, LoginForm } from "./authentication";
 import { HederaTokensProvider } from "./hedera/hedera_context";
-import { Lexicon } from "./lexicon";
 import { useConfiguration } from "./configuration";
 import "./App.scss";
 
@@ -78,28 +77,6 @@ const UnsupportedNetworkFallback: React.FC<{ availableNetworks: Chain[] }> = ({
       )}
     </Flex>
   );
-};
-
-const jsonifyLexicon = (lexicon: Record<string, Lexicon>) => {
-  const entries = Object.entries(lexicon).map(([lexiconKey, value]) => {
-    const jsonKey = lexiconKey
-      .split("_")
-      .map((string, index) => {
-        if (index === 0) {
-          return string.toLowerCase();
-        }
-
-        const firstLetter = string.substring(0, 1);
-        const rest = string.substring(1);
-
-        return `${firstLetter.toUpperCase()}${rest.toLowerCase()}`;
-      })
-      .join("");
-
-    return [jsonKey, value];
-  });
-
-  return Object.fromEntries(entries);
 };
 
 const App = () => {

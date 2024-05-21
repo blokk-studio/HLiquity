@@ -14,9 +14,9 @@ withdrawGainsFromStaking(overrides?: EthersTransactionOverrides): Promise<void>;
 
 ## Parameters
 
-| Parameter | Type                                                                     | Description |
-| --------- | ------------------------------------------------------------------------ | ----------- |
-| overrides | [EthersTransactionOverrides](./lib-ethers.etherstransactionoverrides.md) |             |
+|  Parameter | Type | Description |
+|  --- | --- | --- |
+|  overrides | [EthersTransactionOverrides](./lib-ethers.etherstransactionoverrides.md) |  |
 
 <b>Returns:</b>
 
@@ -25,3 +25,4 @@ Promise&lt;void&gt;
 ## Exceptions
 
 Throws [EthersTransactionFailedError](./lib-ethers.etherstransactionfailederror.md) in case of transaction failure.
+

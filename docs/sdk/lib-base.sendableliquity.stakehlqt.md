@@ -14,9 +14,9 @@ stakeHLQT(amount: Decimalish): Promise<SentLiquityTransaction<S, LiquityReceipt<
 
 ## Parameters
 
-| Parameter | Type                                   | Description                                     |
-| --------- | -------------------------------------- | ----------------------------------------------- |
-| amount    | [Decimalish](./lib-base.decimalish.md) | Amount of HLQT to add to new or existing stake. |
+|  Parameter | Type | Description |
+|  --- | --- | --- |
+|  amount | [Decimalish](./lib-base.decimalish.md) | Amount of HLQT to add to new or existing stake. |
 
 <b>Returns:</b>
 
@@ -25,3 +25,4 @@ Promise&lt;[SentLiquityTransaction](./lib-base.sentliquitytransaction.md)<!-- --
 ## Remarks
 
 As a side-effect, the transaction will also pay out an existing HLQT stake's [collateral gain](./lib-base.hlqtstake.collateralgain.md) and [HCHF gain](./lib-base.hlqtstake.hchfgain.md)<!-- -->.
+

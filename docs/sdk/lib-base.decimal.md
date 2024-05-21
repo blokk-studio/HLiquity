@@ -39,6 +39,7 @@ Used by Liquity libraries to precisely represent native currency (e.g. Ether), H
 |  [eq(that)](./lib-base.decimal.eq.md) |  |  |
 |  [from(decimalish)](./lib-base.decimal.from.md) | <code>static</code> |  |
 |  [fromBigNumberString(bigNumberString)](./lib-base.decimal.frombignumberstring.md) | <code>static</code> |  |
+|  [fromBigNumberStringWithPrecision(bigNumberString, precision)](./lib-base.decimal.frombignumberstringwithprecision.md) | <code>static</code> |  |
 |  [gt(that)](./lib-base.decimal.gt.md) |  |  |
 |  [gte(that)](./lib-base.decimal.gte.md) |  |  |
 |  [lt(that)](./lib-base.decimal.lt.md) |  |  |

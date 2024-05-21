@@ -14,10 +14,10 @@ unstakeHLQT(amount: Decimalish, overrides?: EthersTransactionOverrides): Promise
 
 ## Parameters
 
-| Parameter | Type                                                                     | Description                 |
-| --------- | ------------------------------------------------------------------------ | --------------------------- |
-| amount    | [Decimalish](./lib-base.decimalish.md)                                   | Amount of HLQT to withdraw. |
-| overrides | [EthersTransactionOverrides](./lib-ethers.etherstransactionoverrides.md) |                             |
+|  Parameter | Type | Description |
+|  --- | --- | --- |
+|  amount | [Decimalish](./lib-base.decimalish.md) | Amount of HLQT to withdraw. |
+|  overrides | [EthersTransactionOverrides](./lib-ethers.etherstransactionoverrides.md) |  |
 
 <b>Returns:</b>
 
@@ -30,3 +30,4 @@ Throws [EthersTransactionFailedError](./lib-ethers.etherstransactionfailederror.
 ## Remarks
 
 As a side-effect, the transaction will also pay out the HLQT stake's [collateral gain](./lib-base.hlqtstake.collateralgain.md) and [HCHF gain](./lib-base.hlqtstake.hchfgain.md)<!-- -->.
+
