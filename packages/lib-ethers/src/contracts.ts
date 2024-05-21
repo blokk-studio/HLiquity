@@ -84,8 +84,7 @@ type CallOverridesArg = [overrides?: CallOverrides];
 
 type TypedContract<T extends Contract, U, V> = Contract &
   _TypeSafeContract<T> &
-  U &
-  {
+  U & {
     [P in keyof V]: V[P] extends (...args: infer A) => unknown
       ? (...args: A) => Promise<ContractTransaction>
       : never;
@@ -168,7 +167,7 @@ export interface _LiquityContracts {
   sortedTroves: SortedTroves;
   stabilityPool: StabilityPool;
   gasPool: GasPool;
-  unipool: Unipool;
+  saucerSwapPool: Unipool;
   // uniToken: IERC20 | ERC20Mock;
 }
 
@@ -205,7 +204,7 @@ const getAbi = (priceFeedIsTestnet: boolean, uniTokenIsMock: boolean): LiquityCo
   stabilityPool: stabilityPoolAbi,
   gasPool: gasPoolAbi,
   collSurplusPool: collSurplusPoolAbi,
-  unipool: unipoolAbi
+  saucerSwapPool: unipoolAbi
   // uniToken: uniTokenIsMock ? erc20MockAbi : iERC20Abi
 });
 
