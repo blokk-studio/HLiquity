@@ -5,11 +5,9 @@ import { Decimal, LiquityStoreState } from "@liquity/lib-base";
 import { useLiquitySelector } from "@liquity/lib-react";
 
 import { COIN, COLLATERAL_COIN, GT } from "../strings";
-import { useLiquity } from "../hooks/LiquityContext";
-import { shortenAddress } from "../utils/shortenAddress";
 
 import { Icon } from "./Icon";
-import { useHashConnect } from "./HashConnectProvider";
+import { useHashConnect, useHashConnectSessionData } from "./HashConnectProvider";
 import { t } from "../i18n";
 
 const select = ({ accountBalance, hchfBalance, hlqtBalance }: LiquityStoreState) => ({
@@ -19,9 +17,9 @@ const select = ({ accountBalance, hchfBalance, hlqtBalance }: LiquityStoreState)
 });
 
 export const UserAccount: React.FC = () => {
-  const { account } = useLiquity();
   const { accountBalance, hchfBalance, hlqtBalance } = useLiquitySelector(select);
   const hashConnect = useHashConnect();
+  const sessionData = useHashConnectSessionData();
 
   return (
     <Flex>
@@ -29,7 +27,7 @@ export const UserAccount: React.FC = () => {
         <Box>
           <Icon name="user-circle" size="lg" />
           <Text as="span" sx={{ ml: 2, fontSize: 1 }}>
-            {shortenAddress(account)}
+            {sessionData.userAccountId.toString()}
           </Text>
         </Box>
 
