@@ -36,9 +36,10 @@ type StabilityDepositManagerAction =
   | { type: "startChange" | "finishChange" | "revert" }
   | { type: "setDeposit"; newValue: Decimalish };
 
-const reduceWith = (action: StabilityDepositManagerAction) => (
-  state: StabilityDepositManagerState
-): StabilityDepositManagerState => reduce(state, action);
+const reduceWith =
+  (action: StabilityDepositManagerAction) =>
+  (state: StabilityDepositManagerState): StabilityDepositManagerState =>
+    reduce(state, action);
 
 const finishChange = reduceWith({ type: "finishChange" });
 const revert = reduceWith({ type: "revert" });
@@ -142,14 +143,13 @@ export const StabilityDepositManager: React.FC = () => {
       connection: { addresses }
     }
   } = useLiquity();
-  const {
-    hasAssociatedWithHlqt,
-    hasAssociatedWithHchf,
-    associateWithToken,
-    approveSpender
-  } = useHedera();
+  const { userHasAssociatedWithHchf, userHasAssociatedWithHlqt } = useLiquitySelector(
+    state => state
+  );
+  const { associateWithToken, approveSpender } = useHedera();
   const deployment = useDeployment();
-  const needsHlqtAssociation = !hasAssociatedWithHlqt && (!validChange || validChange?.depositHCHF);
+  const needsHlqtAssociation =
+    !userHasAssociatedWithHlqt && (!validChange || validChange?.depositHCHF);
   // hlqt token association (deposition)
   const { call: associateWithHlqt, state: hlqtAssociationLoadingState } = useLoadingState(
     async () => {
@@ -163,7 +163,7 @@ export const StabilityDepositManager: React.FC = () => {
     }
   );
   // hchf token association (withdrawal)
-  const needsHchfAssociation = !hasAssociatedWithHchf && validChange?.withdrawHCHF;
+  const needsHchfAssociation = !userHasAssociatedWithHchf && validChange?.withdrawHCHF;
   const { call: associateWithHchf, state: hchfAssociationLoadingState } = useLoadingState(
     async () => {
       if (!deployment) {
@@ -205,12 +205,12 @@ export const StabilityDepositManager: React.FC = () => {
   if (!validChange || validChange?.depositHCHF) {
     transactionSteps.push({
       title: "Associate with HLQT",
-      status: hasAssociatedWithHlqt
+      status: userHasAssociatedWithHlqt
         ? "success"
         : hlqtAssociationLoadingState === "error"
         ? "danger"
         : hlqtAssociationLoadingState,
-      description: hasAssociatedWithHlqt
+      description: userHasAssociatedWithHlqt
         ? "You've already associated with HLQT."
         : "You have to associate with HLQT tokens before you can use HLiquity."
     });
@@ -218,12 +218,12 @@ export const StabilityDepositManager: React.FC = () => {
   if (validChange?.withdrawHCHF) {
     transactionSteps.push({
       title: "Associate with HCHF",
-      status: hasAssociatedWithHchf
+      status: userHasAssociatedWithHchf
         ? "success"
         : hlqtAssociationLoadingState === "error"
         ? "danger"
         : hlqtAssociationLoadingState,
-      description: hasAssociatedWithHchf
+      description: userHasAssociatedWithHchf
         ? "You've already associated with HCHF."
         : "You have to associate with HCHF tokens before you can use HLiquity."
     });

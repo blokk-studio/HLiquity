@@ -1,6 +1,7 @@
 import {
   BETA,
   CollateralGainTransferDetails,
+  ConsentableLiquity,
   Decimal,
   Decimalish,
   Fees,
@@ -43,9 +44,14 @@ import { Address } from './address'
 import { DeploymentAddressesKey } from './deployment'
 // contracts
 import {
+  AccountAllowanceApproveTransaction,
   AccountId,
   ContractExecuteTransaction,
   Hbar,
+  Long,
+  TokenAssociateTransaction,
+  TokenDissociateTransaction,
+  TokenId,
   TransactionReceipt,
   TransactionResponse,
 } from '@hashgraph/sdk'
@@ -77,6 +83,7 @@ import {
   getTypedContractId,
 } from './contract_functions'
 import { LiquityEvents } from './events'
+import { Fetch } from './fetch'
 import {
   gasForHLQTIssuance,
   gasForPotentialLastFeeOperationTimeUpdate,
@@ -85,6 +92,7 @@ import {
 } from './gas'
 import { generateTrials } from './hints'
 import { PrefixProperties } from './interface_collision'
+import { fetchTokens } from './mirror_node'
 import { asPopulatable } from './populatable'
 import { asSendable } from './sendable'
 import { getPopulatedLiquityTransaction } from './transactions'
@@ -134,18 +142,20 @@ const defaultRedemptionRateSlippageTolerance = Decimal.from(0.001) // 0.1%
 /** With 70 iterations redemption costs about ~10M gas, and each iteration accounts for ~138k more */
 export const redeemMaxIterations = 70
 
-export class HashgraphLiquity
+export class HashgraphLiquity<FetchInstance extends Fetch = Fetch>
   extends HLiquityStore<HashgraphLiquityStoreState>
   implements
     ReadableLiquity,
     PrefixProperties<Readonly<PopulatableLiquity>, 'populate'>,
     // TransactableLiquity,
+    ConsentableLiquity,
     EventEmitter
 {
   // TODO: fix shitty interface design lasagna and remove this. use events for the different stages of the transaction.
   public store: HLiquityStore = this
   public readonly send: SendableLiquity
   public readonly populate: PopulatableLiquity
+  public readonly connection: { addresses: Record<DeploymentAddressesKey, Address> }
 
   private readonly eventEmitter: Emittery<LiquityEvents>
 
@@ -157,6 +167,8 @@ export class HashgraphLiquity
   private readonly web3: Web3
   private readonly totalStabilityPoolHlqtReward: Decimal
   private readonly frontendAddress: Address
+  private readonly mirrorNodeBaseUrl: `https://${string}`
+  private readonly fetch: FetchInstance
 
   // contracts
   private readonly activePool: Contract<ActivePoolAbi>
@@ -201,6 +213,9 @@ export class HashgraphLiquity
     web3: Web3
     totalStabilityPoolHlqtReward: Decimal
     frontendAddress: Address
+    mirrorNodeBaseUrl: `https://${string}`
+    fetch: FetchInstance
+
     // contracts
     activePool: Contract<ActivePoolAbi>
     activePoolContractId: TypedContractId<ActivePoolAbi>
@@ -236,6 +251,9 @@ export class HashgraphLiquity
     troveManagerContractId: TypedContractId<TroveManagerAbi>
     saucerSwapPool: Contract<UnipoolAbi>
     saucerSwapPoolContractId: TypedContractId<UnipoolAbi>
+
+    // lasagna
+    deploymentAddresses: Record<DeploymentAddressesKey, Address>
   }) {
     super()
 
@@ -248,6 +266,8 @@ export class HashgraphLiquity
     this.web3 = options.web3
     this.totalStabilityPoolHlqtReward = options.totalStabilityPoolHlqtReward
     this.frontendAddress = options.frontendAddress
+    this.mirrorNodeBaseUrl = options.mirrorNodeBaseUrl
+    this.fetch = options.fetch
 
     this.activePool = options.activePool
     this.activePoolContractId = options.activePoolContractId
@@ -300,13 +320,43 @@ export class HashgraphLiquity
     this.saucerSwapPool = options.saucerSwapPool
     this.saucerSwapPoolContractId = options.saucerSwapPoolContractId
 
+    // lasagna
     this.populate = asPopulatable(this)
     this.send = asSendable(this)
+    this.connection = { addresses: options.deploymentAddresses }
   }
 
   private async fetchStoreValues(
     blockTag?: string | number,
   ): Promise<[baseState: LiquityStoreBaseState, extraState: HashgraphLiquityStoreState]> {
+    const tokenAssociationsPromise = (async () => {
+      // TODO: support all chains
+      const [tokens, hchfTokenAddress, hlqtTokenAddress, lpTokenAddress] = await Promise.all([
+        fetchTokens({
+          apiBaseUrl: this.mirrorNodeBaseUrl,
+          accountAddress: this.userAccountAddress,
+          fetch: this.fetch,
+        }),
+        this.hchfToken.methods.tokenAddress().call(),
+        this.hlqtToken.methods.tokenAddress().call(),
+        this.saucerSwapPool.methods.uniToken().call(),
+      ])
+
+      const tokenIdStringSet = new Set(tokens.map((token) => token.id))
+
+      const tokenAddresses = [hchfTokenAddress, hlqtTokenAddress, lpTokenAddress]
+      const tokenIdStrings = tokenAddresses.map(
+        (tokenAddress) => TokenId.fromSolidityAddress(tokenAddress).toString() as `0.0.${string}`,
+      )
+      const [userHasAssociatedWithHchf, userHasAssociatedWithHlqt, userHasAssociatedWithLpToken] =
+        tokenIdStrings.map((tokenIdString) => tokenIdStringSet.has(tokenIdString))
+
+      return {
+        userHasAssociatedWithHchf,
+        userHasAssociatedWithHlqt,
+        userHasAssociatedWithLpToken,
+      }
+    })()
     const { blockTimestamp, createFees, calculateRemainingHLQT, ...baseState } =
       await promiseAllValues({
         // _getFeesFactory({ blockTag }),
@@ -346,8 +396,15 @@ export class HashgraphLiquity
         frontend: this.frontendAddress
           ? this.getFrontendStatus(this.frontendAddress, { blockTag })
           : { status: 'unregistered' as const },
-        userHasAssociatedWithHchf: false,
-        userHasAssociatedWithHlqt: false,
+        userHasAssociatedWithHchf: tokenAssociationsPromise.then(
+          (associations) => associations.userHasAssociatedWithHchf,
+        ),
+        userHasAssociatedWithHlqt: tokenAssociationsPromise.then(
+          (associations) => associations.userHasAssociatedWithHlqt,
+        ),
+        userHasAssociatedWithLpToken: tokenAssociationsPromise.then(
+          (associations) => associations.userHasAssociatedWithLpToken,
+        ),
 
         ...(this.userAccountAddress
           ? {
@@ -885,6 +942,8 @@ export class HashgraphLiquity
     userAccountAddress: Address
     userHashConnect: HashConnect
     rpcUrl: `wss://${string}` | `https://${string}`
+    mirrorNodeBaseUrl: `https://${string}`
+    fetch: Fetch
   }) {
     const web3 = new Web3(options.rpcUrl)
     const totalStabilityPoolHlqtReward = Decimal.from(options.totalStabilityPoolHlqtReward)
@@ -1044,7 +1103,14 @@ export class HashgraphLiquity
       options.deploymentAddresses.saucerSwapPool,
     )
 
-    const { userHashConnect, userAccountId, userAccountAddress, frontendAddress } = options
+    const {
+      userHashConnect,
+      userAccountId,
+      userAccountAddress,
+      frontendAddress,
+      mirrorNodeBaseUrl,
+      fetch,
+    } = options
 
     const hashgraphLiquity = new HashgraphLiquity({
       userAccountId,
@@ -1053,6 +1119,8 @@ export class HashgraphLiquity
       web3,
       totalStabilityPoolHlqtReward,
       frontendAddress,
+      mirrorNodeBaseUrl,
+      fetch,
       // contracts
       collSurplusPool,
       collSurplusPoolContractId,
@@ -1088,6 +1156,8 @@ export class HashgraphLiquity
       troveManagerContractId,
       saucerSwapPool,
       saucerSwapPoolContractId,
+      // lasagna
+      deploymentAddresses: options.deploymentAddresses,
     })
 
     return hashgraphLiquity
@@ -2245,9 +2315,7 @@ export class HashgraphLiquity
       throw new Error('infinite approvals are disallowed. pass an allowance value to approve.')
     }
 
-    const uniTokenAddress = await this.saucerSwapPool.methods.uniToken
-      .call(this.saucerSwapPool)
-      .call()
+    const uniTokenAddress = await this.saucerSwapPool.methods.uniToken().call()
     const functionParameters = TypedContractFunctionParameters<IERC20Abi, 'approve'>()
       .addAddress(this.saucerSwapPoolContractId.toSolidityAddress() as Address)
       .addUint256(new BigNumber(Decimal.from(allowance).hex))
@@ -2395,5 +2463,135 @@ export class HashgraphLiquity
     })
 
     return populatedLiquityTransaction
+  }
+
+  // consent manager
+  async associateWithHchf(): Promise<void> {
+    const tokenAddress = await this.hchfToken.methods.tokenAddress().call()
+    const tokenId = TokenId.fromSolidityAddress(tokenAddress)
+    const unfrozenTransaction = new TokenAssociateTransaction({
+      tokenIds: [tokenId],
+      accountId: this.userAccountId,
+    })
+    const transaction = await unfrozenTransaction.freezeWithSigner(this.signer)
+    const receipt = await transaction.executeWithSigner(this.signer)
+    await this.refresh()
+  }
+
+  async dissociateFromHchf(): Promise<void> {
+    const tokenAddress = await this.hchfToken.methods.tokenAddress().call()
+    const tokenId = TokenId.fromSolidityAddress(tokenAddress)
+    const unfrozenTransaction = new TokenDissociateTransaction({
+      tokenIds: [tokenId],
+      accountId: this.userAccountId,
+    })
+    const transaction = await unfrozenTransaction.freezeWithSigner(this.signer)
+    const receipt = await transaction.executeWithSigner(this.signer)
+    await this.refresh()
+  }
+
+  async associateWithHlqt(): Promise<void> {
+    const tokenAddress = await this.hlqtToken.methods.tokenAddress().call()
+    const tokenId = TokenId.fromSolidityAddress(tokenAddress)
+    const unfrozenTransaction = new TokenAssociateTransaction({
+      tokenIds: [tokenId],
+      accountId: this.userAccountId,
+    })
+    const transaction = await unfrozenTransaction.freezeWithSigner(this.signer)
+    const receipt = await transaction.executeWithSigner(this.signer)
+    await this.refresh()
+  }
+
+  async dissociateFromHlqt(): Promise<void> {
+    const tokenAddress = await this.hlqtToken.methods.tokenAddress().call()
+    const tokenId = TokenId.fromSolidityAddress(tokenAddress)
+    const unfrozenTransaction = new TokenDissociateTransaction({
+      tokenIds: [tokenId],
+      accountId: this.userAccountId,
+    })
+    const transaction = await unfrozenTransaction.freezeWithSigner(this.signer)
+    const receipt = await transaction.executeWithSigner(this.signer)
+    await this.refresh()
+  }
+
+  async associateWithLpToken(): Promise<void> {
+    const tokenAddress = await this.saucerSwapPool.methods.uniToken().call()
+    const tokenId = TokenId.fromSolidityAddress(tokenAddress)
+    const unfrozenTransaction = new TokenAssociateTransaction({
+      tokenIds: [tokenId],
+      accountId: this.userAccountId,
+    })
+    const transaction = await unfrozenTransaction.freezeWithSigner(this.signer)
+    const receipt = await transaction.executeWithSigner(this.signer)
+    await this.refresh()
+  }
+
+  async dissociateFromLpToken(): Promise<void> {
+    const tokenAddress = await this.saucerSwapPool.methods.uniToken().call()
+    const tokenId = TokenId.fromSolidityAddress(tokenAddress)
+    const unfrozenTransaction = new TokenDissociateTransaction({
+      tokenIds: [tokenId],
+      accountId: this.userAccountId,
+    })
+    const transaction = await unfrozenTransaction.freezeWithSigner(this.signer)
+    const receipt = await transaction.executeWithSigner(this.signer)
+    await this.refresh()
+  }
+
+  async approveHchfToSpendHchf(amount: Decimal): Promise<void> {
+    const tokenAddress = await this.hchfToken.methods.tokenAddress().call()
+    const tokenId = TokenId.fromSolidityAddress(tokenAddress)
+    const spenderAccountId = AccountId.fromEvmAddress(
+      0,
+      0,
+      this.hchfTokenContractId.toSolidityAddress(),
+    )
+
+    const unfrozenTransaction = new AccountAllowanceApproveTransaction().approveTokenAllowance(
+      tokenId,
+      this.userAccountId,
+      spenderAccountId,
+      Long.fromString(amount.hex, true, 16),
+    )
+    const transaction = await unfrozenTransaction.freezeWithSigner(this.signer)
+    const receipt = await transaction.executeWithSigner(this.signer)
+  }
+
+  async approveHlqtToSpendHlqt(amount: Decimal): Promise<void> {
+    const tokenAddress = await this.hlqtToken.methods.tokenAddress().call()
+    const tokenId = TokenId.fromSolidityAddress(tokenAddress)
+    const spenderAccountId = AccountId.fromEvmAddress(
+      0,
+      0,
+      this.hlqtTokenContractId.toSolidityAddress(),
+    )
+
+    const unfrozenTransaction = new AccountAllowanceApproveTransaction().approveTokenAllowance(
+      tokenId,
+      this.userAccountId,
+      spenderAccountId,
+      Long.fromString(amount.hex, true, 16),
+    )
+    const transaction = await unfrozenTransaction.freezeWithSigner(this.signer)
+    const receipt = await transaction.executeWithSigner(this.signer)
+  }
+
+  async approveSaucerSwapToSpendLpToken(amount: Decimal): Promise<void> {
+    const tokenAddress = await this.saucerSwapPool.methods.uniToken().call()
+    const tokenId = TokenId.fromSolidityAddress(tokenAddress)
+    const spenderAccountId = AccountId.fromEvmAddress(
+      0,
+      0,
+      this.saucerSwapPoolContractId.toSolidityAddress(),
+    )
+
+    const unfrozenTransaction = new AccountAllowanceApproveTransaction().approveTokenAllowance(
+      tokenId,
+      this.userAccountId,
+      spenderAccountId,
+      Long.fromString(amount.hex, true, 16),
+    )
+    const transaction = await unfrozenTransaction.freezeWithSigner(this.signer)
+    const receipt = await transaction.executeWithSigner(this.signer)
   }
 }

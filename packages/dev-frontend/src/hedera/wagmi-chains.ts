@@ -4,7 +4,7 @@ import { enabledChainIds } from "../configuration/enabled_chains";
 import { deployments } from "../configuration/deployments";
 
 export interface HederaChain extends Chain {
-  apiBaseUrl: string;
+  apiBaseUrl: `https://${string}`;
   color: `#${string}`;
 }
 
@@ -19,13 +19,17 @@ export const testnet: HederaChain = {
   network: "hederaTestnet",
   rpcUrls: {
     default: {
-      http: ["https://starter.arkhia.io/hedera/testnet/json-rpc/v1/7542b249WGllfVd4Gf7l8bf18V1G8fWW"],
+      http: [
+        "https://starter.arkhia.io/hedera/testnet/json-rpc/v1/7542b249WGllfVd4Gf7l8bf18V1G8fWW"
+      ],
       webSocket: [
         "wss://starter.arkhia.io/hedera/testnet/watchtower/v1/7542b249WGllfVd4Gf7l8bf18V1G8fWW"
       ]
     },
     public: {
-      http: ["https://starter.arkhia.io/hedera/testnet/json-rpc/v1/7542b249WGllfVd4Gf7l8bf18V1G8fWW"],
+      http: [
+        "https://starter.arkhia.io/hedera/testnet/json-rpc/v1/7542b249WGllfVd4Gf7l8bf18V1G8fWW"
+      ],
       webSocket: [
         "wss://starter.arkhia.io/hedera/testnet/watchtower/v1/7542b249WGllfVd4Gf7l8bf18V1G8fWW"
       ]
@@ -71,13 +75,17 @@ export const mainnet: HederaChain = {
   network: "hedera",
   rpcUrls: {
     default: {
-      http: ["https://starter.arkhia.io/hedera/mainnet/json-rpc/v1/7542b249WGllfVd4Gf7l8bf18V1G8fWW"],
+      http: [
+        "https://starter.arkhia.io/hedera/mainnet/json-rpc/v1/7542b249WGllfVd4Gf7l8bf18V1G8fWW"
+      ],
       webSocket: [
         "wss://starter.arkhia.io/hedera/mainnet/watchtower/v1/7542b249WGllfVd4Gf7l8bf18V1G8fWW"
       ]
     },
     public: {
-      http: ["https://starter.arkhia.io/hedera/mainnet/json-rpc/v1/7542b249WGllfVd4Gf7l8bf18V1G8fWW"],
+      http: [
+        "https://starter.arkhia.io/hedera/mainnet/json-rpc/v1/7542b249WGllfVd4Gf7l8bf18V1G8fWW"
+      ],
       webSocket: [
         "wss://starter.arkhia.io/hedera/mainnet/watchtower/v1/7542b249WGllfVd4Gf7l8bf18V1G8fWW"
       ]

@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useMemo } from "react";
-import { useDeployment } from "../configuration/deployments";
+import { DeploymentAddressesKey, useDeployment } from "../configuration/deployments";
 import { _LiquityDeploymentJSON } from "@liquity/lib-ethers/dist/src/contracts";
-import { HLiquityStore, ReadableLiquity } from "@liquity/lib-base";
+import { ConsentableLiquity, HLiquityStore, ReadableLiquity } from "@liquity/lib-base";
 import { HederaChain, useHederaChain } from "../hedera/wagmi-chains";
 import { useHashConnect, useHashConnectSessionData } from "../components/HashConnectProvider";
 import { HashgraphLiquity } from "@liquity/lib-hashgraph";
@@ -9,7 +9,10 @@ import { getConsumer, getLoader } from "../optional_context";
 
 export type LiquityContextValue = {
   account: string;
-  liquity: ReadableLiquity;
+  liquity: ReadableLiquity &
+    ConsentableLiquity & {
+      connection: { addresses: Record<DeploymentAddressesKey, `0x${string}`> };
+    };
   store: HLiquityStore;
 };
 
@@ -35,6 +38,7 @@ const NonNullableLiquityProvider: React.FC<NonNullableLiquityProviderProps> = ({
 
   const liquity = useMemo(() => {
     const rpcUrl = chain.rpcUrls.default.http[0] as `https://${string}`;
+    const mirrorNodeBaseUrl = chain.apiBaseUrl;
 
     const hashgraphLiquity = HashgraphLiquity.fromEvmAddresses({
       userAccountId: hashConnectSessionData.userAccountId,
@@ -43,7 +47,9 @@ const NonNullableLiquityProvider: React.FC<NonNullableLiquityProviderProps> = ({
       totalStabilityPoolHlqtReward: parseInt(deployment.totalStabilityPoolHLQTReward),
       frontendAddress: deployment.frontendTag,
       userHashConnect: hashConnect,
-      rpcUrl
+      rpcUrl,
+      mirrorNodeBaseUrl,
+      fetch: window.fetch.bind(window)
     });
 
     Object.assign(hashgraphLiquity, { connection: deployment });
@@ -53,7 +59,11 @@ const NonNullableLiquityProvider: React.FC<NonNullableLiquityProviderProps> = ({
 
   return (
     <LiquityContext.Provider
-      value={{ account: hashConnectSessionData.userAccountEvmAddress, liquity, store: liquity }}
+      value={{
+        account: hashConnectSessionData.userAccountEvmAddress,
+        liquity,
+        store: liquity
+      }}
     >
       {children}
     </LiquityContext.Provider>
