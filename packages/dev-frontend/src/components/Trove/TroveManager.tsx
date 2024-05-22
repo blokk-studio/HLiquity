@@ -23,7 +23,7 @@ import { useHedera } from "../../hedera/hedera_context";
 import { useLoadingState } from "../../loading_state";
 import { BigNumber } from "ethers";
 import { LoadingButton } from "../LoadingButton";
-import { useDeployment } from "../../configuration/deployments";
+import { useDeployment } from "../../hooks/deployments";
 
 const init = ({ trove }: LiquityStoreState) => ({
   original: trove,
@@ -39,8 +39,10 @@ type TroveManagerAction =
   | { type: "startChange" | "finishChange" | "revert" | "addMinimumDebt" | "removeMinimumDebt" }
   | { type: "setCollateral" | "setDebt"; newValue: Decimalish };
 
-const reduceWith = (action: TroveManagerAction) => (state: TroveManagerState): TroveManagerState =>
-  reduce(state, action);
+const reduceWith =
+  (action: TroveManagerAction) =>
+  (state: TroveManagerState): TroveManagerState =>
+    reduce(state, action);
 
 const addMinimumDebt = reduceWith({ type: "addMinimumDebt" });
 const removeMinimumDebt = reduceWith({ type: "removeMinimumDebt" });

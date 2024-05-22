@@ -15,7 +15,7 @@ import { DisposableWalletProvider } from "./testUtils/DisposableWalletProvider";
 import { LiquityFrontend } from "./LiquityFrontend";
 import { AppLoader } from "./components/AppLoader";
 import { useAsyncValue } from "./hooks/AsyncValue";
-import { useHederaChains } from "./hedera/wagmi-chains";
+import { useHederaChains } from "./hooks/chains";
 import { AuthenticationProvider, LoginForm } from "./authentication";
 import { HederaTokensProvider } from "./hedera/hedera_context";
 import { useConfiguration } from "./configuration";
@@ -28,6 +28,7 @@ import {
 } from "./components/HashConnectProvider";
 import { LiquityStoreProvider } from "@liquity/lib-react";
 import { WalletConnector } from "./components/WalletConnector";
+import { SelectedChainProvider } from "./components/chain_context";
 
 const isDemoMode = import.meta.env.VITE_APP_DEMO_MODE === "true";
 
@@ -116,61 +117,63 @@ const App = () => {
         `}
       />
       <AuthenticationProvider loginForm={<LoginForm />}>
-        <WagmiConfig client={client}>
-          <ConnectKitProvider options={{ hideBalance: true }}>
-            <HashConnectProvider walletConnectProjectId={config.value.walletConnectProjectId}>
-              <HashConnectLoader
-                loader={<AppLoader content={<Heading>Setting up HashPack</Heading>} />}
-              >
-                <HashConnectConnectionStateConsumer>
-                  {connectionState => {
-                    if (connectionState !== "Paired") {
-                      return <WalletConnector />;
-                    }
+        <SelectedChainProvider>
+          <WagmiConfig client={client}>
+            <ConnectKitProvider options={{ hideBalance: true }}>
+              <HashConnectProvider walletConnectProjectId={config.value.walletConnectProjectId}>
+                <HashConnectLoader
+                  loader={<AppLoader content={<Heading>Setting up HashPack</Heading>} />}
+                >
+                  <HashConnectConnectionStateConsumer>
+                    {connectionState => {
+                      if (connectionState !== "Paired") {
+                        return <WalletConnector />;
+                      }
 
-                    return (
-                      <HashConnectSessionDataLoader
-                        loader={<AppLoader content={<Heading>Setting up HashPack</Heading>} />}
-                      >
-                        <TransactionProvider>
-                          <HederaTokensProvider>
-                            <LiquityProvider
-                              unsupportedNetworkFallback={
-                                <UnsupportedNetworkFallback availableNetworks={chains} />
-                              }
-                              unsupportedMainnetFallback={
-                                <UnsupportedNetworkFallback availableNetworks={chains} />
-                              }
-                            >
-                              <LiquityConsumer>
-                                {liquityContext => {
-                                  if (!liquityContext) {
-                                    return;
-                                  }
+                      return (
+                        <HashConnectSessionDataLoader
+                          loader={<AppLoader content={<Heading>Setting up HashPack</Heading>} />}
+                        >
+                          <TransactionProvider>
+                            <HederaTokensProvider>
+                              <LiquityProvider
+                                unsupportedNetworkFallback={
+                                  <UnsupportedNetworkFallback availableNetworks={chains} />
+                                }
+                                unsupportedMainnetFallback={
+                                  <UnsupportedNetworkFallback availableNetworks={chains} />
+                                }
+                              >
+                                <LiquityConsumer>
+                                  {liquityContext => {
+                                    if (!liquityContext) {
+                                      return;
+                                    }
 
-                                  return (
-                                    <LiquityStoreProvider
-                                      store={liquityContext.store}
-                                      loader={
-                                        <AppLoader content={<Heading>Loading data</Heading>} />
-                                      }
-                                    >
-                                      <LiquityFrontend />
-                                    </LiquityStoreProvider>
-                                  );
-                                }}
-                              </LiquityConsumer>
-                            </LiquityProvider>
-                          </HederaTokensProvider>
-                        </TransactionProvider>
-                      </HashConnectSessionDataLoader>
-                    );
-                  }}
-                </HashConnectConnectionStateConsumer>
-              </HashConnectLoader>
-            </HashConnectProvider>
-          </ConnectKitProvider>
-        </WagmiConfig>
+                                    return (
+                                      <LiquityStoreProvider
+                                        store={liquityContext.store}
+                                        loader={
+                                          <AppLoader content={<Heading>Loading data</Heading>} />
+                                        }
+                                      >
+                                        <LiquityFrontend />
+                                      </LiquityStoreProvider>
+                                    );
+                                  }}
+                                </LiquityConsumer>
+                              </LiquityProvider>
+                            </HederaTokensProvider>
+                          </TransactionProvider>
+                        </HashConnectSessionDataLoader>
+                      );
+                    }}
+                  </HashConnectConnectionStateConsumer>
+                </HashConnectLoader>
+              </HashConnectProvider>
+            </ConnectKitProvider>
+          </WagmiConfig>
+        </SelectedChainProvider>
       </AuthenticationProvider>
     </ThemeProvider>
   );

@@ -19,12 +19,9 @@ import { StakingManagerAction } from "./StakingManagerAction";
 import { ActionDescription, Amount } from "../ActionDescription";
 import { ErrorDescription } from "../ErrorDescription";
 import { useLiquity } from "../../hooks/LiquityContext";
-import { useHedera } from "../../hedera/hedera_context";
 import { useLoadingState } from "../../loading_state";
-import { BigNumber } from "ethers";
 import { Step } from "../Steps";
 import { LoadingButton } from "../LoadingButton";
-import { useDeployment } from "../../configuration/deployments";
 
 const init = ({ hlqtStake }: LiquityStoreState) => ({
   originalStake: hlqtStake,
@@ -149,23 +146,11 @@ export const StakingManager: React.FC = () => {
   const makingNewStake = originalStake.isEmpty;
 
   // consent & approval
-  const {
-    liquity: {
-      connection: { addresses }
-    }
-  } = useLiquity();
-  const deployment = useDeployment();
-  const { hasAssociatedWithHchf, associateWithToken, approveSpender } = useHedera();
-  // hlqt token association
+  const { liquity } = useLiquity();
+  const { userHasAssociatedWithHchf } = useLiquitySelector(state => state);
   const { call: associateWithHchf, state: hchfAssociationLoadingState } = useLoadingState(
     async () => {
-      if (!deployment) {
-        const errorMessage = `i cannot get the hchf token id if there is no deployment. please connect to a chain first.`;
-        console.error(errorMessage, "context:", { deployment });
-        throw new Error(errorMessage);
-      }
-
-      await associateWithToken({ tokenAddress: deployment.hchfTokenAddress });
+      await liquity.associateWithHchf();
     }
   );
   // hchf spender approval
@@ -175,32 +160,18 @@ export const StakingManager: React.FC = () => {
       throw "cannot approve a withdrawal (negative spending/negative deposit) or deposit of 0";
     }
 
-    if (!deployment) {
-      const errorMessage = `i cannot get the hlqt token id if there is no deployment. please connect to a chain first.`;
-      console.error(errorMessage, "context:", { deployment });
-      throw new Error(errorMessage);
-    }
-
-    const contractAddress = addresses.hlqtToken as `0x${string}`;
-    const tokenAddress = deployment.hlqtTokenAddress;
-    const amount = BigNumber.from(validChange.stakeHLQT.bigNumber);
-
-    await approveSpender({
-      contractAddress,
-      tokenAddress,
-      amount
-    });
+    await liquity.approveHlqtToSpendHlqt(validChange.stakeHLQT);
   });
 
   const transactionSteps: Step[] = [
     {
       title: "Associate with HCHF",
-      status: hasAssociatedWithHchf
+      status: userHasAssociatedWithHchf
         ? "success"
         : hchfAssociationLoadingState === "error"
         ? "danger"
         : hchfAssociationLoadingState,
-      description: hasAssociatedWithHchf
+      description: userHasAssociatedWithHchf
         ? "You've already consented to receiving HCHF."
         : "You have to consent to receiving HCHF tokens before you can use HLiquity."
     }
@@ -238,7 +209,7 @@ export const StakingManager: React.FC = () => {
           Cancel
         </Button>
 
-        {!hasAssociatedWithHchf ? (
+        {!userHasAssociatedWithHchf ? (
           <LoadingButton
             disabled={!validChange}
             loading={hchfAssociationLoadingState === "pending"}

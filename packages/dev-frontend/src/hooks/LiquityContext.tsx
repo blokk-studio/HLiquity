@@ -1,17 +1,28 @@
 import React, { createContext, useContext, useMemo } from "react";
-import { DeploymentAddressesKey, useDeployment } from "../configuration/deployments";
-import { _LiquityDeploymentJSON } from "@liquity/lib-ethers/dist/src/contracts";
-import { ConsentableLiquity, HLiquityStore, ReadableLiquity } from "@liquity/lib-base";
-import { HederaChain, useHederaChain } from "../hedera/wagmi-chains";
+import { useDeployment } from "../hooks/deployments";
+import {
+  ConsentableLiquity,
+  Deployment,
+  DeploymentAddressesKey,
+  HLiquityStore,
+  ReadableLiquity
+} from "@liquity/lib-base";
+import { HederaChain } from "../configuration/chains";
 import { useHashConnect, useHashConnectSessionData } from "../components/HashConnectProvider";
 import { HashgraphLiquity } from "@liquity/lib-hashgraph";
 import { getConsumer, getLoader } from "../optional_context";
+import { useSelectedChain } from "../components/chain_context";
 
 export type LiquityContextValue = {
   account: string;
   liquity: ReadableLiquity &
     ConsentableLiquity & {
-      connection: { addresses: Record<DeploymentAddressesKey, `0x${string}`> };
+      connection: {
+        addresses: Record<DeploymentAddressesKey, `0x${string}`>;
+        version: string;
+        deploymentDate: Date;
+        frontendTag: `0x${string}`;
+      };
     };
   store: HLiquityStore;
 };
@@ -24,7 +35,7 @@ type LiquityProviderProps = {
 };
 
 interface NonNullableLiquityProviderProps {
-  deployment: _LiquityDeploymentJSON;
+  deployment: Deployment;
   chain: HederaChain;
 }
 
@@ -49,7 +60,8 @@ const NonNullableLiquityProvider: React.FC<NonNullableLiquityProviderProps> = ({
       userHashConnect: hashConnect,
       rpcUrl,
       mirrorNodeBaseUrl,
-      fetch: window.fetch.bind(window)
+      fetch: window.fetch.bind(window),
+      deployment: deployment
     });
 
     Object.assign(hashgraphLiquity, { connection: deployment });
@@ -81,7 +93,7 @@ export const LiquityProvider: React.FC<LiquityProviderProps> = ({
   unsupportedNetworkFallback
 }) => {
   const deployment = useDeployment();
-  const chain = useHederaChain();
+  const chain = useSelectedChain();
 
   if (!deployment) {
     return <>{unsupportedNetworkFallback}</>;

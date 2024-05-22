@@ -220,7 +220,10 @@ const mapLiquityContracts = <T, U>(
     Object.entries(contracts).map(([key, t]) => [key, f(t, key as LiquityContractsKey)])
   ) as Record<LiquityContractsKey, U>;
 
-/** @internal */
+/**
+ * @internal
+ * @deprecated use lib-base exports
+ */
 export interface _LiquityDeploymentJSON {
   readonly chainId: number;
   readonly addresses: _LiquityContractAddresses;
