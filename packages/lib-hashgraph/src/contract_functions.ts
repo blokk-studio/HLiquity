@@ -4,8 +4,8 @@ import {
   ContractId,
   Hbar,
 } from '@hashgraph/sdk'
+import { Address } from '@liquity/lib-base'
 import BigNumber from 'bignumber.js'
-import { Address } from './address'
 
 type FunctionNameFromAbi<Abi extends unknown[]> = Extract<
   {

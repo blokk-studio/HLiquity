@@ -1,9 +1,12 @@
 import {
+  Address,
   BETA,
   CollateralGainTransferDetails,
   ConsentableLiquity,
   Decimal,
   Decimalish,
+  Deployment,
+  DeploymentAddressesKey,
   Fees,
   FrontendStatus,
   HCHF_MINIMUM_NET_DEBT,
@@ -40,8 +43,6 @@ import { BigNumber } from 'bignumber.js'
 import { HashConnect } from 'hashconnect'
 import Web3, { Contract, MatchPrimitiveType } from 'web3'
 
-import { Address } from './address'
-import { DeploymentAddressesKey } from './deployment'
 // contracts
 import {
   AccountAllowanceApproveTransaction,
@@ -142,6 +143,13 @@ const defaultRedemptionRateSlippageTolerance = Decimal.from(0.001) // 0.1%
 /** With 70 iterations redemption costs about ~10M gas, and each iteration accounts for ~138k more */
 export const redeemMaxIterations = 70
 
+interface LasagnaConnection {
+  addresses: Record<DeploymentAddressesKey, Address>
+  version: string
+  deploymentDate: Date
+  frontendTag: Address
+}
+
 export class HashgraphLiquity<FetchInstance extends Fetch = Fetch>
   extends HLiquityStore<HashgraphLiquityStoreState>
   implements
@@ -151,11 +159,13 @@ export class HashgraphLiquity<FetchInstance extends Fetch = Fetch>
     ConsentableLiquity,
     EventEmitter
 {
-  // TODO: fix shitty interface design lasagna and remove this. use events for the different stages of the transaction.
   public store: HLiquityStore = this
+  /** @deprecated TODO: implement & use events */
   public readonly send: SendableLiquity
+  /** @deprecated TODO: implement & use events */
   public readonly populate: PopulatableLiquity
-  public readonly connection: { addresses: Record<DeploymentAddressesKey, Address> }
+  /** @deprecated use the deployment directly, rather than proxying through this */
+  public readonly connection: LasagnaConnection
 
   private readonly eventEmitter: Emittery<LiquityEvents>
 
@@ -253,7 +263,7 @@ export class HashgraphLiquity<FetchInstance extends Fetch = Fetch>
     saucerSwapPoolContractId: TypedContractId<UnipoolAbi>
 
     // lasagna
-    deploymentAddresses: Record<DeploymentAddressesKey, Address>
+    connection: LasagnaConnection
   }) {
     super()
 
@@ -323,14 +333,13 @@ export class HashgraphLiquity<FetchInstance extends Fetch = Fetch>
     // lasagna
     this.populate = asPopulatable(this)
     this.send = asSendable(this)
-    this.connection = { addresses: options.deploymentAddresses }
+    this.connection = options.connection
   }
 
   private async fetchStoreValues(
     blockTag?: string | number,
   ): Promise<[baseState: LiquityStoreBaseState, extraState: HashgraphLiquityStoreState]> {
     const tokenAssociationsPromise = (async () => {
-      // TODO: support all chains
       const [tokens, hchfTokenAddress, hlqtTokenAddress, lpTokenAddress] = await Promise.all([
         fetchTokens({
           apiBaseUrl: this.mirrorNodeBaseUrl,
@@ -944,6 +953,8 @@ export class HashgraphLiquity<FetchInstance extends Fetch = Fetch>
     rpcUrl: `wss://${string}` | `https://${string}`
     mirrorNodeBaseUrl: `https://${string}`
     fetch: Fetch
+    // TODO: remove when lasagna is removed
+    deployment: Deployment
   }) {
     const web3 = new Web3(options.rpcUrl)
     const totalStabilityPoolHlqtReward = Decimal.from(options.totalStabilityPoolHlqtReward)
@@ -1157,7 +1168,7 @@ export class HashgraphLiquity<FetchInstance extends Fetch = Fetch>
       saucerSwapPool,
       saucerSwapPoolContractId,
       // lasagna
-      deploymentAddresses: options.deploymentAddresses,
+      connection: options.deployment,
     })
 
     return hashgraphLiquity

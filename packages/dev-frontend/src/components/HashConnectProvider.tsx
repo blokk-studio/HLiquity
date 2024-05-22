@@ -5,6 +5,9 @@ import { getConsumer, getHook, getLoader, getOptionalHook } from "../optional_co
 import { Flex, Heading, Paragraph } from "theme-ui";
 import { Icon } from "./Icon";
 import { t } from "../i18n";
+import { useSelectedChain } from "./chain_context";
+import { chains } from "../configuration/chains";
+import { Address } from "@liquity/lib-base";
 
 const appMetadata: DappMetadata = {
   description: "Decentralized borrowing Protocol on Hedera",
@@ -59,11 +62,15 @@ export const HashConnectProvider: React.FC<{ walletConnectProjectId: string }> =
     HashConnectConnectionState.Disconnected
   );
   const [hashConnectError, setHashConnectError] = useState<Error | null>(null);
+  const selectedChain = useSelectedChain();
 
-  const setUpHashConnect = async (options: { walletConnectProjectId: string }) => {
+  const setUpHashConnect = async (options: {
+    walletConnectProjectId: string;
+    ledgerId: LedgerId;
+  }) => {
     // TODO: handle all chains
     const hashConnect = new HashConnect(
-      LedgerId.TESTNET,
+      options.ledgerId,
       options.walletConnectProjectId,
       appMetadata,
       import.meta.env.DEV
@@ -75,16 +82,42 @@ export const HashConnectProvider: React.FC<{ walletConnectProjectId: string }> =
     const updateSessionData = async (data: SessionData) => {
       const [userAccountIdString] = data.accountIds;
       const userAccountId = AccountId.fromString(userAccountIdString);
-      // TODO: handle all chains
-      const response = await fetch(
-        `https://testnet.mirrornode.hedera.com/api/v1/accounts/${userAccountIdString}`
-      );
-      const { evm_address }: { evm_address: `0x${string}` } = await response.json();
+      const chain = chains.find(chain => chain.ledgerId.toString() === data.network);
+
+      if (!chain) {
+        console.error(
+          `network ${JSON.stringify(
+            data.network
+          )} received from pairing data does not match any chain's ledger id`
+        );
+        setSessionData(null);
+        return;
+      }
+
+      let userAccountEvmAddress: Address | undefined = undefined;
+      try {
+        // TODO: handle all chains
+        const response = await fetch(`${chain.apiBaseUrl}/accounts/${userAccountIdString}`);
+        const json: { evm_address: Address } = await response.json();
+
+        userAccountEvmAddress = json.evm_address;
+      } catch (error) {
+        // shh eslint
+        console.error(
+          `unable to fetch evm address of account id ${JSON.stringify(userAccountIdString)}.`,
+          error
+        );
+      }
+
+      if (!userAccountEvmAddress) {
+        setSessionData(null);
+        return;
+      }
 
       const extendedSessionData: ExtendedHashConnectSessionData = {
         ...data,
         userAccountId,
-        userAccountEvmAddress: evm_address
+        userAccountEvmAddress
       };
 
       setSessionData(extendedSessionData);
@@ -113,9 +146,11 @@ export const HashConnectProvider: React.FC<{ walletConnectProjectId: string }> =
     const effect = async () => {
       try {
         destroyEffect();
+        console.debug({ LedgerId: selectedChain.ledgerId.toString(), selectedChain });
 
         const { hashConnect, destroyHashConnect } = await setUpHashConnect({
-          walletConnectProjectId: props.walletConnectProjectId
+          walletConnectProjectId: props.walletConnectProjectId,
+          ledgerId: selectedChain.ledgerId
         });
 
         destroyEffect = () => {
@@ -142,7 +177,7 @@ export const HashConnectProvider: React.FC<{ walletConnectProjectId: string }> =
     effect();
 
     return destroyEffect;
-  }, [props.walletConnectProjectId]);
+  }, [props.walletConnectProjectId, selectedChain]);
 
   if (hashConnectError) {
     return (

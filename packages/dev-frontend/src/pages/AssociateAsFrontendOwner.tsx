@@ -1,34 +1,24 @@
 import { Flex, Paragraph } from "theme-ui";
-import { useDeployment } from "../configuration/deployments";
-import { useHedera } from "../hedera/hedera_context";
 import { LoadingButton } from "../components/LoadingButton";
 import { useLoadingState } from "../loading_state";
+import { useLiquity } from "../hooks/LiquityContext";
+import { useLiquitySelector } from "@liquity/lib-react";
 
 export const AssociateAsFrontendOwner: React.FC = () => {
-  const deployment = useDeployment();
-  const { hasAssociatedWithHchf, hasAssociatedWithHlqt, associateWithToken } = useHedera();
+  const { userHasAssociatedWithHchf, userHasAssociatedWithHlqt } = useLiquitySelector(
+    state => state
+  );
+  const { liquity } = useLiquity();
 
   const { call: associateWithHchf, state: hchfAssociationLoadingState } = useLoadingState(
     async () => {
-      if (!deployment) {
-        const errorMessage = `i cannot get the hchf token id if there is no deployment. please connect to a chain first.`;
-        console.error(errorMessage, "context:", { deployment });
-        throw new Error(errorMessage);
-      }
-
-      await associateWithToken({ tokenAddress: deployment.hchfTokenAddress });
+      await liquity.associateWithHchf();
     }
   );
 
   const { call: associateWithHlqt, state: hlqtAssociationLoadingState } = useLoadingState(
     async () => {
-      if (!deployment) {
-        const errorMessage = `i cannot get the hlqt token id if there is no deployment. please connect to a chain first.`;
-        console.error(errorMessage, "context:", { deployment });
-        throw new Error(errorMessage);
-      }
-
-      await associateWithToken({ tokenAddress: deployment.hlqtTokenAddress });
+      await liquity.associateWithHlqt();
     }
   );
 
@@ -39,9 +29,9 @@ export const AssociateAsFrontendOwner: React.FC = () => {
       <LoadingButton
         loading={hchfAssociationLoadingState === "pending"}
         onClick={associateWithHchf}
-        disabled={hasAssociatedWithHchf}
+        disabled={userHasAssociatedWithHchf}
         sx={{ marginTop: "1rem" }}
-        variant={hasAssociatedWithHchf ? "success" : "primary"}
+        variant={userHasAssociatedWithHchf ? "success" : "primary"}
       >
         Associate with HCHF
       </LoadingButton>
@@ -49,9 +39,9 @@ export const AssociateAsFrontendOwner: React.FC = () => {
       <LoadingButton
         loading={hlqtAssociationLoadingState === "pending"}
         onClick={associateWithHlqt}
-        disabled={hasAssociatedWithHlqt}
+        disabled={userHasAssociatedWithHlqt}
         sx={{ marginTop: "1rem" }}
-        variant={hasAssociatedWithHlqt ? "success" : "primary"}
+        variant={userHasAssociatedWithHlqt ? "success" : "primary"}
       >
         Associate with HLQT
       </LoadingButton>

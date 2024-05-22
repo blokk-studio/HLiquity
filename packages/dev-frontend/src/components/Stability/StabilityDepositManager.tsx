@@ -18,11 +18,8 @@ import {
 } from "./validation/validateStabilityDepositChange";
 import { Step } from "../Steps";
 import { useLoadingState } from "../../loading_state";
-import { useHedera } from "../../hedera/hedera_context";
 import { useLiquity } from "../../hooks/LiquityContext";
-import { BigNumber } from "ethers";
 import { LoadingButton } from "../LoadingButton";
-import { useDeployment } from "../../configuration/deployments";
 
 const init = ({ stabilityDeposit }: LiquityStoreState) => ({
   originalDeposit: stabilityDeposit,
@@ -138,41 +135,23 @@ export const StabilityDepositManager: React.FC = () => {
   }, [myTransactionState.type, dispatch, dispatchEvent]);
 
   // consent & approval
-  const {
-    liquity: {
-      connection: { addresses }
-    }
-  } = useLiquity();
+  const { liquity } = useLiquity();
   const { userHasAssociatedWithHchf, userHasAssociatedWithHlqt } = useLiquitySelector(
     state => state
   );
-  const { associateWithToken, approveSpender } = useHedera();
-  const deployment = useDeployment();
   const needsHlqtAssociation =
     !userHasAssociatedWithHlqt && (!validChange || validChange?.depositHCHF);
   // hlqt token association (deposition)
   const { call: associateWithHlqt, state: hlqtAssociationLoadingState } = useLoadingState(
     async () => {
-      if (!deployment) {
-        const errorMessage = `i cannot get the hlqt token id if there is no deployment. please connect to a chain first.`;
-        console.error(errorMessage, "context:", { deployment });
-        throw new Error(errorMessage);
-      }
-
-      await associateWithToken({ tokenAddress: deployment.hlqtTokenAddress });
+      await liquity.associateWithHlqt();
     }
   );
   // hchf token association (withdrawal)
   const needsHchfAssociation = !userHasAssociatedWithHchf && validChange?.withdrawHCHF;
   const { call: associateWithHchf, state: hchfAssociationLoadingState } = useLoadingState(
     async () => {
-      if (!deployment) {
-        const errorMessage = `i cannot get the hchf token id if there is no deployment. please connect to a chain first.`;
-        console.error(errorMessage, "context:", { deployment });
-        throw new Error(errorMessage);
-      }
-
-      await associateWithToken({ tokenAddress: deployment.hchfTokenAddress });
+      await liquity.associateWithHchf();
     }
   );
   // hchf spender approval
@@ -184,21 +163,7 @@ export const StabilityDepositManager: React.FC = () => {
       throw new Error(errorMessage);
     }
 
-    if (!deployment) {
-      const errorMessage = `i cannot get the hchf token id if there is no deployment. please connect to a chain first.`;
-      console.error(errorMessage, "context:", { deployment });
-      throw new Error(errorMessage);
-    }
-
-    const contractAddress = addresses.hchfToken as `0x${string}`;
-    const tokenAddress = deployment.hchfTokenAddress;
-    const amount = BigNumber.from(validChange.depositHCHF.bigNumber);
-
-    await approveSpender({
-      contractAddress,
-      tokenAddress,
-      amount
-    });
+    await liquity.approveHchfToSpendHchf(validChange.depositHCHF);
   });
 
   const transactionSteps: Step[] = [];

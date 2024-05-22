@@ -1,21 +1,22 @@
-import { createContext, useContext, useMemo, useState } from "react";
+import { createContext, useContext, useState } from "react";
 import { BigNumber } from "ethers";
-import { useHederaChain } from "./wagmi-chains";
-import { useAccount, useSigner } from "wagmi";
 import { TokenId } from "@hashgraph/sdk";
-import { fetchTokens } from "./mirrornode";
-import { approveSpender, associateWithToken, dissociateFromToken } from "./consent";
-import { useDeployment } from "../configuration/deployments";
+import { useDeployment } from "../hooks/deployments";
 
 interface HederaContext {
+  /** @deprecated use liquity methods instead */
   approveSpender: (options: {
     contractAddress: `0x${string}`;
     tokenAddress: `0x${string}`;
     amount: BigNumber;
   }) => Promise<void>;
+  /** @deprecated use liquity methods instead */
   associateWithToken: (options: { tokenAddress: `0x${string}` }) => Promise<void>;
+  /** @deprecated use liquity methods instead */
   dissociateFromToken: (options: { tokenAddress: `0x${string}` }) => Promise<void>;
+  /** @deprecated use liquity store state instead */
   hasAssociatedWithHchf: boolean;
+  /** @deprecated use liquity store state instead */
   hasAssociatedWithHlqt: boolean;
 }
 
@@ -37,32 +38,8 @@ interface HederaToken {
 }
 
 export const HederaTokensProvider: React.FC = ({ children }) => {
-  const signerResult = useSigner();
-  const account = useAccount();
-  const hederaChain = useHederaChain();
   const deployment = useDeployment();
-  const [tokens, setTokens] = useState<HederaToken[]>([]);
-  // const [tokensApiError, setTokensApiError] = useState<Error | null>(null);
-  useMemo(async () => {
-    if (!account.address) {
-      return;
-    }
-
-    if (!hederaChain) {
-      return;
-    }
-
-    try {
-      const tokens = await fetchTokens({
-        apiBaseUrl: hederaChain.apiBaseUrl,
-        accountAddress: account.address
-      });
-
-      setTokens(tokens);
-    } catch (error: unknown) {
-      // setTokensApiError(error as Error);
-    }
-  }, [account.address, hederaChain]);
+  const [tokens] = useState<HederaToken[]>([]);
 
   const hchfTokenId = deployment
     ? TokenId.fromSolidityAddress(deployment.hchfTokenAddress).toString()
@@ -80,78 +57,18 @@ export const HederaTokensProvider: React.FC = ({ children }) => {
   });
 
   const associateWithTokenWithContext: HederaContext["associateWithToken"] = async options => {
-    if (!signerResult.data) {
-      throw new Error(
-        `need \`liquity.connection.signer\` to be defined to sign token association transactions`
-      );
-    }
-    const signer = signerResult.data;
-
-    await associateWithToken({ ...options, signer });
-
-    if (!account.address) {
-      console.warn(
-        "need an account address to update the account info. refresh the page to get up-to-date (token) info."
-      );
-      return;
-    }
-
-    if (!hederaChain) {
-      console.warn(
-        "need a hedera chain to update the account info. refresh the page to get up-to-date (token) info."
-      );
-      return;
-    }
-
-    const tokens = await fetchTokens({
-      apiBaseUrl: hederaChain.apiBaseUrl,
-      accountAddress: account.address
-    });
-
-    setTokens(tokens);
+    options;
+    throw new Error("deprecated. use liquity methods instead");
   };
 
   const dissociateFromTokenWithContext: HederaContext["dissociateFromToken"] = async options => {
-    if (!signerResult.data) {
-      throw new Error(
-        `need \`liquity.connection.signer\` to be defined to sign token association transactions`
-      );
-    }
-    const signer = signerResult.data;
-
-    await dissociateFromToken({ ...options, signer });
-
-    if (!account.address) {
-      console.warn(
-        "need an account address to update the account info. refresh the page to get up-to-date (token) info."
-      );
-      return;
-    }
-
-    if (!hederaChain) {
-      console.warn(
-        "need a hedera chain to update the account info. refresh the page to get up-to-date (token) info."
-      );
-      return;
-    }
-
-    const tokens = await fetchTokens({
-      apiBaseUrl: hederaChain.apiBaseUrl,
-      accountAddress: account.address
-    });
-
-    setTokens(tokens);
+    options;
+    throw new Error("deprecated. use liquity methods instead");
   };
 
   const approveSpenderWithContext: HederaContext["approveSpender"] = async options => {
-    if (!signerResult.data) {
-      throw new Error(
-        `need \`liquity.connection.signer\` to be defined to sign token association transactions`
-      );
-    }
-    const signer = signerResult.data;
-
-    await approveSpender({ ...options, signer });
+    options;
+    throw new Error("deprecated. use liquity methods instead");
   };
 
   return (

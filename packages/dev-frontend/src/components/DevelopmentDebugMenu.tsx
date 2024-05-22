@@ -1,5 +1,5 @@
 import { Flex } from "theme-ui";
-import { useDeployment } from "../configuration/deployments";
+import { useDeployment } from "../hooks/deployments";
 import { LoadingButton } from "./LoadingButton";
 import { useLoadingState } from "../loading_state";
 import React, { useEffect, useState } from "react";

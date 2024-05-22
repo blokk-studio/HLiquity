@@ -1,18 +1,17 @@
 /** @jsxImportSource theme-ui */
-import { ConnectKitButton } from "connectkit";
-import { Box, Button, Flex, Heading, Paragraph } from "theme-ui";
-import { Icon } from "./Icon";
+import { Button, Flex, Heading, Paragraph } from "theme-ui";
 import { useTranslation } from "react-i18next";
 import ThemeSwitcher from "./ThemeSwitcher";
 import React from "react";
 import { useHashConnect } from "./HashConnectProvider";
 import { HashPack } from "./icons/HashPack";
+import { ChainSelector } from "./chain_context";
 
 type WalletConnectorProps = {
   loader?: React.ReactNode;
 };
 
-export const WalletConnector: React.FC<WalletConnectorProps> = ({ children }) => {
+export const WalletConnector: React.FC<WalletConnectorProps> = () => {
   const { t } = useTranslation();
   const hashConnect = useHashConnect();
 
@@ -47,27 +46,20 @@ export const WalletConnector: React.FC<WalletConnectorProps> = ({ children }) =>
           <span sx={{ color: "secondary", fontWeight: "bold" }}>{t("startScreen.introText.3")}</span>
         </Paragraph>
 
-        <Button
-          onClick={() => hashConnect.openPairingModal()}
-          variant="outline"
-          sx={{ alignSelf: "center", marginTop: "4rem", display: "flex", gap: "1rem" }}
-        >
-          <HashPack aria-label="HashPack" />
-          {t("startScreen.connectHashPack")}
-        </Button>
+        <Flex sx={{ flexDirection: "column", alignSelf: "center", marginTop: "2rem" }}>
+          <ChainSelector />
 
-        {/* <ConnectKitButton.Custom>
-        {connectKit =>
-          connectKit.isConnected ? (
-            children
-          ) : (
-            <Button onClick={connectKit.show} sx={{ marginTop: "4rem", alignSelf: "center" }}>
-              <Icon name="plug" size="lg" />
-              <Box sx={{ ml: 2 }}>{t("startScreen.connectWallet")}</Box>
-            </Button>
-          )
-        }
-      </ConnectKitButton.Custom> */}
+          <Button
+            onClick={() => {
+              hashConnect.openPairingModal();
+            }}
+            variant="outline"
+            sx={{ marginTop: "2rem", display: "flex", gap: "1rem" }}
+          >
+            <HashPack aria-label="HashPack" />
+            {t("startScreen.connectHashPack")}
+          </Button>
+        </Flex>
       </Flex>
     </React.Fragment>
   );
