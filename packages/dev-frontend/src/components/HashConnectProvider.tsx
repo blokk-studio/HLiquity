@@ -146,7 +146,6 @@ export const HashConnectProvider: React.FC<{ walletConnectProjectId: string }> =
     const effect = async () => {
       try {
         destroyEffect();
-        console.debug({ LedgerId: selectedChain.ledgerId.toString(), selectedChain });
 
         const { hashConnect, destroyHashConnect } = await setUpHashConnect({
           walletConnectProjectId: props.walletConnectProjectId,
