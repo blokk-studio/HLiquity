@@ -13,17 +13,15 @@ import {
   HLQTStake,
   HLiquityStore,
   LiquidationDetails,
-  LiquityReceipt,
   LiquityStoreBaseState,
   LiquityStoreState,
   MINUTE_DECAY_FACTOR,
+  MinedReceipt,
   PopulatableLiquity,
-  PopulatedLiquityTransaction,
   PopulatedRedemption,
   ReadableLiquity,
   RedemptionDetails,
   SendableLiquity,
-  SentLiquityTransaction,
   StabilityDeposit,
   StabilityDepositChangeDetails,
   StabilityPoolGainsWithdrawalDetails,
@@ -53,8 +51,8 @@ import {
   TokenAssociateTransaction,
   TokenDissociateTransaction,
   TokenId,
+  Transaction,
   TransactionReceipt,
-  TransactionResponse,
 } from '@hashgraph/sdk'
 import { default as Emittery } from 'emittery'
 import { HashConnectSigner } from 'hashconnect/dist/signer'
@@ -96,7 +94,12 @@ import { PrefixProperties } from './interface_collision'
 import { fetchTokens } from './mirror_node'
 import { asPopulatable } from './populatable'
 import { asSendable } from './sendable'
-import { getPopulatedLiquityTransaction } from './transactions'
+import {
+  GetDetailsOptions,
+  PopulatedHashgraphLiquityTransaction,
+  SentHashgraphLiquityTransaction,
+  getLiquityReceiptStatus,
+} from './transactions'
 import { BackendTroveStatus, userTroveStatusFrom } from './trove_status'
 import { getBlockTimestamp } from './web3'
 
@@ -1348,13 +1351,7 @@ export class HashgraphLiquity<FetchInstance extends Fetch = Fetch>
     maxBorrowingRate?: Decimalish,
     options?: TransactionOptions,
   ): Promise<
-    PopulatedLiquityTransaction<
-      ContractExecuteTransaction,
-      SentLiquityTransaction<
-        TransactionResponse,
-        LiquityReceipt<TransactionReceipt, TroveCreationDetails>
-      >
-    >
+    PopulatedHashgraphLiquityTransaction<TroveCreationDetails, ContractExecuteTransaction>
   > {
     const normalized = _normalizeTroveCreation(params)
     const { depositCollateral, borrowHCHF } = normalized
@@ -1400,26 +1397,19 @@ export class HashgraphLiquity<FetchInstance extends Fetch = Fetch>
       return details
     }
 
-    const populatedLiquityTransaction = getPopulatedLiquityTransaction({
+    const PopulatedHashgraphLiquityTransaction = this.getPopulatedHashgraphLiquityTransaction({
       rawPopulatedTransaction,
-      signer: this.signer,
       getDetails,
       gasLimit: gas,
     })
 
-    return populatedLiquityTransaction
+    return PopulatedHashgraphLiquityTransaction
   }
 
   async populateCloseTrove(
     options?: TransactionOptions,
   ): Promise<
-    PopulatedLiquityTransaction<
-      ContractExecuteTransaction,
-      SentLiquityTransaction<
-        TransactionResponse,
-        LiquityReceipt<TransactionReceipt, TroveClosureDetails>
-      >
-    >
+    PopulatedHashgraphLiquityTransaction<TroveClosureDetails, ContractExecuteTransaction>
   > {
     const gas = 3000000
     const unfrozenTransaction = TypedContractExecuteTransaction<BorrowerOperationsAbi>({
@@ -1442,9 +1432,8 @@ export class HashgraphLiquity<FetchInstance extends Fetch = Fetch>
 
       return details
     }
-    const populatedEthersLiquityTransaction = getPopulatedLiquityTransaction({
+    const populatedEthersLiquityTransaction = this.getPopulatedHashgraphLiquityTransaction({
       rawPopulatedTransaction,
-      signer: this.signer,
       getDetails,
       gasLimit: gas,
     })
@@ -1452,18 +1441,73 @@ export class HashgraphLiquity<FetchInstance extends Fetch = Fetch>
     return populatedEthersLiquityTransaction
   }
 
+  private getPopulatedHashgraphLiquityTransaction<
+    Details,
+    RawPopulatedTransaction extends Transaction = Transaction,
+  >(options: {
+    gasLimit: number
+    rawPopulatedTransaction: RawPopulatedTransaction
+    getDetails:
+      | ((options: GetDetailsOptions<RawPopulatedTransaction>) => Promise<Details>)
+      | ((options: GetDetailsOptions<RawPopulatedTransaction>) => Details)
+  }) {
+    const send = async (): Promise<SentHashgraphLiquityTransaction<Details>> => {
+      const rawReceipt = await this.hashConnect.sendTransaction(
+        this.userAccountId,
+        options.rawPopulatedTransaction,
+      )
+
+      const waitForReceipt = async (): Promise<MinedReceipt<TransactionReceipt, Details>> => {
+        // wait for the receipt before querying
+        const details = await options.getDetails({
+          rawPopulatedTransaction: options.rawPopulatedTransaction,
+          rawReceipt,
+        })
+
+        const status = getLiquityReceiptStatus(rawReceipt.status)
+
+        if (status === 'pending') {
+          // this should never actually happen
+          throw new Error(
+            'TODO: figure out how to wait for the transaction to not be pending anymore.',
+          )
+        }
+
+        await this.refresh()
+
+        return {
+          status,
+          rawReceipt,
+          details,
+        }
+      }
+
+      return {
+        rawSentTransaction: rawReceipt,
+        waitForReceipt,
+        getReceipt: waitForReceipt,
+      }
+    }
+
+    const populatedTransaction: PopulatedHashgraphLiquityTransaction<
+      Details,
+      RawPopulatedTransaction
+    > = {
+      rawPopulatedTransaction: options.rawPopulatedTransaction,
+      send,
+      gasLimit: options.gasLimit,
+      gasHeadroom: 0,
+    }
+
+    return populatedTransaction
+  }
+
   async populateAdjustTrove(
     params: TroveAdjustmentParams<Decimalish>,
     maxBorrowingRate?: Decimalish,
     options?: TransactionOptions,
   ): Promise<
-    PopulatedLiquityTransaction<
-      ContractExecuteTransaction,
-      SentLiquityTransaction<
-        TransactionResponse,
-        LiquityReceipt<TransactionReceipt, TroveAdjustmentDetails>
-      >
-    >
+    PopulatedHashgraphLiquityTransaction<TroveAdjustmentDetails, ContractExecuteTransaction>
   > {
     const address = this.getAddressOrUserAddress(options?.from)
 
@@ -1507,14 +1551,13 @@ export class HashgraphLiquity<FetchInstance extends Fetch = Fetch>
       .addBool(!!borrowHCHF)
       .addAddress(hints[0])
       .addAddress(hints[1])
-    const unfrozenTransaction = TypedContractExecuteTransaction<BorrowerOperationsAbi>({
+    const rawPopulatedTransaction = TypedContractExecuteTransaction<BorrowerOperationsAbi>({
       contractId: this.borrowerOperationsContractId,
       functionName: 'adjustTrove',
       functionParameters,
       hbar,
       gas,
     })
-    const rawPopulatedTransaction = await unfrozenTransaction.freezeWithSigner(this.signer)
 
     const getDetails = async () => {
       const newStoreState = await this.refresh()
@@ -1529,90 +1572,65 @@ export class HashgraphLiquity<FetchInstance extends Fetch = Fetch>
 
       return details
     }
-    const populatedLiquityTransaction = getPopulatedLiquityTransaction({
+    const PopulatedHashgraphLiquityTransaction = this.getPopulatedHashgraphLiquityTransaction({
       rawPopulatedTransaction,
-      signer: this.signer,
       getDetails,
       gasLimit: gas,
     })
 
-    return populatedLiquityTransaction
+    return PopulatedHashgraphLiquityTransaction
   }
 
   async populateDepositCollateral(
     amount: Decimalish,
     options?: TransactionOptions,
   ): Promise<
-    PopulatedLiquityTransaction<
-      ContractExecuteTransaction,
-      SentLiquityTransaction<
-        TransactionResponse,
-        LiquityReceipt<TransactionReceipt, TroveAdjustmentDetails>
-      >
-    >
+    PopulatedHashgraphLiquityTransaction<TroveAdjustmentDetails, ContractExecuteTransaction>
   > {
-    const populatedLiquityTransaction = await this.populateAdjustTrove(
+    const PopulatedHashgraphLiquityTransaction = await this.populateAdjustTrove(
       { depositCollateral: amount },
       undefined,
       options,
     )
 
-    return populatedLiquityTransaction
+    return PopulatedHashgraphLiquityTransaction
   }
 
   async populateWithdrawCollateral(
     amount: Decimalish,
     options?: TransactionOptions,
   ): Promise<
-    PopulatedLiquityTransaction<
-      ContractExecuteTransaction,
-      SentLiquityTransaction<
-        TransactionResponse,
-        LiquityReceipt<TransactionReceipt, TroveAdjustmentDetails>
-      >
-    >
+    PopulatedHashgraphLiquityTransaction<TroveAdjustmentDetails, ContractExecuteTransaction>
   > {
-    const populatedLiquityTransaction = await this.populateAdjustTrove(
+    const PopulatedHashgraphLiquityTransaction = await this.populateAdjustTrove(
       { withdrawCollateral: amount },
       undefined,
       options,
     )
 
-    return populatedLiquityTransaction
+    return PopulatedHashgraphLiquityTransaction
   }
 
   async populateBorrowHCHF(
     amount: Decimalish,
     options?: TransactionOptions,
   ): Promise<
-    PopulatedLiquityTransaction<
-      ContractExecuteTransaction,
-      SentLiquityTransaction<
-        TransactionResponse,
-        LiquityReceipt<TransactionReceipt, TroveAdjustmentDetails>
-      >
-    >
+    PopulatedHashgraphLiquityTransaction<TroveAdjustmentDetails, ContractExecuteTransaction>
   > {
-    const populatedLiquityTransaction = await this.populateAdjustTrove(
+    const PopulatedHashgraphLiquityTransaction = await this.populateAdjustTrove(
       { borrowHCHF: amount },
       undefined,
       options,
     )
 
-    return populatedLiquityTransaction
+    return PopulatedHashgraphLiquityTransaction
   }
 
   async populateRepayHCHF(
     amount: Decimalish,
     options?: TransactionOptions,
   ): Promise<
-    PopulatedLiquityTransaction<
-      ContractExecuteTransaction,
-      SentLiquityTransaction<
-        TransactionResponse,
-        LiquityReceipt<TransactionReceipt, TroveAdjustmentDetails>
-      >
-    >
+    PopulatedHashgraphLiquityTransaction<TroveAdjustmentDetails, ContractExecuteTransaction>
   > {
     const populateDepositCollateral = await this.populateAdjustTrove(
       { repayHCHF: amount },
@@ -1625,12 +1643,7 @@ export class HashgraphLiquity<FetchInstance extends Fetch = Fetch>
 
   async populateClaimCollateralSurplus(
     options?: TransactionOptions,
-  ): Promise<
-    PopulatedLiquityTransaction<
-      ContractExecuteTransaction,
-      SentLiquityTransaction<TransactionResponse, LiquityReceipt<TransactionReceipt, void>>
-    >
-  > {
+  ): Promise<PopulatedHashgraphLiquityTransaction<void, ContractExecuteTransaction>> {
     const gas = 3000000
     const unfrozenRawPopulatedTransaction = TypedContractExecuteTransaction<BorrowerOperationsAbi>({
       contractId: this.borrowerOperationsContractId,
@@ -1642,25 +1655,19 @@ export class HashgraphLiquity<FetchInstance extends Fetch = Fetch>
       this.signer,
     )
 
-    const populatedLiquityTransaction = getPopulatedLiquityTransaction({
+    const PopulatedHashgraphLiquityTransaction = this.getPopulatedHashgraphLiquityTransaction({
       rawPopulatedTransaction,
-      signer: this.signer,
       getDetails: () => undefined,
       gasLimit: gas,
     })
 
-    return populatedLiquityTransaction
+    return PopulatedHashgraphLiquityTransaction
   }
 
   async populateSetPrice(
     price: Decimalish,
     options?: TransactionOptions,
-  ): Promise<
-    PopulatedLiquityTransaction<
-      ContractExecuteTransaction,
-      SentLiquityTransaction<TransactionResponse, LiquityReceipt<TransactionReceipt, void>>
-    >
-  > {
+  ): Promise<PopulatedHashgraphLiquityTransaction<void, ContractExecuteTransaction>> {
     throw new Error(
       'setPrice() is not implemented. amend HashgraphLiquity::populateSetPrice to implement it.',
     )
@@ -1684,27 +1691,19 @@ export class HashgraphLiquity<FetchInstance extends Fetch = Fetch>
     //   this.signer,
     // )
 
-    // const populatedLiquityTransaction = getPopulatedLiquityTransaction({
+    // const PopulatedHashgraphLiquityTransaction = this.getPopulatedHashgraphLiquityTransaction({
     //   rawPopulatedTransaction,
     //   signer: this.signer,
     //   getDetails: () => undefined,
     // })
 
-    // return populatedLiquityTransaction
+    // return PopulatedHashgraphLiquityTransaction
   }
 
   async populateLiquidate(
     addressOrAddresses: Address | Address[],
     options?: TransactionOptions,
-  ): Promise<
-    PopulatedLiquityTransaction<
-      ContractExecuteTransaction,
-      SentLiquityTransaction<
-        TransactionResponse,
-        LiquityReceipt<TransactionReceipt, LiquidationDetails>
-      >
-    >
-  > {
+  ): Promise<PopulatedHashgraphLiquityTransaction<LiquidationDetails, ContractExecuteTransaction>> {
     let unfrozenRawPopulatedTransaction: ContractExecuteTransaction
     const gas = 3000000 + gasForHLQTIssuance
     if (Array.isArray(addressOrAddresses)) {
@@ -1753,28 +1752,19 @@ export class HashgraphLiquity<FetchInstance extends Fetch = Fetch>
       return details
     }
 
-    const populatedLiquityTransaction = getPopulatedLiquityTransaction({
+    const PopulatedHashgraphLiquityTransaction = this.getPopulatedHashgraphLiquityTransaction({
       rawPopulatedTransaction,
-      signer: this.signer,
       getDetails,
       gasLimit: gas,
     })
 
-    return populatedLiquityTransaction
+    return PopulatedHashgraphLiquityTransaction
   }
 
   async populateLiquidateUpTo(
     maximumNumberOfTrovesToLiquidate: number,
     options?: TransactionOptions,
-  ): Promise<
-    PopulatedLiquityTransaction<
-      ContractExecuteTransaction,
-      SentLiquityTransaction<
-        TransactionResponse,
-        LiquityReceipt<TransactionReceipt, LiquidationDetails>
-      >
-    >
-  > {
+  ): Promise<PopulatedHashgraphLiquityTransaction<LiquidationDetails, ContractExecuteTransaction>> {
     const functionParameters = TypedContractFunctionParameters<
       TroveManagerAbi,
       'liquidateTroves'
@@ -1803,14 +1793,13 @@ export class HashgraphLiquity<FetchInstance extends Fetch = Fetch>
 
       return details
     }
-    const populatedLiquityTransaction = getPopulatedLiquityTransaction({
+    const PopulatedHashgraphLiquityTransaction = this.getPopulatedHashgraphLiquityTransaction({
       rawPopulatedTransaction,
-      signer: this.signer,
       getDetails,
       gasLimit: gas,
     })
 
-    return populatedLiquityTransaction
+    return PopulatedHashgraphLiquityTransaction
   }
 
   async populateDepositHCHFInStabilityPool(
@@ -1818,13 +1807,7 @@ export class HashgraphLiquity<FetchInstance extends Fetch = Fetch>
     frontendTag?: Address,
     options?: TransactionOptions,
   ): Promise<
-    PopulatedLiquityTransaction<
-      ContractExecuteTransaction,
-      SentLiquityTransaction<
-        TransactionResponse,
-        LiquityReceipt<TransactionReceipt, StabilityDepositChangeDetails>
-      >
-    >
+    PopulatedHashgraphLiquityTransaction<StabilityDepositChangeDetails, ContractExecuteTransaction>
   > {
     const frontendAddress = frontendTag ?? this.frontendAddress
     const functionParameters = TypedContractFunctionParameters<StabilityPoolAbi, 'provideToSP'>()
@@ -1858,27 +1841,23 @@ export class HashgraphLiquity<FetchInstance extends Fetch = Fetch>
 
       return details
     }
-    const populatedLiquityTransaction = getPopulatedLiquityTransaction({
+    const PopulatedHashgraphLiquityTransaction = this.getPopulatedHashgraphLiquityTransaction({
       rawPopulatedTransaction,
-      signer: this.signer,
       getDetails,
       gasLimit: gas,
     })
 
-    return populatedLiquityTransaction
+    return PopulatedHashgraphLiquityTransaction
   }
 
-  // @ts-expect-error some weird types here
+  // @ts-expect-error weird overlapping types here
   async populateWithdrawHCHFFromStabilityPool(
     amount: Decimalish,
     options?: TransactionOptions,
   ): Promise<
-    PopulatedLiquityTransaction<
-      ContractExecuteTransaction,
-      SentLiquityTransaction<
-        TransactionResponse,
-        LiquityReceipt<TransactionReceipt, StabilityPoolGainsWithdrawalDetails>
-      >
+    PopulatedHashgraphLiquityTransaction<
+      StabilityPoolGainsWithdrawalDetails,
+      ContractExecuteTransaction
     >
   > {
     const functionParameters = TypedContractFunctionParameters<
@@ -1909,25 +1888,21 @@ export class HashgraphLiquity<FetchInstance extends Fetch = Fetch>
 
       return details
     }
-    const populatedLiquityTransaction = getPopulatedLiquityTransaction({
+    const PopulatedHashgraphLiquityTransaction = this.getPopulatedHashgraphLiquityTransaction({
       rawPopulatedTransaction,
-      signer: this.signer,
       getDetails,
       gasLimit: gas,
     })
 
-    return populatedLiquityTransaction
+    return PopulatedHashgraphLiquityTransaction
   }
 
   async populateWithdrawGainsFromStabilityPool(
     options?: TransactionOptions,
   ): Promise<
-    PopulatedLiquityTransaction<
-      ContractExecuteTransaction,
-      SentLiquityTransaction<
-        TransactionResponse,
-        LiquityReceipt<TransactionReceipt, StabilityPoolGainsWithdrawalDetails>
-      >
+    PopulatedHashgraphLiquityTransaction<
+      StabilityPoolGainsWithdrawalDetails,
+      ContractExecuteTransaction
     >
   > {
     const functionParameters = TypedContractFunctionParameters<
@@ -1958,26 +1933,19 @@ export class HashgraphLiquity<FetchInstance extends Fetch = Fetch>
 
       return details
     }
-    const populatedLiquityTransaction = getPopulatedLiquityTransaction({
+    const PopulatedHashgraphLiquityTransaction = this.getPopulatedHashgraphLiquityTransaction({
       rawPopulatedTransaction,
-      signer: this.signer,
       getDetails,
       gasLimit: gas,
     })
 
-    return populatedLiquityTransaction
+    return PopulatedHashgraphLiquityTransaction
   }
 
   async populateTransferCollateralGainToTrove(
     options?: TransactionOptions,
   ): Promise<
-    PopulatedLiquityTransaction<
-      ContractExecuteTransaction,
-      SentLiquityTransaction<
-        TransactionResponse,
-        LiquityReceipt<TransactionReceipt, CollateralGainTransferDetails>
-      >
-    >
+    PopulatedHashgraphLiquityTransaction<CollateralGainTransferDetails, ContractExecuteTransaction>
   > {
     const address = this.getAddressOrUserAddress(options?.from)
 
@@ -2025,14 +1993,13 @@ export class HashgraphLiquity<FetchInstance extends Fetch = Fetch>
 
       return details
     }
-    const populatedLiquityTransaction = getPopulatedLiquityTransaction({
+    const PopulatedHashgraphLiquityTransaction = this.getPopulatedHashgraphLiquityTransaction({
       rawPopulatedTransaction,
-      signer: this.signer,
       getDetails,
       gasLimit: gas,
     })
 
-    return populatedLiquityTransaction
+    return PopulatedHashgraphLiquityTransaction
   }
 
   async populateRedeemHCHF(
@@ -2040,14 +2007,8 @@ export class HashgraphLiquity<FetchInstance extends Fetch = Fetch>
     maxRedemptionRate?: Decimalish,
     options?: TransactionOptions,
   ): Promise<
-    PopulatedLiquityTransaction<
-      ContractExecuteTransaction,
-      SentLiquityTransaction<
-        TransactionResponse,
-        LiquityReceipt<TransactionReceipt, RedemptionDetails>
-      >
-    > &
-      PopulatedRedemption<ContractExecuteTransaction, TransactionResponse, TransactionReceipt>
+    PopulatedHashgraphLiquityTransaction<RedemptionDetails, ContractExecuteTransaction> &
+      PopulatedRedemption<ContractExecuteTransaction, TransactionReceipt, TransactionReceipt>
   > {
     const attemptedHCHFAmount = Decimal.from(amount)
 
@@ -2112,14 +2073,8 @@ export class HashgraphLiquity<FetchInstance extends Fetch = Fetch>
       partialRedemptionLowerHint: Address = AddressZero,
       partialRedemptionHintNICR: Decimal = Decimal.ZERO,
     ): Promise<
-      PopulatedLiquityTransaction<
-        ContractExecuteTransaction,
-        SentLiquityTransaction<
-          TransactionResponse,
-          LiquityReceipt<TransactionReceipt, RedemptionDetails>
-        >
-      > &
-        PopulatedRedemption<ContractExecuteTransaction, TransactionResponse, TransactionReceipt>
+      PopulatedHashgraphLiquityTransaction<RedemptionDetails, ContractExecuteTransaction> &
+        PopulatedRedemption<ContractExecuteTransaction, TransactionReceipt, TransactionReceipt>
     > => {
       const maxRedemptionRateOrDefault =
         maxRedemptionRate !== undefined
@@ -2160,10 +2115,9 @@ export class HashgraphLiquity<FetchInstance extends Fetch = Fetch>
 
         return redemptionDetails
       }
-      const populatedLiquityTransaction = getPopulatedLiquityTransaction({
+      const populatedHashgraphLiquityTransaction = this.getPopulatedHashgraphLiquityTransaction({
         rawPopulatedTransaction,
         getDetails,
-        signer: this.signer,
         gasLimit: gas,
       })
 
@@ -2188,15 +2142,12 @@ export class HashgraphLiquity<FetchInstance extends Fetch = Fetch>
         ? newPopulatedRedemptionWithNewMaxRedemptionRate
         : throwMissingTruncationError
 
-      const populatedRedemption: PopulatedLiquityTransaction<
-        ContractExecuteTransaction,
-        SentLiquityTransaction<
-          TransactionResponse,
-          LiquityReceipt<TransactionReceipt, RedemptionDetails>
-        >
+      const populatedRedemption: PopulatedHashgraphLiquityTransaction<
+        RedemptionDetails,
+        ContractExecuteTransaction
       > &
-        PopulatedRedemption<ContractExecuteTransaction, TransactionResponse, TransactionReceipt> = {
-        ...populatedLiquityTransaction,
+        PopulatedRedemption<ContractExecuteTransaction, TransactionReceipt, TransactionReceipt> = {
+        ...populatedHashgraphLiquityTransaction,
         attemptedHCHFAmount,
         isTruncated,
         redeemableHCHFAmount: truncatedAmount,
@@ -2219,12 +2170,7 @@ export class HashgraphLiquity<FetchInstance extends Fetch = Fetch>
   async populateStakeHLQT(
     amount: Decimalish,
     options?: TransactionOptions,
-  ): Promise<
-    PopulatedLiquityTransaction<
-      ContractExecuteTransaction,
-      SentLiquityTransaction<TransactionResponse, LiquityReceipt<TransactionReceipt, void>>
-    >
-  > {
+  ): Promise<PopulatedHashgraphLiquityTransaction<void, ContractExecuteTransaction>> {
     const functionParameters = TypedContractFunctionParameters<
       HLQTStakingAbi,
       'stake'
@@ -2243,25 +2189,19 @@ export class HashgraphLiquity<FetchInstance extends Fetch = Fetch>
     )
 
     const getDetails = () => undefined
-    const populatedLiquityTransaction = getPopulatedLiquityTransaction({
+    const PopulatedHashgraphLiquityTransaction = this.getPopulatedHashgraphLiquityTransaction({
       rawPopulatedTransaction,
-      signer: this.signer,
       getDetails,
       gasLimit: gas,
     })
 
-    return populatedLiquityTransaction
+    return PopulatedHashgraphLiquityTransaction
   }
 
   async populateUnstakeHLQT(
     amount: Decimalish,
     options?: TransactionOptions,
-  ): Promise<
-    PopulatedLiquityTransaction<
-      ContractExecuteTransaction,
-      SentLiquityTransaction<TransactionResponse, LiquityReceipt<TransactionReceipt, void>>
-    >
-  > {
+  ): Promise<PopulatedHashgraphLiquityTransaction<void, ContractExecuteTransaction>> {
     const functionParameters = TypedContractFunctionParameters<
       HLQTStakingAbi,
       'unstake'
@@ -2280,36 +2220,25 @@ export class HashgraphLiquity<FetchInstance extends Fetch = Fetch>
     )
 
     const getDetails = () => undefined
-    const populatedLiquityTransaction = getPopulatedLiquityTransaction({
+    const PopulatedHashgraphLiquityTransaction = this.getPopulatedHashgraphLiquityTransaction({
       rawPopulatedTransaction,
-      signer: this.signer,
       getDetails,
       gasLimit: gas,
     })
 
-    return populatedLiquityTransaction
+    return PopulatedHashgraphLiquityTransaction
   }
 
   async populateWithdrawGainsFromStaking(
     options?: TransactionOptions,
-  ): Promise<
-    PopulatedLiquityTransaction<
-      ContractExecuteTransaction,
-      SentLiquityTransaction<TransactionResponse, LiquityReceipt<TransactionReceipt, void>>
-    >
-  > {
+  ): Promise<PopulatedHashgraphLiquityTransaction<void, ContractExecuteTransaction>> {
     return this.populateUnstakeHLQT(Decimal.ZERO, options)
   }
 
   async populateRegisterFrontend(
     kickbackRate: Decimalish,
     options?: TransactionOptions,
-  ): Promise<
-    PopulatedLiquityTransaction<
-      ContractExecuteTransaction,
-      SentLiquityTransaction<TransactionResponse, LiquityReceipt<TransactionReceipt, void>>
-    >
-  > {
+  ): Promise<PopulatedHashgraphLiquityTransaction<void, ContractExecuteTransaction>> {
     const functionParameters = TypedContractFunctionParameters<
       StabilityPoolAbi,
       'registerFrontEnd'
@@ -2328,25 +2257,19 @@ export class HashgraphLiquity<FetchInstance extends Fetch = Fetch>
     )
 
     const getDetails = () => undefined
-    const populatedLiquityTransaction = getPopulatedLiquityTransaction({
+    const PopulatedHashgraphLiquityTransaction = this.getPopulatedHashgraphLiquityTransaction({
       rawPopulatedTransaction,
-      signer: this.signer,
       getDetails,
       gasLimit: gas,
     })
 
-    return populatedLiquityTransaction
+    return PopulatedHashgraphLiquityTransaction
   }
 
   async populateApproveUniTokens(
     allowance?: Decimalish,
     options?: TransactionOptions,
-  ): Promise<
-    PopulatedLiquityTransaction<
-      ContractExecuteTransaction,
-      SentLiquityTransaction<TransactionResponse, LiquityReceipt<TransactionReceipt, void>>
-    >
-  > {
+  ): Promise<PopulatedHashgraphLiquityTransaction<void, ContractExecuteTransaction>> {
     if (!allowance) {
       throw new Error('infinite approvals are disallowed. pass an allowance value to approve.')
     }
@@ -2369,25 +2292,19 @@ export class HashgraphLiquity<FetchInstance extends Fetch = Fetch>
     )
 
     const getDetails = () => undefined
-    const populatedLiquityTransaction = getPopulatedLiquityTransaction({
+    const PopulatedHashgraphLiquityTransaction = this.getPopulatedHashgraphLiquityTransaction({
       rawPopulatedTransaction,
-      signer: this.signer,
       getDetails,
       gasLimit: gas,
     })
 
-    return populatedLiquityTransaction
+    return PopulatedHashgraphLiquityTransaction
   }
 
   async populateStakeUniTokens(
     amount: Decimalish,
     options?: TransactionOptions,
-  ): Promise<
-    PopulatedLiquityTransaction<
-      ContractExecuteTransaction,
-      SentLiquityTransaction<TransactionResponse, LiquityReceipt<TransactionReceipt, void>>
-    >
-  > {
+  ): Promise<PopulatedHashgraphLiquityTransaction<void, ContractExecuteTransaction>> {
     const functionParameters = TypedContractFunctionParameters<UnipoolAbi, 'stake'>().addUint256(
       new BigNumber(Decimal.from(amount).hex),
     )
@@ -2405,25 +2322,19 @@ export class HashgraphLiquity<FetchInstance extends Fetch = Fetch>
     )
 
     const getDetails = () => undefined
-    const populatedLiquityTransaction = getPopulatedLiquityTransaction({
+    const PopulatedHashgraphLiquityTransaction = this.getPopulatedHashgraphLiquityTransaction({
       rawPopulatedTransaction,
-      signer: this.signer,
       getDetails,
       gasLimit: gas,
     })
 
-    return populatedLiquityTransaction
+    return PopulatedHashgraphLiquityTransaction
   }
 
   async populateUnstakeUniTokens(
     amount: Decimalish,
     options?: TransactionOptions,
-  ): Promise<
-    PopulatedLiquityTransaction<
-      ContractExecuteTransaction,
-      SentLiquityTransaction<TransactionResponse, LiquityReceipt<TransactionReceipt, void>>
-    >
-  > {
+  ): Promise<PopulatedHashgraphLiquityTransaction<void, ContractExecuteTransaction>> {
     const functionParameters = TypedContractFunctionParameters<UnipoolAbi, 'withdraw'>().addUint256(
       new BigNumber(Decimal.from(amount).hex),
     )
@@ -2441,24 +2352,18 @@ export class HashgraphLiquity<FetchInstance extends Fetch = Fetch>
     )
 
     const getDetails = () => undefined
-    const populatedLiquityTransaction = getPopulatedLiquityTransaction({
+    const PopulatedHashgraphLiquityTransaction = this.getPopulatedHashgraphLiquityTransaction({
       rawPopulatedTransaction,
-      signer: this.signer,
       getDetails,
       gasLimit: gas,
     })
 
-    return populatedLiquityTransaction
+    return PopulatedHashgraphLiquityTransaction
   }
 
   async populateWithdrawHLQTRewardFromLiquidityMining(
     options?: TransactionOptions,
-  ): Promise<
-    PopulatedLiquityTransaction<
-      ContractExecuteTransaction,
-      SentLiquityTransaction<TransactionResponse, LiquityReceipt<TransactionReceipt, void>>
-    >
-  > {
+  ): Promise<PopulatedHashgraphLiquityTransaction<void, ContractExecuteTransaction>> {
     const gas = 3000000 + gasForUnipoolRewardUpdate
     const unfrozenRawPopulatedTransaction = TypedContractExecuteTransaction<UnipoolAbi>({
       contractId: this.saucerSwapPoolContractId,
@@ -2471,24 +2376,18 @@ export class HashgraphLiquity<FetchInstance extends Fetch = Fetch>
     )
 
     const getDetails = () => undefined
-    const populatedLiquityTransaction = getPopulatedLiquityTransaction({
+    const PopulatedHashgraphLiquityTransaction = this.getPopulatedHashgraphLiquityTransaction({
       rawPopulatedTransaction,
-      signer: this.signer,
       getDetails,
       gasLimit: gas,
     })
 
-    return populatedLiquityTransaction
+    return PopulatedHashgraphLiquityTransaction
   }
 
   async populateExitLiquidityMining(
     options?: TransactionOptions,
-  ): Promise<
-    PopulatedLiquityTransaction<
-      ContractExecuteTransaction,
-      SentLiquityTransaction<TransactionResponse, LiquityReceipt<TransactionReceipt, void>>
-    >
-  > {
+  ): Promise<PopulatedHashgraphLiquityTransaction<void, ContractExecuteTransaction>> {
     const gas = 3000000 + gasForUnipoolRewardUpdate
     const unfrozenRawPopulatedTransaction = TypedContractExecuteTransaction<UnipoolAbi>({
       contractId: this.saucerSwapPoolContractId,
@@ -2501,14 +2400,13 @@ export class HashgraphLiquity<FetchInstance extends Fetch = Fetch>
     )
 
     const getDetails = () => undefined
-    const populatedLiquityTransaction = getPopulatedLiquityTransaction({
+    const PopulatedHashgraphLiquityTransaction = this.getPopulatedHashgraphLiquityTransaction({
       rawPopulatedTransaction,
-      signer: this.signer,
       getDetails,
       gasLimit: gas,
     })
 
-    return populatedLiquityTransaction
+    return PopulatedHashgraphLiquityTransaction
   }
 
   // consent manager

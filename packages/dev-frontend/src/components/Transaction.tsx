@@ -257,8 +257,6 @@ export const TransactionMonitor: React.FC = () => {
           finished = true;
 
           if (receipt.status === "succeeded") {
-            console.log({ receipt });
-
             setTransactionState({
               type: "confirmedOneShot",
               id

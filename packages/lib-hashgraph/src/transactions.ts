@@ -1,11 +1,11 @@
-import { Status, Transaction, TransactionReceipt, TransactionResponse } from '@hashgraph/sdk'
+import { AccountId, Status, Transaction, TransactionReceipt } from '@hashgraph/sdk'
 import {
   LiquityReceipt,
   MinedReceipt,
   PopulatedLiquityTransaction,
   SentLiquityTransaction,
 } from '@liquity/lib-base'
-import { HashConnectSigner } from 'hashconnect/dist/signer'
+import { HashConnect } from 'hashconnect'
 
 export const getLiquityReceiptStatus = (
   hashgraphStatus: Status,
@@ -30,10 +30,21 @@ export const getLiquityReceiptStatus = (
 
 export interface GetDetailsOptions<TransactionInstance extends Transaction> {
   rawPopulatedTransaction: TransactionInstance
-  rawSentTransaction: TransactionResponse
   rawReceipt: TransactionReceipt
-  signer: HashConnectSigner
 }
+
+export type HashgraphLiquityReceipt<Details> = LiquityReceipt<TransactionReceipt, Details>
+export type SentHashgraphLiquityTransaction<Details> = SentLiquityTransaction<
+  TransactionReceipt,
+  HashgraphLiquityReceipt<Details>
+>
+export type PopulatedHashgraphLiquityTransaction<
+  Details,
+  RawPopulatedTransaction extends Transaction = Transaction,
+> = PopulatedLiquityTransaction<
+  RawPopulatedTransaction,
+  SentLiquityTransaction<TransactionReceipt, HashgraphLiquityReceipt<Details>>
+>
 
 /**
  * builds the populated -> sent -> receipt pyramid/lasagna
@@ -42,29 +53,26 @@ export interface GetDetailsOptions<TransactionInstance extends Transaction> {
  */
 export const getPopulatedLiquityTransaction = <
   Details,
-  TransactionInstance extends Transaction = Transaction,
+  RawPopulatedTransaction extends Transaction = Transaction,
 >(options: {
   gasLimit: number
-  rawPopulatedTransaction: TransactionInstance
-  signer: HashConnectSigner
+  rawPopulatedTransaction: RawPopulatedTransaction
+  hashConnect: Pick<HashConnect, 'sendTransaction'>
+  accountId: AccountId
   getDetails:
-    | ((options: GetDetailsOptions<TransactionInstance>) => Promise<Details>)
-    | ((options: GetDetailsOptions<TransactionInstance>) => Details)
+    | ((options: GetDetailsOptions<RawPopulatedTransaction>) => Promise<Details>)
+    | ((options: GetDetailsOptions<RawPopulatedTransaction>) => Details)
 }) => {
-  const send = async (): Promise<
-    SentLiquityTransaction<TransactionResponse, LiquityReceipt<TransactionReceipt, Details>>
-  > => {
-    const rawSentTransaction = await options.rawPopulatedTransaction.executeWithSigner(
-      options.signer,
+  const send = async (): Promise<SentHashgraphLiquityTransaction<Details>> => {
+    const rawReceipt = await options.hashConnect.sendTransaction(
+      options.accountId,
+      options.rawPopulatedTransaction,
     )
 
     const waitForReceipt = async (): Promise<MinedReceipt<TransactionReceipt, Details>> => {
       // wait for the receipt before querying
-      const rawReceipt = await rawSentTransaction.getReceiptWithSigner(options.signer)
       const details = await options.getDetails({
         rawPopulatedTransaction: options.rawPopulatedTransaction,
-        signer: options.signer,
-        rawSentTransaction,
         rawReceipt,
       })
 
@@ -85,15 +93,15 @@ export const getPopulatedLiquityTransaction = <
     }
 
     return {
-      rawSentTransaction,
+      rawSentTransaction: rawReceipt,
       waitForReceipt,
       getReceipt: waitForReceipt,
     }
   }
 
-  const populatedTransaction: PopulatedLiquityTransaction<
-    TransactionInstance,
-    SentLiquityTransaction<TransactionResponse, LiquityReceipt<TransactionReceipt, Details>>
+  const populatedTransaction: PopulatedHashgraphLiquityTransaction<
+    Details,
+    RawPopulatedTransaction
   > = {
     rawPopulatedTransaction: options.rawPopulatedTransaction,
     send,
