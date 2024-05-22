@@ -23,7 +23,7 @@ export const UserAccount: React.FC = () => {
 
   return (
     <Flex>
-      <Box>
+      <Flex sx={{ alignItems: "center" }}>
         <Box>
           <Icon name="user-circle" size="lg" />
           <Text as="span" sx={{ ml: 2, fontSize: 1 }}>
@@ -37,10 +37,12 @@ export const UserAccount: React.FC = () => {
           onClick={() => {
             hashConnect.disconnect();
           }}
+          aria-label={t("userAccount.disconnectHashPack")}
+          title={t("userAccount.disconnectHashPack")}
         >
-          {t("userAccount.disconnectHashPack")}
+          <Icon name="window-close" />
         </Button>
-      </Box>
+      </Flex>
 
       <Box
         sx={{
