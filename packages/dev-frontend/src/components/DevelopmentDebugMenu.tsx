@@ -92,7 +92,6 @@ export const DevelopmentDebugMenu: React.FC = () => {
 
           <dt>HCHF</dt>
           <dd>{deployment.hchfTokenAddress}</dd>
-          {userHasAssociatedWithHchf}
           <dd>
             {hchfAssociationError && <p>{hchfAssociationError.message}</p>}
             <LoadingButton
