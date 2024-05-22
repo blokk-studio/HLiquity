@@ -17,6 +17,7 @@ interface HederaContext {
   dissociateFromToken: (options: { tokenAddress: `0x${string}` }) => Promise<void>;
   hasAssociatedWithHchf: boolean;
   hasAssociatedWithHlqt: boolean;
+  hasAssociatedWithLP: boolean;
 }
 
 const noOp = async () => undefined;
@@ -26,6 +27,7 @@ const hederaContext = createContext<HederaContext>({
   dissociateFromToken: noOp,
   hasAssociatedWithHchf: false,
   hasAssociatedWithHlqt: false,
+  hasAssociatedWithLP: false,
 });
 
 export const useHedera = () => {
@@ -77,6 +79,16 @@ export const HederaTokensProvider: React.FC = ({ children }) => {
   const hasAssociatedWithHlqt = tokens.some(token => {
     const isHlqt = token.id === hlqtTokenId;
     return isHlqt;
+  });
+
+  const LPTokenId = deployment
+  ? deployment.addresses.uniToken
+  : undefined;
+
+  const hasAssociatedWithLP = tokens.some(token => {
+    // console.log('tokens', token, LPTokenId);
+    const isLP = token.id === LPTokenId;
+    return isLP;
   });
 
   const associateWithTokenWithContext: HederaContext["associateWithToken"] = async options => {
@@ -162,6 +174,7 @@ export const HederaTokensProvider: React.FC = ({ children }) => {
         approveSpender: approveSpenderWithContext,
         hasAssociatedWithHchf,
         hasAssociatedWithHlqt,
+        hasAssociatedWithLP,
       }}
     >
       {children}

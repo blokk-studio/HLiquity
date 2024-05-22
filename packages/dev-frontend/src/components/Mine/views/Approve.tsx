@@ -1,10 +1,15 @@
 import React, { useEffect } from "react";
-import { Button } from "theme-ui";
+// import { Button } from "theme-ui";
 import { Decimal } from "@liquity/lib-base";
 import { useLiquity } from "../../../hooks/LiquityContext";
-import { Transaction, useMyTransactionState } from "../../Transaction";
+import { useMyTransactionState } from "../../Transaction";
 import { useMineView } from "../context/MineViewContext";
 import { useValidationState } from "../context/useValidationState";
+import { useDeployment } from "../../../configuration/deployments";
+import { useHedera } from "../../../hedera/hedera_context";
+import { BigNumber } from "ethers";
+import { LoadingButton } from "../../LoadingButton";
+import { useLoadingState } from "../../../loading_state";
 // import { useLoadingState } from "../../../loading_state";
 // import { useHedera } from "../../../hedera/hedera_context";
 // import { LoadingButton } from "../../LoadingButton";
@@ -19,12 +24,16 @@ const transactionId = "mine-approve";
 export const Approve: React.FC<ApproveProps> = ({ amount }) => {
   const { dispatchEvent } = useMineView();
   const {
-    liquity: { send: liquity }
+    liquity: { 
+      // send: liquity,
+      connection: { addresses } 
+    },
   } = useLiquity();
 
   const { hasApproved } = useValidationState(amount);
   const transactionState = useMyTransactionState(transactionId);
-  // const { approveSpender } = useHedera();
+  const { approveSpender } = useHedera();
+  const deployment = useDeployment();
 
   useEffect(() => {
     if (transactionState.type === "confirmedOneShot") {
@@ -32,50 +41,69 @@ export const Approve: React.FC<ApproveProps> = ({ amount }) => {
     }
   }, [transactionState.type, dispatchEvent]);
 
-  console.log(amount, hasApproved);
+  // console.log(amount, hasApproved);
 
-  // const { call: approveLPSpender, state: LPApprovalLoadingState } = useLoadingState(async () => {
-  //   if (!amount) {
-  //     throw "cannot approve a withdrawal (negative spending/negative deposit) or deposit of 0";
-  //   }
+  const { hasAssociatedWithLP, associateWithToken } = useHedera();
+  // LP token association
+  const { call: associateWithLP, state: LPAssociationLoadingState } = useLoadingState(
+    async () => {
+      if (!deployment) {
+        const errorMessage = `i cannot get the hchf token id if there is no deployment. please connect to a chain first.`;
+        console.error(errorMessage, "context:", { deployment });
+        throw new Error(errorMessage);
+      }
 
-  //   // if (!deployment) {
-  //   //   const errorMessage = `i cannot get the hlqt token id if there is no deployment. please connect to a chain first.`;
-  //   //   console.error(errorMessage, "context:", { deployment });
-  //   //   throw new Error(errorMessage);
-  //   // }
+      // console.log(deployment);
 
-  //   const contractAddress = "0x0000000000000000000000000000000000428968" as `0x${string}`;
-  //   const tokenAddress = "0x0000000000000000000000000000000000428959";
-  //   const amnt = BigNumber.from(amount.hex);
+      await associateWithToken({ tokenAddress: addresses.uniToken as `0x${string}` });
+    }
+  );
 
-  //   await approveSpender({
-  //     contractAddress,
-  //     tokenAddress,
-  //     amount: amnt
-  //   });
-  // });
+  const { call: approveLPSpender, state: LPApprovalLoadingState } = useLoadingState(async () => {
+    if (!amount) {
+      throw "cannot approve a withdrawal (negative spending/negative deposit) or deposit of 0";
+    }
+
+    if (!deployment) {
+      const errorMessage = `i cannot get the hlqt token id if there is no deployment. please connect to a chain first.`;
+      console.error(errorMessage, "context:", { deployment });
+      throw new Error(errorMessage);
+    }
+
+    const tokenAddress = deployment.addresses.uniToken as `0x${string}`;
+    const contractAddress = deployment.addresses.saucerSwapPool as `0x${string}`;
+    const amnt = BigNumber.from(amount.hex);
+
+    // console.log('addresses', deployment.addresses.uniToken, tokenAddress);
+
+    await approveSpender({
+      contractAddress,
+      tokenAddress: tokenAddress,
+      amount: amnt
+    });
+  });
 
   if (hasApproved) {
     return null;
   }
-  console.log('approve')
+  // console.log('approve', amount, hasAssociatedWithLP, addresses.uniToken)
 
   return (
-    // <LoadingButton
-    //         disabled={!amount}
-    //         loading={LPApprovalLoadingState === "pending"}
-    //         onClick={approveLPSpender}
-    //       >
-    //         Consent to spending {amount.prettify()} LP
-    //       </LoadingButton>
-    <Transaction
-      id={transactionId}
-      send={liquity.approveUniTokens.bind(liquity, undefined)}
-      showFailure="asTooltip"
-      tooltipPlacement="bottom"
-    >
-      <Button sx={{ width: "60%" }}>Approve LP</Button>
-    </Transaction>
+    <>
+      <LoadingButton
+        disabled={!amount || hasAssociatedWithLP}
+        loading={LPApprovalLoadingState === "pending"}
+        onClick={associateWithLP}
+      >
+        Assoc. {amount.prettify()} LP
+      </LoadingButton>
+      <LoadingButton
+        disabled={!amount || hasAssociatedWithLP}
+        loading={LPAssociationLoadingState === "pending"}
+        onClick={approveLPSpender}
+      >
+        Approve {amount.prettify()} LP
+      </LoadingButton>
+    </>
   );
 };
