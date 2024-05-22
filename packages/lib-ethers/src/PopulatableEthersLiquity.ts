@@ -1034,10 +1034,6 @@ export class PopulatableEthersLiquity
     const newToken = await saucerSwapPool.uniToken;
     console.log('saucerSwapPool', saucerSwapPool, newToken);
 
-    console.log('stake final', amount, Decimal.from(amount).prettify());
-    const newToken = await saucerSwapPool.uniToken;
-    console.log('saucerSwapPool', saucerSwapPool, newToken);
-
     return this._wrapSimpleTransaction(
       await saucerSwapPool.estimateAndPopulate.stake(
         { gasLimit: 3000000 },

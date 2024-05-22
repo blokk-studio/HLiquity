@@ -1,22 +1,22 @@
-import {Decimal} from "./Decimal";
-import {Fees} from "./Fees";
-import {HLQTStake} from "./HLQTStake";
-import {StabilityDeposit} from "./StabilityDeposit";
-import {Trove, TroveWithPendingRedistribution, UserTrove} from "./Trove";
-import {FrontendStatus, ReadableLiquity, TroveListingParams} from "./ReadableLiquity";
+import { Decimal } from "./Decimal";
+import { Fees } from "./Fees";
+import { HLQTStake } from "./HLQTStake";
+import { StabilityDeposit } from "./StabilityDeposit";
+import { Trove, TroveWithPendingRedistribution, UserTrove } from "./Trove";
+import { FrontendStatus, ReadableLiquity, TroveListingParams } from "./ReadableLiquity";
 
 /** @internal */
 export type _ReadableLiquityWithExtraParamsBase<T extends unknown[]> = {
     [P in keyof ReadableLiquity]: ReadableLiquity[P] extends (...params: infer A) => infer R
-        ? (...params: [...originalParams: A, ...extraParams: T]) => R
-        : never;
+    ? (...params: [...originalParams: A, ...extraParams: T]) => R
+    : never;
 };
 
 /** @internal */
 export type _LiquityReadCacheBase<T extends unknown[]> = {
     [P in keyof ReadableLiquity]: ReadableLiquity[P] extends (...args: infer A) => Promise<infer R>
-        ? (...params: [...originalParams: A, ...extraParams: T]) => R | undefined
-        : never;
+    ? (...params: [...originalParams: A, ...extraParams: T]) => R | undefined
+    : never;
 };
 
 // Overloads get lost in the mapping, so we need to define them again...
@@ -122,10 +122,24 @@ export class _CachedReadableLiquity<T extends unknown[]>
         );
     }
 
+    async getLPBalance(address?: string, ...extraParams: T): Promise<Decimal> {
+        return (
+            this._cache.getLPBalance(address, ...extraParams) ??
+            this._readable.getLPBalance(address, ...extraParams)
+        );
+    }
+
     async getLPReward(address?: string, ...extraParams: T): Promise<Decimal> {
         return (
             this._cache.getLPReward(address, ...extraParams) ??
             this._readable.getLPReward(address, ...extraParams)
+        );
+    }
+
+    async getLPEarnings(address?: string, ...extraParams: T): Promise<Decimal> {
+        return (
+            this._cache.getLPEarnings(address, ...extraParams) ??
+            this._readable.getLPEarnings(address, ...extraParams)
         );
     }
 
@@ -207,12 +221,12 @@ export class _CachedReadableLiquity<T extends unknown[]>
     getTroves(params: TroveListingParams, ...extraParams: T): Promise<UserTrove[]>;
 
     async getTroves(params: TroveListingParams, ...extraParams: T): Promise<UserTrove[]> {
-        const {beforeRedistribution, ...restOfParams} = params;
+        const { beforeRedistribution, ...restOfParams } = params;
 
         const [totalRedistributed, troves] = await Promise.all([
             beforeRedistribution ? undefined : this.getTotalRedistributed(...extraParams),
-            this._cache.getTroves({beforeRedistribution: true, ...restOfParams}, ...extraParams) ??
-            this._readable.getTroves({beforeRedistribution: true, ...restOfParams}, ...extraParams)
+            this._cache.getTroves({ beforeRedistribution: true, ...restOfParams }, ...extraParams) ??
+            this._readable.getTroves({ beforeRedistribution: true, ...restOfParams }, ...extraParams)
         ]);
 
         if (totalRedistributed) {
