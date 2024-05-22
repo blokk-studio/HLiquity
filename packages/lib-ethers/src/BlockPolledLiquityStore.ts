@@ -126,6 +126,7 @@ export class BlockPolledLiquityStore extends HLiquityStore<BlockPolledLiquitySto
           : { status: "unregistered" as const },
         userHasAssociatedWithHchf: false,
         userHasAssociatedWithHlqt: false,
+        userHasAssociatedWithLpToken: false,
 
         ...(userAddress
           ? {

@@ -31,12 +31,12 @@ export default defineConfig({
       // plugins: [RollupPluginPolyfillNode()]
     }
   },
-  resolve: {
-    alias: {
-      assert: "rollup-plugin-node-polyfills/polyfills/assert",
-      events: "rollup-plugin-node-polyfills/polyfills/events"
-    }
-  },
+  // resolve: {
+  //   alias: {
+  //     assert: "rollup-plugin-node-polyfills/polyfills/assert",
+  //     events: "rollup-plugin-node-polyfills/polyfills/events"
+  //   }
+  // },
   test: {
     globals: true,
     environment: "jsdom",

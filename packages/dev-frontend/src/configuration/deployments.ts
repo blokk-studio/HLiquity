@@ -1,6 +1,5 @@
 import { useHederaChain } from "../hedera/wagmi-chains";
 import { enabledChainIds } from "./enabled_chains";
-import { useChainId } from "wagmi";
 
 export type Address = `0x${string}`;
 
@@ -21,8 +20,7 @@ export type DeploymentAddressesKey =
   | "sortedTroves"
   | "stabilityPool"
   | "gasPool"
-  | "unipool";
-// | 'uniToken'
+  | "saucerSwapPool";
 
 export interface Deployment {
   readonly chainId: number;
