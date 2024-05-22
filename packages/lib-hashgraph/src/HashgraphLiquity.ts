@@ -1404,6 +1404,7 @@ export class HashgraphLiquity<FetchInstance extends Fetch = Fetch>
       rawPopulatedTransaction,
       signer: this.signer,
       getDetails,
+      gasLimit: gas,
     })
 
     return populatedLiquityTransaction
@@ -1445,6 +1446,7 @@ export class HashgraphLiquity<FetchInstance extends Fetch = Fetch>
       rawPopulatedTransaction,
       signer: this.signer,
       getDetails,
+      gasLimit: gas,
     })
 
     return populatedEthersLiquityTransaction
@@ -1531,6 +1533,7 @@ export class HashgraphLiquity<FetchInstance extends Fetch = Fetch>
       rawPopulatedTransaction,
       signer: this.signer,
       getDetails,
+      gasLimit: gas,
     })
 
     return populatedLiquityTransaction
@@ -1628,10 +1631,11 @@ export class HashgraphLiquity<FetchInstance extends Fetch = Fetch>
       SentLiquityTransaction<TransactionResponse, LiquityReceipt<TransactionReceipt, void>>
     >
   > {
+    const gas = 3000000
     const unfrozenRawPopulatedTransaction = TypedContractExecuteTransaction<BorrowerOperationsAbi>({
       contractId: this.borrowerOperationsContractId,
       functionName: 'claimCollateral',
-      gas: 3000000,
+      gas,
     })
 
     const rawPopulatedTransaction = await unfrozenRawPopulatedTransaction.freezeWithSigner(
@@ -1642,6 +1646,7 @@ export class HashgraphLiquity<FetchInstance extends Fetch = Fetch>
       rawPopulatedTransaction,
       signer: this.signer,
       getDetails: () => undefined,
+      gasLimit: gas,
     })
 
     return populatedLiquityTransaction
@@ -1701,6 +1706,7 @@ export class HashgraphLiquity<FetchInstance extends Fetch = Fetch>
     >
   > {
     let unfrozenRawPopulatedTransaction: ContractExecuteTransaction
+    const gas = 3000000 + gasForHLQTIssuance
     if (Array.isArray(addressOrAddresses)) {
       // batch-liquidate multiple addresses
       const functionParameters = TypedContractFunctionParameters<
@@ -1710,7 +1716,7 @@ export class HashgraphLiquity<FetchInstance extends Fetch = Fetch>
 
       unfrozenRawPopulatedTransaction = TypedContractExecuteTransaction<TroveManagerAbi>({
         contractId: this.troveManagerContractId,
-        gas: 3000000 + gasForHLQTIssuance,
+        gas,
         functionName: 'batchLiquidateTroves',
         functionParameters,
       })
@@ -1723,7 +1729,7 @@ export class HashgraphLiquity<FetchInstance extends Fetch = Fetch>
 
       unfrozenRawPopulatedTransaction = TypedContractExecuteTransaction<TroveManagerAbi>({
         contractId: this.troveManagerContractId,
-        gas: 3000000 + gasForHLQTIssuance,
+        gas,
         functionName: 'liquidate',
         functionParameters,
       })
@@ -1751,6 +1757,7 @@ export class HashgraphLiquity<FetchInstance extends Fetch = Fetch>
       rawPopulatedTransaction,
       signer: this.signer,
       getDetails,
+      gasLimit: gas,
     })
 
     return populatedLiquityTransaction
@@ -1773,10 +1780,11 @@ export class HashgraphLiquity<FetchInstance extends Fetch = Fetch>
       'liquidateTroves'
     >().addUint256(new BigNumber(maximumNumberOfTrovesToLiquidate))
 
+    const gas = 3000000 + gasForHLQTIssuance
     const unfrozenRawPopulatedTransaction = TypedContractExecuteTransaction<TroveManagerAbi>({
       contractId: this.troveManagerContractId,
       functionName: 'liquidateTroves',
-      gas: 3000000 + gasForHLQTIssuance,
+      gas,
       functionParameters,
     })
 
@@ -1799,6 +1807,7 @@ export class HashgraphLiquity<FetchInstance extends Fetch = Fetch>
       rawPopulatedTransaction,
       signer: this.signer,
       getDetails,
+      gasLimit: gas,
     })
 
     return populatedLiquityTransaction
@@ -1822,10 +1831,11 @@ export class HashgraphLiquity<FetchInstance extends Fetch = Fetch>
       .addUint256(new BigNumber(Decimal.from(amount).hex))
       .addAddress(frontendAddress)
 
+    const gas = 3000000 + gasForHLQTIssuance
     const unfrozenRawPopulatedTransaction = TypedContractExecuteTransaction<StabilityPoolAbi>({
       contractId: this.stabilityPoolContractId,
       functionName: 'provideToSP',
-      gas: 3000000 + gasForHLQTIssuance,
+      gas,
       functionParameters,
     })
 
@@ -1852,6 +1862,7 @@ export class HashgraphLiquity<FetchInstance extends Fetch = Fetch>
       rawPopulatedTransaction,
       signer: this.signer,
       getDetails,
+      gasLimit: gas,
     })
 
     return populatedLiquityTransaction
@@ -1875,10 +1886,11 @@ export class HashgraphLiquity<FetchInstance extends Fetch = Fetch>
       'withdrawFromSP'
     >().addUint256(new BigNumber(Decimal.from(amount).hex))
 
+    const gas = 3000000 + gasForHLQTIssuance
     const unfrozenRawPopulatedTransaction = TypedContractExecuteTransaction<StabilityPoolAbi>({
       contractId: this.stabilityPoolContractId,
       functionName: 'withdrawFromSP',
-      gas: 3000000 + gasForHLQTIssuance,
+      gas,
       functionParameters,
     })
 
@@ -1901,6 +1913,7 @@ export class HashgraphLiquity<FetchInstance extends Fetch = Fetch>
       rawPopulatedTransaction,
       signer: this.signer,
       getDetails,
+      gasLimit: gas,
     })
 
     return populatedLiquityTransaction
@@ -1922,10 +1935,11 @@ export class HashgraphLiquity<FetchInstance extends Fetch = Fetch>
       'withdrawFromSP'
     >().addUint256(new BigNumber(0))
 
+    const gas = 3000000 + gasForHLQTIssuance
     const unfrozenRawPopulatedTransaction = TypedContractExecuteTransaction<StabilityPoolAbi>({
       contractId: this.stabilityPoolContractId,
       functionName: 'withdrawFromSP',
-      gas: 3000000 + gasForHLQTIssuance,
+      gas,
       functionParameters,
     })
 
@@ -1948,6 +1962,7 @@ export class HashgraphLiquity<FetchInstance extends Fetch = Fetch>
       rawPopulatedTransaction,
       signer: this.signer,
       getDetails,
+      gasLimit: gas,
     })
 
     return populatedLiquityTransaction
@@ -1986,10 +2001,11 @@ export class HashgraphLiquity<FetchInstance extends Fetch = Fetch>
       .addAddress(hints[0])
       .addAddress(hints[1])
 
+    const gas = 3000000 + gasForHLQTIssuance
     const unfrozenRawPopulatedTransaction = TypedContractExecuteTransaction<StabilityPoolAbi>({
       contractId: this.stabilityPoolContractId,
       functionName: 'withdrawETHGainToTrove',
-      gas: 3000000 + gasForHLQTIssuance,
+      gas,
       functionParameters,
     })
 
@@ -2013,6 +2029,7 @@ export class HashgraphLiquity<FetchInstance extends Fetch = Fetch>
       rawPopulatedTransaction,
       signer: this.signer,
       getDetails,
+      gasLimit: gas,
     })
 
     return populatedLiquityTransaction
@@ -2120,9 +2137,10 @@ export class HashgraphLiquity<FetchInstance extends Fetch = Fetch>
         .addUint256(new BigNumber(partialRedemptionHintNICR.hex))
         .addUint256(new BigNumber(redeemMaxIterations))
         .addUint256(new BigNumber(maxRedemptionRateOrDefault.hex))
+      const gas = 3000000 + gasForPotentialLastFeeOperationTimeUpdate
       const unfrozenRawPopulatedTransaction = TypedContractExecuteTransaction<TroveManagerAbi>({
         contractId: this.troveManagerContractId,
-        gas: 3000000 + gasForPotentialLastFeeOperationTimeUpdate,
+        gas,
         functionName: 'redeemCollateral',
         functionParameters,
       })
@@ -2146,6 +2164,7 @@ export class HashgraphLiquity<FetchInstance extends Fetch = Fetch>
         rawPopulatedTransaction,
         getDetails,
         signer: this.signer,
+        gasLimit: gas,
       })
 
       const isTruncated = truncatedAmount.lt(attemptedHCHFAmount)
@@ -2211,10 +2230,11 @@ export class HashgraphLiquity<FetchInstance extends Fetch = Fetch>
       'stake'
     >().addUint256(new BigNumber(Decimal.from(amount).hex))
 
+    const gas = 3000000
     const unfrozenRawPopulatedTransaction = TypedContractExecuteTransaction<HLQTStakingAbi>({
       contractId: this.hlqtStakingContractId,
       functionName: 'stake',
-      gas: 3000000,
+      gas,
       functionParameters,
     })
 
@@ -2227,6 +2247,7 @@ export class HashgraphLiquity<FetchInstance extends Fetch = Fetch>
       rawPopulatedTransaction,
       signer: this.signer,
       getDetails,
+      gasLimit: gas,
     })
 
     return populatedLiquityTransaction
@@ -2246,10 +2267,11 @@ export class HashgraphLiquity<FetchInstance extends Fetch = Fetch>
       'unstake'
     >().addUint256(new BigNumber(Decimal.from(amount).hex))
 
+    const gas = 3000000
     const unfrozenRawPopulatedTransaction = TypedContractExecuteTransaction<HLQTStakingAbi>({
       contractId: this.hlqtStakingContractId,
       functionName: 'unstake',
-      gas: 3000000,
+      gas,
       functionParameters,
     })
 
@@ -2262,6 +2284,7 @@ export class HashgraphLiquity<FetchInstance extends Fetch = Fetch>
       rawPopulatedTransaction,
       signer: this.signer,
       getDetails,
+      gasLimit: gas,
     })
 
     return populatedLiquityTransaction
@@ -2292,10 +2315,11 @@ export class HashgraphLiquity<FetchInstance extends Fetch = Fetch>
       'registerFrontEnd'
     >().addUint256(new BigNumber(Decimal.from(kickbackRate).hex))
 
+    const gas = 3000000
     const unfrozenRawPopulatedTransaction = TypedContractExecuteTransaction<StabilityPoolAbi>({
       contractId: this.stabilityPoolContractId,
       functionName: 'registerFrontEnd',
-      gas: 3000000,
+      gas,
       functionParameters,
     })
 
@@ -2308,6 +2332,7 @@ export class HashgraphLiquity<FetchInstance extends Fetch = Fetch>
       rawPopulatedTransaction,
       signer: this.signer,
       getDetails,
+      gasLimit: gas,
     })
 
     return populatedLiquityTransaction
@@ -2331,10 +2356,11 @@ export class HashgraphLiquity<FetchInstance extends Fetch = Fetch>
       .addAddress(this.saucerSwapPoolContractId.toSolidityAddress() as Address)
       .addUint256(new BigNumber(Decimal.from(allowance).hex))
 
+    const gas = 3000000
     const unfrozenRawPopulatedTransaction = TypedContractExecuteTransaction<IERC20Abi>({
       contractId: getTypedContractId<IERC20Abi>(0, 0, uniTokenAddress as Address),
       functionName: 'approve',
-      gas: 3000000,
+      gas,
       functionParameters,
     })
 
@@ -2347,6 +2373,7 @@ export class HashgraphLiquity<FetchInstance extends Fetch = Fetch>
       rawPopulatedTransaction,
       signer: this.signer,
       getDetails,
+      gasLimit: gas,
     })
 
     return populatedLiquityTransaction
@@ -2365,10 +2392,11 @@ export class HashgraphLiquity<FetchInstance extends Fetch = Fetch>
       new BigNumber(Decimal.from(amount).hex),
     )
 
+    const gas = 3000000 + gasForUnipoolRewardUpdate
     const unfrozenRawPopulatedTransaction = TypedContractExecuteTransaction<UnipoolAbi>({
       contractId: this.saucerSwapPoolContractId,
       functionName: 'stake',
-      gas: 3000000 + gasForUnipoolRewardUpdate,
+      gas,
       functionParameters,
     })
 
@@ -2381,6 +2409,7 @@ export class HashgraphLiquity<FetchInstance extends Fetch = Fetch>
       rawPopulatedTransaction,
       signer: this.signer,
       getDetails,
+      gasLimit: gas,
     })
 
     return populatedLiquityTransaction
@@ -2399,10 +2428,11 @@ export class HashgraphLiquity<FetchInstance extends Fetch = Fetch>
       new BigNumber(Decimal.from(amount).hex),
     )
 
+    const gas = 3000000 + gasForUnipoolRewardUpdate
     const unfrozenRawPopulatedTransaction = TypedContractExecuteTransaction<UnipoolAbi>({
       contractId: this.saucerSwapPoolContractId,
       functionName: 'withdraw',
-      gas: 3000000 + gasForUnipoolRewardUpdate,
+      gas,
       functionParameters,
     })
 
@@ -2415,6 +2445,7 @@ export class HashgraphLiquity<FetchInstance extends Fetch = Fetch>
       rawPopulatedTransaction,
       signer: this.signer,
       getDetails,
+      gasLimit: gas,
     })
 
     return populatedLiquityTransaction
@@ -2428,10 +2459,11 @@ export class HashgraphLiquity<FetchInstance extends Fetch = Fetch>
       SentLiquityTransaction<TransactionResponse, LiquityReceipt<TransactionReceipt, void>>
     >
   > {
+    const gas = 3000000 + gasForUnipoolRewardUpdate
     const unfrozenRawPopulatedTransaction = TypedContractExecuteTransaction<UnipoolAbi>({
       contractId: this.saucerSwapPoolContractId,
       functionName: 'claimReward',
-      gas: 3000000 + gasForUnipoolRewardUpdate,
+      gas,
     })
 
     const rawPopulatedTransaction = await unfrozenRawPopulatedTransaction.freezeWithSigner(
@@ -2443,6 +2475,7 @@ export class HashgraphLiquity<FetchInstance extends Fetch = Fetch>
       rawPopulatedTransaction,
       signer: this.signer,
       getDetails,
+      gasLimit: gas,
     })
 
     return populatedLiquityTransaction
@@ -2456,10 +2489,11 @@ export class HashgraphLiquity<FetchInstance extends Fetch = Fetch>
       SentLiquityTransaction<TransactionResponse, LiquityReceipt<TransactionReceipt, void>>
     >
   > {
+    const gas = 3000000 + gasForUnipoolRewardUpdate
     const unfrozenRawPopulatedTransaction = TypedContractExecuteTransaction<UnipoolAbi>({
       contractId: this.saucerSwapPoolContractId,
       functionName: 'withdrawAndClaim',
-      gas: 3000000 + gasForUnipoolRewardUpdate,
+      gas,
     })
 
     const rawPopulatedTransaction = await unfrozenRawPopulatedTransaction.freezeWithSigner(
@@ -2471,6 +2505,7 @@ export class HashgraphLiquity<FetchInstance extends Fetch = Fetch>
       rawPopulatedTransaction,
       signer: this.signer,
       getDetails,
+      gasLimit: gas,
     })
 
     return populatedLiquityTransaction

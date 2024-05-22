@@ -44,6 +44,7 @@ export const getPopulatedLiquityTransaction = <
   Details,
   TransactionInstance extends Transaction = Transaction,
 >(options: {
+  gasLimit: number
   rawPopulatedTransaction: TransactionInstance
   signer: HashConnectSigner
   getDetails:
@@ -96,6 +97,8 @@ export const getPopulatedLiquityTransaction = <
   > = {
     rawPopulatedTransaction: options.rawPopulatedTransaction,
     send,
+    gasLimit: options.gasLimit,
+    gasHeadroom: 0,
   }
 
   return populatedTransaction
