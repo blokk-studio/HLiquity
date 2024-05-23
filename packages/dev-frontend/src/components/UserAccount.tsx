@@ -4,7 +4,7 @@ import { Text, Flex, Box, Heading, Button } from "theme-ui";
 import { Decimal, LiquityStoreState } from "@liquity/lib-base";
 import { useLiquitySelector } from "@liquity/lib-react";
 
-import { COIN, COLLATERAL_COIN, GT } from "../strings";
+import { COIN, COLLATERAL_COIN, GT, LP } from "../strings";
 import { useLiquity } from "../hooks/LiquityContext";
 import { shortenAddress } from "../utils/shortenAddress";
 
@@ -13,15 +13,16 @@ import { useBondView } from "./Bonds/context/BondViewContext";
 import { useBondAddresses } from "./Bonds/context/BondAddressesContext";
 import { ConnectKitButton } from "connectkit";
 
-const select = ({ accountBalance, hchfBalance, hlqtBalance }: LiquityStoreState) => ({
+const select = ({ accountBalance, hchfBalance, hlqtBalance, lpBalance }: LiquityStoreState) => ({
   accountBalance,
   hchfBalance,
-  hlqtBalance
+  hlqtBalance,
+  lpBalance,
 });
 
 export const UserAccount: React.FC = () => {
   const { account } = useLiquity();
-  const { accountBalance, hchfBalance: realHchfBalance, hlqtBalance } = useLiquitySelector(select);
+  const { accountBalance, hchfBalance: realHchfBalance, hlqtBalance, lpBalance } = useLiquitySelector(select);
   const { hchfBalance: customHchfBalance } = useBondView();
   const { LUSD_OVERRIDE_ADDRESS } = useBondAddresses();
 
@@ -55,7 +56,8 @@ export const UserAccount: React.FC = () => {
         {([
           [COLLATERAL_COIN, accountBalance],
           [COIN, Decimal.from(hchfBalance || 0)],
-          [GT, Decimal.from(hlqtBalance)]
+          [GT, Decimal.from(hlqtBalance)],
+          [LP, Decimal.from(lpBalance)],
         ] as const).map(([currency, balance], i) => (
           <Flex key={i} sx={{ ml: 3, flexDirection: "column" }}>
             <Heading sx={{ fontSize: 1 }}>{currency}</Heading>
