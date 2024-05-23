@@ -176,7 +176,7 @@ export const SystemStats: React.FC<SystemStatsProps> = ({ variant = "info", show
         <Box sx={{ fontSize: 0 }}>
           Contracts version:{" "}
           {contractsVersion ? (
-            <Link sx={{ color: "info" }} href={`https://github.com/SwisscoastAG/HLiquity/commit/${contractsVersion}`}>
+            <Link target="_blank" sx={{ color: "info" }} href={`https://github.com/SwisscoastAG/HLiquity/commit/${contractsVersion}`}>
               {contractsVersion.substring(0, 7)}
             </Link>
           ) : (
@@ -189,6 +189,7 @@ export const SystemStats: React.FC<SystemStatsProps> = ({ variant = "info", show
           {import.meta.env.VITE_APP_VERSION ? (
             <Link
               sx={{ color: "info" }}
+              target="_blank"
               href={`https://github.com/blokk-studio/HLiquity/commit/${import.meta.env.VITE_APP_VERSION
                 }`}
             >
@@ -220,7 +221,7 @@ export const SystemStats: React.FC<SystemStatsProps> = ({ variant = "info", show
         <Box sx={{ fontSize: 0 }}>
           HCHF Token ID:{" "}
           {deployment ? (
-            <Link sx={{ color: "info" }} href={getHederaLink(deployment.hchfTokenAddress, chain?.id)}>
+            <Link target="_blank" sx={{ color: "info" }} href={getHederaLink(deployment.hchfTokenAddress, chain?.id)}>
               {TokenId.fromSolidityAddress(deployment.hchfTokenAddress).toString()}
             </Link>
           ) : (
@@ -230,7 +231,7 @@ export const SystemStats: React.FC<SystemStatsProps> = ({ variant = "info", show
         <Box sx={{ fontSize: 0 }}>
           HLQT Token ID:{" "}
           {deployment ? (
-            <Link sx={{ color: "info" }} href={getHederaLink(deployment.hlqtTokenAddress, chain?.id)}>
+            <Link target="_blank" sx={{ color: "info" }} href={getHederaLink(deployment.hlqtTokenAddress, chain?.id)}>
               {TokenId.fromSolidityAddress(deployment.hlqtTokenAddress).toString()}
             </Link>
           ) : (
