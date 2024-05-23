@@ -177,6 +177,7 @@ export const SystemStats: React.FC<SystemStatsProps> = ({ variant = "info", show
           Contracts version:{" "}
           {contractsVersion ? (
             <Link
+              target="_blank"
               sx={{ color: "info" }}
               href={`https://github.com/SwisscoastAG/HLiquity/commit/${contractsVersion}`}
             >
@@ -192,6 +193,7 @@ export const SystemStats: React.FC<SystemStatsProps> = ({ variant = "info", show
           {import.meta.env.VITE_APP_VERSION ? (
             <Link
               sx={{ color: "info" }}
+              target="_blank"
               href={`https://github.com/blokk-studio/HLiquity/commit/${
                 import.meta.env.VITE_APP_VERSION
               }`}
@@ -225,6 +227,7 @@ export const SystemStats: React.FC<SystemStatsProps> = ({ variant = "info", show
           HCHF Token ID:{" "}
           {deployment ? (
             <Link
+              target="_blank"
               sx={{ color: "info" }}
               href={getHederaLink(deployment.hchfTokenAddress, chain?.id)}
             >
@@ -238,6 +241,7 @@ export const SystemStats: React.FC<SystemStatsProps> = ({ variant = "info", show
           HLQT Token ID:{" "}
           {deployment ? (
             <Link
+              target="_blank"
               sx={{ color: "info" }}
               href={getHederaLink(deployment.hlqtTokenAddress, chain?.id)}
             >
@@ -250,7 +254,10 @@ export const SystemStats: React.FC<SystemStatsProps> = ({ variant = "info", show
         <Box sx={{ fontSize: 0 }}>
           LP Token ID:{" "}
           {deployment ? (
-            <Link sx={{ color: "info" }} href={getHederaLink(deployment.addresses.uniToken, chain?.id)}>
+            <Link
+              sx={{ color: "info" }}
+              href={getHederaLink(deployment.addresses.uniToken, chain?.id)}
+            >
               {TokenId.fromSolidityAddress(deployment.addresses.uniToken).toString()}
             </Link>
           ) : (

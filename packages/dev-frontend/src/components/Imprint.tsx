@@ -45,15 +45,15 @@ export const Imprint: React.FC = () => {
       <li sx={listSX}>
         <h2>Legal Stuff</h2>
 
-        <Link href="/">Imprint</Link>
-        <Link href="/">Privacy policy</Link>
+        <Link href="/" target="_blank">Imprint</Link>
+        <Link href="/" target="_blank">Privacy policy</Link>
       </li>
       <li sx={listSX}>
         <h2>Social Media</h2>
 
-        <Link href="/">Twitter</Link>
-        <Link href="/">LinkedIn</Link>
-        <Link href="/">GitHub</Link>
+        <Link href="/" target="_blank">Twitter</Link>
+        <Link href="/" target="_blank">LinkedIn</Link>
+        <Link href="/" target="_blank">GitHub</Link>
       </li>
     </ul>
   );
