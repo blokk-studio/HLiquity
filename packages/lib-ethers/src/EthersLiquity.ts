@@ -638,7 +638,6 @@ export class EthersLiquity
    * Throws {@link EthersTransactionFailedError} in case of transaction failure.
    */
   approveUniTokens(allowance?: Decimalish, overrides?: EthersTransactionOverrides): Promise<void> {
-    console.log('allowance', allowance)
     return this.send.approveUniTokens(allowance, overrides).then(waitForSuccess);
   }
 

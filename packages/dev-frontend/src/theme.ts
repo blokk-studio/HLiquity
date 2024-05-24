@@ -49,6 +49,7 @@ const buttonBase: ThemeUIStyleObject = {
   alignItems: "center",
   justifyContent: "center",
   fontSize: 4,
+  fontWeight: 300,
 
   ":enabled": { cursor: "pointer" }
 };
@@ -61,7 +62,7 @@ const button: ThemeUIStyleObject = {
   // transition: "box-shadow .5s, border .2s",
   color: "primary",
   borderRadius: 2,
-  fontWeight: "regular",
+  fontWeight: 300,
   fontFamily: "inherit",
 
   ":disabled": {
@@ -118,7 +119,7 @@ const infoCard: ThemeUIStyleObject = {
   h2: {
     mb: 2,
     fontSize: cardHeadingFontSize
-  }
+  },
 };
 
 const formBase: ThemeUIStyleObject = {
@@ -184,12 +185,12 @@ const theme: Theme = {
   fontSizes: [12, 14, 16, 20, 24, 32, 48, 64, 96],
 
   fontWeights: {
-    body: 400,
-    heading: 600,
+    body: 300,
+    heading: 700,
 
-    light: 200,
-    medium: 500,
-    bold: 600
+    light: 100,
+    medium: 300,
+    bold: 700
   },
 
   lineHeights: {
@@ -313,6 +314,11 @@ const theme: Theme = {
         // bg: "muted",
 
         fontSize: cardHeadingFontSize
+      },
+
+      "h3": {
+        fontSize: "20px",
+        fontWeight: 500,
       }
     },
 

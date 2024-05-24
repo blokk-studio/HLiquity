@@ -5,6 +5,8 @@ import { useLiquity } from "../../../hooks/LiquityContext";
 import { Transaction, useMyTransactionState } from "../../Transaction";
 import { useValidationState } from "../context/useValidationState";
 import { useMineView } from "../context/MineViewContext";
+import { LP } from "../../../strings";
+import { useHedera } from "../../../hedera/hedera_context";
 
 type ConfirmProps = {
   amount: Decimal;
@@ -18,12 +20,10 @@ export const Confirm: React.FC<ConfirmProps> = ({ amount }) => {
     liquity: { send: liquity }
   } = useLiquity();
 
-  const transactionState = useMyTransactionState(transactionId);
-  const { isValid, isWithdrawing, amountChanged } = useValidationState(amount);
+  const { hasAssociatedWithLP } = useHedera();
 
-  console.log('isWithdrawing', isWithdrawing);
-  console.log('isValid', isValid);
-  console.log('amountChanged', amountChanged.prettify(4));
+  const transactionState = useMyTransactionState(transactionId);
+  const { isValid, isWithdrawing, amountChanged, hasApproved } = useValidationState(amount);
 
   const transactionAction = isWithdrawing
     ? liquity.unstakeUniTokens.bind(liquity, amountChanged)
@@ -38,13 +38,17 @@ export const Confirm: React.FC<ConfirmProps> = ({ amount }) => {
   }, [transactionState.type, dispatchEvent]);
 
   return (
-    <Transaction
-      id={transactionId}
-      send={transactionAction}
-      showFailure="asTooltip"
-      tooltipPlacement="bottom"
-    >
-      <Button disabled={shouldDisable}>Confirm</Button>
-    </Transaction>
+    <>
+      {
+        (hasAssociatedWithLP && hasApproved) && <Transaction
+          id={transactionId}
+          send={transactionAction}
+          showFailure="asTooltip"
+          tooltipPlacement="bottom"
+        >
+          <Button disabled={shouldDisable}>{isWithdrawing ? "Unstake" : "Stake"} {amountChanged.prettify(2)} {LP}</Button>
+        </Transaction>
+      }
+    </>
   );
 };

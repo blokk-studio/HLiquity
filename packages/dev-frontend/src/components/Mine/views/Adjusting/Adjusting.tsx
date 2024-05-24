@@ -17,18 +17,20 @@ import { Validation } from "../Validation";
 const selector = ({
   liquidityMiningStake,
   liquidityMiningHLQTReward,
-  uniTokenBalance
+  uniTokenBalance,
+  totalStakedUniTokens
 }: LiquityStoreState) => ({
   liquidityMiningStake,
   liquidityMiningHLQTReward,
-  uniTokenBalance
+  uniTokenBalance,
+  totalStakedUniTokens
 });
 
 const transactionId = "mine-stake";
 
 export const Adjusting: React.FC = () => {
   const { dispatchEvent } = useMineView();
-  const { liquidityMiningStake, liquidityMiningHLQTReward, uniTokenBalance } = useLiquitySelector(
+  const { liquidityMiningStake, liquidityMiningHLQTReward, uniTokenBalance, totalStakedUniTokens } = useLiquitySelector(
     selector
   );
   const [amount, setAmount] = useState<Decimal>(liquidityMiningStake);
@@ -42,6 +44,7 @@ export const Adjusting: React.FC = () => {
   const isDirty = !amount.eq(liquidityMiningStake);
   const maximumAmount = liquidityMiningStake.add(uniTokenBalance);
   const hasSetMaximumAmount = amount.eq(maximumAmount);
+  const poolShare = liquidityMiningStake.mulDiv(100, totalStakedUniTokens);
 
   const handleCancelPressed = useCallback(() => {
     dispatchEvent("CANCEL_PRESSED");
@@ -74,17 +77,22 @@ export const Adjusting: React.FC = () => {
           maxAmount={maximumAmount.toString()}
           maxedOut={hasSetMaximumAmount}
         ></EditableRow>
-
+        <StaticRow
+          label="Pool share"
+          inputId="deposit-share"
+          amount={poolShare.prettify(4)}
+          unit="%"
+        />
         <StaticRow
           label="Reward"
           inputId="mine-reward-amount"
-          amount={liquidityMiningHLQTReward.prettify(4)}
+          amount={liquidityMiningHLQTReward.prettify()}
           color={liquidityMiningHLQTReward.nonZero && "success"}
           unit={GT}
         />
 
         {isDirty && <Validation amount={amount} />}
-        {isDirty && <Description amount={amount} />}
+        <Description amount={amount} />
 
         <Flex variant="layout.actions">
           <Button variant="cancel" onClick={handleCancelPressed}>

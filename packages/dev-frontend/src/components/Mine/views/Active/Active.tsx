@@ -9,17 +9,17 @@ import { useMyTransactionState } from "../../../Transaction";
 import { DisabledEditableRow, StaticRow } from "../../../Trove/Editor";
 import { useMineView } from "../../context/MineViewContext";
 import { ClaimReward } from "./ClaimReward";
-import { UnstakeAndClaim } from "../UnstakeAndClaim";
 
-const selector = ({ liquidityMiningStake, liquidityMiningHLQTReward }: LiquityStoreState) => ({
+const selector = ({ liquidityMiningStake, liquidityMiningHLQTReward, totalStakedUniTokens }: LiquityStoreState) => ({
   liquidityMiningStake,
-  liquidityMiningHLQTReward
+  liquidityMiningHLQTReward,
+  totalStakedUniTokens
 });
 const transactionId = /mine-/i;
 
 export const Active: React.FC = () => {
   const { dispatchEvent } = useMineView();
-  const { liquidityMiningStake, liquidityMiningHLQTReward } = useLiquitySelector(selector);
+  const { liquidityMiningStake, liquidityMiningHLQTReward, totalStakedUniTokens } = useLiquitySelector(selector);
 
   const handleAdjustPressed = useCallback(() => {
     dispatchEvent("ADJUST_PRESSED");
@@ -29,6 +29,8 @@ export const Active: React.FC = () => {
   const isTransactionPending =
     transactionState.type === "waitingForApproval" ||
     transactionState.type === "waitingForConfirmation";
+
+  const poolShare = liquidityMiningStake.mulDiv(100, totalStakedUniTokens);
 
   return (
     <Card>
@@ -44,9 +46,15 @@ export const Active: React.FC = () => {
             unit={LP}
           />
           <StaticRow
+            label="Pool share"
+            inputId="deposit-share"
+            amount={poolShare.prettify(4)}
+            unit="%"
+          />
+          <StaticRow
             label="Reward"
             inputId="mine-reward"
-            amount={liquidityMiningHLQTReward.prettify(4)}
+            amount={liquidityMiningHLQTReward.prettify()}
             color={liquidityMiningHLQTReward.nonZero && "success"}
             unit={GT}
           />
@@ -58,9 +66,6 @@ export const Active: React.FC = () => {
             &nbsp;Adjust
           </Button>
           <ClaimReward />
-        </Flex>
-        <Flex>
-          <UnstakeAndClaim />
         </Flex>
       </Box>
       {isTransactionPending && <LoadingOverlay />}
