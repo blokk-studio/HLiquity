@@ -103,9 +103,57 @@ const App = () => {
         styles={css`
         @font-face {
           font-family: "museo";
+          src: url('fonts/Museo_Sans_Cyrl_100.ttf') format("truetype");
+          font-style: normal;
+          font-weight: 100;
+        }
+        @font-face {
+          font-family: "museo";
+          src: url('fonts/Museo_Sans_Cyrl_100_Italic.ttf') format("truetype");
+          font-style: italic;
+          font-weight: 100;
+        }
+        @font-face {
+          font-family: "museo";
           src: url('fonts/Museo_Sans_Cyrl_300.ttf') format("truetype");
           font-style: normal;
           font-weight: 300;
+        }
+        @font-face {
+          font-family: "museo";
+          src: url('fonts/Museo_Sans_Cyrl_300_Italic.ttf') format("truetype");
+          font-style: italic;
+          font-weight: 300;
+        }
+        @font-face {
+          font-family: "museo";
+          src: url('fonts/Museo_Sans_Cyrl_500.ttf') format("truetype");
+          font-style: normal;
+          font-weight: 500;
+        }
+        @font-face {
+          font-family: "museo";
+          src: url('fonts/Museo_Sans_Cyrl_500_Italic.ttf') format("truetype");
+          font-style: italic;
+          font-weight: 500;
+        }
+        @font-face {
+          font-family: "museo";
+          src: url('fonts/Museo_Sans_Cyrl_700.ttf') format("truetype");
+          font-style: normal;
+          font-weight: 700;
+        }
+        @font-face {
+          font-family: "museo";
+          src: url('fonts/Museo_Sans_Cyrl_700_Italic.ttf') format("truetype");
+          font-style: italic;
+          font-weight: 700;
+        }
+        @font-face {
+          font-family: "museo";
+          src: url('fonts/Museo_Sans_Cyrl_900_Italic.ttf') format("truetype");
+          font-style: italic;
+          font-weight: 900;
         }
       `}
       />

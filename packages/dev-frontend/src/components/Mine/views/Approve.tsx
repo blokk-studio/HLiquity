@@ -10,6 +10,7 @@ import { useHedera } from "../../../hedera/hedera_context";
 import { BigNumber } from "ethers";
 import { LoadingButton } from "../../LoadingButton";
 import { useLoadingState } from "../../../loading_state";
+import { LP } from "../../../strings";
 // import { useLoadingState } from "../../../loading_state";
 // import { useHedera } from "../../../hedera/hedera_context";
 // import { LoadingButton } from "../../LoadingButton";
@@ -24,9 +25,9 @@ const transactionId = "mine-approve";
 export const Approve: React.FC<ApproveProps> = ({ amount }) => {
   const { dispatchEvent } = useMineView();
   const {
-    liquity: { 
+    liquity: {
       // send: liquity,
-      connection: { addresses } ,
+      connection: { addresses },
       store
     },
   } = useLiquity();
@@ -88,27 +89,33 @@ export const Approve: React.FC<ApproveProps> = ({ amount }) => {
     });
   });
 
-  if (hasApproved) {
+  if (hasApproved && hasAssociatedWithLP) {
     return null;
   }
   // console.log('approve', amount, hasApproved, !amount || hasApproved || !hasAssociatedWithLP)
 
   return (
     <>
-      <LoadingButton
-        disabled={!amount || hasApproved}
-        loading={LPAssociationLoadingState === "pending"}
-        onClick={associateWithLP}
-      >
-        Assoc. {amount.prettify()} LP
-      </LoadingButton>
-      <LoadingButton
-        disabled={!amount || hasApproved || !hasAssociatedWithLP}
-        loading={LPApprovalLoadingState === "pending"}
-        onClick={approveLPSpender}
-      >
-        Approve {amount.prettify()} LP
-      </LoadingButton>
+      {
+        !hasAssociatedWithLP &&
+        <LoadingButton
+          disabled={!amount}
+          loading={LPAssociationLoadingState === "pending"}
+          onClick={associateWithLP}
+        >
+          Consent to spending {amount.prettify(2)} {LP}
+        </LoadingButton>
+      }
+      {
+        (!hasApproved && hasAssociatedWithLP) &&
+        <LoadingButton
+          disabled={!amount}
+          loading={LPApprovalLoadingState === "pending"}
+          onClick={approveLPSpender}
+        >
+          Consent to spending {amount.prettify(2)} {LP}
+        </LoadingButton>
+      }
     </>
   );
 };

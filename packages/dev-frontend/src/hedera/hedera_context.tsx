@@ -82,14 +82,12 @@ export const HederaTokensProvider: React.FC = ({ children }) => {
   });
 
   const LPTokenId = deployment
-  ? deployment.addresses.uniToken
+  ? TokenId.fromSolidityAddress(deployment.addresses.uniToken).toString()
   : undefined;
 
   const hasAssociatedWithLP = tokens.some(token => {
-    return true;
-    // console.log('tokens', token, LPTokenId);
-    // const isLP = token.id === LPTokenId;
-    // return isLP;
+    const isLP = token.id === LPTokenId;
+    return isLP;
   });
 
   const associateWithTokenWithContext: HederaContext["associateWithToken"] = async options => {

@@ -4,13 +4,12 @@ import { useMineView } from "../../context/MineViewContext";
 import { StaticRow } from "../../../Trove/Editor";
 import { useLiquitySelector } from "@liquity/lib-react";
 import { LiquityStoreState } from "@liquity/lib-base";
+import { InfoMessage } from "../../../InfoMessage";
+import { LP } from "../../../../strings";
 
-const select = ({ lpBalance, lpEarnings, lpReward, liquidityMiningStake, uniTokenAllowance }: LiquityStoreState) => ({
-  lpBalance,
-  lpEarnings,
+const select = ({ lpReward, liquidityMiningStake }: LiquityStoreState) => ({
   lpReward,
   liquidityMiningStake,
-  uniTokenAllowance,
 });
 
 export const Inactive: React.FC = () => {
@@ -20,9 +19,7 @@ export const Inactive: React.FC = () => {
     dispatchEvent("STAKE_PRESSED");
   }, [dispatchEvent]);
 
-  const { lpBalance, lpEarnings, lpReward, liquidityMiningStake, uniTokenAllowance } = useLiquitySelector(select);
-
-  // console.log('lp stats', lpBalance.prettify(), lpEarnings.prettify(), lpReward.prettify(), uniTokenAllowance.prettify());
+  const { lpReward, liquidityMiningStake } = useLiquitySelector(select);
 
   return (
     <Card>
@@ -30,20 +27,23 @@ export const Inactive: React.FC = () => {
         SaucerSwap LP Staking
       </Heading>
       <Box sx={{ p: [2, 3] }}>
-      <StaticRow
-        label="Staked"
-        inputId="deposit-share"
-        amount={liquidityMiningStake.prettify()}
-        unit="LP"
-      />
-      <StaticRow
-        label="Reward Per Token"
-        inputId="deposit-share"
-        amount={lpReward.prettify()}
-        unit=""
-      />
+        <InfoMessage title={`You haven't staked ${LP} yet.`}>
+
+        </InfoMessage>
+        <StaticRow
+          label="Staked"
+          inputId="deposit-share"
+          amount={liquidityMiningStake.prettify()}
+          unit="LP"
+        />
+        <StaticRow
+          label="Reward Per Token"
+          inputId="deposit-share"
+          amount={lpReward.prettify()}
+          unit=""
+        />
         <Flex variant="layout.actions">
-          <Button onClick={handleStakePressed}>Stake</Button>
+          <Button onClick={handleStakePressed}>Start staking</Button>
         </Flex>
       </Box>
     </Card>
