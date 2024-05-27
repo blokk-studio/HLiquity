@@ -19,11 +19,8 @@ import {
 import { COLLATERAL_COIN } from "../../strings";
 import { Step } from "../Steps";
 import { useLiquity } from "../../hooks/LiquityContext";
-import { useHedera } from "../../hedera/hedera_context";
 import { useLoadingState } from "../../loading_state";
-import { BigNumber } from "ethers";
 import { LoadingButton } from "../LoadingButton";
-import { useDeployment } from "../../hooks/deployments";
 
 const init = ({ trove }: LiquityStoreState) => ({
   original: trove,
@@ -219,35 +216,15 @@ export const TroveManager: React.FC<TroveManagerProps> = ({ collateral, debt }) 
   }, [myTransactionState, dispatch, dispatchEvent]);
 
   // consent & approval
-  const {
-    liquity: {
-      connection: { addresses }
-    }
-  } = useLiquity();
+  const { liquity } = useLiquity();
 
-  const deployment = useDeployment();
-  const { approveSpender } = useHedera();
   // hchf spender approval
   const { call: approveHchfSpender, state: hchfApprovalLoadingState } = useLoadingState(async () => {
     if (!validChange?.params.repayHCHF) {
       throw "cannot approve a withdrawal (negative spending/negative deposit) or deposit of 0";
     }
 
-    if (!deployment) {
-      const errorMessage = `i cannot get the hchf token id if there is no deployment. please connect to a chain first.`;
-      console.error(errorMessage, "context:", { deployment });
-      throw new Error(errorMessage);
-    }
-
-    const contractAddress = addresses.hchfToken as `0x${string}`;
-    const tokenAddress = deployment.hchfTokenAddress;
-    const amount = BigNumber.from(validChange.params.repayHCHF.bigNumber);
-
-    await approveSpender({
-      contractAddress,
-      tokenAddress,
-      amount
-    });
+    await liquity.approveHchfToSpendHchf(validChange.params.repayHCHF);
   });
 
   const transactionSteps: Step[] = [

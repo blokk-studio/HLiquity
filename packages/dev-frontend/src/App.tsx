@@ -17,7 +17,6 @@ import { AppLoader } from "./components/AppLoader";
 import { useAsyncValue } from "./hooks/AsyncValue";
 import { useHederaChains } from "./hooks/chains";
 import { AuthenticationProvider, LoginForm } from "./authentication";
-import { HederaTokensProvider } from "./hedera/hedera_context";
 import { useConfiguration } from "./configuration";
 import "./App.scss";
 import {
@@ -135,35 +134,33 @@ const App = () => {
                           loader={<AppLoader content={<Heading>Setting up HashPack</Heading>} />}
                         >
                           <TransactionProvider>
-                            <HederaTokensProvider>
-                              <LiquityProvider
-                                unsupportedNetworkFallback={
-                                  <UnsupportedNetworkFallback availableNetworks={chains} />
-                                }
-                                unsupportedMainnetFallback={
-                                  <UnsupportedNetworkFallback availableNetworks={chains} />
-                                }
-                              >
-                                <LiquityConsumer>
-                                  {liquityContext => {
-                                    if (!liquityContext) {
-                                      return;
-                                    }
+                            <LiquityProvider
+                              unsupportedNetworkFallback={
+                                <UnsupportedNetworkFallback availableNetworks={chains} />
+                              }
+                              unsupportedMainnetFallback={
+                                <UnsupportedNetworkFallback availableNetworks={chains} />
+                              }
+                            >
+                              <LiquityConsumer>
+                                {liquityContext => {
+                                  if (!liquityContext) {
+                                    return;
+                                  }
 
-                                    return (
-                                      <LiquityStoreProvider
-                                        store={liquityContext.store}
-                                        loader={
-                                          <AppLoader content={<Heading>Loading data</Heading>} />
-                                        }
-                                      >
-                                        <LiquityFrontend />
-                                      </LiquityStoreProvider>
-                                    );
-                                  }}
-                                </LiquityConsumer>
-                              </LiquityProvider>
-                            </HederaTokensProvider>
+                                  return (
+                                    <LiquityStoreProvider
+                                      store={liquityContext.store}
+                                      loader={
+                                        <AppLoader content={<Heading>Loading data</Heading>} />
+                                      }
+                                    >
+                                      <LiquityFrontend />
+                                    </LiquityStoreProvider>
+                                  );
+                                }}
+                              </LiquityConsumer>
+                            </LiquityProvider>
                           </TransactionProvider>
                         </HashConnectSessionDataLoader>
                       );
