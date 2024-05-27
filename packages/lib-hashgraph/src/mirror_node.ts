@@ -13,11 +13,17 @@ export const fetchTokens = async <FetchInstance extends Fetch>(options: {
   accountAddress: `0x${string}`
   fetch: FetchInstance
 }) => {
+  // usually getting stale responses
+  await new Promise((resolve) => setTimeout(resolve, 4000))
+
   const accountAddressUrlSegment = options.accountAddress.replace(/^0x/, '')
   const response = await options.fetch(
     `${options.apiBaseUrl}/accounts/${accountAddressUrlSegment}/tokens`,
     {
       method: 'GET',
+      headers: {
+        'Cache-Control': 'no-cache',
+      },
     },
   )
 
