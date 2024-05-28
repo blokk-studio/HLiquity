@@ -252,7 +252,7 @@ export const TroveManager: React.FC<TroveManagerProps> = ({ collateral, debt }) 
     {
       title: "Approve HCHF spender",
       status: hchfApprovalLoadingState === "error" ? "danger" : hchfApprovalLoadingState,
-      description: "You have to consent to the HCHF contract spending your HCHF tokens."
+      description: "You have to approve the HCHF contract to spend your HCHF tokens."
     },
     {
       title: "Close your trove",
@@ -292,7 +292,7 @@ export const TroveManager: React.FC<TroveManagerProps> = ({ collateral, debt }) 
             loading={hchfApprovalLoadingState === "pending"}
             onClick={approveHchfSpender}
           >
-            Consent to spending {validChange?.params.repayHCHF?.toString(2)} HCHF
+            Approve spending {validChange?.params.repayHCHF?.toString(2)} HCHF
           </LoadingButton>
         ) : validChange ? (
           <TroveAction

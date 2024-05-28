@@ -120,8 +120,8 @@ export const Opening: React.FC = () => {
         ? "danger"
         : hchfAssociationLoadingState,
       description: hasAssociatedWithHchf
-        ? "You've already consented to receiving HCHF."
-        : "You have to consent to receiving HCHF tokens before you can use HLiquity."
+        ? "You've already associated with HCHF."
+        : "You have to associate with HCHF tokens before you can use HLiquity."
     },
     {
       title: "Open the trove",
@@ -264,7 +264,7 @@ export const Opening: React.FC = () => {
               disabled={!stableTroveChange || hchfAssociationLoadingState === "pending"}
               sx={{ gap: "1rem" }}
             >
-              Consent to receiving HCHF
+              Associate with HCHF
               {hchfAssociationLoadingState === "pending" && (
                 <Spinner size="1rem" color="currentColor" />
               )}

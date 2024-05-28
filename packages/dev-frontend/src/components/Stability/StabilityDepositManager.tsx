@@ -211,8 +211,8 @@ export const StabilityDepositManager: React.FC = () => {
         ? "danger"
         : hlqtAssociationLoadingState,
       description: hasAssociatedWithHlqt
-        ? "You've already consented to receiving HLQT."
-        : "You have to consent to receiving HLQT tokens before you can use HLiquity."
+        ? "You've already associated with HLQT."
+        : "You have to associate with HLQT tokens before you can use HLiquity."
     });
   }
   if (validChange?.withdrawHCHF) {
@@ -224,15 +224,15 @@ export const StabilityDepositManager: React.FC = () => {
         ? "danger"
         : hlqtAssociationLoadingState,
       description: hasAssociatedWithHchf
-        ? "You've already consented to receiving HCHF."
-        : "You have to consent to receiving HCHF tokens before you can use HLiquity."
+        ? "You've already associated with HCHF."
+        : "You have to associate with HCHF tokens before you can use HLiquity."
     });
   }
   if (needsHchfSpenderApproval) {
     transactionSteps.push({
       title: "Approve HCHF spender",
       status: hchfApprovalLoadingState === "error" ? "danger" : hchfApprovalLoadingState,
-      description: "You have to consent to the HCHF contract spending your HCHF tokens."
+      description: "You have to approve the HCHF contract to spend your HCHF tokens."
     });
   }
   transactionSteps.push({
@@ -269,7 +269,7 @@ export const StabilityDepositManager: React.FC = () => {
             loading={hlqtAssociationLoadingState === "pending"}
             onClick={associateWithHlqt}
           >
-            Consent to receiving HLQT
+            Associate with HLQT
           </LoadingButton>
         ) : needsHchfAssociation ? (
           <LoadingButton
@@ -277,7 +277,7 @@ export const StabilityDepositManager: React.FC = () => {
             loading={hchfAssociationLoadingState === "pending"}
             onClick={associateWithHchf}
           >
-            Consent to receiving HCHF
+            Associate with HCHF
           </LoadingButton>
         ) : needsHchfSpenderApproval && hchfApprovalLoadingState !== "success" ? (
           <LoadingButton
@@ -285,7 +285,7 @@ export const StabilityDepositManager: React.FC = () => {
             loading={hchfApprovalLoadingState === "pending"}
             onClick={approveHchfSpender}
           >
-            Consent to spending {validChange?.depositHCHF?.toString(2)} HCHF
+            Approve spending {validChange?.depositHCHF?.toString(2)} HCHF
           </LoadingButton>
         ) : validChange ? (
           <StabilityDepositAction
