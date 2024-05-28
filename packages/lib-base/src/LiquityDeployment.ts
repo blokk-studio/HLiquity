@@ -17,8 +17,9 @@ export type DeploymentAddressesKey =
   | "sortedTroves"
   | "stabilityPool"
   | "gasPool"
-  | "saucerSwapPool";
-// | 'uniToken'
+  | "saucerSwapPool"
+  | "pythCaller"
+  | "supraCaller";
 
 export const getDeployment = (deploymentDefinition: DeploymentDefinition): Deployment => {
   const deploymentDate = new Date(deploymentDefinition.deploymentDate * 1000);

@@ -12,7 +12,7 @@ import { COLLATERAL_COIN } from "../strings";
 import { Tooltip } from "./Tooltip";
 import { TokenId } from "@hashgraph/sdk";
 import { useDeployment } from "../hooks/deployments";
-import { useSelectedChain } from "./chain_context";
+import { useMultiWallet } from "../multi_wallet";
 
 const selectBalances = ({ accountBalance, hchfBalance, hlqtBalance }: LiquityStoreState) => ({
   accountBalance,
@@ -86,7 +86,7 @@ export const SystemStats: React.FC<SystemStatsProps> = ({ variant = "info", show
   const totalCollateralRatioPct = new Percent(total.collateralRatio(price));
   const borrowingFeePct = new Percent(borrowingRate);
   const kickbackRatePct = frontendTag === AddressZero ? "100" : kickbackRate?.mul(100).prettify();
-  const chain = useSelectedChain();
+  const { chain } = useMultiWallet();
   const deployment = useDeployment();
 
   const getHederaLink = (tokenId: string, chainId?: number) => {

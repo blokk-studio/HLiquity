@@ -19,15 +19,12 @@ import { useHederaChains } from "./hooks/chains";
 import { AuthenticationProvider, LoginForm } from "./authentication";
 import { useConfiguration } from "./configuration";
 import "./App.scss";
-import {
-  HashConnectProvider,
-  HashConnectLoader,
-  HashConnectSessionDataLoader,
-  HashConnectConnectionStateConsumer
-} from "./components/HashConnectProvider";
+import { HashConnectProvider, HashConnectLoader } from "./components/HashConnectProvider";
 import { LiquityStoreProvider } from "@liquity/lib-react";
-import { WalletConnector } from "./components/WalletConnector";
+import { MultiWalletGatekeeper } from "./components/MultiWalletGatekeeper";
 import { SelectedChainProvider } from "./components/chain_context";
+import { MultiWalletProvider } from "./multi_wallet";
+import { AppErrorBoundary } from "./components/AppErrorBoundary";
 
 const isDemoMode = import.meta.env.VITE_APP_DEMO_MODE === "true";
 
@@ -105,73 +102,63 @@ const App = () => {
 
   return (
     <ThemeProvider theme={theme}>
-      <Global
-        styles={css`
-          @font-face {
-            font-family: "museo";
-            src: url("fonts/Museo_Sans_Cyrl_300.ttf") format("truetype");
-            font-style: normal;
-            font-weight: 300;
-          }
-        `}
-      />
-      <AuthenticationProvider loginForm={<LoginForm />}>
-        <SelectedChainProvider>
-          <WagmiConfig client={client}>
-            <ConnectKitProvider options={{ hideBalance: true }}>
-              <HashConnectProvider walletConnectProjectId={config.value.walletConnectProjectId}>
-                <HashConnectLoader
-                  loader={<AppLoader content={<Heading>Setting up HashPack</Heading>} />}
-                >
-                  <HashConnectConnectionStateConsumer>
-                    {connectionState => {
-                      if (connectionState !== "Paired") {
-                        return <WalletConnector />;
-                      }
+      <AppErrorBoundary>
+        <Global
+          styles={css`
+            @font-face {
+              font-family: "museo";
+              src: url("fonts/Museo_Sans_Cyrl_300.ttf") format("truetype");
+              font-style: normal;
+              font-weight: 300;
+            }
+          `}
+        />
+        <AuthenticationProvider loginForm={<LoginForm />}>
+          <SelectedChainProvider>
+            <WagmiConfig client={client}>
+              <ConnectKitProvider options={{ hideBalance: true }}>
+                <HashConnectProvider walletConnectProjectId={config.value.walletConnectProjectId}>
+                  <TransactionProvider>
+                    <HashConnectLoader
+                      loader={<AppLoader content={<Heading>Setting up HashPack</Heading>} />}
+                    >
+                      <MultiWalletProvider>
+                        <MultiWalletGatekeeper>
+                          <LiquityProvider
+                            unsupportedNetworkFallback={
+                              <UnsupportedNetworkFallback availableNetworks={chains} />
+                            }
+                            unsupportedMainnetFallback={
+                              <UnsupportedNetworkFallback availableNetworks={chains} />
+                            }
+                          >
+                            <LiquityConsumer>
+                              {liquityContext => {
+                                if (!liquityContext) {
+                                  return;
+                                }
 
-                      return (
-                        <HashConnectSessionDataLoader
-                          loader={<AppLoader content={<Heading>Setting up HashPack</Heading>} />}
-                        >
-                          <TransactionProvider>
-                            <LiquityProvider
-                              unsupportedNetworkFallback={
-                                <UnsupportedNetworkFallback availableNetworks={chains} />
-                              }
-                              unsupportedMainnetFallback={
-                                <UnsupportedNetworkFallback availableNetworks={chains} />
-                              }
-                            >
-                              <LiquityConsumer>
-                                {liquityContext => {
-                                  if (!liquityContext) {
-                                    return;
-                                  }
-
-                                  return (
-                                    <LiquityStoreProvider
-                                      store={liquityContext.store}
-                                      loader={
-                                        <AppLoader content={<Heading>Loading data</Heading>} />
-                                      }
-                                    >
-                                      <LiquityFrontend />
-                                    </LiquityStoreProvider>
-                                  );
-                                }}
-                              </LiquityConsumer>
-                            </LiquityProvider>
-                          </TransactionProvider>
-                        </HashConnectSessionDataLoader>
-                      );
-                    }}
-                  </HashConnectConnectionStateConsumer>
-                </HashConnectLoader>
-              </HashConnectProvider>
-            </ConnectKitProvider>
-          </WagmiConfig>
-        </SelectedChainProvider>
-      </AuthenticationProvider>
+                                return (
+                                  <LiquityStoreProvider
+                                    store={liquityContext.store}
+                                    loader={<AppLoader content={<Heading>Loading data</Heading>} />}
+                                  >
+                                    <LiquityFrontend />
+                                  </LiquityStoreProvider>
+                                );
+                              }}
+                            </LiquityConsumer>
+                          </LiquityProvider>
+                        </MultiWalletGatekeeper>
+                      </MultiWalletProvider>
+                    </HashConnectLoader>
+                  </TransactionProvider>
+                </HashConnectProvider>
+              </ConnectKitProvider>
+            </WagmiConfig>
+          </SelectedChainProvider>
+        </AuthenticationProvider>
+      </AppErrorBoundary>
     </ThemeProvider>
   );
 };

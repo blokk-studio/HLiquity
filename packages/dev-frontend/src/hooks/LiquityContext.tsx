@@ -9,14 +9,27 @@ import {
   ReadableLiquity,
   SendableLiquity
 } from "@liquity/lib-base";
-import { HederaChain } from "../configuration/chains";
-import { useHashConnect, useHashConnectSessionData } from "../components/HashConnectProvider";
+import { HederaChain, getChainFromId } from "../configuration/chains";
+import {
+  HashConnectSessionDataLoader,
+  useHashConnect,
+  useHashConnectSessionData
+} from "../components/HashConnectProvider";
 import { HashgraphLiquity } from "@liquity/lib-hashgraph";
 import { getConsumer, getLoader } from "../optional_context";
 import { useSelectedChain } from "../components/chain_context";
+import { Signer } from "ethers";
+import { Provider } from "@ethersproject/abstract-provider";
+import { EthersLiquity } from "@liquity/lib-ethers";
+import { useMultiWallet } from "../multi_wallet";
+import { useAccount, useChainId, useProvider, useSigner } from "wagmi";
+import { FallbackProvider } from "@ethersproject/providers";
+import { BatchedProvider } from "../providers/BatchingProvider";
+import { AppLoader } from "../components/AppLoader";
+import { Heading } from "theme-ui";
+import { AppError } from "../components/AppError";
 
 export type LiquityContextValue = {
-  account: string;
   liquity: ReadableLiquity &
     ConsentableLiquity & {
       send: SendableLiquity,
@@ -29,6 +42,8 @@ export type LiquityContextValue = {
       };
     };
   store: HLiquityStore;
+  /** @deprecated use `const { addressDisplayText } = useMultiWallet()` instead */
+  account: string;
 };
 
 export const LiquityContext = createContext<LiquityContextValue | null>(null);
@@ -38,12 +53,11 @@ type LiquityProviderProps = {
   unsupportedMainnetFallback?: React.ReactNode;
 };
 
-interface NonNullableLiquityProviderProps {
+interface HashgraphLiquityProviderProps {
   deployment: Deployment;
   chain: HederaChain;
 }
-
-const NonNullableLiquityProvider: React.FC<NonNullableLiquityProviderProps> = ({
+const HashgraphLiquityProvider: React.FC<HashgraphLiquityProviderProps> = ({
   children,
   deployment,
   chain
@@ -68,8 +82,6 @@ const NonNullableLiquityProvider: React.FC<NonNullableLiquityProviderProps> = ({
       deployment: deployment
     });
 
-    Object.assign(hashgraphLiquity, { connection: deployment });
-
     return hashgraphLiquity;
   }, [deployment, chain, hashConnectSessionData, hashConnect]);
 
@@ -86,31 +98,137 @@ const NonNullableLiquityProvider: React.FC<NonNullableLiquityProviderProps> = ({
   );
 };
 
+interface EthersLiquityProviderProps {
+  provider: Provider;
+  signer: Signer;
+  userAddress: `0x${string}`;
+  chain: HederaChain;
+  deployment: Deployment;
+}
+
+const EthersLiquityProvider: React.FC<EthersLiquityProviderProps> = ({
+  children,
+  provider,
+  signer,
+  userAddress,
+  chain,
+  deployment
+}) => {
+  const liquity = useMemo(() => {
+    const { frontendTag } = deployment;
+    const ethersDeployment = {
+      ...deployment,
+      deploymentDate: deployment.deploymentDate.getTime() / 1000
+    };
+
+    const liquity = EthersLiquity.fromConnectionOptionsWithBlockPolledStore({
+      chainId: chain.id,
+      deployment: ethersDeployment,
+      provider,
+      signer,
+      frontendTag,
+      userAddress,
+      mirrorNodeBaseUrl: chain.apiBaseUrl,
+      fetch: window.fetch.bind(window)
+    });
+    liquity.store.logging = true;
+
+    return liquity;
+  }, [provider, signer, userAddress, chain, deployment]);
+
+  return (
+    <LiquityContext.Provider value={{ account: userAddress, store: liquity.store, liquity }}>
+      {children}
+    </LiquityContext.Provider>
+  );
+};
+
 export const OptionalLiquityConsumer = LiquityContext.Consumer;
 export const LiquityConsumer = getConsumer(LiquityContext, {
   errorMessage: `the liquity context hasn't been set. make sure you have <LiquityProvider> and <LiquityLoader> as ancestors of this <LiquityConsumer>.`
 });
 export const LiquityLoader = getLoader(LiquityContext);
 
+export const WagmiLoader: React.FC<{ loader: React.ReactNode }> = ({ loader, children }) => {
+  const wagmiProvider = useProvider<FallbackProvider>();
+  const signer = useSigner();
+  const account = useAccount();
+
+  if (!wagmiProvider || !signer.data || !account.address) {
+    return <>{loader}</>;
+  }
+
+  return <>{children}</>;
+};
+
 export const LiquityProvider: React.FC<LiquityProviderProps> = ({
   children,
   unsupportedNetworkFallback
 }) => {
+  const { hasHashConnect, hasWagmi } = useMultiWallet();
   const deployment = useDeployment();
-  const chain = useSelectedChain();
+  // wagmi
+  const ethersProvider = useProvider<FallbackProvider>();
+  const ethersSigner = useSigner();
+  const ethersAccount = useAccount();
+  const ethersChainId = useChainId();
+  const ethersChain = getChainFromId(ethersChainId);
+  // hashpack
+  const hashgraphChain = useSelectedChain();
 
   if (!deployment) {
     return <>{unsupportedNetworkFallback}</>;
   }
 
-  if (!chain) {
-    return <>{unsupportedNetworkFallback}</>;
+  if (hasHashConnect) {
+    if (!hashgraphChain) {
+      return <>{unsupportedNetworkFallback}</>;
+    }
+
+    return (
+      <HashConnectSessionDataLoader
+        loader={<AppLoader content={<Heading>Setting up HashPack</Heading>} />}
+      >
+        <HashgraphLiquityProvider deployment={deployment} chain={hashgraphChain}>
+          {children}
+        </HashgraphLiquityProvider>
+      </HashConnectSessionDataLoader>
+    );
+  }
+
+  if (hasWagmi) {
+    if (!ethersProvider || !ethersSigner.data || !ethersAccount.address) {
+      throw new Error(
+        `wagmi's useProvider(), useSigner().data or useAccount().address are falsy. this should never happen, because \`useAccount().address\` and \`useSigner().data\` must be defined for us to get here. please investigate \`useMultiWallet().hasWagmi\` and the wagmi context to resolve this disparity. ${JSON.stringify(
+          {
+            "!!provider": !!ethersProvider,
+            "!!signer.data": !!ethersSigner.data,
+            "account.address": ethersAccount.address
+          }
+        )}`
+      );
+    }
+
+    const provider = new BatchedProvider(ethersProvider, ethersChain.id, 20000);
+
+    return (
+      <EthersLiquityProvider
+        chain={ethersChain}
+        deployment={deployment}
+        provider={provider}
+        signer={ethersSigner.data}
+        userAddress={ethersAccount.address}
+      >
+        {children}
+      </EthersLiquityProvider>
+    );
   }
 
   return (
-    <NonNullableLiquityProvider deployment={deployment} chain={chain}>
-      {children}
-    </NonNullableLiquityProvider>
+    <AppError
+      error={new Error("neither wallet is connected")}
+      infoText="Please refresh the page. If that doesn't work, disconnect all your wallets and try again."
+    />
   );
 };
 

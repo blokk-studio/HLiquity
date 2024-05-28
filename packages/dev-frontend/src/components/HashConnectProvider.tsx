@@ -8,6 +8,7 @@ import { t } from "../i18n";
 import { useSelectedChain } from "./chain_context";
 import { chains } from "../configuration/chains";
 import { Address } from "@liquity/lib-base";
+import { AppError } from "./AppError";
 
 const appMetadata: DappMetadata = {
   description: "Decentralized borrowing Protocol on Hedera",
@@ -180,26 +181,11 @@ export const HashConnectProvider: React.FC<{ walletConnectProjectId: string }> =
 
   if (hashConnectError) {
     return (
-      <Flex
-        sx={{
-          minHeight: "100%",
-          flexDirection: "column",
-          justifyContent: "center",
-          marginInline: "clamp(2rem, 100%, 50% - 12rem)"
-        }}
-      >
-        <Heading sx={{ display: "flex", gap: "1rem", alignItems: "center" }}>
-          <Icon name="exclamation-triangle" />
-          {t("hashPackError.heading")}
-        </Heading>
-        <Paragraph sx={{ marginTop: "1rem" }}>{t("hashPackError.infoText")}</Paragraph>
-
-        <details style={{ marginTop: "3rem", width: "100%" }}>
-          <summary>{t("hashPackError.errorDetails")}</summary>
-
-          <p>{hashConnectError.message}</p>
-        </details>
-      </Flex>
+      <AppError
+        error={hashConnectError}
+        heading={t("hashPackError.heading")}
+        infoText={t("hashPackError.infoText")}
+      />
     );
   }
 

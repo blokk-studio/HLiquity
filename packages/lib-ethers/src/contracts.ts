@@ -57,6 +57,7 @@ import {
 } from "../types";
 
 import { EthersProvider, EthersSigner } from "./types";
+import { Address } from "@liquity/lib-base";
 
 export interface _TypedLogDescription<T> extends Omit<LogDescription, "args"> {
   args: T;
@@ -188,7 +189,7 @@ export const _uniTokenIsMock = (uniToken: IERC20 | ERC20Mock): uniToken is ERC20
 type LiquityContractsKey = keyof _LiquityContracts;
 
 /** @internal */
-export type _LiquityContractAddresses = Record<LiquityContractsKey, string>;
+export type _LiquityContractAddresses = Record<LiquityContractsKey, Address>;
 
 type LiquityContractAbis = Record<LiquityContractsKey, JsonFragment[]>;
 
