@@ -5,15 +5,16 @@ import { useLiquity } from "../../../hooks/LiquityContext";
 import { useMyTransactionState } from "../../Transaction";
 import { useMineView } from "../context/MineViewContext";
 import { useValidationState } from "../context/useValidationState";
-import { useDeployment } from "../../../configuration/deployments";
-import { useHedera } from "../../../hedera/hedera_context";
-import { BigNumber } from "ethers";
+// import { useDeployment } from "../../../configuration/deployments";
+// import { useHedera } from "../../../hedera/hedera_context";
+// import { BigNumber } from "ethers";
 import { LoadingButton } from "../../LoadingButton";
 import { useLoadingState } from "../../../loading_state";
 // import { useLoadingState } from "../../../loading_state";
 // import { useHedera } from "../../../hedera/hedera_context";
 // import { LoadingButton } from "../../LoadingButton";
 // import { BigNumber } from "ethers";
+import { useLiquitySelector } from "@liquity/lib-react";
 
 type ApproveProps = {
   amount: Decimal;
@@ -24,17 +25,15 @@ const transactionId = "mine-approve";
 export const Approve: React.FC<ApproveProps> = ({ amount }) => {
   const { dispatchEvent } = useMineView();
   const {
-    liquity: { 
-      // send: liquity,
-      connection: { addresses } ,
-      store
-    },
+    liquity,
+    store
   } = useLiquity();
+  const { userHasAssociatedWithLpToken } = useLiquitySelector(state => state);
 
   const { hasApproved } = useValidationState(amount);
   const transactionState = useMyTransactionState(transactionId);
-  const { approveSpender } = useHedera();
-  const deployment = useDeployment();
+  // const { approveSpender } = useHedera();
+  // const deployment = useDeployment();
 
   useEffect(() => {
     if (transactionState.type === "confirmedOneShot") {
@@ -43,20 +42,10 @@ export const Approve: React.FC<ApproveProps> = ({ amount }) => {
   }, [transactionState.type, dispatchEvent]);
 
   // console.log(amount, hasApproved);
-
-  const { hasAssociatedWithLP, associateWithToken } = useHedera();
   // LP token association
   const { call: associateWithLP, state: LPAssociationLoadingState } = useLoadingState(
     async () => {
-      if (!deployment) {
-        const errorMessage = `i cannot get the hchf token id if there is no deployment. please connect to a chain first.`;
-        console.error(errorMessage, "context:", { deployment });
-        throw new Error(errorMessage);
-      }
-
-      // console.log(deployment);
-
-      await associateWithToken({ tokenAddress: addresses.uniToken as `0x${string}` }).then(() => {
+      await liquity.associateWithLpToken().then(() => {
         store.refresh();
       });;
     }
@@ -67,23 +56,9 @@ export const Approve: React.FC<ApproveProps> = ({ amount }) => {
       throw "cannot approve a withdrawal (negative spending/negative deposit) or deposit of 0";
     }
 
-    if (!deployment) {
-      const errorMessage = `i cannot get the hlqt token id if there is no deployment. please connect to a chain first.`;
-      console.error(errorMessage, "context:", { deployment });
-      throw new Error(errorMessage);
-    }
+    const amnt = amount;
 
-    const tokenAddress = deployment.addresses.uniToken as `0x${string}`;
-    const contractAddress = deployment.addresses.saucerSwapPool as `0x${string}`;
-    const amnt = BigNumber.from(amount.hex);
-
-    // console.log('addresses', deployment.addresses.uniToken, tokenAddress);
-
-    await approveSpender({
-      contractAddress,
-      tokenAddress: tokenAddress,
-      amount: amnt
-    }).then(() => {
+    await liquity.approveSaucerSwapToSpendLpToken(amnt).then(() => {
       store.refresh();
     });
   });
@@ -103,7 +78,7 @@ export const Approve: React.FC<ApproveProps> = ({ amount }) => {
         Assoc. {amount.prettify()} LP
       </LoadingButton>
       <LoadingButton
-        disabled={!amount || hasApproved || !hasAssociatedWithLP}
+        disabled={!amount || hasApproved || !userHasAssociatedWithLpToken}
         loading={LPApprovalLoadingState === "pending"}
         onClick={approveLPSpender}
       >

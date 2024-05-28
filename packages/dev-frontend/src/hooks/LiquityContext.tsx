@@ -5,7 +5,9 @@ import {
   Deployment,
   DeploymentAddressesKey,
   HLiquityStore,
-  ReadableLiquity
+  PopulatableLiquity,
+  ReadableLiquity,
+  SendableLiquity
 } from "@liquity/lib-base";
 import { HederaChain } from "../configuration/chains";
 import { useHashConnect, useHashConnectSessionData } from "../components/HashConnectProvider";
@@ -17,6 +19,8 @@ export type LiquityContextValue = {
   account: string;
   liquity: ReadableLiquity &
     ConsentableLiquity & {
+      send: SendableLiquity,
+      populate: PopulatableLiquity,
       connection: {
         addresses: Record<DeploymentAddressesKey, `0x${string}`>;
         version: string;

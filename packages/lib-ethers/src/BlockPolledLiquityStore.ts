@@ -135,9 +135,8 @@ export class BlockPolledLiquityStore extends HLiquityStore<BlockPolledLiquitySto
               .then(bigNumber =>
                 Decimal.fromBigNumberStringWithPrecision(bigNumber.toHexString(), 18)
               ),
-            hchfBalance: this._readable.getHCHFBalance(userAddress, { blockTag }), lpBalance: this._readable.getLPBalance(userAddress, { blockTag }),
+            hchfBalance: this._readable.getHCHFBalance(userAddress, { blockTag }), 
             lpReward: this._readable.getLPReward(userAddress, { blockTag }),
-            lpEarnings: this._readable.getLPEarnings(userAddress, { blockTag }),
             hchfTokenAddress: this._readable.getHCHFTokenAddress({ blockTag }),
             hlqtTokenAddress: this._readable.getHLQTTokenAddress({ blockTag }),
             hlqtBalance: this._readable.getHLQTBalance(userAddress, { blockTag }),
@@ -163,9 +162,7 @@ export class BlockPolledLiquityStore extends HLiquityStore<BlockPolledLiquitySto
             accountBalance: Decimal.ZERO,
             hchfBalance: Decimal.ZERO,
             hlqtBalance: Decimal.ZERO,
-            lpBalance: Decimal.ZERO,
             lpReward: Decimal.ZERO,
-            lpEarnings: Decimal.ZERO,
             hchfTokenAddress: "0x",
             hlqtTokenAddress: "0x",
             uniTokenBalance: Decimal.ZERO,

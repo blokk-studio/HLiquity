@@ -75,7 +75,7 @@ export const StakingViewProvider: React.FC = ({ children }) => {
   const stakingTransactionState = useMyTransactionState("stake");
   const [{ adjusting, changePending, hlqtStake }, dispatch] = useLiquityReducer(reduce, init);
   const [ viewState, setViewState ] = useState<StakingView>("NONE");
-  const { liquity } = useLiquity();
+  const { store } = useLiquity();
 
   useEffect(() => {
     if (
@@ -96,7 +96,7 @@ export const StakingViewProvider: React.FC = ({ children }) => {
   }, [adjusting, hlqtStake])
 
   useEffect(() => {
-    liquity.store.refresh();
+    store.refresh();
   }, [viewState])
 
   return (

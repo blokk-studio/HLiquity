@@ -307,28 +307,12 @@ export class ReadableEthersLiquity implements ReadableLiquity {
     return hchfToken.balanceOf(address, { ...overrides }).then(decimalify);
   }
 
-  /** {@inheritDoc @liquity/lib-base#ReadableLiquity.getLPBalance} */
-  getLPBalance(address?: string, overrides?: EthersCallOverrides): Promise<Decimal> {
-    address ??= _requireAddress(this.connection);
-    const { saucerSwapPool, uniToken } = _getContracts(this.connection);
-
-    return uniToken.balanceOf(address, { ...overrides }).then(decimalify);
-  }
-
   /** {@inheritDoc @liquity/lib-base#ReadableLiquity.getLPReward} */
   getLPReward(address?: string, overrides?: EthersCallOverrides): Promise<Decimal> {
     address ??= _requireAddress(this.connection);
     const { saucerSwapPool, uniToken } = _getContracts(this.connection);
 
     return saucerSwapPool.rewardPerToken().then(decimalify);
-  }
-
-  /** {@inheritDoc @liquity/lib-base#ReadableLiquity.getLPEarnings} */
-  getLPEarnings(address?: string, overrides?: EthersCallOverrides): Promise<Decimal> {
-    address ??= _requireAddress(this.connection);
-    const { saucerSwapPool, uniToken } = _getContracts(this.connection);
-
-    return saucerSwapPool.earned(address, { ...overrides }).then(decimalify);
   }
 
   getHLQTTokenAddress(overrides?: EthersCallOverrides): Promise<string> {
@@ -678,21 +662,9 @@ class BlockPolledLiquityStoreBasedCache
     }
   }
 
-  getLPBalance(address?: string, overrides?: EthersCallOverrides): Decimal | undefined {
-    if (this._userHit(address, overrides)) {
-      return this._store.state.lpBalance;
-    }
-  }
-
   getLPReward(address?: string, overrides?: EthersCallOverrides): Decimal | undefined {
     if (this._userHit(address, overrides)) {
       return this._store.state.lpReward
-    }
-  }
-
-  getLPEarnings(address?: string, overrides?: EthersCallOverrides): Decimal | undefined {
-    if (this._userHit(address, overrides)) {
-      return this._store.state.lpEarnings;
     }
   }
 

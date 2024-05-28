@@ -12,17 +12,17 @@ import { t } from "../i18n";
 import { useBondView } from "./Bonds/context/BondViewContext";
 import { useBondAddresses } from "./Bonds/context/BondAddressesContext";
 
-const select = ({ accountBalance, hchfBalance, hlqtBalance, lpBalance }: LiquityStoreState) => ({
+const select = ({ accountBalance, hchfBalance, hlqtBalance, uniTokenBalance }: LiquityStoreState) => ({
   accountBalance,
   hchfBalance,
   hlqtBalance,
-  lpBalance,
+  uniTokenBalance,
 });
 
 export const UserAccount: React.FC = () => {
   const hashConnect = useHashConnect();
   const sessionData = useHashConnectSessionData();
-  const { accountBalance, hchfBalance: realHchfBalance, hlqtBalance, lpBalance } = useLiquitySelector(select);
+  const { accountBalance, hchfBalance: realHchfBalance, hlqtBalance, uniTokenBalance } = useLiquitySelector(select);
   const { hchfBalance: customHchfBalance } = useBondView();
   const { LUSD_OVERRIDE_ADDRESS } = useBondAddresses();
 
@@ -63,7 +63,7 @@ export const UserAccount: React.FC = () => {
           [COLLATERAL_COIN, accountBalance],
           [COIN, Decimal.from(hchfBalance || 0)],
           [GT, Decimal.from(hlqtBalance)],
-          [LP, Decimal.from(lpBalance)],
+          [LP, Decimal.from(uniTokenBalance)],
         ] as const).map(([currency, balance], i) => (
           <Flex key={i} sx={{ ml: 3, flexDirection: "column" }}>
             <Heading sx={{ fontSize: 1 }}>{currency}</Heading>

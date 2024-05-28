@@ -67,7 +67,7 @@ import { HCHFTokenAbi, hCHFTokenAbi } from '../abi/HCHFToken'
 import { HLQTStakingAbi, hLQTStakingAbi } from '../abi/HLQTStaking'
 import { HLQTTokenAbi, hLQTTokenAbi } from '../abi/HLQTToken'
 import { HintHelpersAbi, hintHelpersAbi } from '../abi/HintHelpers'
-import { IERC20Abi } from '../abi/IERC20'
+import { IERC20Abi, iERC20Abi } from '../abi/IERC20'
 import { LockupContractFactoryAbi, lockupContractFactoryAbi } from '../abi/LockupContractFactory'
 import { MultiTroveGetterAbi, multiTroveGetterAbi } from '../abi/MultiTroveGetter'
 import { PriceFeedAbi, priceFeedAbi } from '../abi/PriceFeed'
@@ -103,9 +103,9 @@ import {
 import { BackendTroveStatus, userTroveStatusFrom } from './trove_status'
 import { getBlockTimestamp } from './web3'
 
-export const getHashgraphLiquity = () => {}
+export const getHashgraphLiquity = () => { }
 
-interface HashgraphLiquityStoreState {}
+interface HashgraphLiquityStoreState { }
 
 const decimalify = (matchPrimitiveType: MatchPrimitiveType<'uint256', unknown>) => {
   const decimal = Decimal.fromBigNumberString(matchPrimitiveType.toString())
@@ -156,12 +156,11 @@ interface LasagnaConnection {
 export class HashgraphLiquity<FetchInstance extends Fetch = Fetch>
   extends HLiquityStore<HashgraphLiquityStoreState>
   implements
-    ReadableLiquity,
-    PrefixProperties<Readonly<PopulatableLiquity>, 'populate'>,
-    // TransactableLiquity,
-    ConsentableLiquity,
-    EventEmitter
-{
+  ReadableLiquity,
+  PrefixProperties<Readonly<PopulatableLiquity>, 'populate'>,
+  // TransactableLiquity,
+  ConsentableLiquity,
+  EventEmitter {
   public store: HLiquityStore = this
   /** @deprecated TODO: implement & use events */
   public readonly send: SendableLiquity
@@ -372,9 +371,7 @@ export class HashgraphLiquity<FetchInstance extends Fetch = Fetch>
     const { blockTimestamp, createFees, calculateRemainingHLQT, ...baseState } =
       await promiseAllValues({
         // _getFeesFactory({ blockTag }),
-        // calculateRemainingHLQT: this._readable._getRemainingLiquidityMiningHLQTRewardCalculator({
-        //   blockTag,
-        // }),
+        calculateRemainingHLQT: this.getRemainingLiquidityMiningHLQTReward({ blockTag }),
         blockTimestamp: getBlockTimestamp(this.web3, blockTag),
         createFees: (blockTimestamp: number, isInRecoveryMode: boolean) =>
           new Fees(
@@ -385,7 +382,7 @@ export class HashgraphLiquity<FetchInstance extends Fetch = Fetch>
             new Date(blockTimestamp * 100),
             isInRecoveryMode,
           ),
-        calculateRemainingHLQT: (blockTimestamp: number) => Decimal.from(0),
+        // calculateRemainingHLQT: (blockTimestamp: number) => Decimal.from(0),
 
         price: this.getPrice({ blockTag }),
         numberOfTroves: this.getNumberOfTroves({ blockTag }),
@@ -420,73 +417,75 @@ export class HashgraphLiquity<FetchInstance extends Fetch = Fetch>
 
         ...(this.userAccountAddress
           ? {
-              accountBalance: this.web3.eth
-                .getBalance(this.userAccountAddress, blockTag)
-                .then((bigInt) =>
-                  Decimal.fromBigNumberStringWithPrecision(`0x${bigInt.toString(16)}`, 18),
-                ),
-              hchfBalance: this.getHCHFBalance(this.userAccountAddress, { blockTag }),
-              hchfTokenAddress: this.getHCHFTokenAddress({ blockTag }),
-              hlqtTokenAddress: this.getHLQTTokenAddress({ blockTag }),
-              hlqtBalance: this.getHLQTBalance(this.userAccountAddress, { blockTag }),
-              // uniTokenBalance: this.getUniTokenBalance(this.userAccountAddress, { blockTag }),
-              // uniTokenAllowance: this.getUniTokenAllowance(this.userAccountAddress, { blockTag }),
-              uniTokenBalance: Decimal.ZERO,
-              uniTokenAllowance: Decimal.ZERO,
-              liquidityMiningStake: this.getLiquidityMiningStake(this.userAccountAddress, {
-                blockTag,
-              }),
-              liquidityMiningHLQTReward: this.getLiquidityMiningHLQTReward(
-                this.userAccountAddress,
-                {
-                  blockTag,
-                },
+            accountBalance: this.web3.eth
+              .getBalance(this.userAccountAddress, blockTag)
+              .then((bigInt) =>
+                Decimal.fromBigNumberStringWithPrecision(`0x${bigInt.toString(16)}`, 18),
               ),
-              collateralSurplusBalance: this.getCollateralSurplusBalance(this.userAccountAddress, {
-                blockTag,
-              }),
-              troveBeforeRedistribution: this.getTroveBeforeRedistribution(
-                this.userAccountAddress,
-                {
-                  blockTag,
-                },
-              ),
-              stabilityDeposit: this.getStabilityDeposit(this.userAccountAddress, { blockTag }),
-              hlqtStake: this.getHLQTStake(this.userAccountAddress, { blockTag }),
-              ownFrontend: this.getFrontendStatus(this.userAccountAddress, { blockTag }),
-            }
-          : {
-              accountBalance: Decimal.ZERO,
-              hchfBalance: Decimal.ZERO,
-              hlqtBalance: Decimal.ZERO,
-              hchfTokenAddress: '0x',
-              hlqtTokenAddress: '0x',
-              uniTokenBalance: Decimal.ZERO,
-              uniTokenAllowance: Decimal.ZERO,
-              liquidityMiningStake: Decimal.ZERO,
-              liquidityMiningHLQTReward: Decimal.ZERO,
-              collateralSurplusBalance: Decimal.ZERO,
-              troveBeforeRedistribution: new TroveWithPendingRedistribution(
-                AddressZero,
-                'nonExistent',
-              ),
-              stabilityDeposit: new StabilityDeposit(
-                Decimal.ZERO,
-                Decimal.ZERO,
-                Decimal.ZERO,
-                Decimal.ZERO,
-                AddressZero,
-              ),
-              hlqtStake: new HLQTStake(),
-              ownFrontend: { status: 'unregistered' as const },
+            hchfBalance: this.getHCHFBalance(this.userAccountAddress, { blockTag }),
+            hchfTokenAddress: this.getHCHFTokenAddress({ blockTag }),
+            hlqtTokenAddress: this.getHLQTTokenAddress({ blockTag }),
+            hlqtBalance: this.getHLQTBalance(this.userAccountAddress, { blockTag }),
+            uniTokenBalance: this.getUniTokenBalance(this.userAccountAddress, { blockTag }),
+            uniTokenAllowance: this.getUniTokenAllowance(this.userAccountAddress, { blockTag }),
+            // uniTokenBalance: Decimal.ZERO,
+            lpReward: this.getLPReward(this.userAccountAddress, { blockTag }),
+            // uniTokenAllowance: Decimal.ZERO,
+            liquidityMiningStake: this.getLiquidityMiningStake(this.userAccountAddress, {
+              blockTag,
             }),
+            liquidityMiningHLQTReward: this.getLiquidityMiningHLQTReward(
+              this.userAccountAddress,
+              {
+                blockTag,
+              },
+            ),
+            collateralSurplusBalance: this.getCollateralSurplusBalance(this.userAccountAddress, {
+              blockTag,
+            }),
+            troveBeforeRedistribution: this.getTroveBeforeRedistribution(
+              this.userAccountAddress,
+              {
+                blockTag,
+              },
+            ),
+            stabilityDeposit: this.getStabilityDeposit(this.userAccountAddress, { blockTag }),
+            hlqtStake: this.getHLQTStake(this.userAccountAddress, { blockTag }),
+            ownFrontend: this.getFrontendStatus(this.userAccountAddress, { blockTag }),
+          }
+          : {
+            accountBalance: Decimal.ZERO,
+            hchfBalance: Decimal.ZERO,
+            hlqtBalance: Decimal.ZERO,
+            hchfTokenAddress: '0x',
+            hlqtTokenAddress: '0x',
+            uniTokenBalance: Decimal.ZERO,
+            lpReward: Decimal.ZERO,
+            uniTokenAllowance: Decimal.ZERO,
+            liquidityMiningStake: Decimal.ZERO,
+            liquidityMiningHLQTReward: Decimal.ZERO,
+            collateralSurplusBalance: Decimal.ZERO,
+            troveBeforeRedistribution: new TroveWithPendingRedistribution(
+              AddressZero,
+              'nonExistent',
+            ),
+            stabilityDeposit: new StabilityDeposit(
+              Decimal.ZERO,
+              Decimal.ZERO,
+              Decimal.ZERO,
+              Decimal.ZERO,
+              AddressZero,
+            ),
+            hlqtStake: new HLQTStake(),
+            ownFrontend: { status: 'unregistered' as const },
+          }),
       })
 
     return [
       {
         ...baseState,
         _feesInNormalMode: createFees(blockTimestamp, false),
-        remainingLiquidityMiningHLQTReward: calculateRemainingHLQT(blockTimestamp),
+        remainingLiquidityMiningHLQTReward: calculateRemainingHLQT,
       },
       {
         blockTag,
@@ -729,19 +728,52 @@ export class HashgraphLiquity<FetchInstance extends Fetch = Fetch>
     return hlqtBalance
   }
 
-  getUniTokenBalance(address?: Address, options?: ContractCallOptions): Promise<Decimal> {
-    throw new Error(
-      `unitoken does not exist on hedera, i think. called getUniTokenBalance(${address ?? ''}).`,
+  async getUniTokenBalance(address?: Address, options?: ContractCallOptions): Promise<Decimal> {
+    const addressOrUserAddress = this.getAddressOrUserAddress(address)
+    const uniTokenAddress = await this.saucerSwapPool.methods.uniToken().call();
+
+    const uniTokenContract = new this.web3.eth.Contract(
+      iERC20Abi,
+      uniTokenAddress,
     )
+
+    const lpBalanceResult = await uniTokenContract.methods
+      .balanceOf(addressOrUserAddress)
+      .call(undefined, options?.blockTag)
+    const lpBalance = decimalify(lpBalanceResult)
+
+    return lpBalance
   }
 
-  getUniTokenAllowance(address?: Address, options?: ContractCallOptions): Promise<Decimal> {
-    throw new Error(
-      `unitoken does not exist on hedera, i think. called getUniTokenAllowance(${address ?? ''}).`,
-    )
+  async getLPReward(address?: Address, options?: ContractCallOptions): Promise<Decimal> {
+    const addressOrUserAddress = this.getAddressOrUserAddress(address)
+
+    const lpRewardResult = await this.saucerSwapPool.methods
+      .rewardPerToken(addressOrUserAddress)
+      .call(undefined, options?.blockTag)
+    const lpReward = decimalify(lpRewardResult)
+
+    return lpReward
   }
 
-  async getRemainingLiquidityMiningHLQTReward(options?: { blockTag?: number }): Promise<Decimal> {
+  async getUniTokenAllowance(address?: Address, options?: ContractCallOptions): Promise<Decimal> {
+    const addressOrUserAddress = this.getAddressOrUserAddress(address)
+    const uniTokenAddress = await this.saucerSwapPool.methods.uniToken().call();
+
+    const uniTokenContract = new this.web3.eth.Contract(
+      iERC20Abi,
+      uniTokenAddress,
+    )
+
+    const lpAllowanceResult = await uniTokenContract.methods
+      .allowance(addressOrUserAddress, this.saucerSwapPool.options.address)
+      .call(undefined, options?.blockTag)
+    const lpAllowance = decimalify(lpAllowanceResult)
+
+    return lpAllowance
+  }
+
+  async getRemainingLiquidityMiningHLQTReward(options?: { blockTag?: number | string }): Promise<Decimal> {
     const [totalSupplyResult, rewardRateResult, periodFinishResult, lastUpdateTimeResult, block] =
       await Promise.all([
         this.saucerSwapPool.methods.totalSupply().call(undefined, options?.blockTag),
@@ -760,6 +792,8 @@ export class HashgraphLiquity<FetchInstance extends Fetch = Fetch>
     const remainingReward = rewardRate.mul(
       Math.max(0, periodFinish - (totalSupply.eq(0) ? lastUpdateTime : blockTimestamp)),
     )
+
+    console.log('remaining reward', remainingReward)
 
     return remainingReward
   }
@@ -1369,8 +1403,8 @@ export class HashgraphLiquity<FetchInstance extends Fetch = Fetch>
     const gas = 3000000 + gasForPotentialLastFeeOperationTimeUpdate + gasForPotentialListTraversal
 
     const functionParameters = TypedContractFunctionParameters<BorrowerOperationsAbi, 'openTrove'>()
-      .addUint256(new BigNumber(finalMaxBorrowingRate.hex))
-      .addUint256(new BigNumber(borrowHCHF.hex))
+      .addUint256(finalMaxBorrowingRate.bigNumber)
+      .addUint256(borrowHCHF.bigNumber)
       .addAddress(hints[0])
       .addAddress(hints[1])
 
@@ -1448,8 +1482,8 @@ export class HashgraphLiquity<FetchInstance extends Fetch = Fetch>
     gasLimit: number
     rawPopulatedTransaction: RawPopulatedTransaction
     getDetails:
-      | ((options: GetDetailsOptions<RawPopulatedTransaction>) => Promise<Details>)
-      | ((options: GetDetailsOptions<RawPopulatedTransaction>) => Details)
+    | ((options: GetDetailsOptions<RawPopulatedTransaction>) => Promise<Details>)
+    | ((options: GetDetailsOptions<RawPopulatedTransaction>) => Details)
   }) {
     const send = async (): Promise<SentHashgraphLiquityTransaction<Details>> => {
       const rawReceipt = await this.hashConnect.sendTransaction(
@@ -1545,9 +1579,9 @@ export class HashgraphLiquity<FetchInstance extends Fetch = Fetch>
       BorrowerOperationsAbi,
       'adjustTrove'
     >()
-      .addUint256(new BigNumber(finalMaxBorrowingRate.hex))
-      .addUint256(new BigNumber((withdrawCollateral ?? Decimal.ZERO).hex))
-      .addUint256(new BigNumber((borrowHCHF ?? repayHCHF ?? Decimal.ZERO).hex))
+      .addUint256(finalMaxBorrowingRate.bigNumber)
+      .addUint256((withdrawCollateral ?? Decimal.ZERO).bigNumber)
+      .addUint256((borrowHCHF ?? repayHCHF ?? Decimal.ZERO).bigNumber)
       .addBool(!!borrowHCHF)
       .addAddress(hints[0])
       .addAddress(hints[1])
@@ -1768,7 +1802,7 @@ export class HashgraphLiquity<FetchInstance extends Fetch = Fetch>
     const functionParameters = TypedContractFunctionParameters<
       TroveManagerAbi,
       'liquidateTroves'
-    >().addUint256(new BigNumber(maximumNumberOfTrovesToLiquidate))
+    >().addUint256(Decimal.from(maximumNumberOfTrovesToLiquidate).bigNumber)
 
     const gas = 3000000 + gasForHLQTIssuance
     const unfrozenRawPopulatedTransaction = TypedContractExecuteTransaction<TroveManagerAbi>({
@@ -1811,7 +1845,7 @@ export class HashgraphLiquity<FetchInstance extends Fetch = Fetch>
   > {
     const frontendAddress = frontendTag ?? this.frontendAddress
     const functionParameters = TypedContractFunctionParameters<StabilityPoolAbi, 'provideToSP'>()
-      .addUint256(new BigNumber(Decimal.from(amount).hex))
+      .addUint256(Decimal.from(amount).bigNumber)
       .addAddress(frontendAddress)
 
     const gas = 3000000 + gasForHLQTIssuance
@@ -1863,7 +1897,7 @@ export class HashgraphLiquity<FetchInstance extends Fetch = Fetch>
     const functionParameters = TypedContractFunctionParameters<
       StabilityPoolAbi,
       'withdrawFromSP'
-    >().addUint256(new BigNumber(Decimal.from(amount).hex))
+    >().addUint256(Decimal.from(amount).bigNumber)
 
     const gas = 3000000 + gasForHLQTIssuance
     const unfrozenRawPopulatedTransaction = TypedContractExecuteTransaction<StabilityPoolAbi>({
@@ -1908,7 +1942,7 @@ export class HashgraphLiquity<FetchInstance extends Fetch = Fetch>
     const functionParameters = TypedContractFunctionParameters<
       StabilityPoolAbi,
       'withdrawFromSP'
-    >().addUint256(new BigNumber(0))
+    >().addUint256(Decimal.from(0).bigNumber)
 
     const gas = 3000000 + gasForHLQTIssuance
     const unfrozenRawPopulatedTransaction = TypedContractExecuteTransaction<StabilityPoolAbi>({
@@ -2008,7 +2042,7 @@ export class HashgraphLiquity<FetchInstance extends Fetch = Fetch>
     options?: TransactionOptions,
   ): Promise<
     PopulatedHashgraphLiquityTransaction<RedemptionDetails, ContractExecuteTransaction> &
-      PopulatedRedemption<ContractExecuteTransaction, TransactionReceipt, TransactionReceipt>
+    PopulatedRedemption<ContractExecuteTransaction, TransactionReceipt, TransactionReceipt>
   > {
     const attemptedHCHFAmount = Decimal.from(amount)
 
@@ -2074,7 +2108,7 @@ export class HashgraphLiquity<FetchInstance extends Fetch = Fetch>
       partialRedemptionHintNICR: Decimal = Decimal.ZERO,
     ): Promise<
       PopulatedHashgraphLiquityTransaction<RedemptionDetails, ContractExecuteTransaction> &
-        PopulatedRedemption<ContractExecuteTransaction, TransactionReceipt, TransactionReceipt>
+      PopulatedRedemption<ContractExecuteTransaction, TransactionReceipt, TransactionReceipt>
     > => {
       const maxRedemptionRateOrDefault =
         maxRedemptionRate !== undefined
@@ -2085,13 +2119,13 @@ export class HashgraphLiquity<FetchInstance extends Fetch = Fetch>
         TroveManagerAbi,
         'redeemCollateral'
       >()
-        .addUint256(new BigNumber(truncatedAmount.hex))
+        .addUint256(truncatedAmount.bigNumber)
         .addAddress(firstRedemptionHint as Address)
         .addAddress(partialRedemptionUpperHint as Address)
         .addAddress(partialRedemptionLowerHint as Address)
-        .addUint256(new BigNumber(partialRedemptionHintNICR.hex))
-        .addUint256(new BigNumber(redeemMaxIterations))
-        .addUint256(new BigNumber(maxRedemptionRateOrDefault.hex))
+        .addUint256(partialRedemptionHintNICR.bigNumber)
+        .addUint256(Decimal.from(redeemMaxIterations).bigNumber)
+        .addUint256(maxRedemptionRateOrDefault.bigNumber)
       const gas = 3000000 + gasForPotentialLastFeeOperationTimeUpdate
       const unfrozenRawPopulatedTransaction = TypedContractExecuteTransaction<TroveManagerAbi>({
         contractId: this.troveManagerContractId,
@@ -2174,7 +2208,7 @@ export class HashgraphLiquity<FetchInstance extends Fetch = Fetch>
     const functionParameters = TypedContractFunctionParameters<
       HLQTStakingAbi,
       'stake'
-    >().addUint256(new BigNumber(Decimal.from(amount).hex))
+    >().addUint256(Decimal.from(amount).bigNumber)
 
     const gas = 3000000
     const unfrozenRawPopulatedTransaction = TypedContractExecuteTransaction<HLQTStakingAbi>({
@@ -2205,7 +2239,7 @@ export class HashgraphLiquity<FetchInstance extends Fetch = Fetch>
     const functionParameters = TypedContractFunctionParameters<
       HLQTStakingAbi,
       'unstake'
-    >().addUint256(new BigNumber(Decimal.from(amount).hex))
+    >().addUint256(Decimal.from(amount).bigNumber)
 
     const gas = 3000000
     const unfrozenRawPopulatedTransaction = TypedContractExecuteTransaction<HLQTStakingAbi>({
@@ -2242,7 +2276,7 @@ export class HashgraphLiquity<FetchInstance extends Fetch = Fetch>
     const functionParameters = TypedContractFunctionParameters<
       StabilityPoolAbi,
       'registerFrontEnd'
-    >().addUint256(new BigNumber(Decimal.from(kickbackRate).hex))
+    >().addUint256(Decimal.from(kickbackRate).bigNumber)
 
     const gas = 3000000
     const unfrozenRawPopulatedTransaction = TypedContractExecuteTransaction<StabilityPoolAbi>({
@@ -2277,7 +2311,7 @@ export class HashgraphLiquity<FetchInstance extends Fetch = Fetch>
     const uniTokenAddress = await this.saucerSwapPool.methods.uniToken().call()
     const functionParameters = TypedContractFunctionParameters<IERC20Abi, 'approve'>()
       .addAddress(this.saucerSwapPoolContractId.toSolidityAddress() as Address)
-      .addUint256(new BigNumber(Decimal.from(allowance).hex))
+      .addUint256(Decimal.from(allowance).bigNumber)
 
     const gas = 3000000
     const unfrozenRawPopulatedTransaction = TypedContractExecuteTransaction<IERC20Abi>({
@@ -2305,9 +2339,15 @@ export class HashgraphLiquity<FetchInstance extends Fetch = Fetch>
     amount: Decimalish,
     options?: TransactionOptions,
   ): Promise<PopulatedHashgraphLiquityTransaction<void, ContractExecuteTransaction>> {
+    console.log('Amount', amount);
+    console.log('Decimal', Decimal.from(amount));
+    console.log('Big Number', new BigNumber(Decimal.from(amount).hex));
+
     const functionParameters = TypedContractFunctionParameters<UnipoolAbi, 'stake'>().addUint256(
-      new BigNumber(Decimal.from(amount).hex),
+      Decimal.from(amount).bigNumber,
     )
+
+    console.log('passed stake')
 
     const gas = 3000000 + gasForUnipoolRewardUpdate
     const unfrozenRawPopulatedTransaction = TypedContractExecuteTransaction<UnipoolAbi>({
@@ -2336,7 +2376,7 @@ export class HashgraphLiquity<FetchInstance extends Fetch = Fetch>
     options?: TransactionOptions,
   ): Promise<PopulatedHashgraphLiquityTransaction<void, ContractExecuteTransaction>> {
     const functionParameters = TypedContractFunctionParameters<UnipoolAbi, 'withdraw'>().addUint256(
-      new BigNumber(Decimal.from(amount).hex),
+      Decimal.from(amount).bigNumber,
     )
 
     const gas = 3000000 + gasForUnipoolRewardUpdate

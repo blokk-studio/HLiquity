@@ -64,7 +64,7 @@ type TypedContractParameters<
   ? FunctionInputs[Index]['type'] extends 'uint256'
     ? {
         addUint256: (
-          uint256: BigNumber,
+          uint256: string,
         ) => TypedContractParameters<FunctionInputs, NextIndex<Index>>
       } & { [key in `~ ${FunctionInputs[Index]['name']}`]: never }
     : FunctionInputs[Index]['type'] extends 'address'

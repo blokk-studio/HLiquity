@@ -44,14 +44,14 @@ const select = ({ stabilityDeposit }: LiquityStoreState): StabilityDeposit => st
 export const StabilityViewProvider: React.FC = props => {
   const { children } = props;
   const stabilityDeposit = useLiquitySelector(select);
-  const { liquity } = useLiquity();
+  const { store } = useLiquity();
 
   const [view, setView] = useState<StabilityView>(getInitialView(stabilityDeposit));
   const viewRef = useRef<StabilityView>(view);
 
   const dispatchEvent = useCallback((event: StabilityEvent) => {
     const nextView = transition(viewRef.current, event);
-    liquity.store.refresh();
+    store.refresh();
 
     console.log(
       "dispatchEvent() [current-view, event, next-view]",

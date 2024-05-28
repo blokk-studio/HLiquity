@@ -122,24 +122,10 @@ export class _CachedReadableLiquity<T extends unknown[]>
         );
     }
 
-    async getLPBalance(address?: string, ...extraParams: T): Promise<Decimal> {
-        return (
-            this._cache.getLPBalance(address, ...extraParams) ??
-            this._readable.getLPBalance(address, ...extraParams)
-        );
-    }
-
     async getLPReward(address?: string, ...extraParams: T): Promise<Decimal> {
         return (
             this._cache.getLPReward(address, ...extraParams) ??
             this._readable.getLPReward(address, ...extraParams)
-        );
-    }
-
-    async getLPEarnings(address?: string, ...extraParams: T): Promise<Decimal> {
-        return (
-            this._cache.getLPEarnings(address, ...extraParams) ??
-            this._readable.getLPEarnings(address, ...extraParams)
         );
     }
 
