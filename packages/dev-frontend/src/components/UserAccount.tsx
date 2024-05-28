@@ -8,8 +8,6 @@ import { COIN, COLLATERAL_COIN, GT, LP } from "../strings";
 
 import { Icon } from "./Icon";
 import { t } from "../i18n";
-import { useBondView } from "./Bonds/context/BondViewContext";
-import { useBondAddresses } from "./Bonds/context/BondAddressesContext";
 import { useMultiWallet } from "../multi_wallet";
 
 const select = ({ accountBalance, hchfBalance, hlqtBalance, lpBalance }: LiquityStoreState) => ({
@@ -22,15 +20,11 @@ const select = ({ accountBalance, hchfBalance, hlqtBalance, lpBalance }: Liquity
 export const UserAccount: React.FC = () => {
   const {
     accountBalance,
-    hchfBalance: realHchfBalance,
+    hchfBalance,
     hlqtBalance,
     lpBalance
   } = useLiquitySelector(select);
-  const { hchfBalance: customHchfBalance } = useBondView();
-  const { LUSD_OVERRIDE_ADDRESS } = useBondAddresses();
   const { addressDisplayText, disconnect } = useMultiWallet();
-
-  const hchfBalance = LUSD_OVERRIDE_ADDRESS === null ? realHchfBalance : customHchfBalance;
 
   return (
     <Flex>

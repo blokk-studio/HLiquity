@@ -43,35 +43,33 @@ export const LiquityFrontend: React.FC = () => {
         <TroveViewProvider>
           <StabilityViewProvider>
             <StakingViewProvider>
-              <BondsProvider>
-                <Flex sx={{ flexDirection: "column", minHeight: "100%" }}>
-                  <Header>
-                    <UserAccount />
-                    <SystemStatsPopup />
-                  </Header>
+              <Flex sx={{ flexDirection: "column", minHeight: "100%" }}>
+                <Header>
+                  <UserAccount />
+                  <SystemStatsPopup />
+                </Header>
 
-                  <Container
-                    variant="main"
-                    sx={{
-                      display: "flex",
-                      flexGrow: 1,
-                      flexDirection: "column",
-                      alignItems: "center"
-                    }}
-                  >
-                    <PageSwitcher>
-                      <Switch>
-                        <Route path="/" exact>
-                          <Dashboard />
-                        </Route>
-                        <Route path="/risky-troves">
-                          <RiskyTrovesPage />
-                        </Route>
-                      </Switch>
-                    </PageSwitcher>
-                  </Container>
-                </Flex>
-              </BondsProvider>
+                <Container
+                  variant="main"
+                  sx={{
+                    display: "flex",
+                    flexGrow: 1,
+                    flexDirection: "column",
+                    alignItems: "center"
+                  }}
+                >
+                  <PageSwitcher>
+                    <Switch>
+                      <Route path="/" exact>
+                        <Dashboard />
+                      </Route>
+                      <Route path="/risky-troves">
+                        <RiskyTrovesPage />
+                      </Route>
+                    </Switch>
+                  </PageSwitcher>
+                </Container>
+              </Flex>
             </StakingViewProvider>
           </StabilityViewProvider>
         </TroveViewProvider>
