@@ -1,6 +1,6 @@
-import { useSelectedChain } from "../components/chain_context";
 import { enabledChainIds } from "../configuration/chains";
 import { deployments } from "../configuration/deployments";
+import { useMultiWallet } from "../multi_wallet";
 
 const setOfEnabledChainIds = new Set(enabledChainIds);
 export const enabledDeployments = deployments.filter(deployment =>
@@ -14,7 +14,7 @@ export const useDeployments = () => {
 
 /** returns the deployment for the chain that is currently selected by wagmi */
 export const useDeployment = () => {
-  const chain = useSelectedChain();
+  const { chain } = useMultiWallet();
 
   if (!chain) {
     const errorMessage = `i need a chain to get a deployment. useHederaChain() returned ${JSON.stringify(

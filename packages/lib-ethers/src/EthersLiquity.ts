@@ -22,7 +22,9 @@ import {
   TroveCreationParams,
   TroveListingParams,
   TroveWithPendingRedistribution,
-  UserTrove
+  UserTrove,
+  ConsentableLiquity,
+  Address
 } from "@liquity/lib-base";
 
 import {
@@ -31,6 +33,7 @@ import {
   EthersLiquityConnectionOptions,
   EthersLiquityStoreOption,
   _connect,
+  _getContracts,
   _usingStore,
   getConnectionWithBlockPolledStore
 } from "./EthersLiquityConnection";
@@ -47,6 +50,9 @@ import { PopulatableEthersLiquity, SentEthersLiquityTransaction } from "./Popula
 import { ReadableEthersLiquity, ReadableEthersLiquityWithStore } from "./ReadableEthersLiquity";
 import { SendableEthersLiquity } from "./SendableEthersLiquity";
 import { BlockPolledLiquityStore } from "./BlockPolledLiquityStore";
+import { approveSpender, associateWithToken, dissociateFromToken } from "./consentable";
+import { BigNumber } from "ethers";
+import { Fetch } from "./fetch";
 
 /**
  * Thrown by {@link EthersLiquity} in case of transaction failure.
@@ -70,12 +76,32 @@ const waitForSuccess = async <T>(tx: SentEthersLiquityTransaction<T>) => {
   return receipt.details;
 };
 
+const optionsUsingStore = (
+  options:
+    | {
+        connection: EthersLiquityConnection & { useStore: "blockPolled" };
+        mirrorNodeBaseUrl: string;
+        fetch: Fetch;
+      }
+    | {
+        connection: EthersLiquityConnection;
+        mirrorNodeBaseUrl: string;
+        fetch: Fetch;
+      }
+): options is {
+  connection: EthersLiquityConnection & { useStore: "blockPolled" };
+  mirrorNodeBaseUrl: string;
+  fetch: Fetch;
+} => _usingStore(options.connection);
+
 /**
  * Convenience class that combines multiple interfaces of the library in one object.
  *
  * @public
  */
-export class EthersLiquity implements ReadableEthersLiquity, TransactableLiquity {
+export class EthersLiquity
+  implements ReadableEthersLiquity, TransactableLiquity, ConsentableLiquity
+{
   /** Information about the connection to the Liquity protocol. */
   readonly connection: EthersLiquityConnection;
 
@@ -94,33 +120,50 @@ export class EthersLiquity implements ReadableEthersLiquity, TransactableLiquity
     this.populate = new PopulatableEthersLiquity(readable);
     this.send = new SendableEthersLiquity(
       this.populate,
-      readable.hasStore('blockPolled') ? readable.store : undefined
+      readable.hasStore("blockPolled") ? readable.store : undefined
     );
   }
 
   static fromConnectionOptionsWithBlockPolledStore(
-    options: Omit<EthersLiquityConnectionOptions, "useStore">
+    options: Omit<EthersLiquityConnectionOptions, "useStore"> & {
+      mirrorNodeBaseUrl: string;
+      fetch: Fetch;
+    }
   ): EthersLiquityWithStore<BlockPolledLiquityStore> {
     const connection = getConnectionWithBlockPolledStore(options);
-    const ethersLiquity = EthersLiquity._from(connection);
+    const ethersLiquity = EthersLiquity._from({
+      connection,
+      mirrorNodeBaseUrl: options.mirrorNodeBaseUrl,
+      fetch: options.fetch
+    });
 
     return ethersLiquity;
   }
 
   /** @internal */
-  static _from(
-    connection: EthersLiquityConnection & { useStore: "blockPolled" }
-  ): EthersLiquityWithStore<BlockPolledLiquityStore>;
+  static _from(options: {
+    connection: EthersLiquityConnection & { useStore: "blockPolled" };
+    mirrorNodeBaseUrl: string;
+    fetch: Fetch;
+  }): EthersLiquityWithStore<BlockPolledLiquityStore>;
 
   /** @internal */
-  static _from(connection: EthersLiquityConnection): EthersLiquity;
+  static _from(options: {
+    connection: EthersLiquityConnection;
+    mirrorNodeBaseUrl: string;
+    fetch: Fetch;
+  }): EthersLiquity;
 
   /** @internal */
-  static _from(connection: EthersLiquityConnection): EthersLiquity {
-    if (_usingStore(connection)) {
-      return new _EthersLiquityWithStore(ReadableEthersLiquity._from(connection));
+  static _from(options: {
+    connection: EthersLiquityConnection;
+    mirrorNodeBaseUrl: string;
+    fetch: Fetch;
+  }): EthersLiquity {
+    if (optionsUsingStore(options)) {
+      return new _EthersLiquityWithStore(ReadableEthersLiquity._from(options));
     } else {
-      return new EthersLiquity(ReadableEthersLiquity._from(connection));
+      return new EthersLiquity(ReadableEthersLiquity._from(options));
     }
   }
 
@@ -144,9 +187,14 @@ export class EthersLiquity implements ReadableEthersLiquity, TransactableLiquity
 
   static async connect(
     signerOrProvider: EthersSigner | EthersProvider,
-    optionalParams?: EthersLiquityConnectionOptionalParams
+    optionalParams: EthersLiquityConnectionOptionalParams
   ): Promise<EthersLiquity> {
-    return EthersLiquity._from(await _connect(signerOrProvider, optionalParams));
+    const connection = await _connect(signerOrProvider, optionalParams);
+    return EthersLiquity._from({
+      connection,
+      mirrorNodeBaseUrl: optionalParams.mirrorNodeBaseUrl,
+      fetch: optionalParams.fetch
+    });
   }
 
   /**
@@ -616,6 +664,138 @@ export class EthersLiquity implements ReadableEthersLiquity, TransactableLiquity
    */
   exitLiquidityMining(overrides?: EthersTransactionOverrides): Promise<void> {
     return this.send.exitLiquidityMining(overrides).then(waitForSuccess);
+  }
+
+  private async getHchfTokenAddress(): Promise<Address> {
+    const { hchfToken } = _getContracts(this._readable.connection);
+    const tokenAddress = await hchfToken.tokenAddress();
+
+    return tokenAddress as Address;
+  }
+
+  private async getHlqtTokenAddress(): Promise<Address> {
+    const { hlqtToken } = _getContracts(this._readable.connection);
+    const tokenAddress = await hlqtToken.tokenAddress();
+
+    return tokenAddress as Address;
+  }
+
+  private async getLpTokenAddress(): Promise<Address> {
+    const { saucerSwapPool } = _getContracts(this._readable.connection);
+    const tokenAddress = await saucerSwapPool.uniToken();
+
+    return tokenAddress as Address;
+  }
+
+  async associateWithHchf(): Promise<void> {
+    if (!this.connection.signer) {
+      throw new Error("this.connection.signer is falsy! i cannot associate without a signer!");
+    }
+
+    const tokenAddress = await this.getHchfTokenAddress();
+    await associateWithToken({ signer: this.connection.signer, tokenAddress });
+  }
+
+  async dissociateFromHchf(): Promise<void> {
+    if (!this.connection.signer) {
+      throw new Error("this.connection.signer is falsy! i cannot associate without a signer!");
+    }
+
+    const tokenAddress = await this.getHchfTokenAddress();
+    await dissociateFromToken({ signer: this.connection.signer, tokenAddress });
+  }
+
+  async approveHchfToSpendHchf(amount: Decimal): Promise<void> {
+    if (!this.connection.signer) {
+      throw new Error(
+        "this.connection.signer is falsy! i cannot approve allowances without a signer!"
+      );
+    }
+
+    const tokenAddress = await this.getHchfTokenAddress();
+    const { hchfToken } = _getContracts(this._readable.connection);
+    const contractAddress = hchfToken.address as Address;
+
+    await approveSpender({
+      signer: this.connection.signer,
+      tokenAddress,
+      contractAddress,
+      amount: BigNumber.from(amount.bigNumber)
+    });
+  }
+
+  async associateWithHlqt(): Promise<void> {
+    if (!this.connection.signer) {
+      throw new Error("this.connection.signer is falsy! i cannot associate without a signer!");
+    }
+
+    const tokenAddress = await this.getHlqtTokenAddress();
+    await associateWithToken({ signer: this.connection.signer, tokenAddress });
+  }
+
+  async dissociateFromHlqt(): Promise<void> {
+    if (!this.connection.signer) {
+      throw new Error("this.connection.signer is falsy! i cannot associate without a signer!");
+    }
+
+    const tokenAddress = await this.getHlqtTokenAddress();
+    await dissociateFromToken({ signer: this.connection.signer, tokenAddress });
+  }
+
+  async approveHlqtToSpendHlqt(amount: Decimal): Promise<void> {
+    if (!this.connection.signer) {
+      throw new Error(
+        "this.connection.signer is falsy! i cannot approve allowances without a signer!"
+      );
+    }
+
+    const tokenAddress = await this.getHlqtTokenAddress();
+    const { hlqtToken } = _getContracts(this._readable.connection);
+    const contractAddress = hlqtToken.address as Address;
+
+    await approveSpender({
+      signer: this.connection.signer,
+      tokenAddress,
+      contractAddress,
+      amount: BigNumber.from(amount.bigNumber)
+    });
+  }
+
+  async associateWithLpToken(): Promise<void> {
+    if (!this.connection.signer) {
+      throw new Error("this.connection.signer is falsy! i cannot associate without a signer!");
+    }
+
+    const tokenAddress = await this.getLpTokenAddress();
+    await associateWithToken({ signer: this.connection.signer, tokenAddress });
+  }
+
+  async dissociateFromLpToken(): Promise<void> {
+    if (!this.connection.signer) {
+      throw new Error("this.connection.signer is falsy! i cannot associate without a signer!");
+    }
+
+    const tokenAddress = await this.getLpTokenAddress();
+    await dissociateFromToken({ signer: this.connection.signer, tokenAddress });
+  }
+
+  async approveSaucerSwapToSpendLpToken(amount: Decimal): Promise<void> {
+    if (!this.connection.signer) {
+      throw new Error(
+        "this.connection.signer is falsy! i cannot approve allowances without a signer!"
+      );
+    }
+
+    const tokenAddress = await this.getLpTokenAddress();
+    const { saucerSwapPool } = _getContracts(this._readable.connection);
+    const contractAddress = saucerSwapPool.address as Address;
+
+    await approveSpender({
+      signer: this.connection.signer,
+      tokenAddress,
+      contractAddress,
+      amount: BigNumber.from(amount.bigNumber)
+    });
   }
 }
 

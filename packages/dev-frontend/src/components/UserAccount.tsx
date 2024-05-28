@@ -7,8 +7,8 @@ import { useLiquitySelector } from "@liquity/lib-react";
 import { COIN, COLLATERAL_COIN, GT } from "../strings";
 
 import { Icon } from "./Icon";
-import { useHashConnect, useHashConnectSessionData } from "./HashConnectProvider";
 import { t } from "../i18n";
+import { useMultiWallet } from "../multi_wallet";
 
 const select = ({ accountBalance, hchfBalance, hlqtBalance }: LiquityStoreState) => ({
   accountBalance,
@@ -18,8 +18,7 @@ const select = ({ accountBalance, hchfBalance, hlqtBalance }: LiquityStoreState)
 
 export const UserAccount: React.FC = () => {
   const { accountBalance, hchfBalance, hlqtBalance } = useLiquitySelector(select);
-  const hashConnect = useHashConnect();
-  const sessionData = useHashConnectSessionData();
+  const { addressDisplayText, disconnect } = useMultiWallet();
 
   return (
     <Flex>
@@ -27,7 +26,7 @@ export const UserAccount: React.FC = () => {
         <Box>
           <Icon name="user-circle" size="lg" />
           <Text as="span" sx={{ ml: 2, fontSize: 1 }}>
-            {sessionData.userAccountId.toString()}
+            {addressDisplayText}
           </Text>
         </Box>
 
@@ -35,7 +34,7 @@ export const UserAccount: React.FC = () => {
           variant="outline"
           sx={{ alignItems: "center", p: 2, mr: 3 }}
           onClick={() => {
-            hashConnect.disconnect();
+            disconnect();
           }}
           aria-label={t("userAccount.disconnectHashPack")}
           title={t("userAccount.disconnectHashPack")}

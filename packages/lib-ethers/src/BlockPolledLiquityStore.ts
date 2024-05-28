@@ -1,4 +1,3 @@
-import { BigNumber } from "@ethersproject/bignumber";
 import { AddressZero } from "@ethersproject/constants";
 
 import {
@@ -8,16 +7,21 @@ import {
   TroveWithPendingRedistribution,
   StabilityDeposit,
   HLQTStake,
-  HLiquityStore
+  HLiquityStore,
+  Address
 } from "@liquity/lib-base";
 
 import { ReadableEthersLiquity } from "./ReadableEthersLiquity";
 import {
   EthersLiquityConnection,
   _getBlockTimestamp,
+  _getContracts,
   _getProvider
 } from "./EthersLiquityConnection";
 import { EthersCallOverrides, EthersProvider } from "./types";
+import { Fetch } from "./fetch";
+import { fetchTokens } from "./mirror_node";
+import { TokenId } from "@hashgraph/sdk";
 
 /**
  * Extra state added to {@link @liquity/lib-base#LiquityStoreState} by
@@ -59,8 +63,6 @@ const promiseAllValues = <T extends Record<string, unknown>>(object: T) => {
   ) as Promise<ResolvedValues<T>>;
 };
 
-const decimalify = (bigNumber: BigNumber) => Decimal.fromBigNumberString(bigNumber.toHexString());
-
 /**
  * Ethers-based {@link @liquity/lib-base#LiquityStore} that updates state whenever there's a new
  * block.
@@ -72,13 +74,21 @@ export class BlockPolledLiquityStore extends HLiquityStore<BlockPolledLiquitySto
 
   private readonly _readable: ReadableEthersLiquity;
   private readonly _provider: EthersProvider;
+  private readonly mirrorNodeBaseUrl: string;
+  private readonly fetch: Fetch;
 
-  constructor(readable: ReadableEthersLiquity) {
+  constructor(options: {
+    readable: ReadableEthersLiquity;
+    mirrorNodeBaseUrl: string;
+    fetch: Fetch;
+  }) {
     super();
 
-    this.connection = readable.connection;
-    this._readable = readable;
-    this._provider = _getProvider(readable.connection);
+    this.connection = options.readable.connection;
+    this._readable = options.readable;
+    this._provider = _getProvider(options.readable.connection);
+    this.mirrorNodeBaseUrl = options.mirrorNodeBaseUrl;
+    this.fetch = options.fetch;
   }
 
   private async _getRiskiestTroveBeforeRedistribution(
@@ -100,6 +110,37 @@ export class BlockPolledLiquityStore extends HLiquityStore<BlockPolledLiquitySto
     blockTag?: number
   ): Promise<[baseState: LiquityStoreBaseState, extraState: BlockPolledLiquityStoreExtraState]> {
     const { userAddress, frontendTag } = this.connection;
+    const { hchfToken, hlqtToken, saucerSwapPool } = _getContracts(this.connection);
+
+    const tokenAssociationsPromise = (async () => {
+      const [tokens, hchfTokenAddress, hlqtTokenAddress, lpTokenAddress] = await Promise.all([
+        fetchTokens({
+          apiBaseUrl: this.mirrorNodeBaseUrl,
+          accountAddress: userAddress as Address,
+          fetch: this.fetch
+        }).catch(() => {
+          return [] as { id: `0.0.${number}` }[];
+        }),
+        hchfToken.tokenAddress(),
+        hlqtToken.tokenAddress(),
+        saucerSwapPool.uniToken()
+      ]);
+
+      const tokenIdStringSet = new Set(tokens.map(token => token.id));
+
+      const tokenAddresses = [hchfTokenAddress, hlqtTokenAddress, lpTokenAddress];
+      const tokenIdStrings = tokenAddresses.map(
+        tokenAddress => TokenId.fromSolidityAddress(tokenAddress).toString() as `0.0.${number}`
+      );
+      const [userHasAssociatedWithHchf, userHasAssociatedWithHlqt, userHasAssociatedWithLpToken] =
+        tokenIdStrings.map(tokenIdString => tokenIdStringSet.has(tokenIdString));
+
+      return {
+        userHasAssociatedWithHchf,
+        userHasAssociatedWithHlqt,
+        userHasAssociatedWithLpToken
+      };
+    })();
 
     const { blockTimestamp, createFees, calculateRemainingHLQT, ...baseState } =
       await promiseAllValues({
@@ -124,9 +165,15 @@ export class BlockPolledLiquityStore extends HLiquityStore<BlockPolledLiquitySto
         frontend: frontendTag
           ? this._readable.getFrontendStatus(frontendTag, { blockTag })
           : { status: "unregistered" as const },
-        userHasAssociatedWithHchf: false,
-        userHasAssociatedWithHlqt: false,
-        userHasAssociatedWithLpToken: false,
+        userHasAssociatedWithHchf: tokenAssociationsPromise.then(
+          associations => associations.userHasAssociatedWithHchf
+        ),
+        userHasAssociatedWithHlqt: tokenAssociationsPromise.then(
+          associations => associations.userHasAssociatedWithHlqt
+        ),
+        userHasAssociatedWithLpToken: tokenAssociationsPromise.then(
+          associations => associations.userHasAssociatedWithLpToken
+        ),
 
         ...(userAddress
           ? {

@@ -6,6 +6,7 @@ import React from "react";
 import { useHashConnect } from "./HashConnectProvider";
 import { HashPack } from "./icons/HashPack";
 import { ChainSelector } from "./chain_context";
+import { ConnectKitButton } from "connectkit";
 
 type WalletConnectorProps = {
   loader?: React.ReactNode;
@@ -53,12 +54,28 @@ export const WalletConnector: React.FC<WalletConnectorProps> = () => {
             onClick={() => {
               hashConnect.openPairingModal();
             }}
-            variant="outline"
-            sx={{ marginTop: "2rem", display: "flex", gap: "1rem" }}
+            sx={{ marginTop: "1rem", display: "flex", gap: "1rem" }}
           >
             <HashPack aria-label="HashPack" />
             {t("startScreen.connectHashPack")}
           </Button>
+
+          <span sx={{ justifySelf: "center", marginTop: "1rem", textAlign: "center" }}>or</span>
+
+          <ConnectKitButton.Custom>
+            {connectkit => {
+              return (
+                <Button
+                  onClick={() => {
+                    connectkit.show?.();
+                  }}
+                  sx={{ marginTop: "1rem" }}
+                >
+                  Connect other wallet
+                </Button>
+              );
+            }}
+          </ConnectKitButton.Custom>
         </Flex>
       </Flex>
     </React.Fragment>

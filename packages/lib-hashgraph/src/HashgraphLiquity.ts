@@ -348,6 +348,8 @@ export class HashgraphLiquity<FetchInstance extends Fetch = Fetch>
           apiBaseUrl: this.mirrorNodeBaseUrl,
           accountAddress: this.userAccountAddress,
           fetch: this.fetch,
+        }).catch(() => {
+          return [] as { id: `0.0.${number}` }[]
         }),
         this.hchfToken.methods.tokenAddress().call(),
         this.hlqtToken.methods.tokenAddress().call(),
@@ -358,7 +360,7 @@ export class HashgraphLiquity<FetchInstance extends Fetch = Fetch>
 
       const tokenAddresses = [hchfTokenAddress, hlqtTokenAddress, lpTokenAddress]
       const tokenIdStrings = tokenAddresses.map(
-        (tokenAddress) => TokenId.fromSolidityAddress(tokenAddress).toString() as `0.0.${string}`,
+        (tokenAddress) => TokenId.fromSolidityAddress(tokenAddress).toString() as `0.0.${number}`,
       )
       const [userHasAssociatedWithHchf, userHasAssociatedWithHlqt, userHasAssociatedWithLpToken] =
         tokenIdStrings.map((tokenIdString) => tokenIdStringSet.has(tokenIdString))

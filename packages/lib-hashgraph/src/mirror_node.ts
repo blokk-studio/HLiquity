@@ -1,13 +1,14 @@
-import { Fetch } from './fetch'
+import { type Fetch } from './fetch'
 
 interface HederaApiToken {
-  token_id: `0.0.${string}`
+  token_id: `0.0.${number}`
 }
 
 interface HederaApiTokensData {
   tokens: HederaApiToken[]
 }
 
+// there is a duplicate of this in lib-ethers because of bundling limitations
 export const fetchTokens = async <FetchInstance extends Fetch>(options: {
   apiBaseUrl: string
   accountAddress: `0x${string}`

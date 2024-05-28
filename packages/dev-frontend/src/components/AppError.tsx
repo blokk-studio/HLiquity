@@ -1,48 +1,9 @@
 /** @jsxImportSource theme-ui */
-import { HLiquityStore } from "@liquity/lib-base";
-import React, { createContext, useEffect, useState } from "react";
-// app error
 import { ReactNode } from "react";
-import { Flex, Heading, Paragraph, Button } from "theme-ui";
+import { Button, Flex, Heading, Paragraph } from "theme-ui";
+import { Icon } from "./Icon";
 
-export const LiquityStoreContext = createContext<HLiquityStore | undefined>(undefined);
-
-type LiquityStoreProviderProps = {
-  store: HLiquityStore;
-  loader?: React.ReactNode;
-};
-
-export const LiquityStoreProvider: React.FC<LiquityStoreProviderProps> = ({
-  store,
-  children,
-  loader
-}) => {
-  const [isStoreLoaded, setIsStoreLoaded] = useState(false);
-  const [storeError, setStoreError] = useState<Error | null>(null);
-
-  useEffect(() => {
-    store.onLoaded = () => setIsStoreLoaded(true);
-    store.refresh().catch(setStoreError);
-
-    return () => {
-      store.onLoaded = undefined;
-      setIsStoreLoaded(false);
-    };
-  }, [store]);
-
-  if (storeError) {
-    // TODO: move this stupid component to dev-frontend or everything here
-    return <AppError error={storeError} />;
-  }
-
-  if (!isStoreLoaded) {
-    return <>{loader}</>;
-  }
-
-  return <LiquityStoreContext.Provider value={store}>{children}</LiquityStoreContext.Provider>;
-};
-
-const AppError: React.FC<
+export const AppError: React.FC<
   void | { error: Error; heading?: string | ReactNode; infoText?: string | ReactNode }
 > = props => (
   <Flex
@@ -58,6 +19,7 @@ const AppError: React.FC<
     ) : (
       <>
         <Heading sx={{ display: "flex", gap: "1rem", alignItems: "center" }}>
+          <Icon name="exclamation-triangle" />
           {"heading" in props ? props.heading : "Something went wrong"}
         </Heading>
         <Paragraph sx={{ marginTop: "1rem" }}>
