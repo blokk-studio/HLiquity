@@ -709,6 +709,10 @@ export class EthersLiquity
 
     const tokenAddress = await this.getHchfTokenAddress();
     await associateWithToken({ signer: this.connection.signer, tokenAddress });
+
+    if (this.hasStore()) {
+      await this.store.refresh();
+    }
   }
 
   async dissociateFromHchf(): Promise<void> {
@@ -718,6 +722,10 @@ export class EthersLiquity
 
     const tokenAddress = await this.getHchfTokenAddress();
     await dissociateFromToken({ signer: this.connection.signer, tokenAddress });
+
+    if (this.hasStore()) {
+      await this.store.refresh();
+    }
   }
 
   async approveHchfToSpendHchf(amount: Decimal): Promise<void> {
@@ -746,6 +754,10 @@ export class EthersLiquity
 
     const tokenAddress = await this.getHlqtTokenAddress();
     await associateWithToken({ signer: this.connection.signer, tokenAddress });
+
+    if (this.hasStore()) {
+      await this.store.refresh();
+    }
   }
 
   async dissociateFromHlqt(): Promise<void> {
@@ -755,6 +767,10 @@ export class EthersLiquity
 
     const tokenAddress = await this.getHlqtTokenAddress();
     await dissociateFromToken({ signer: this.connection.signer, tokenAddress });
+
+    if (this.hasStore()) {
+      await this.store.refresh();
+    }
   }
 
   async approveHlqtToSpendHlqt(amount: Decimal): Promise<void> {
@@ -783,6 +799,10 @@ export class EthersLiquity
 
     const tokenAddress = await this.getLpTokenAddress();
     await associateWithToken({ signer: this.connection.signer, tokenAddress });
+
+    if (this.hasStore()) {
+      await this.store.refresh();
+    }
   }
 
   async dissociateFromLpToken(): Promise<void> {
@@ -792,6 +812,10 @@ export class EthersLiquity
 
     const tokenAddress = await this.getLpTokenAddress();
     await dissociateFromToken({ signer: this.connection.signer, tokenAddress });
+
+    if (this.hasStore()) {
+      await this.store.refresh();
+    }
   }
 
   async approveSaucerSwapToSpendLpToken(amount: Decimal): Promise<void> {
