@@ -275,7 +275,7 @@ export const Adjusting: React.FC = () => {
           label="Borrowing Fee"
           inputId="trove-borrowing-fee"
           amount={fee.prettify(2)}
-          pendingAmount={feePct.toString(2)}
+          pendingAmount={`currently ${feePct.toString(2)} of debt`}
           unit={COIN}
           infoIcon={
             <InfoIcon
