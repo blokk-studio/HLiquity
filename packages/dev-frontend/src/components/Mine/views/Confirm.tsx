@@ -6,7 +6,7 @@ import { Transaction, useMyTransactionState } from "../../Transaction";
 import { useValidationState } from "../context/useValidationState";
 import { useMineView } from "../context/MineViewContext";
 import { LP } from "../../../strings";
-import { useHedera } from "../../../hedera/hedera_context";
+import { useLiquitySelector } from "@liquity/lib-react";
 
 type ConfirmProps = {
   amount: Decimal;
@@ -20,7 +20,7 @@ export const Confirm: React.FC<ConfirmProps> = ({ amount }) => {
     liquity: { send: liquity }
   } = useLiquity();
 
-  const { hasAssociatedWithLP } = useHedera();
+  const { userHasAssociatedWithLpToken } = useLiquitySelector(state => state);
 
   const transactionState = useMyTransactionState(transactionId);
   const { isValid, isWithdrawing, amountChanged, hasApproved } = useValidationState(amount);
@@ -39,16 +39,18 @@ export const Confirm: React.FC<ConfirmProps> = ({ amount }) => {
 
   return (
     <>
-      {
-        (hasAssociatedWithLP && hasApproved) && <Transaction
+      {userHasAssociatedWithLpToken && hasApproved && (
+        <Transaction
           id={transactionId}
           send={transactionAction}
           showFailure="asTooltip"
           tooltipPlacement="bottom"
         >
-          <Button disabled={shouldDisable}>{isWithdrawing ? "Unstake" : "Stake"} {amountChanged.prettify(2)} {LP}</Button>
+          <Button disabled={shouldDisable}>
+            {isWithdrawing ? "Unstake" : "Stake"} {amountChanged.prettify(2)} {LP}
+          </Button>
         </Transaction>
-      }
+      )}
     </>
   );
 };

@@ -5,16 +5,10 @@ import { useLiquity } from "../../../hooks/LiquityContext";
 import { useMyTransactionState } from "../../Transaction";
 import { useMineView } from "../context/MineViewContext";
 import { useValidationState } from "../context/useValidationState";
-import { useDeployment } from "../../../hooks/deployments";
-import { useHedera } from "../../../hedera/hedera_context";
-import { BigNumber } from "ethers";
 import { LoadingButton } from "../../LoadingButton";
 import { useLoadingState } from "../../../loading_state";
 import { LP } from "../../../strings";
-// import { useLoadingState } from "../../../loading_state";
-// import { useHedera } from "../../../hedera/hedera_context";
-// import { LoadingButton } from "../../LoadingButton";
-// import { BigNumber } from "ethers";
+import { useLiquitySelector } from "@liquity/lib-react";
 
 type ApproveProps = {
   amount: Decimal;
@@ -24,18 +18,8 @@ const transactionId = "mine-approve";
 
 export const Approve: React.FC<ApproveProps> = ({ amount }) => {
   const { dispatchEvent } = useMineView();
-  const {
-    liquity: {
-      // send: liquity,
-      connection: { addresses },
-      store
-    }
-  } = useLiquity();
-
   const { hasApproved } = useValidationState(amount);
   const transactionState = useMyTransactionState(transactionId);
-  const { approveSpender } = useHedera();
-  const deployment = useDeployment();
 
   useEffect(() => {
     if (transactionState.type === "confirmedOneShot") {
@@ -43,22 +27,11 @@ export const Approve: React.FC<ApproveProps> = ({ amount }) => {
     }
   }, [transactionState.type, dispatchEvent]);
 
-  // console.log(amount, hasApproved);
-
-  const { hasAssociatedWithLP, associateWithToken } = useHedera();
+  const { liquity } = useLiquity();
+  const { userHasAssociatedWithLpToken } = useLiquitySelector(state => state);
   // LP token association
   const { call: associateWithLP, state: LPAssociationLoadingState } = useLoadingState(async () => {
-    if (!deployment) {
-      const errorMessage = `i cannot get the hchf token id if there is no deployment. please connect to a chain first.`;
-      console.error(errorMessage, "context:", { deployment });
-      throw new Error(errorMessage);
-    }
-
-    // console.log(deployment);
-
-    await associateWithToken({ tokenAddress: addresses.uniToken as `0x${string}` }).then(() => {
-      store.refresh();
-    });
+    await liquity.associateWithLpToken();
   });
 
   const { call: approveLPSpender, state: LPApprovalLoadingState } = useLoadingState(async () => {
@@ -66,35 +39,17 @@ export const Approve: React.FC<ApproveProps> = ({ amount }) => {
       throw "cannot approve a withdrawal (negative spending/negative deposit) or deposit of 0";
     }
 
-    if (!deployment) {
-      const errorMessage = `i cannot get the hlqt token id if there is no deployment. please connect to a chain first.`;
-      console.error(errorMessage, "context:", { deployment });
-      throw new Error(errorMessage);
-    }
-
-    const tokenAddress = deployment.addresses.uniToken as `0x${string}`;
-    const contractAddress = deployment.addresses.saucerSwapPool as `0x${string}`;
-    const amnt = BigNumber.from(amount.hex);
-
-    // console.log('addresses', deployment.addresses.uniToken, tokenAddress);
-
-    await approveSpender({
-      contractAddress,
-      tokenAddress: tokenAddress,
-      amount: amnt
-    }).then(() => {
-      store.refresh();
-    });
+    await liquity.approveSaucerSwapToSpendLpToken(amount);
   });
 
-  if (hasApproved && hasAssociatedWithLP) {
+  if (hasApproved && userHasAssociatedWithLpToken) {
     return null;
   }
   // console.log('approve', amount, hasApproved, !amount || hasApproved || !hasAssociatedWithLP)
 
   return (
     <>
-      {!hasAssociatedWithLP && (
+      {!userHasAssociatedWithLpToken && (
         <LoadingButton
           disabled={!amount}
           loading={LPAssociationLoadingState === "pending"}
@@ -103,7 +58,7 @@ export const Approve: React.FC<ApproveProps> = ({ amount }) => {
           Approve spending {amount.prettify(2)} {LP}
         </LoadingButton>
       )}
-      {!hasApproved && hasAssociatedWithLP && (
+      {!hasApproved && userHasAssociatedWithLpToken && (
         <LoadingButton
           disabled={!amount}
           loading={LPApprovalLoadingState === "pending"}
