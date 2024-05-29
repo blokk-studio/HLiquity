@@ -103,9 +103,9 @@ import {
 import { BackendTroveStatus, userTroveStatusFrom } from './trove_status'
 import { getBlockTimestamp } from './web3'
 
-export const getHashgraphLiquity = () => { }
+export const getHashgraphLiquity = () => {}
 
-interface HashgraphLiquityStoreState { }
+interface HashgraphLiquityStoreState {}
 
 const decimalify = (matchPrimitiveType: MatchPrimitiveType<'uint256', unknown>) => {
   const decimal = Decimal.fromBigNumberString(matchPrimitiveType.toString())
@@ -156,11 +156,12 @@ interface LasagnaConnection {
 export class HashgraphLiquity<FetchInstance extends Fetch = Fetch>
   extends HLiquityStore<HashgraphLiquityStoreState>
   implements
-  ReadableLiquity,
-  PrefixProperties<Readonly<PopulatableLiquity>, 'populate'>,
-  // TransactableLiquity,
-  ConsentableLiquity,
-  EventEmitter {
+    ReadableLiquity,
+    PrefixProperties<Readonly<PopulatableLiquity>, 'populate'>,
+    // TransactableLiquity,
+    ConsentableLiquity,
+    EventEmitter
+{
   public store: HLiquityStore = this
   /** @deprecated TODO: implement & use events */
   public readonly send: SendableLiquity
@@ -350,7 +351,7 @@ export class HashgraphLiquity<FetchInstance extends Fetch = Fetch>
       const [tokens, hchfTokenAddress, hlqtTokenAddress, lpTokenAddress] = await Promise.all([
         fetchTokens({
           apiBaseUrl: this.mirrorNodeBaseUrl,
-          accountAddress: this.userAccountAddress,
+          accountId: this.userAccountId,
           fetch: this.fetch,
         }).catch(() => {
           return [] as { id: `0.0.${number}` }[]
@@ -424,68 +425,68 @@ export class HashgraphLiquity<FetchInstance extends Fetch = Fetch>
 
         ...(this.userAccountAddress
           ? {
-            accountBalance: this.web3.eth
-              .getBalance(this.userAccountAddress, blockTag)
-              .then((bigInt) =>
-                Decimal.fromBigNumberStringWithPrecision(`0x${bigInt.toString(16)}`, 18),
+              accountBalance: this.web3.eth
+                .getBalance(this.userAccountAddress, blockTag)
+                .then((bigInt) =>
+                  Decimal.fromBigNumberStringWithPrecision(`0x${bigInt.toString(16)}`, 18),
+                ),
+              hchfBalance: this.getHCHFBalance(this.userAccountAddress, { blockTag }),
+              hchfTokenAddress: this.getHCHFTokenAddress({ blockTag }),
+              hlqtTokenAddress: this.getHLQTTokenAddress({ blockTag }),
+              hlqtBalance: this.getHLQTBalance(this.userAccountAddress, { blockTag }),
+              uniTokenBalance: this.getUniTokenBalance(this.userAccountAddress, { blockTag }),
+              uniTokenAllowance: this.getUniTokenAllowance(this.userAccountAddress, { blockTag }),
+              // uniTokenBalance: Decimal.ZERO,
+              lpReward: this.getLPReward(this.userAccountAddress, { blockTag }),
+              // uniTokenAllowance: Decimal.ZERO,
+              liquidityMiningStake: this.getLiquidityMiningStake(this.userAccountAddress, {
+                blockTag,
+              }),
+              liquidityMiningHLQTReward: this.getLiquidityMiningHLQTReward(
+                this.userAccountAddress,
+                {
+                  blockTag,
+                },
               ),
-            hchfBalance: this.getHCHFBalance(this.userAccountAddress, { blockTag }),
-            hchfTokenAddress: this.getHCHFTokenAddress({ blockTag }),
-            hlqtTokenAddress: this.getHLQTTokenAddress({ blockTag }),
-            hlqtBalance: this.getHLQTBalance(this.userAccountAddress, { blockTag }),
-            uniTokenBalance: this.getUniTokenBalance(this.userAccountAddress, { blockTag }),
-            uniTokenAllowance: this.getUniTokenAllowance(this.userAccountAddress, { blockTag }),
-            // uniTokenBalance: Decimal.ZERO,
-            lpReward: this.getLPReward(this.userAccountAddress, { blockTag }),
-            // uniTokenAllowance: Decimal.ZERO,
-            liquidityMiningStake: this.getLiquidityMiningStake(this.userAccountAddress, {
-              blockTag,
-            }),
-            liquidityMiningHLQTReward: this.getLiquidityMiningHLQTReward(
-              this.userAccountAddress,
-              {
+              collateralSurplusBalance: this.getCollateralSurplusBalance(this.userAccountAddress, {
                 blockTag,
-              },
-            ),
-            collateralSurplusBalance: this.getCollateralSurplusBalance(this.userAccountAddress, {
-              blockTag,
-            }),
-            troveBeforeRedistribution: this.getTroveBeforeRedistribution(
-              this.userAccountAddress,
-              {
-                blockTag,
-              },
-            ),
-            stabilityDeposit: this.getStabilityDeposit(this.userAccountAddress, { blockTag }),
-            hlqtStake: this.getHLQTStake(this.userAccountAddress, { blockTag }),
-            ownFrontend: this.getFrontendStatus(this.userAccountAddress, { blockTag }),
-          }
+              }),
+              troveBeforeRedistribution: this.getTroveBeforeRedistribution(
+                this.userAccountAddress,
+                {
+                  blockTag,
+                },
+              ),
+              stabilityDeposit: this.getStabilityDeposit(this.userAccountAddress, { blockTag }),
+              hlqtStake: this.getHLQTStake(this.userAccountAddress, { blockTag }),
+              ownFrontend: this.getFrontendStatus(this.userAccountAddress, { blockTag }),
+            }
           : {
-            accountBalance: Decimal.ZERO,
-            hchfBalance: Decimal.ZERO,
-            hlqtBalance: Decimal.ZERO,
-            hchfTokenAddress: '0x',
-            hlqtTokenAddress: '0x',
-            uniTokenBalance: Decimal.ZERO,
-            lpReward: Decimal.ZERO,
-            uniTokenAllowance: Decimal.ZERO,
-            liquidityMiningStake: Decimal.ZERO,
-            liquidityMiningHLQTReward: Decimal.ZERO,
-            collateralSurplusBalance: Decimal.ZERO,
-            troveBeforeRedistribution: new TroveWithPendingRedistribution(
-              AddressZero,
-              'nonExistent',
-            ),
-            stabilityDeposit: new StabilityDeposit(
-              Decimal.ZERO,
-              Decimal.ZERO,
-              Decimal.ZERO,
-              Decimal.ZERO,
-              AddressZero,
-            ),
-            hlqtStake: new HLQTStake(),
-            ownFrontend: { status: 'unregistered' as const },
-          }),
+              accountBalance: Decimal.ZERO,
+              hchfBalance: Decimal.ZERO,
+              hlqtBalance: Decimal.ZERO,
+              hchfTokenAddress: '0x',
+              hlqtTokenAddress: '0x',
+              uniTokenBalance: Decimal.ZERO,
+              lpReward: Decimal.ZERO,
+              uniTokenAllowance: Decimal.ZERO,
+              liquidityMiningStake: Decimal.ZERO,
+              liquidityMiningHLQTReward: Decimal.ZERO,
+              collateralSurplusBalance: Decimal.ZERO,
+              troveBeforeRedistribution: new TroveWithPendingRedistribution(
+                AddressZero,
+                'nonExistent',
+              ),
+              stabilityDeposit: new StabilityDeposit(
+                Decimal.ZERO,
+                Decimal.ZERO,
+                Decimal.ZERO,
+                Decimal.ZERO,
+                AddressZero,
+              ),
+              hlqtStake: new HLQTStake(),
+              ownFrontend: { status: 'unregistered' as const },
+            }),
       })
 
     return [
@@ -737,12 +738,9 @@ export class HashgraphLiquity<FetchInstance extends Fetch = Fetch>
 
   async getUniTokenBalance(address?: Address, options?: ContractCallOptions): Promise<Decimal> {
     const addressOrUserAddress = this.getAddressOrUserAddress(address)
-    const uniTokenAddress = await this.saucerSwapPool.methods.uniToken().call();
+    const uniTokenAddress = await this.saucerSwapPool.methods.uniToken().call()
 
-    const uniTokenContract = new this.web3.eth.Contract(
-      iERC20Abi,
-      uniTokenAddress,
-    )
+    const uniTokenContract = new this.web3.eth.Contract(iERC20Abi, uniTokenAddress)
 
     const lpBalanceResult = await uniTokenContract.methods
       .balanceOf(addressOrUserAddress)
@@ -765,12 +763,9 @@ export class HashgraphLiquity<FetchInstance extends Fetch = Fetch>
 
   async getUniTokenAllowance(address?: Address, options?: ContractCallOptions): Promise<Decimal> {
     const addressOrUserAddress = this.getAddressOrUserAddress(address)
-    const uniTokenAddress = await this.saucerSwapPool.methods.uniToken().call();
+    const uniTokenAddress = await this.saucerSwapPool.methods.uniToken().call()
 
-    const uniTokenContract = new this.web3.eth.Contract(
-      iERC20Abi,
-      uniTokenAddress,
-    )
+    const uniTokenContract = new this.web3.eth.Contract(iERC20Abi, uniTokenAddress)
 
     const lpAllowanceResult = await uniTokenContract.methods
       .allowance(addressOrUserAddress, this.saucerSwapPool.options.address)
@@ -780,7 +775,9 @@ export class HashgraphLiquity<FetchInstance extends Fetch = Fetch>
     return lpAllowance
   }
 
-  async getRemainingLiquidityMiningHLQTReward(options?: { blockTag?: number | string }): Promise<Decimal> {
+  async getRemainingLiquidityMiningHLQTReward(options?: {
+    blockTag?: number | string
+  }): Promise<Decimal> {
     const [totalSupplyResult, rewardRateResult, periodFinishResult, lastUpdateTimeResult, block] =
       await Promise.all([
         this.saucerSwapPool.methods.totalSupply().call(undefined, options?.blockTag),
@@ -1489,8 +1486,8 @@ export class HashgraphLiquity<FetchInstance extends Fetch = Fetch>
     gasLimit: number
     rawPopulatedTransaction: RawPopulatedTransaction
     getDetails:
-    | ((options: GetDetailsOptions<RawPopulatedTransaction>) => Promise<Details>)
-    | ((options: GetDetailsOptions<RawPopulatedTransaction>) => Details)
+      | ((options: GetDetailsOptions<RawPopulatedTransaction>) => Promise<Details>)
+      | ((options: GetDetailsOptions<RawPopulatedTransaction>) => Details)
   }) {
     const send = async (): Promise<SentHashgraphLiquityTransaction<Details>> => {
       const rawReceipt = await this.hashConnect.sendTransaction(
@@ -2049,7 +2046,7 @@ export class HashgraphLiquity<FetchInstance extends Fetch = Fetch>
     options?: TransactionOptions,
   ): Promise<
     PopulatedHashgraphLiquityTransaction<RedemptionDetails, ContractExecuteTransaction> &
-    PopulatedRedemption<ContractExecuteTransaction, TransactionReceipt, TransactionReceipt>
+      PopulatedRedemption<ContractExecuteTransaction, TransactionReceipt, TransactionReceipt>
   > {
     const attemptedHCHFAmount = Decimal.from(amount)
 
@@ -2115,7 +2112,7 @@ export class HashgraphLiquity<FetchInstance extends Fetch = Fetch>
       partialRedemptionHintNICR: Decimal = Decimal.ZERO,
     ): Promise<
       PopulatedHashgraphLiquityTransaction<RedemptionDetails, ContractExecuteTransaction> &
-      PopulatedRedemption<ContractExecuteTransaction, TransactionReceipt, TransactionReceipt>
+        PopulatedRedemption<ContractExecuteTransaction, TransactionReceipt, TransactionReceipt>
     > => {
       const maxRedemptionRateOrDefault =
         maxRedemptionRate !== undefined
@@ -2346,9 +2343,9 @@ export class HashgraphLiquity<FetchInstance extends Fetch = Fetch>
     amount: Decimalish,
     options?: TransactionOptions,
   ): Promise<PopulatedHashgraphLiquityTransaction<void, ContractExecuteTransaction>> {
-    console.log('Amount', amount);
-    console.log('Decimal', Decimal.from(amount));
-    console.log('Big Number', new BigNumber(Decimal.from(amount).hex));
+    console.log('Amount', amount)
+    console.log('Decimal', Decimal.from(amount))
+    console.log('Big Number', new BigNumber(Decimal.from(amount).hex))
 
     const functionParameters = TypedContractFunctionParameters<UnipoolAbi, 'stake'>().addUint256(
       Decimal.from(amount).bigNumber,
