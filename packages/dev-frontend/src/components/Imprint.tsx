@@ -1,20 +1,9 @@
 /** @jsxImportSource theme-ui */
 import React, { useEffect, useState } from "react";
 import { Link } from "theme-ui";
+import { ImprintItem } from "./ImprintItem";
 
-const listSX = {
-  width: 200,
-  "& a": {
-    display: "block",
-    mb: 16,
-    fontSize: 20
-  },
-  "& span": {
-    display: "block",
-    mb: 16,
-    fontSize: 20
-  }
-};
+
 
 export const Imprint: React.FC = () => {
   const [email, setEmail] = useState("");
@@ -23,10 +12,15 @@ export const Imprint: React.FC = () => {
   }, []);
 
   return (
-    <ul sx={{ p: 0, listStyleType: "none", display: "inline-flex" }}>
-      <li sx={listSX}>
-        <h2>Contact</h2>
-
+    <ul sx={{
+      p: 0, 
+      listStyleType: "none", 
+      display: "inline-flex", 
+      '@media screen and (max-width: 767px)': {
+        display: "block"
+      },
+    }}>
+      <ImprintItem title="Contact">
         <address sx={{ display: "flex", flexDirection: "column", fontStyle: "normal" }}>
           <span>blokk.</span>
           <span>Dammstrasse 16</span>
@@ -41,20 +35,16 @@ export const Imprint: React.FC = () => {
             </Link>
           )}
         </address>
-      </li>
-      <li sx={listSX}>
-        <h2>Legal Stuff</h2>
-
+      </ImprintItem>
+      <ImprintItem title="Legal Stuff">
         <Link href="/" target="_blank">Imprint</Link>
         <Link href="/" target="_blank">Privacy policy</Link>
-      </li>
-      <li sx={listSX}>
-        <h2>Social Media</h2>
-
+      </ImprintItem>
+      <ImprintItem title="Social Media">
         <Link href="/" target="_blank">Twitter</Link>
         <Link href="/" target="_blank">LinkedIn</Link>
         <Link href="/" target="_blank">GitHub</Link>
-      </li>
+      </ImprintItem>
     </ul>
   );
 };

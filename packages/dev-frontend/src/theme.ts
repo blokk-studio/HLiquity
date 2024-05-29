@@ -50,6 +50,9 @@ const buttonBase: ThemeUIStyleObject = {
   justifyContent: "center",
   fontSize: 4,
   fontWeight: 300,
+  '@media screen and (max-width: 767px)': {
+    fontSize: 3,
+  },
 
   ":enabled": { cursor: "pointer" }
 };
@@ -501,7 +504,8 @@ const theme: Theme = {
     sidenav: {
       display: ["flex", "none"],
       flexDirection: "column",
-      p: 0,
+      px: 0,
+      py: '6px',
       m: 0,
       borderColor: "muted",
       mr: "25vw",
