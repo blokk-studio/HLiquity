@@ -26,6 +26,7 @@ import {
   ConsentableLiquity,
   Address
 } from "@liquity/lib-base";
+import { TokenId } from "@hashgraph/sdk";
 
 import {
   EthersLiquityConnection,
@@ -53,6 +54,7 @@ import { BlockPolledLiquityStore } from "./BlockPolledLiquityStore";
 import { approveSpender, associateWithToken, dissociateFromToken } from "./consentable";
 import { BigNumber } from "ethers";
 import { Fetch } from "./fetch";
+import { waitForTokenState } from "./mirror_node";
 
 /**
  * Thrown by {@link EthersLiquity} in case of transaction failure.
@@ -711,6 +713,12 @@ export class EthersLiquity
     await associateWithToken({ signer: this.connection.signer, tokenAddress });
 
     if (this.hasStore()) {
+      await waitForTokenState({
+        evmAddress: this.connection.userAddress as Address,
+        apiBaseUrl: this.connection.mirrorNodeBaseUrl,
+        fetch: this.connection.fetch,
+        requiredAssociations: [TokenId.fromSolidityAddress(tokenAddress)]
+      });
       await this.store.refresh();
     }
   }
@@ -724,6 +732,12 @@ export class EthersLiquity
     await dissociateFromToken({ signer: this.connection.signer, tokenAddress });
 
     if (this.hasStore()) {
+      await waitForTokenState({
+        evmAddress: this.connection.userAddress as Address,
+        apiBaseUrl: this.connection.mirrorNodeBaseUrl,
+        fetch: this.connection.fetch,
+        requiredDissociations: [TokenId.fromSolidityAddress(tokenAddress)]
+      });
       await this.store.refresh();
     }
   }
@@ -756,6 +770,12 @@ export class EthersLiquity
     await associateWithToken({ signer: this.connection.signer, tokenAddress });
 
     if (this.hasStore()) {
+      await waitForTokenState({
+        evmAddress: this.connection.userAddress as Address,
+        apiBaseUrl: this.connection.mirrorNodeBaseUrl,
+        fetch: this.connection.fetch,
+        requiredAssociations: [TokenId.fromSolidityAddress(tokenAddress)]
+      });
       await this.store.refresh();
     }
   }
@@ -769,6 +789,12 @@ export class EthersLiquity
     await dissociateFromToken({ signer: this.connection.signer, tokenAddress });
 
     if (this.hasStore()) {
+      await waitForTokenState({
+        evmAddress: this.connection.userAddress as Address,
+        apiBaseUrl: this.connection.mirrorNodeBaseUrl,
+        fetch: this.connection.fetch,
+        requiredDissociations: [TokenId.fromSolidityAddress(tokenAddress)]
+      });
       await this.store.refresh();
     }
   }
@@ -801,6 +827,12 @@ export class EthersLiquity
     await associateWithToken({ signer: this.connection.signer, tokenAddress });
 
     if (this.hasStore()) {
+      await waitForTokenState({
+        evmAddress: this.connection.userAddress as Address,
+        apiBaseUrl: this.connection.mirrorNodeBaseUrl,
+        fetch: this.connection.fetch,
+        requiredAssociations: [TokenId.fromSolidityAddress(tokenAddress)]
+      });
       await this.store.refresh();
     }
   }
@@ -814,6 +846,12 @@ export class EthersLiquity
     await dissociateFromToken({ signer: this.connection.signer, tokenAddress });
 
     if (this.hasStore()) {
+      await waitForTokenState({
+        evmAddress: this.connection.userAddress as Address,
+        apiBaseUrl: this.connection.mirrorNodeBaseUrl,
+        fetch: this.connection.fetch,
+        requiredDissociations: [TokenId.fromSolidityAddress(tokenAddress)]
+      });
       await this.store.refresh();
     }
   }

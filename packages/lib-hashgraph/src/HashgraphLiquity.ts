@@ -91,7 +91,7 @@ import {
 } from './gas'
 import { generateTrials } from './hints'
 import { PrefixProperties } from './interface_collision'
-import { fetchTokens } from './mirror_node'
+import { fetchTokens, waitForTokenState } from './mirror_node'
 import { asPopulatable } from './populatable'
 import { asSendable } from './sendable'
 import {
@@ -153,7 +153,7 @@ interface LasagnaConnection {
   frontendTag: Address
 }
 
-export class HashgraphLiquity<FetchInstance extends Fetch = Fetch>
+export class HashgraphLiquity
   extends HLiquityStore<HashgraphLiquityStoreState>
   implements
     ReadableLiquity,
@@ -181,7 +181,7 @@ export class HashgraphLiquity<FetchInstance extends Fetch = Fetch>
   private readonly totalStabilityPoolHlqtReward: Decimal
   private readonly frontendAddress: Address
   private readonly mirrorNodeBaseUrl: `https://${string}`
-  private readonly fetch: FetchInstance
+  private readonly fetch: Fetch
 
   // contracts
   private readonly activePool: Contract<ActivePoolAbi>
@@ -227,7 +227,7 @@ export class HashgraphLiquity<FetchInstance extends Fetch = Fetch>
     totalStabilityPoolHlqtReward: Decimal
     frontendAddress: Address
     mirrorNodeBaseUrl: `https://${string}`
-    fetch: FetchInstance
+    fetch: Fetch
 
     // contracts
     activePool: Contract<ActivePoolAbi>
@@ -2461,6 +2461,13 @@ export class HashgraphLiquity<FetchInstance extends Fetch = Fetch>
     })
     const transaction = await unfrozenTransaction.freezeWithSigner(this.signer)
     const receipt = await transaction.executeWithSigner(this.signer)
+
+    await waitForTokenState({
+      accountId: this.userAccountId,
+      apiBaseUrl: this.mirrorNodeBaseUrl,
+      fetch: this.fetch,
+      requiredAssociations: [tokenId],
+    })
     await this.refresh()
   }
 
@@ -2473,6 +2480,13 @@ export class HashgraphLiquity<FetchInstance extends Fetch = Fetch>
     })
     const transaction = await unfrozenTransaction.freezeWithSigner(this.signer)
     const receipt = await transaction.executeWithSigner(this.signer)
+
+    await waitForTokenState({
+      accountId: this.userAccountId,
+      apiBaseUrl: this.mirrorNodeBaseUrl,
+      fetch: this.fetch,
+      requiredDissociations: [tokenId],
+    })
     await this.refresh()
   }
 
@@ -2485,6 +2499,13 @@ export class HashgraphLiquity<FetchInstance extends Fetch = Fetch>
     })
     const transaction = await unfrozenTransaction.freezeWithSigner(this.signer)
     const receipt = await transaction.executeWithSigner(this.signer)
+
+    await waitForTokenState({
+      accountId: this.userAccountId,
+      apiBaseUrl: this.mirrorNodeBaseUrl,
+      fetch: this.fetch,
+      requiredAssociations: [tokenId],
+    })
     await this.refresh()
   }
 
@@ -2497,6 +2518,13 @@ export class HashgraphLiquity<FetchInstance extends Fetch = Fetch>
     })
     const transaction = await unfrozenTransaction.freezeWithSigner(this.signer)
     const receipt = await transaction.executeWithSigner(this.signer)
+
+    await waitForTokenState({
+      accountId: this.userAccountId,
+      apiBaseUrl: this.mirrorNodeBaseUrl,
+      fetch: this.fetch,
+      requiredDissociations: [tokenId],
+    })
     await this.refresh()
   }
 
@@ -2509,6 +2537,13 @@ export class HashgraphLiquity<FetchInstance extends Fetch = Fetch>
     })
     const transaction = await unfrozenTransaction.freezeWithSigner(this.signer)
     const receipt = await transaction.executeWithSigner(this.signer)
+
+    await waitForTokenState({
+      accountId: this.userAccountId,
+      apiBaseUrl: this.mirrorNodeBaseUrl,
+      fetch: this.fetch,
+      requiredAssociations: [tokenId],
+    })
     await this.refresh()
   }
 
@@ -2521,6 +2556,13 @@ export class HashgraphLiquity<FetchInstance extends Fetch = Fetch>
     })
     const transaction = await unfrozenTransaction.freezeWithSigner(this.signer)
     const receipt = await transaction.executeWithSigner(this.signer)
+
+    await waitForTokenState({
+      accountId: this.userAccountId,
+      apiBaseUrl: this.mirrorNodeBaseUrl,
+      fetch: this.fetch,
+      requiredDissociations: [tokenId],
+    })
     await this.refresh()
   }
 
