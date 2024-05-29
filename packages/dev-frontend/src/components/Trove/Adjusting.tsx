@@ -135,10 +135,10 @@ export const Adjusting: React.FC = () => {
   const maxBorrowingRate = borrowingRate.add(0.005);
   const updatedTrove = isDirty ? new Trove(collateral, totalDebt) : trove;
   const feePct = new Percent(borrowingRate);
-  const availableEth = accountBalance.gt(TX_MAX_COSTS)
-    ? accountBalance.sub(TX_MAX_COSTS)
+  const availableEth = trove.collateral.add(accountBalance);
+  const maxCollateral = availableEth.gt(TX_MAX_COSTS)
+    ? availableEth.sub(TX_MAX_COSTS)
     : Decimal.ZERO;
-  const maxCollateral = availableEth;
   const collateralMaxedOut = collateral.eq(maxCollateral);
   const collateralRatio =
     !collateral.isZero && !netDebt.isZero ? updatedTrove.collateralRatio(price) : undefined;
