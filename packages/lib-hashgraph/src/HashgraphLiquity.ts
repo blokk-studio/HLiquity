@@ -275,7 +275,12 @@ export class HashgraphLiquity<FetchInstance extends Fetch = Fetch>
     this.userAccountId = options.userAccountId
     this.userAccountAddress = options.userAccountAddress
     this.hashConnect = options.userHashConnect
-    this.signer = this.hashConnect.getSigner(this.userAccountId)
+    try {
+      this.signer = this.hashConnect.getSigner(this.userAccountId)
+    } catch {
+      this.hashConnect.disconnect()
+      throw new Error("Disconnected HashConnect because the signer isn't available. Please retry.")
+    }
     this.web3 = options.web3
     this.totalStabilityPoolHlqtReward = options.totalStabilityPoolHlqtReward
     this.frontendAddress = options.frontendAddress
