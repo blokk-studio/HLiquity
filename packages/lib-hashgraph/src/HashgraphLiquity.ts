@@ -797,8 +797,6 @@ export class HashgraphLiquity<FetchInstance extends Fetch = Fetch>
       Math.max(0, periodFinish - (totalSupply.eq(0) ? lastUpdateTime : blockTimestamp)),
     )
 
-    console.log('remaining reward', remainingReward)
-
     return remainingReward
   }
 
