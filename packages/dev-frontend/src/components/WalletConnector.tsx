@@ -42,9 +42,9 @@ export const WalletConnector: React.FC<WalletConnectorProps> = () => {
 
         <Paragraph sx={{ marginTop: "2rem", fontSize: "1.125rem" }}>
           {t("startScreen.introText.0")}
-          <span sx={{ color: "secondary", fontWeight: "bold" }}>{t("startScreen.introText.1")}</span>
+          <span sx={{ color: "primary", fontWeight: "bold" }}>{t("startScreen.introText.1")}</span>
           {t("startScreen.introText.2")}
-          <span sx={{ color: "secondary", fontWeight: "bold" }}>{t("startScreen.introText.3")}</span>
+          <span sx={{ color: "primary", fontWeight: "bold" }}>{t("startScreen.introText.3")}</span>
         </Paragraph>
 
         <Flex sx={{ flexDirection: "column", alignSelf: "center", marginTop: "2rem" }}>

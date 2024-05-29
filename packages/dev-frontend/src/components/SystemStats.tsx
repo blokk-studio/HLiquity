@@ -255,6 +255,7 @@ export const SystemStats: React.FC<SystemStatsProps> = ({ variant = "info", show
           LP Token ID:{" "}
           {deployment ? (
             <Link
+              target="_blank"
               sx={{ color: "info" }}
               href={getHederaLink(deployment.addresses.uniToken, chain?.id)}
             >

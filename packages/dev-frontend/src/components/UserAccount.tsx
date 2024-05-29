@@ -12,11 +12,11 @@ import { useMultiWallet } from "../multi_wallet";
 import { useBondView } from "./Bonds/context/BondViewContext";
 import { useBondAddresses } from "./Bonds/context/BondAddressesContext";
 
-const select = ({ accountBalance, hchfBalance, hlqtBalance, lpBalance }: LiquityStoreState) => ({
+const select = ({ accountBalance, hchfBalance, hlqtBalance, uniTokenBalance }: LiquityStoreState) => ({
   accountBalance,
   hchfBalance,
   hlqtBalance,
-  lpBalance
+  uniTokenBalance
 });
 
 export const UserAccount: React.FC = () => {
@@ -24,7 +24,7 @@ export const UserAccount: React.FC = () => {
     accountBalance,
     hchfBalance: realHchfBalance,
     hlqtBalance,
-    lpBalance
+    uniTokenBalance
   } = useLiquitySelector(select);
   const { addressDisplayText, disconnect } = useMultiWallet();
   const { hchfBalance: customHchfBalance } = useBondView();
@@ -67,7 +67,7 @@ export const UserAccount: React.FC = () => {
           [COLLATERAL_COIN, accountBalance],
           [COIN, Decimal.from(hchfBalance || 0)],
           [GT, Decimal.from(hlqtBalance)],
-          [LP, Decimal.from(lpBalance)],
+          [LP, Decimal.from(uniTokenBalance)],
         ] as const).map(([currency, balance], i) => (
           <Flex key={i} sx={{ ml: 3, flexDirection: "column" }}>
             <Heading sx={{ fontSize: 1 }}>{currency}</Heading>
