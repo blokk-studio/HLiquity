@@ -45,7 +45,6 @@ export const Approve: React.FC<ApproveProps> = ({ amount }) => {
   if (hasApproved && userHasAssociatedWithLpToken) {
     return null;
   }
-  // console.log('approve', amount, hasApproved, !amount || hasApproved || !hasAssociatedWithLP)
 
   return (
     <>
@@ -55,7 +54,7 @@ export const Approve: React.FC<ApproveProps> = ({ amount }) => {
           loading={LPAssociationLoadingState === "pending"}
           onClick={associateWithLP}
         >
-          Approve spending {amount.prettify(2)} {LP}
+          Associate with {LP}
         </LoadingButton>
       )}
       {!hasApproved && userHasAssociatedWithLpToken && (
