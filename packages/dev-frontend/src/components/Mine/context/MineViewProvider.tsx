@@ -29,7 +29,7 @@ const selector = ({
 export const MineViewProvider: React.FC = props => {
   const { children } = props;
   const { liquidityMiningStake, remainingLiquidityMiningHLQTReward } = useLiquitySelector(selector);
-  const { liquity } = useLiquity();
+  const { store } = useLiquity();
 
   const [view, setView] = useState<MineView>(
     getInitialView(liquidityMiningStake, remainingLiquidityMiningHLQTReward)
@@ -38,7 +38,7 @@ export const MineViewProvider: React.FC = props => {
 
   const dispatchEvent = useCallback((event: MineEvent) => {
     const nextView = transition(viewRef.current, event);
-    liquity.store.refresh();
+    store.refresh();
 
     console.log(
       "dispatchEvent() [current-view, event, next-view]",
