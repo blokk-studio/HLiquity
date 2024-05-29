@@ -18,7 +18,12 @@ export class AppErrorBoundary extends Component<unknown, { error: Error | null }
 
   render(): React.ReactNode {
     if (this.state.error) {
-      return <AppError error={this.state.error} />;
+      return (
+        <AppError
+          error={this.state.error}
+          infoText="Please refresh the page and try again. If the error persists, try disconnecting all of your wallets and try again."
+        />
+      );
     }
 
     return <>{this.props.children}</>;
