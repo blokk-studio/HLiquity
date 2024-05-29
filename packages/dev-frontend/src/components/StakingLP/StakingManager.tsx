@@ -1,13 +1,7 @@
 import React from "react";
 import { Button, Flex } from "theme-ui";
 
-import {
-  Decimal,
-  Decimalish,
-  LiquityStoreState,
-  LPTStake,
-  LPTStakeChange
-} from "@liquity/lib-base";
+import { Decimal, Decimalish, LiquityStoreState, LPTStake, LPTStakeChange } from "@liquity/lib-base";
 
 import { LiquityStoreUpdate, useLiquityReducer, useLiquitySelector } from "@liquity/lib-react";
 
@@ -203,15 +197,15 @@ export const StakingManager: React.FC = () => {
         ? "danger"
         : hchfAssociationLoadingState,
       description: hasAssociatedWithHchf
-        ? "You've already consented to receiving HCHF."
-        : "You have to consent to receiving HCHF tokens before you can use HLiquity."
+        ? "You've already associated with HCHF."
+        : "You have to associate with HCHF tokens before you can use HLiquity."
     }
   ];
   if (needsSpenderApproval) {
     transactionSteps.push({
       title: "Approve HLQT spender",
       status: hlqtApprovalLoadingState === "error" ? "danger" : hlqtApprovalLoadingState,
-      description: "You have to consent to the HLQT contract spending your HLQT tokens."
+      description: "You have to approve the HLQT contract to spend your HLQT tokens."
     });
   }
   transactionSteps.push({
@@ -246,7 +240,7 @@ export const StakingManager: React.FC = () => {
             loading={hchfAssociationLoadingState === "pending"}
             onClick={associateWithHchf}
           >
-            Consent to receiving HCHF
+            Associate with HCHF
           </LoadingButton>
         ) : needsSpenderApproval && hlqtApprovalLoadingState !== "success" ? (
           <LoadingButton
@@ -254,7 +248,7 @@ export const StakingManager: React.FC = () => {
             loading={hlqtApprovalLoadingState === "pending"}
             onClick={approveHlqtSpender}
           >
-            Consent to spending {validChange?.stakeHLQT?.toString(2)} HLQT
+            Approve spending {validChange?.stakeHLQT?.toString(2)} HLQT
           </LoadingButton>
         ) : validChange ? (
           <StakingManagerAction change={validChange} loading={changePending}>

@@ -100,7 +100,7 @@ export const Approve: React.FC<ApproveProps> = ({ amount }) => {
           loading={LPAssociationLoadingState === "pending"}
           onClick={associateWithLP}
         >
-          Consent to spending {amount.prettify(2)} {LP}
+          Approve spending {amount.prettify(2)} {LP}
         </LoadingButton>
       )}
       {!hasApproved && hasAssociatedWithLP && (
@@ -109,7 +109,7 @@ export const Approve: React.FC<ApproveProps> = ({ amount }) => {
           loading={LPApprovalLoadingState === "pending"}
           onClick={approveLPSpender}
         >
-          Consent to spending {amount.prettify(2)} {LP}
+          Approve spending {amount.prettify(2)} {LP}
         </LoadingButton>
       )}
     </>
