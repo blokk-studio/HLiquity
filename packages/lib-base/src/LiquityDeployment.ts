@@ -41,9 +41,11 @@ export interface Deployment {
   readonly _priceFeedIsTestnet: boolean;
   readonly _uniTokenIsMock: boolean;
   readonly _isDev: boolean;
-  readonly hchfTokenAddress: Address;
-  readonly hlqtTokenAddress: Address;
   readonly frontendTag: Address;
+  /** @deprecated call contract methods instead */
+  readonly hchfTokenAddress: Address;
+  /** @deprecated call contract methods instead */
+  readonly hlqtTokenAddress: Address;
 }
 
 export interface DeploymentDefinition {
