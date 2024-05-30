@@ -436,9 +436,6 @@ export class HashgraphLiquity
               hlqtBalance: this.getHLQTBalance(this.userAccountAddress, { blockTag }),
               uniTokenBalance: this.getUniTokenBalance(this.userAccountAddress, { blockTag }),
               uniTokenAllowance: this.getUniTokenAllowance(this.userAccountAddress, { blockTag }),
-              // uniTokenBalance: Decimal.ZERO,
-              lpReward: this.getLPReward(this.userAccountAddress, { blockTag }),
-              // uniTokenAllowance: Decimal.ZERO,
               liquidityMiningStake: this.getLiquidityMiningStake(this.userAccountAddress, {
                 blockTag,
               }),
@@ -468,7 +465,6 @@ export class HashgraphLiquity
               hchfTokenAddress: '0x',
               hlqtTokenAddress: '0x',
               uniTokenBalance: Decimal.ZERO,
-              lpReward: Decimal.ZERO,
               uniTokenAllowance: Decimal.ZERO,
               liquidityMiningStake: Decimal.ZERO,
               liquidityMiningHLQTReward: Decimal.ZERO,

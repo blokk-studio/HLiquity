@@ -27,7 +27,6 @@ import {
   EthersLiquityStoreOption,
   _connect,
   _getBlockTimestamp,
-  _getBlockTimestampAsNumber,
   _getContracts,
   _requireAddress,
   _requireFrontendAddress
@@ -58,14 +57,14 @@ const userTroveStatusFrom = (backendStatus: BackendTroveStatus): UserTroveStatus
   backendStatus === BackendTroveStatus.nonExistent
     ? "nonExistent"
     : backendStatus === BackendTroveStatus.active
-      ? "open"
-      : backendStatus === BackendTroveStatus.closedByOwner
-        ? "closedByOwner"
-        : backendStatus === BackendTroveStatus.closedByLiquidation
-          ? "closedByLiquidation"
-          : backendStatus === BackendTroveStatus.closedByRedemption
-            ? "closedByRedemption"
-            : panic(new Error(`invalid backendStatus ${backendStatus}`));
+    ? "open"
+    : backendStatus === BackendTroveStatus.closedByOwner
+    ? "closedByOwner"
+    : backendStatus === BackendTroveStatus.closedByLiquidation
+    ? "closedByLiquidation"
+    : backendStatus === BackendTroveStatus.closedByRedemption
+    ? "closedByRedemption"
+    : panic(new Error(`invalid backendStatus ${backendStatus}`));
 
 const decimalify = (bigNumber: BigNumber) => Decimal.fromBigNumberString(bigNumber.toHexString());
 const numberify = (bigNumber: BigNumber) => bigNumber.toNumber();
@@ -123,10 +122,10 @@ export class ReadableEthersLiquity implements ReadableLiquity {
 
     return options.connection.useStore === "blockPolled"
       ? new _BlockPolledReadableEthersLiquity({
-        readable,
-        mirrorNodeBaseUrl: options.mirrorNodeBaseUrl,
-        fetch: options.fetch
-      })
+          readable,
+          mirrorNodeBaseUrl: options.mirrorNodeBaseUrl,
+          fetch: options.fetch
+        })
       : readable;
   }
 
@@ -331,30 +330,6 @@ export class ReadableEthersLiquity implements ReadableLiquity {
     const { hchfToken } = _getContracts(this.connection);
 
     return hchfToken.balanceOf(address, { ...overrides }).then(decimalify);
-  }
-
-  /** {@inheritDoc @liquity/lib-base#ReadableLiquity.getLPBalance} */
-  getLPBalance(address?: string, overrides?: EthersCallOverrides): Promise<Decimal> {
-    address ??= _requireAddress(this.connection);
-    const { saucerSwapPool, uniToken } = _getContracts(this.connection);
-
-    return uniToken.balanceOf(address, { ...overrides }).then(decimalify);
-  }
-
-  /** {@inheritDoc @liquity/lib-base#ReadableLiquity.getLPReward} */
-  getLPReward(address?: string, overrides?: EthersCallOverrides): Promise<Decimal> {
-    address ??= _requireAddress(this.connection);
-    const { saucerSwapPool, uniToken } = _getContracts(this.connection);
-
-    return saucerSwapPool.rewardPerToken().then(decimalify);
-  }
-
-  /** {@inheritDoc @liquity/lib-base#ReadableLiquity.getLPEarnings} */
-  getLPEarnings(address?: string, overrides?: EthersCallOverrides): Promise<Decimal> {
-    address ??= _requireAddress(this.connection);
-    const { saucerSwapPool, uniToken } = _getContracts(this.connection);
-
-    return saucerSwapPool.earned(address, { ...overrides }).then(decimalify);
   }
 
   getHLQTTokenAddress(overrides?: EthersCallOverrides): Promise<string> {
@@ -608,7 +583,8 @@ export interface ReadableEthersLiquityWithStore<T extends HLiquityStore = HLiqui
 }
 
 class BlockPolledLiquityStoreBasedCache
-  implements _LiquityReadCache<[overrides?: EthersCallOverrides]> {
+  implements _LiquityReadCache<[overrides?: EthersCallOverrides]>
+{
   private _store: BlockPolledLiquityStore;
 
   constructor(store: BlockPolledLiquityStore) {
@@ -700,24 +676,6 @@ class BlockPolledLiquityStoreBasedCache
   getHCHFBalance(address?: string, overrides?: EthersCallOverrides): Decimal | undefined {
     if (this._userHit(address, overrides)) {
       return this._store.state.hchfBalance;
-    }
-  }
-
-  getLPBalance(address?: string, overrides?: EthersCallOverrides): Decimal | undefined {
-    if (this._userHit(address, overrides)) {
-      return this._store.state.lpBalance;
-    }
-  }
-
-  getLPReward(address?: string, overrides?: EthersCallOverrides): Decimal | undefined {
-    if (this._userHit(address, overrides)) {
-      return this._store.state.lpReward
-    }
-  }
-
-  getLPEarnings(address?: string, overrides?: EthersCallOverrides): Decimal | undefined {
-    if (this._userHit(address, overrides)) {
-      return this._store.state.lpEarnings;
     }
   }
 
@@ -821,7 +779,8 @@ class BlockPolledLiquityStoreBasedCache
 
 class _BlockPolledReadableEthersLiquity
   extends _CachedReadableLiquity<[overrides?: EthersCallOverrides]>
-  implements ReadableEthersLiquityWithStore<BlockPolledLiquityStore> {
+  implements ReadableEthersLiquityWithStore<BlockPolledLiquityStore>
+{
   readonly connection: EthersLiquityConnection;
   readonly store: BlockPolledLiquityStore;
 
