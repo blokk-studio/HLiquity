@@ -10,13 +10,13 @@ const baseColors = {
   red: "#dc2c10",
   lightRed: "#ff755f",
   white: "#fff",
-  black: "#000",
+  black: "#000"
 };
 
 const colors = {
   primary: baseColors.black,
   secondary: baseColors.white,
-  accent: baseColors.cyan,
+  accent: "#444547",
 
   success: baseColors.green,
   successHover: baseColors.lightGreen,
@@ -29,7 +29,7 @@ const colors = {
 
   text: "#primary",
   background: "white",
-  muted: "#eaebed",
+  muted: "#c5c6c8",
   highlight: "#efeffe",
 
   modes: {
@@ -40,6 +40,8 @@ const colors = {
       secondary: baseColors.black,
       buttonShadow: "#ffffff3D",
       info: baseColors.cyan,
+      muted: "#303032",
+      accent: "#949597"
     }
   }
 };
@@ -50,8 +52,8 @@ const buttonBase: ThemeUIStyleObject = {
   justifyContent: "center",
   fontSize: 4,
   fontWeight: 300,
-  '@media screen and (max-width: 767px)': {
-    fontSize: 3,
+  "@media screen and (max-width: 767px)": {
+    fontSize: 3
   },
 
   ":enabled": { cursor: "pointer" }
@@ -75,12 +77,14 @@ const button: ThemeUIStyleObject = {
 
 const buttonOutline = (color: string, hoverColor: string): ThemeUIStyleObject => ({
   color,
-  borderColor: color,
   background: "none",
+  borderColor: "muted",
+  borderWidth: 2,
+  borderStyle: "solid",
 
   ":enabled:hover": {
-    bg: hoverColor,
-    borderColor: hoverColor
+    borderColor: hoverColor,
+    boxShadow: `4px 4px 20px var(--theme-ui-colors-muted), inset 0 0 0 2px var(--theme-ui-colors-muted)`
   }
 });
 
@@ -122,7 +126,7 @@ const infoCard: ThemeUIStyleObject = {
   h2: {
     mb: 2,
     fontSize: cardHeadingFontSize
-  },
+  }
 };
 
 const formBase: ThemeUIStyleObject = {
@@ -225,13 +229,13 @@ const theme: Theme = {
       ":enabled:hover": {
         bg: "secondary",
         borderColor: "secondary",
-        boxShadow: `4px 4px 20px var(--theme-ui-colors-buttonShadow), inset 0 0 0 2px var(--theme-ui-colors-primary)`,
+        boxShadow: `4px 4px 20px var(--theme-ui-colors-buttonShadow), inset 0 0 0 2px var(--theme-ui-colors-primary)`
       }
     },
 
     outline: {
       ...button,
-      ...buttonOutline("primary", "secondary")
+      ...buttonOutline("primary", "muted")
     },
 
     cancel: {
@@ -243,7 +247,7 @@ const theme: Theme = {
       ":enabled:hover": {
         bg: "secondary",
         borderColor: "secondary",
-        boxShadow: `4px 4px 20px var(--theme-ui-colors-buttonShadow), inset 0 0 0 2px var(--theme-ui-colors-primary)`,
+        boxShadow: `4px 4px 20px var(--theme-ui-colors-buttonShadow), inset 0 0 0 2px var(--theme-ui-colors-primary)`
       }
     },
 
@@ -319,9 +323,9 @@ const theme: Theme = {
         fontSize: cardHeadingFontSize
       },
 
-      "h3": {
+      h3: {
         fontSize: "20px",
-        fontWeight: 500,
+        fontWeight: 500
       }
     },
 
@@ -358,18 +362,18 @@ const theme: Theme = {
 
   forms: {
     switch: {
-      backgroundColor: 'primary',
+      backgroundColor: "primary",
       mr: 0,
       ml: 3,
       pr: 0,
 
-      '&:checked': {
-        backgroundColor: 'primary'
+      "&:checked": {
+        backgroundColor: "primary"
       },
 
-      'input:checked ~ & > div': {
-        backgroundColor: 'secondary',
-      },
+      "input:checked ~ & > div": {
+        backgroundColor: "secondary"
+      }
     },
 
     label: {
@@ -505,7 +509,7 @@ const theme: Theme = {
       display: ["flex", "none"],
       flexDirection: "column",
       px: 0,
-      py: '6px',
+      py: "6px",
       m: 0,
       borderColor: "muted",
       mr: "25vw",
@@ -541,7 +545,7 @@ const theme: Theme = {
     a: {
       color: "primary",
       ":hover": { fontWeight: "bold" },
-      textDecoration: "none",
+      textDecoration: "none"
     },
 
     progress: {
@@ -569,8 +573,8 @@ const theme: Theme = {
       textTransform: "unset",
       letterSpacing: "unset",
       mt: "unset",
-      fontWeight: "unset",
-    },
+      fontWeight: "unset"
+    }
   }
 };
 
