@@ -37,7 +37,6 @@ export const Staking: React.FC = () => {
     dispatchEvent("CANCEL_PRESSED");
   }, [dispatchEvent]);
 
-  console.debug(liquity);
   const transactionAction = isWithdrawing
     ? liquity.send.unstakeUniTokens.bind(liquity.send, amountChanged)
     : liquity.send.stakeUniTokens.bind(liquity.send, amountChanged);
