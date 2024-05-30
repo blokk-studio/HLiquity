@@ -16,7 +16,7 @@ import {
   selectForStabilityDepositChangeValidation,
   validateStabilityDepositChange
 } from "./validation/validateStabilityDepositChange";
-import { Step } from "../Steps";
+import { Step, getAssociationStepStatus } from "../Steps";
 import { useLoadingState } from "../../loading_state";
 import { useLiquity } from "../../hooks/LiquityContext";
 import { LoadingButton } from "../LoadingButton";
@@ -170,11 +170,10 @@ export const StabilityDepositManager: React.FC = () => {
   if (!validChange || validChange?.depositHCHF) {
     transactionSteps.push({
       title: "Associate with HLQT",
-      status: userHasAssociatedWithHlqt
-        ? "success"
-        : hlqtAssociationLoadingState === "error"
-        ? "danger"
-        : hlqtAssociationLoadingState,
+      status: getAssociationStepStatus({
+        userHasAssociatedWithToken: userHasAssociatedWithHlqt,
+        tokenAssociationLoadingState: hlqtAssociationLoadingState
+      }),
       description: userHasAssociatedWithHlqt
         ? "You've already associated with HLQT."
         : "You have to associate with HLQT tokens before you can use HLiquity."
@@ -183,11 +182,10 @@ export const StabilityDepositManager: React.FC = () => {
   if (validChange?.withdrawHCHF) {
     transactionSteps.push({
       title: "Associate with HCHF",
-      status: userHasAssociatedWithHchf
-        ? "success"
-        : hlqtAssociationLoadingState === "error"
-        ? "danger"
-        : hlqtAssociationLoadingState,
+      status: getAssociationStepStatus({
+        userHasAssociatedWithToken: userHasAssociatedWithHchf,
+        tokenAssociationLoadingState: hchfAssociationLoadingState
+      }),
       description: userHasAssociatedWithHchf
         ? "You've already associated with HCHF."
         : "You have to associate with HCHF tokens before you can use HLiquity."

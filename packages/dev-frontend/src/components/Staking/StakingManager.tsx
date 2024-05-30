@@ -20,7 +20,7 @@ import { ActionDescription, Amount } from "../ActionDescription";
 import { ErrorDescription } from "../ErrorDescription";
 import { useLiquity } from "../../hooks/LiquityContext";
 import { useLoadingState } from "../../loading_state";
-import { Step } from "../Steps";
+import { Step, getAssociationStepStatus } from "../Steps";
 import { LoadingButton } from "../LoadingButton";
 
 const init = ({ hlqtStake }: LiquityStoreState) => ({
@@ -166,11 +166,10 @@ export const StakingManager: React.FC = () => {
   const transactionSteps: Step[] = [
     {
       title: "Associate with HCHF",
-      status: userHasAssociatedWithHchf
-        ? "success"
-        : hchfAssociationLoadingState === "error"
-        ? "danger"
-        : hchfAssociationLoadingState,
+      status: getAssociationStepStatus({
+        userHasAssociatedWithToken: userHasAssociatedWithHchf,
+        tokenAssociationLoadingState: hchfAssociationLoadingState
+      }),
       description: userHasAssociatedWithHchf
         ? "You've already associated with HCHF."
         : "You have to associate with HCHF tokens before you can use HLiquity."
