@@ -3,6 +3,7 @@ import React, { ReactNode } from "react";
 import { Icon } from "./Icon";
 import { Card, Spinner, ThemeUIStyleObject } from "theme-ui";
 import { Tooltip } from "./Tooltip";
+import { LoadingState } from "../loading_state";
 
 export interface Step {
   title: string;
@@ -123,4 +124,27 @@ export const Steps: React.FunctionComponent<{ steps: Step[]; sx?: ThemeUIStyleOb
       })}
     </ul>
   );
+};
+
+export const getAssociationStepStatus = (options: {
+  userHasAssociatedWithToken: boolean;
+  tokenAssociationLoadingState: LoadingState;
+}) => {
+  if (options.userHasAssociatedWithToken) {
+    return "success";
+  }
+
+  const hasAssociationError = options.tokenAssociationLoadingState === "error";
+  if (hasAssociationError) {
+    return "danger";
+  }
+
+  const isWaitingForAssociation =
+    options.tokenAssociationLoadingState === "pending" ||
+    (!options.userHasAssociatedWithToken && options.tokenAssociationLoadingState === "success");
+  if (isWaitingForAssociation) {
+    return "pending";
+  }
+
+  return "idle";
 };

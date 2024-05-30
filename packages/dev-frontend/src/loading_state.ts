@@ -1,9 +1,10 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
-type LoadingState = "idle" | "pending" | "success" | "error";
+export type LoadingState = "idle" | "pending" | "success" | "error";
 
 export const useLoadingState = <Type>(
-  callback: () => Promise<Type | null>
+  callback: () => Promise<Type | null>,
+  resetDependencies: unknown[] = []
 ): {
   state: LoadingState;
   call: typeof callback;
@@ -31,6 +32,14 @@ export const useLoadingState = <Type>(
 
     return null;
   };
+
+  useEffect(() => {
+    setState("idle");
+    setResult(null);
+    setError(null);
+    // man, react sucks bad
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, resetDependencies);
 
   return {
     state,
