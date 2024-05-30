@@ -1,35 +1,36 @@
-import { AccountId } from '@hashgraph/sdk'
+import { AccountId, TokenId } from '@hashgraph/sdk'
+import { Address } from '@liquity/lib-base'
 import { type Fetch } from './fetch'
 
+// there is a duplicate of this in lib-ethers because of bundling limitations
+
+type TokenIdString = `0.0.${number}`
+
 interface HederaApiToken {
-  token_id: `0.0.${number}`
+  token_id: TokenIdString
 }
 
 interface HederaApiTokensData {
   tokens: HederaApiToken[]
 }
 
-// there is a duplicate of this in lib-ethers because of bundling limitations
-export const fetchTokens = async <FetchInstance extends Fetch>(
-  options:
-    | {
-        apiBaseUrl: string
-        accountAddress: `0x${string}`
-        fetch: FetchInstance
-      }
-    | {
-        apiBaseUrl: string
-        accountId: AccountId
-        fetch: FetchInstance
-      },
-) => {
-  // usually getting stale responses
-  await new Promise((resolve) => setTimeout(resolve, 4000))
+interface FetchTokensByTokenIdOptions {
+  apiBaseUrl: string
+  accountId: AccountId
+  fetch: Fetch
+}
 
+interface FetchTokensByEvmAddressOptions {
+  apiBaseUrl: string
+  evmAddress: Address
+  fetch: Fetch
+}
+
+export const fetchTokens = async (
+  options: FetchTokensByTokenIdOptions | FetchTokensByEvmAddressOptions,
+) => {
   const accountAddressUrlSegment =
-    'accountId' in options
-      ? options.accountId.toString()
-      : options.accountAddress.replace(/^0x/, '')
+    'accountId' in options ? options.accountId.toString() : options.evmAddress.replace(/^0x/, '')
 
   const response = await options.fetch(
     `${options.apiBaseUrl}/accounts/${accountAddressUrlSegment}/tokens`,
@@ -64,6 +65,49 @@ export const fetchTokens = async <FetchInstance extends Fetch>(
 
     return token
   })
+
+  return tokens
+}
+
+interface WaitForTokensByTokenIdOptions extends FetchTokensByTokenIdOptions {
+  requiredAssociations?: TokenId[]
+  requiredDissociations?: TokenId[]
+}
+
+interface WaitForTokensByEvmAddressOptions extends FetchTokensByEvmAddressOptions {
+  requiredAssociations?: TokenId[]
+  requiredDissociations?: TokenId[]
+}
+
+const numberOfWaitForTokenAttempts = 5
+const millisecondsBetweenTokenAttempts = 2000
+export const waitForTokenState = async (
+  options: WaitForTokensByTokenIdOptions | WaitForTokensByEvmAddressOptions,
+) => {
+  const requiredAssociationIdStrings = options.requiredAssociations
+    ? options.requiredAssociations.map((tokenId) => tokenId.toString() as TokenIdString)
+    : []
+  const requiredDissociationIdStrings = options.requiredDissociations
+    ? options.requiredDissociations.map((tokenId) => tokenId.toString() as TokenIdString)
+    : []
+
+  let tokens: { id: TokenIdString }[] = []
+  for (let attempt = 0; attempt < numberOfWaitForTokenAttempts; attempt++) {
+    await new Promise((resolve) => setTimeout(resolve, millisecondsBetweenTokenAttempts))
+
+    tokens = await fetchTokens(options)
+    const tokenIdStringSet = new Set(tokens.map((token) => token.id))
+    const hasAllRequiredAssociations = requiredAssociationIdStrings.every((tokenIdString) =>
+      tokenIdStringSet.has(tokenIdString),
+    )
+    const hasAllRequiredDissociations = requiredDissociationIdStrings.every(
+      (tokenIdString) => !tokenIdStringSet.has(tokenIdString),
+    )
+
+    if (hasAllRequiredAssociations && hasAllRequiredDissociations) {
+      break
+    }
+  }
 
   return tokens
 }
