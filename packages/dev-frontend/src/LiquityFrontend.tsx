@@ -24,6 +24,8 @@ import { Imprint } from "./components/Imprint";
 import { AutomaticDevelopmentDebugMenu } from "./components/DevelopmentDebugMenu";
 import { Dashboard } from "./pages/Dashboard";
 import { BondsProvider } from "./components/Bonds/context/BondsProvider";
+import { PrivacyPolicyPage } from "./pages/PrivacyPolicyPage";
+import { ImprintPage } from "./pages/ImprintPage";
 
 export const LiquityFrontend: React.FC = () => {
   const { account: accountAddress, liquity } = useLiquity();
@@ -68,6 +70,12 @@ export const LiquityFrontend: React.FC = () => {
                         <Route path="/risky-troves">
                           <RiskyTrovesPage />
                         </Route>
+                        <Route path="/privacy-policy">
+                          <PrivacyPolicyPage />
+                        </Route>
+                        <Route path="/imprint">
+                          <ImprintPage />
+                        </Route>
                       </Switch>
                     </PageSwitcher>
                   </Container>
@@ -76,11 +84,10 @@ export const LiquityFrontend: React.FC = () => {
             </StakingViewProvider>
           </StabilityViewProvider>
         </TroveViewProvider>
+        <footer sx={{ marginInline: "clamp(2rem, 100%, 50% - 38rem)", paddingBottom: "2rem" }}>
+          <Imprint />
+        </footer>
       </Router>
-
-      <footer sx={{ marginInline: "clamp(2rem, 100%, 50% - 38rem)", paddingBottom: "2rem" }}>
-        <Imprint />
-      </footer>
 
       <TransactionMonitor />
       <AutomaticDevelopmentDebugMenu />

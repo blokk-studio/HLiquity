@@ -560,6 +560,17 @@ const theme: Theme = {
       width: ["100%", "auto"],
       mt: [3, "auto"]
     },
+    default: {
+      color: "primary",
+      ":hover": { fontWeight: "bold" },
+      textDecoration: "none",
+      px: "inherit",
+      py: "inherit",
+      textTransform: "unset",
+      letterSpacing: "unset",
+      mt: "unset",
+      fontWeight: "unset",
+    },
   }
 };
 

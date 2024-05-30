@@ -1,21 +1,20 @@
 /** @jsxImportSource theme-ui */
 import React, { useEffect, useState } from "react";
-import { Link } from "theme-ui";
 import { ImprintItem } from "./ImprintItem";
-
-
+import { Link as RouteLink } from "./Link";
+import { Link } from "theme-ui";
 
 export const Imprint: React.FC = () => {
   const [email, setEmail] = useState("");
   useEffect(() => {
-    setEmail(atob("aGVsbG9AYmxva2suc3R1ZGlv"));
+    setEmail(atob("aGxpcXVpdHlAYmxva2suc3R1ZGlv"));
   }, []);
 
   return (
     <ul sx={{
-      p: 0, 
-      listStyleType: "none", 
-      display: "inline-flex", 
+      p: 0,
+      listStyleType: "none",
+      display: "inline-flex",
       '@media screen and (max-width: 767px)': {
         display: "block"
       },
@@ -31,19 +30,18 @@ export const Imprint: React.FC = () => {
           </Link>
           {email && (
             <Link href={`mailto:${email}`} target="_blank">
-              {email}
+              Feedback and Suggestions?
             </Link>
           )}
         </address>
       </ImprintItem>
       <ImprintItem title="Legal Stuff">
-        <Link href="/" target="_blank">Imprint</Link>
-        <Link href="/" target="_blank">Privacy policy</Link>
+        <RouteLink variant="default" to="/imprint">Imprint</RouteLink>
+        <RouteLink variant="default" to="/imprint">Privacy policy</RouteLink>
       </ImprintItem>
       <ImprintItem title="Social Media">
-        <Link href="/" target="_blank">Twitter</Link>
-        <Link href="/" target="_blank">LinkedIn</Link>
-        <Link href="/" target="_blank">GitHub</Link>
+        <Link href="https://x.com/blokkstudio" target="_blank">X</Link>
+        <Link href="https://github.com/blokk-studio" target="_blank">GitHub</Link>
       </ImprintItem>
     </ul>
   );
