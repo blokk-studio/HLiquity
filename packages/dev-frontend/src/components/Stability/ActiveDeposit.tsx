@@ -9,32 +9,26 @@ import { Icon } from "../Icon";
 import { LoadingOverlay } from "../LoadingOverlay";
 import { useMyTransactionState } from "../Transaction";
 import { DisabledEditableRow, StaticRow } from "../Trove/Editor";
-import { ClaimAndMove } from "./actions/ClaimAndMove";
 import { ClaimRewards } from "./actions/ClaimRewards";
 import { useStabilityView } from "./context/StabilityViewContext";
 import { RemainingLQTY } from "./RemainingLQTY";
 import { Yield } from "./Yield";
 import { InfoIcon } from "../InfoIcon";
 
-const selector = ({ stabilityDeposit, trove, hchfInStabilityPool }: LiquityStoreState) => ({
+const selector = ({ stabilityDeposit, hchfInStabilityPool }: LiquityStoreState) => ({
   stabilityDeposit,
-  trove,
   hchfInStabilityPool
 });
 
 export const ActiveDeposit: React.FC = () => {
   const { dispatchEvent } = useStabilityView();
-  const { stabilityDeposit, trove, hchfInStabilityPool } = useLiquitySelector(selector);
+  const { stabilityDeposit, hchfInStabilityPool } = useLiquitySelector(selector);
 
   const poolShare = stabilityDeposit.currentHCHF.mulDiv(100, hchfInStabilityPool);
 
   const handleAdjustDeposit = useCallback(() => {
     dispatchEvent("ADJUST_DEPOSIT_PRESSED");
   }, [dispatchEvent]);
-
-  const hasReward = !stabilityDeposit.hlqtReward.isZero;
-  const hasGain = !stabilityDeposit.collateralGain.isZero;
-  const hasTrove = !trove.isEmpty;
 
   const transactionId = "stability-deposit";
   const transactionState = useMyTransactionState(transactionId);
@@ -117,12 +111,6 @@ export const ActiveDeposit: React.FC = () => {
             Claim {COLLATERAL_COIN} and {GT}
           </ClaimRewards>
         </Flex>
-
-        {hasTrove && (
-          <ClaimAndMove>
-            Claim {GT} and move {COLLATERAL_COIN} to Trove
-          </ClaimAndMove>
-        )}
       </Box>
 
       {isWaitingForTransaction && <LoadingOverlay />}
