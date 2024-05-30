@@ -81,7 +81,7 @@ export const Adjusting: React.FC = () => {
     }
 
     await liquity.approveSaucerSwapToSpendLpToken(amount);
-  });
+  }, [hasApproved]);
 
   const steps: Step[] = [
     {

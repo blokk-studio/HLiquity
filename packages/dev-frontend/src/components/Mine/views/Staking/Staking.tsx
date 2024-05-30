@@ -64,7 +64,7 @@ export const Staking: React.FC = () => {
     }
 
     await liquity.approveSaucerSwapToSpendLpToken(amount);
-  });
+  }, [hasApproved]);
 
   const steps: Step[] = [
     {
