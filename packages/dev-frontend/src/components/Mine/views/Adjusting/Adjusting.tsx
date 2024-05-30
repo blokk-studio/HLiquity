@@ -55,8 +55,8 @@ export const Adjusting: React.FC = () => {
 
   const { hasApproved, isValid, isWithdrawing, amountChanged } = useValidationState(amount);
   const transactionAction = isWithdrawing
-    ? liquity.send.unstakeUniTokens.bind(liquity, amountChanged)
-    : liquity.send.stakeUniTokens.bind(liquity, amountChanged);
+    ? liquity.send.unstakeUniTokens.bind(liquity.send, amountChanged)
+    : liquity.send.stakeUniTokens.bind(liquity.send, amountChanged);
   const shouldDisable = amountChanged.isZero || !isValid;
   useEffect(() => {
     if (transactionState.type === "confirmedOneShot") {
