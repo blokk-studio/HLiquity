@@ -1,4 +1,3 @@
-import { TransactionReceipt, TransactionResponse } from '@hashgraph/sdk'
 import {
   PopulatedLiquityTransaction,
   SendableLiquity,
@@ -19,10 +18,8 @@ const sendFromPopulate =
     return sentTransaction
   }
 
-export const asSendable = (
-  hashgraphLiquity: HashgraphLiquity,
-): SendableLiquity<TransactionReceipt, TransactionResponse> => {
-  const sendableLiquity: SendableLiquity<TransactionReceipt, TransactionResponse> = {
+export const asSendable = (hashgraphLiquity: HashgraphLiquity): SendableLiquity => {
+  const sendableLiquity: SendableLiquity = {
     depositCollateral: sendFromPopulate(
       hashgraphLiquity.populateDepositCollateral.bind(hashgraphLiquity),
     ),
