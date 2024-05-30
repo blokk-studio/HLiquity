@@ -41,7 +41,7 @@ type TransactionCancelled = {
 type TransactionWaitingForConfirmations = {
   type: "waitingForConfirmation";
   id: string;
-  tx: SentTransaction;
+  tx: SentLiquityTransaction;
 };
 
 type TransactionConfirmed = {
@@ -112,7 +112,7 @@ type SentTransaction = SentLiquityTransaction<
 
 export type TransactionFunction = (
   overrides?: EthersTransactionOverrides
-) => Promise<SentTransaction>;
+) => Promise<SentLiquityTransaction>;
 
 type TransactionProps<C> = {
   id: string;
@@ -232,7 +232,7 @@ const tryToGetRevertReason = async (provider: Provider, tx: TransactionReceipt) 
 };
 
 export const TransactionMonitor: React.FC = () => {
-  const { provider, store } = useLiquity();
+  const { store } = useLiquity();
   const [transactionState, setTransactionState] = useTransactionState();
 
   const id = transactionState.type !== "idle" ? transactionState.id : undefined;
@@ -243,7 +243,9 @@ export const TransactionMonitor: React.FC = () => {
       let cancelled = false;
       let finished = false;
 
-      const txHash = tx.rawSentTransaction.hash;
+      // TODO: fix shitty interface design if necessary and add the hash to the type rathen than relying on rawX
+      // const txHash = tx.rawSentTransaction.hash;
+      const txHash = "<no hash on non-ethers liquity implementations>";
 
       const waitForConfirmation = async () => {
         try {
@@ -253,8 +255,11 @@ export const TransactionMonitor: React.FC = () => {
             return;
           }
 
-          const { confirmations } = receipt.rawReceipt;
-          const blockNumber = receipt.rawReceipt.blockNumber + confirmations - 1;
+          // TODO: fix shitty interface design if necessary and add the hash to the type rathen than relying on rawX
+          // const { confirmations } = receipt.rawReceipt;
+          // const blockNumber = receipt.rawReceipt.blockNumber + confirmations - 1;
+          const confirmations = 0;
+          const blockNumber = 0;
           console.log(`Block #${blockNumber} ${confirmations}-confirms tx ${txHash}`);
           console.log(`Finish monitoring tx ${txHash}`);
           finished = true;
@@ -265,7 +270,9 @@ export const TransactionMonitor: React.FC = () => {
               id
             });
           } else {
-            const reason = await tryToGetRevertReason(provider, receipt.rawReceipt);
+            // TODO: fix shitty interface design if necessary and add the hash to the type rathen than relying on rawX
+            // const reason = await tryToGetRevertReason(provider, receipt.rawReceipt);
+            const reason = "<no revert reason on non-ethers liquity implementations>";
 
             if (cancelled) {
               return;
@@ -317,7 +324,7 @@ export const TransactionMonitor: React.FC = () => {
         }
       };
     }
-  }, [provider, id, tx, setTransactionState]);
+  }, [store, id, tx, setTransactionState]);
 
   useEffect(() => {
     if (transactionState.type === "confirmedOneShot" && id) {
@@ -343,8 +350,7 @@ export const TransactionMonitor: React.FC = () => {
         cancelled = true;
       };
     }
-
-  }, [transactionState.type, setTransactionState, id]);
+  }, [store, transactionState.type, setTransactionState, id]);
 
   if (transactionState.type === "idle" || transactionState.type === "waitingForApproval") {
     return null;
