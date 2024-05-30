@@ -105,12 +105,12 @@ export const Adjusting: React.FC = () => {
         : "You have to associate with HLQT tokens before you can use HLiquity."
     },
     {
-      title: "Approve LP spender",
+      title: "Approve LP allowance",
       status: getAssociationStepStatus({
         userHasAssociatedWithToken: hasApproved,
         tokenAssociationLoadingState: LPApprovalLoadingState
       }),
-      description: "You have to approve the SaucerSwap contract to spend your LP tokens."
+      description: "You have to give the SaucerSwap contract an LP token allowance."
     },
     {
       title: "Stake LP",
@@ -187,7 +187,7 @@ export const Adjusting: React.FC = () => {
               loading={LPApprovalLoadingState === "pending"}
               onClick={approveLPSpender}
             >
-              Approve spending {amount.prettify(2)} {LP}
+              Approve allowance of {amount.prettify(2)} {LP}
             </LoadingButton>
           ) : (
             <Transaction
