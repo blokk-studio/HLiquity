@@ -6,7 +6,7 @@
 
 Get a slice from the list of Troves.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 getTroves(params: TroveListingParams): Promise<UserTrove[]>;
@@ -14,11 +14,40 @@ getTroves(params: TroveListingParams): Promise<UserTrove[]>;
 
 ## Parameters
 
-|  Parameter | Type | Description |
-|  --- | --- | --- |
-|  params | [TroveListingParams](./lib-base.trovelistingparams.md) | Controls how the list is sorted, and where the slice begins and ends. |
+<table><thead><tr><th>
 
-<b>Returns:</b>
+Parameter
+
+
+</th><th>
+
+Type
+
+
+</th><th>
+
+Description
+
+
+</th></tr></thead>
+<tbody><tr><td>
+
+params
+
+
+</td><td>
+
+[TroveListingParams](./lib-base.trovelistingparams.md)
+
+
+</td><td>
+
+Controls how the list is sorted, and where the slice begins and ends.
+
+
+</td></tr>
+</tbody></table>
+**Returns:**
 
 Promise&lt;[UserTrove](./lib-base.usertrove.md)<!-- -->\[\]&gt;
 

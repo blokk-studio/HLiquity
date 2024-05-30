@@ -6,7 +6,7 @@
 
 A Trove must always have at least this much debt on top of the [liquidation reserve](./lib-base.hchf_liquidation_reserve.md)<!-- -->.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 HCHF_MINIMUM_NET_DEBT: Decimal

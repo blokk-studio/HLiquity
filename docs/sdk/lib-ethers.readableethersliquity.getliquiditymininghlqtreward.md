@@ -6,7 +6,7 @@
 
 Get the amount of HLQT earned by an address through mining liquidity.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 getLiquidityMiningHLQTReward(address?: string, overrides?: EthersCallOverrides): Promise<Decimal>;
@@ -14,12 +14,54 @@ getLiquidityMiningHLQTReward(address?: string, overrides?: EthersCallOverrides):
 
 ## Parameters
 
-|  Parameter | Type | Description |
-|  --- | --- | --- |
-|  address | string | Address whose HLQT reward should be retrieved. |
-|  overrides | [EthersCallOverrides](./lib-ethers.etherscalloverrides.md) |  |
+<table><thead><tr><th>
 
-<b>Returns:</b>
+Parameter
+
+
+</th><th>
+
+Type
+
+
+</th><th>
+
+Description
+
+
+</th></tr></thead>
+<tbody><tr><td>
+
+address
+
+
+</td><td>
+
+string
+
+
+</td><td>
+
+Address whose HLQT reward should be retrieved.
+
+
+</td></tr>
+<tr><td>
+
+overrides
+
+
+</td><td>
+
+[EthersCallOverrides](./lib-ethers.etherscalloverrides.md)
+
+
+</td><td>
+
+
+</td></tr>
+</tbody></table>
+**Returns:**
 
 Promise&lt;[Decimal](./lib-base.decimal.md)<!-- -->&gt;
 

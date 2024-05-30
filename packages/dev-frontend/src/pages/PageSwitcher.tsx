@@ -9,7 +9,6 @@ import { useLiquity } from "../hooks/LiquityContext";
 import { UnregisteredFrontend } from "./UnregisteredFrontend";
 import { FrontendRegistration } from "./FrontendRegistration";
 import { FrontendRegistrationSuccess } from "./FrontendRegistrationSuccess";
-import { useHedera } from "../hedera/hedera_context";
 import { AssociateAsFrontendOwner } from "./AssociateAsFrontendOwner";
 
 const selectFrontend = ({ frontend }: LiquityStoreState) => frontend;
@@ -25,7 +24,9 @@ export const PageSwitcher: React.FC = ({ children }) => {
   const frontend = useLiquitySelector(selectFrontend);
   const unregistered = frontendTag !== AddressZero && frontend.status === "unregistered";
   const isFrontendOwner = account.toLowerCase() === frontendTag?.toLowerCase();
-  const { hasAssociatedWithHchf, hasAssociatedWithHlqt } = useHedera();
+  const { userHasAssociatedWithHchf, userHasAssociatedWithHlqt } = useLiquitySelector(
+    state => state
+  );
 
   const [registering, setRegistering] = useState(false);
 
@@ -39,7 +40,7 @@ export const PageSwitcher: React.FC = ({ children }) => {
     return <FrontendRegistration />;
   }
 
-  if (isFrontendOwner && (!hasAssociatedWithHchf || !hasAssociatedWithHlqt)) {
+  if (isFrontendOwner && (!userHasAssociatedWithHchf || !userHasAssociatedWithHlqt)) {
     return <AssociateAsFrontendOwner />;
   }
 

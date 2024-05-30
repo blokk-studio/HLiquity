@@ -4,11 +4,12 @@ import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react-swc";
 import { NodeModulesPolyfillPlugin } from "@esbuild-plugins/node-modules-polyfill";
 import RollupPluginPolyfillNode from "rollup-plugin-polyfill-node";
+import { nodePolyfills } from "vite-plugin-node-polyfills";
 
 // https://vitejs.dev/config/
 export default defineConfig({
   base: "./",
-  plugins: [react()],
+  plugins: [nodePolyfills(), react()],
   define: { "process.env": {} }, // Coinbase SDK wants this
   optimizeDeps: {
     include: [
@@ -19,7 +20,7 @@ export default defineConfig({
     ],
     force: true,
     esbuildOptions: {
-      plugins: [NodeModulesPolyfillPlugin()]
+      // plugins: [NodeModulesPolyfillPlugin()]
     }
   },
   build: {
@@ -27,15 +28,15 @@ export default defineConfig({
       include: ["**.cjs", "**.js"]
     },
     rollupOptions: {
-      plugins: [RollupPluginPolyfillNode()]
+      // plugins: [RollupPluginPolyfillNode()]
     }
   },
-  resolve: {
-    alias: {
-      assert: "rollup-plugin-node-polyfills/polyfills/assert",
-      events: "rollup-plugin-node-polyfills/polyfills/events"
-    }
-  },
+  // resolve: {
+  //   alias: {
+  //     assert: "rollup-plugin-node-polyfills/polyfills/assert",
+  //     events: "rollup-plugin-node-polyfills/polyfills/events"
+  //   }
+  // },
   test: {
     globals: true,
     environment: "jsdom",

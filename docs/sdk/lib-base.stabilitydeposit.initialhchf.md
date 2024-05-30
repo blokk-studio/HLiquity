@@ -6,7 +6,7 @@
 
 Amount of HCHF in the Stability Deposit at the time of the last direct modification.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 readonly initialHCHF: Decimal;

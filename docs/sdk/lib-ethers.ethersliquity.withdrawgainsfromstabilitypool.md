@@ -6,7 +6,7 @@
 
 Withdraw [collateral gain](./lib-base.stabilitydeposit.collateralgain.md) and [HLQT reward](./lib-base.stabilitydeposit.hlqtreward.md) from Stability Deposit.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 withdrawGainsFromStabilityPool(overrides?: EthersTransactionOverrides): Promise<StabilityPoolGainsWithdrawalDetails>;
@@ -14,11 +14,38 @@ withdrawGainsFromStabilityPool(overrides?: EthersTransactionOverrides): Promise<
 
 ## Parameters
 
-|  Parameter | Type | Description |
-|  --- | --- | --- |
-|  overrides | [EthersTransactionOverrides](./lib-ethers.etherstransactionoverrides.md) |  |
+<table><thead><tr><th>
 
-<b>Returns:</b>
+Parameter
+
+
+</th><th>
+
+Type
+
+
+</th><th>
+
+Description
+
+
+</th></tr></thead>
+<tbody><tr><td>
+
+overrides
+
+
+</td><td>
+
+[EthersTransactionOverrides](./lib-ethers.etherstransactionoverrides.md)
+
+
+</td><td>
+
+
+</td></tr>
+</tbody></table>
+**Returns:**
 
 Promise&lt;[StabilityPoolGainsWithdrawalDetails](./lib-base.stabilitypoolgainswithdrawaldetails.md)<!-- -->&gt;
 

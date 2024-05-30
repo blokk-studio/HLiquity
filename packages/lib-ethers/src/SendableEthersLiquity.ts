@@ -43,11 +43,11 @@ export class SendableEthersLiquity
 
   sendTransaction = async <T>(tx: PopulatedEthersLiquityTransaction<T>) => {
     const response = await tx.send();
-  
+
     if (this._store) {
       this._store.refresh();
     }
-  
+
     return response;
   }
 

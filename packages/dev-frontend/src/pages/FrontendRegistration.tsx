@@ -53,6 +53,7 @@ export const FrontendRegistration: React.FC = () => {
             <Input
               sx={{ maxWidth: "200px" }}
               type="number"
+              onWheel={(e) => e.target.blur()}
               step="any"
               value={kickbackRateString}
               onChange={e => {

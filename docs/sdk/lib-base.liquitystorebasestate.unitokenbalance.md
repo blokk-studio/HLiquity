@@ -6,7 +6,7 @@
 
 User's Uniswap ETH/HCHF LP token balance.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 uniTokenBalance: Decimal;

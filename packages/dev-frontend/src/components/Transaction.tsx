@@ -5,7 +5,10 @@ import { defaultAbiCoder } from "@ethersproject/abi";
 
 import "react-circular-progressbar/dist/styles.css";
 
-import { EthersTransactionOverrides, EthersTransactionFailedError as EthersTransactionCancelledError } from "@liquity/lib-ethers";
+import {
+  EthersTransactionOverrides,
+  EthersTransactionFailedError as EthersTransactionCancelledError
+} from "@liquity/lib-ethers";
 import { SentLiquityTransaction, LiquityReceipt } from "@liquity/lib-base";
 
 import { useLiquity } from "../hooks/LiquityContext";
@@ -126,6 +129,7 @@ export const useTransactionFunction = (
   send: TransactionFunction
 ): [sendTransaction: () => Promise<void>, transactionState: TransactionState] => {
   const [transactionState, setTransactionState] = useTransactionState();
+  const { store } = useLiquity();
 
   const sendTransaction = useCallback(async () => {
     setTransactionState({ type: "waitingForApproval", id });
@@ -151,6 +155,8 @@ export const useTransactionFunction = (
         });
       }
     }
+
+    store.refresh();
   }, [send, id, setTransactionState]);
 
   return [sendTransaction, transactionState];
@@ -226,7 +232,7 @@ const tryToGetRevertReason = async (provider: Provider, tx: TransactionReceipt) 
 };
 
 export const TransactionMonitor: React.FC = () => {
-  const { provider } = useLiquity();
+  const { provider, store } = useLiquity();
   const [transactionState, setTransactionState] = useTransactionState();
 
   const id = transactionState.type !== "idle" ? transactionState.id : undefined;
@@ -254,8 +260,6 @@ export const TransactionMonitor: React.FC = () => {
           finished = true;
 
           if (receipt.status === "succeeded") {
-            console.log(`${receipt}`);
-
             setTransactionState({
               type: "confirmedOneShot",
               id
@@ -303,6 +307,7 @@ export const TransactionMonitor: React.FC = () => {
 
       console.log(`Start monitoring tx ${txHash}`);
       waitForConfirmation();
+      store.refresh();
 
       return () => {
         if (!finished) {
@@ -318,6 +323,7 @@ export const TransactionMonitor: React.FC = () => {
     if (transactionState.type === "confirmedOneShot" && id) {
       // hack: the txn confirmed state lasts 5 seconds which blocks other states, review with Dani
       setTransactionState({ type: "confirmed", id });
+      store.refresh();
     } else if (
       transactionState.type === "confirmed" ||
       transactionState.type === "failed" ||
@@ -328,13 +334,16 @@ export const TransactionMonitor: React.FC = () => {
       setTimeout(() => {
         if (!cancelled) {
           setTransactionState({ type: "idle" });
+          store.refresh();
         }
       }, 5000);
 
+      store.refresh();
       return () => {
         cancelled = true;
       };
     }
+
   }, [transactionState.type, setTransactionState, id]);
 
   if (transactionState.type === "idle" || transactionState.type === "waitingForApproval") {

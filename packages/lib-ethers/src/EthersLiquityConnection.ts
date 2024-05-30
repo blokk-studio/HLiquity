@@ -2,7 +2,7 @@ import { BigNumber } from "@ethersproject/bignumber";
 import { Block, BlockTag } from "@ethersproject/abstract-provider";
 import { Signer } from "@ethersproject/abstract-signer";
 
-import { Decimal } from "@liquity/lib-base";
+import { Address, Decimal } from "@liquity/lib-base";
 
 import devOrNull from "../deployments/dev.json";
 import hederaLocalTestnet from "../deployments/hederaLocalTestnet.json";
@@ -18,18 +18,20 @@ import {
 } from "./contracts";
 
 import { _connectToMulticall, _Multicall } from "./_Multicall";
+import { Fetch } from "./fetch";
 
 const dev = devOrNull as _LiquityDeploymentJSON | null;
 
+/** @deprecated deployments are passed through the environment */
 const deployments: {
   [chainId: number]: _LiquityDeploymentJSON | undefined;
 } = {
   // TODO: deploy to mainnet
   // [hedera.chainId]: hedera,
-  [hederaLocalTestnet.chainId]: (hederaLocalTestnet as unknown) as _LiquityDeploymentJSON,
+  [hederaLocalTestnet.chainId]: hederaLocalTestnet as unknown as _LiquityDeploymentJSON,
   // TODO: deploy to previewnet
   // [hederaPreviewnet.chainId]: hederaPreviewnet,
-  [hederaTestnet.chainId]: (hederaTestnet as unknown) as _LiquityDeploymentJSON,
+  [hederaTestnet.chainId]: hederaTestnet as unknown as _LiquityDeploymentJSON,
 
   ...(dev !== null ? { [dev.chainId]: dev } : {})
 };
@@ -74,7 +76,7 @@ export interface EthersLiquityConnection extends EthersLiquityConnectionOptional
   readonly liquidityMiningHLQTRewardRate: Decimal;
 
   /** A mapping of Liquity contracts' names to their addresses. */
-  readonly addresses: Record<string, string>;
+  readonly addresses: _LiquityContractAddresses;
 
   /** @internal */
   readonly _priceFeedIsTestnet: boolean;
@@ -98,6 +100,8 @@ export interface EthersLiquityConnectionOptions extends EthersLiquityConnectionO
   provider: EthersProvider;
   signer: EthersSigner;
   chainId: number;
+  mirrorNodeBaseUrl: string;
+  fetch: Fetch;
 }
 
 const getConnection = (
@@ -111,7 +115,7 @@ const getConnection = (
     liquidityMiningHLQTRewardRate,
     ...deployment
   }: _LiquityDeploymentJSON,
-  optionalParams?: EthersLiquityConnectionOptionalParams
+  optionalParams: EthersLiquityConnectionOptionalParams
 ): _InternalEthersLiquityConnection => {
   if (
     optionalParams &&
@@ -162,6 +166,15 @@ const getMulticall = (connection: EthersLiquityConnection): _Multicall | undefin
 const numberify = (bigNumber: BigNumber) => bigNumber.toNumber();
 
 const getTimestampFromBlock = ({ timestamp }: Block) => timestamp;
+
+/** @internal */
+export const _getBlockTimestampAsNumber = (
+  connection: EthersLiquityConnection,
+  blockTag: BlockTag = "latest"
+): Promise<number> =>
+  // Get the timestamp via a contract call whenever possible, to make it batchable with other calls
+  getMulticall(connection)?.getCurrentBlockTimestamp({ blockTag }).then(numberify) ??
+  _getProvider(connection).getBlock(blockTag).then(getTimestampFromBlock);
 
 /** @internal */
 export const _getBlockTimestamp = (
@@ -238,7 +251,7 @@ const getProviderAndSigner = (
 export const _connectToDeployment = (
   deployment: _LiquityDeploymentJSON,
   signerOrProvider: EthersSigner | EthersProvider,
-  optionalParams?: EthersLiquityConnectionOptionalParams
+  optionalParams: EthersLiquityConnectionOptionalParams
 ): EthersLiquityConnection =>
   getConnection(
     ...getProviderAndSigner(signerOrProvider),
@@ -291,7 +304,7 @@ export interface EthersLiquityConnectionOptionalParams {
    * will tag newly made Stability Deposits with this address when its `frontendTag` parameter is
    * omitted.
    */
-  readonly frontendTag?: string;
+  readonly frontendTag: Address;
 
   /**
    * Create a {@link @liquity/lib-base#LiquityStore} and expose it as the `store` property.
@@ -307,6 +320,9 @@ export interface EthersLiquityConnectionOptionalParams {
    * {@link @liquity/lib-base#LiquityStore.start | start()} function is called.
    */
   readonly useStore?: EthersLiquityStoreOption;
+
+  readonly mirrorNodeBaseUrl: string;
+  readonly fetch: Fetch;
 }
 
 /** @internal */
@@ -322,7 +338,7 @@ export function _connectByChainId(
   provider: EthersProvider,
   signer: EthersSigner | undefined,
   chainId: number,
-  optionalParams?: EthersLiquityConnectionOptionalParams
+  optionalParams: EthersLiquityConnectionOptionalParams
 ): EthersLiquityConnection;
 
 /** @internal */
@@ -330,7 +346,7 @@ export function _connectByChainId(
   provider: EthersProvider,
   signer: EthersSigner | undefined,
   chainId: number,
-  optionalParams?: EthersLiquityConnectionOptionalParams
+  optionalParams: EthersLiquityConnectionOptionalParams
 ): EthersLiquityConnection {
   const deployment: _LiquityDeploymentJSON =
     deployments[chainId] ?? panic(new UnsupportedNetworkError(chainId));
@@ -348,7 +364,7 @@ export function _connectByChainId(
 /** @internal */
 export const _connect = async (
   signerOrProvider: EthersSigner | EthersProvider,
-  optionalParams?: EthersLiquityConnectionOptionalParams
+  optionalParams: EthersLiquityConnectionOptionalParams
 ): Promise<EthersLiquityConnection> => {
   const [provider, signer] = getProviderAndSigner(signerOrProvider);
 

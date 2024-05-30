@@ -127,7 +127,6 @@ export class Decimal {
       case "number":
         return Decimal._fromString(decimalish.toString());
       default:
-        console.trace({ from: decimalish });
         return this.from(0);
         throw new Error("invalid Decimalish value");
     }

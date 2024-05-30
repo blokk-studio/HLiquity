@@ -30,6 +30,8 @@ import sortedTrovesAbi from "../abi/SortedTroves.json";
 import stabilityPoolAbi from "../abi/StabilityPool.json";
 import gasPoolAbi from "../abi/GasPool.json";
 import unipoolAbi from "../abi/Unipool.json";
+import iERC20Abi from "../abi/IERC20.json";
+import erc20MockAbi from "../abi/ERC20Mock.json";
 
 import {
   ActivePool,
@@ -55,6 +57,7 @@ import {
 } from "../types";
 
 import { EthersProvider, EthersSigner } from "./types";
+import { Address } from "@liquity/lib-base";
 
 export interface _TypedLogDescription<T> extends Omit<LogDescription, "args"> {
   args: T;
@@ -70,8 +73,8 @@ export type _TypeSafeContract<T> = Pick<
   } extends {
     [_ in keyof T]: infer U;
   }
-    ? U
-    : never
+  ? U
+  : never
 >;
 
 type EstimatedContractFunction<R = unknown, A extends unknown[] = unknown[], O = Overrides> = (
@@ -86,19 +89,19 @@ type TypedContract<T extends Contract, U, V> = Contract &
   _TypeSafeContract<T> &
   U & {
     [P in keyof V]: V[P] extends (...args: infer A) => unknown
-      ? (...args: A) => Promise<ContractTransaction>
-      : never;
+    ? (...args: A) => Promise<ContractTransaction>
+    : never;
   } & {
     readonly callStatic: {
       [P in keyof V]: V[P] extends (...args: [...infer A, never]) => infer R
-        ? (...args: [...A, ...CallOverridesArg]) => R
-        : never;
+      ? (...args: [...A, ...CallOverridesArg]) => R
+      : never;
     };
 
     readonly estimateAndPopulate: {
       [P in keyof V]: V[P] extends (...args: [...infer A, infer O | undefined]) => unknown
-        ? EstimatedContractFunction<PopulatedTransaction, A, O>
-        : never;
+      ? EstimatedContractFunction<PopulatedTransaction, A, O>
+      : never;
     };
   };
 
@@ -171,6 +174,7 @@ export interface _LiquityContracts {
   pythCaller: PriceFeed;
   supraCaller: PriceFeed;
   // uniToken: IERC20 | ERC20Mock;
+  uniToken: IERC20 | ERC20Mock;
 }
 
 /** @internal */
@@ -185,7 +189,7 @@ export const _uniTokenIsMock = (uniToken: IERC20 | ERC20Mock): uniToken is ERC20
 type LiquityContractsKey = keyof _LiquityContracts;
 
 /** @internal */
-export type _LiquityContractAddresses = Record<LiquityContractsKey, string>;
+export type _LiquityContractAddresses = Record<LiquityContractsKey, Address>;
 
 type LiquityContractAbis = Record<LiquityContractsKey, JsonFragment[]>;
 
@@ -208,8 +212,9 @@ const getAbi = (priceFeedIsTestnet: boolean, uniTokenIsMock: boolean): LiquityCo
   collSurplusPool: collSurplusPoolAbi,
   saucerSwapPool: unipoolAbi,
   pythCaller: priceFeedIsTestnet ? priceFeedTestnetAbi : priceFeedAbi,
-  supraCaller: priceFeedIsTestnet ? priceFeedTestnetAbi : priceFeedAbi
+  supraCaller: priceFeedIsTestnet ? priceFeedTestnetAbi : priceFeedAbi,
   // uniToken: uniTokenIsMock ? erc20MockAbi : iERC20Abi
+  uniToken: uniTokenIsMock ? erc20MockAbi : iERC20Abi
 });
 
 const mapLiquityContracts = <T, U>(
@@ -220,7 +225,10 @@ const mapLiquityContracts = <T, U>(
     Object.entries(contracts).map(([key, t]) => [key, f(t, key as LiquityContractsKey)])
   ) as Record<LiquityContractsKey, U>;
 
-/** @internal */
+/**
+ * @internal
+ * @deprecated use lib-base exports
+ */
 export interface _LiquityDeploymentJSON {
   readonly chainId: number;
   readonly addresses: _LiquityContractAddresses;

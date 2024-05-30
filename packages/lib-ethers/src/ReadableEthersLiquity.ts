@@ -33,6 +33,7 @@ import {
 } from "./EthersLiquityConnection";
 
 import { BlockPolledLiquityStore } from "./BlockPolledLiquityStore";
+import { Fetch } from "./fetch";
 
 // TODO: these are constant in the contracts, so it doesn't make sense to make a call for them,
 // but to avoid having to update them here when we change them in the contracts, we could read
@@ -98,19 +99,33 @@ export class ReadableEthersLiquity implements ReadableLiquity {
   }
 
   /** @internal */
-  static _from(
-    connection: EthersLiquityConnection & { useStore: "blockPolled" }
-  ): ReadableEthersLiquityWithStore<BlockPolledLiquityStore>;
+  static _from(options: {
+    connection: EthersLiquityConnection & { useStore: "blockPolled" };
+    mirrorNodeBaseUrl: string;
+    fetch: Fetch;
+  }): ReadableEthersLiquityWithStore<BlockPolledLiquityStore>;
 
   /** @internal */
-  static _from(connection: EthersLiquityConnection): ReadableEthersLiquity;
+  static _from(options: {
+    connection: EthersLiquityConnection;
+    mirrorNodeBaseUrl: string;
+    fetch: Fetch;
+  }): ReadableEthersLiquity;
 
   /** @internal */
-  static _from(connection: EthersLiquityConnection): ReadableEthersLiquity {
-    const readable = new ReadableEthersLiquity(connection);
+  static _from(options: {
+    connection: EthersLiquityConnection;
+    mirrorNodeBaseUrl: string;
+    fetch: Fetch;
+  }): ReadableEthersLiquity {
+    const readable = new ReadableEthersLiquity(options.connection);
 
-    return connection.useStore === "blockPolled"
-      ? new _BlockPolledReadableEthersLiquity(readable)
+    return options.connection.useStore === "blockPolled"
+      ? new _BlockPolledReadableEthersLiquity({
+          readable,
+          mirrorNodeBaseUrl: options.mirrorNodeBaseUrl,
+          fetch: options.fetch
+        })
       : readable;
   }
 
@@ -136,7 +151,18 @@ export class ReadableEthersLiquity implements ReadableLiquity {
     signerOrProvider: EthersSigner | EthersProvider,
     optionalParams?: EthersLiquityConnectionOptionalParams
   ): Promise<ReadableEthersLiquity> {
-    return ReadableEthersLiquity._from(await _connect(signerOrProvider, optionalParams));
+    if (!optionalParams) {
+      throw new Error(
+        "you need to pass `mirrorNodeBaseUrl` and `fetch` with the `optionalParams` argument. they're not optional anymore."
+      );
+    }
+    const connection = await _connect(signerOrProvider, optionalParams);
+
+    return ReadableEthersLiquity._from({
+      connection,
+      mirrorNodeBaseUrl: optionalParams.mirrorNodeBaseUrl,
+      fetch: optionalParams.fetch
+    });
   }
 
   /**
@@ -311,6 +337,7 @@ export class ReadableEthersLiquity implements ReadableLiquity {
 
     return hlqtToken.getTokenAddress({ ...overrides });
   }
+
   getHCHFTokenAddress(overrides?: EthersCallOverrides): Promise<string> {
     const { hchfToken } = _getContracts(this.connection);
 
@@ -327,29 +354,28 @@ export class ReadableEthersLiquity implements ReadableLiquity {
 
   /** {@inheritDoc @liquity/lib-base#ReadableLiquity.getUniTokenBalance} */
   getUniTokenBalance(address?: string, overrides?: EthersCallOverrides): Promise<Decimal> {
-    return new Promise(resolve => {
-      const decimal = Decimal.from(0);
-      resolve(decimal);
-    });
+    // return new Promise(resolve => {
+    //   const decimal = Decimal.from(0);
+    //   resolve(decimal);
+    // });
 
-    throw "unitoken";
-    // address ??= _requireAddress(this.connection);
-    // const { uniToken } = _getContracts(this.connection);
+    address ??= _requireAddress(this.connection);
+    const { uniToken } = _getContracts(this.connection);
 
-    // return uniToken.balanceOf(address, { ...overrides }).then(decimalify);
+    return uniToken.balanceOf(address, { ...overrides }).then(decimalify);
   }
 
   /** {@inheritDoc @liquity/lib-base#ReadableLiquity.getUniTokenAllowance} */
   getUniTokenAllowance(address?: string, overrides?: EthersCallOverrides): Promise<Decimal> {
-    return new Promise(resolve => {
-      const decimal = Decimal.from(0);
-      resolve(decimal);
-    });
-    throw "unitoken";
-    // address ??= _requireAddress(this.connection);
-    // const { uniToken, unipool } = _getContracts(this.connection);
+    // return new Promise(resolve => {
+    //   const decimal = Decimal.from(0);
+    //   resolve(decimal);
+    // });
+    // throw "unitoken";
+    address ??= _requireAddress(this.connection);
+    const { uniToken, saucerSwapPool } = _getContracts(this.connection);
 
-    // return uniToken.allowance(address, unipool.address, { ...overrides }).then(decimalify);
+    return uniToken.allowance(address, saucerSwapPool.address, { ...overrides }).then(decimalify);
   }
 
   /** @internal */
@@ -758,13 +784,17 @@ class _BlockPolledReadableEthersLiquity
   readonly connection: EthersLiquityConnection;
   readonly store: BlockPolledLiquityStore;
 
-  constructor(readable: ReadableEthersLiquity) {
-    const store = new BlockPolledLiquityStore(readable);
+  constructor(options: {
+    readable: ReadableEthersLiquity;
+    mirrorNodeBaseUrl: string;
+    fetch: Fetch;
+  }) {
+    const store = new BlockPolledLiquityStore(options);
 
-    super(readable, new BlockPolledLiquityStoreBasedCache(store));
+    super(options.readable, new BlockPolledLiquityStoreBasedCache(store));
 
     this.store = store;
-    this.connection = readable.connection;
+    this.connection = options.readable.connection;
   }
 
   hasStore(store?: EthersLiquityStoreOption): boolean {

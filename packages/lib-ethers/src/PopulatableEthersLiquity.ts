@@ -986,23 +986,21 @@ export class PopulatableEthersLiquity
     address?: string,
     overrides?: EthersTransactionOverrides
   ): Promise<PopulatedEthersLiquityTransaction<void>> {
-    console.debug("_mintUniToken");
-    throw "unitoken";
-    // address ??= _requireAddress(this._readable.connection, overrides);
-    // const { uniToken } = _getContracts(this._readable.connection);
+    address ??= _requireAddress(this._readable.connection, overrides);
+    const { uniToken } = _getContracts(this._readable.connection);
 
-    // if (!_uniTokenIsMock(uniToken)) {
-    //   throw new Error("_mintUniToken() unavailable on this deployment of Liquity");
-    // }
+    if (!_uniTokenIsMock(uniToken)) {
+      throw new Error("_mintUniToken() unavailable on this deployment of Liquity");
+    }
 
-    // return this._wrapSimpleTransaction(
-    //   await uniToken.estimateAndPopulate.mint(
-    //     { gasLimit: 3000000 },
-    //     id,
-    //     address,
-    //     Decimal.from(amount).hex
-    //   )
-    // );
+    return this._wrapSimpleTransaction(
+      await uniToken.estimateAndPopulate.mint(
+        { gasLimit: 3000000 },
+        id,
+        address,
+        Decimal.from(amount).hex
+      )
+    );
   }
 
   /** {@inheritDoc @liquity/lib-base#PopulatableLiquity.approveUniTokens} */
@@ -1010,18 +1008,16 @@ export class PopulatableEthersLiquity
     allowance?: Decimalish,
     overrides?: EthersTransactionOverrides
   ): Promise<PopulatedEthersLiquityTransaction<void>> {
-    console.debug("approveUniTokens");
-    throw "unitoken";
-    // const { uniToken, unipool } = _getContracts(this._readable.connection);
+    const { uniToken, saucerSwapPool } = _getContracts(this._readable.connection);
 
-    // return this._wrapSimpleTransaction(
-    //   await uniToken.estimateAndPopulate.approve(
-    //     { gasLimit: 3000000 },
-    //     id,
-    //     unipool.address,
-    //     Decimal.from(allowance ?? Decimal.INFINITY).hex
-    //   )
-    // );
+    return this._wrapSimpleTransaction(
+      await uniToken.estimateAndPopulate.approve(
+        { gasLimit: 3000000 },
+        id,
+        saucerSwapPool.address,
+        Decimal.from(allowance ?? Decimal.INFINITY).hex
+      )
+    );
   }
 
   /** {@inheritDoc @liquity/lib-base#PopulatableLiquity.stakeUniTokens} */
@@ -1034,7 +1030,7 @@ export class PopulatableEthersLiquity
     return this._wrapSimpleTransaction(
       await saucerSwapPool.estimateAndPopulate.stake(
         { gasLimit: 3000000 },
-        addGasForUnipoolRewardUpdate,
+        id,
         Decimal.from(amount).hex
       )
     );
@@ -1050,7 +1046,7 @@ export class PopulatableEthersLiquity
     return this._wrapSimpleTransaction(
       await saucerSwapPool.estimateAndPopulate.withdraw(
         { gasLimit: 3000000 },
-        addGasForUnipoolRewardUpdate,
+        id,
         Decimal.from(amount).hex
       )
     );

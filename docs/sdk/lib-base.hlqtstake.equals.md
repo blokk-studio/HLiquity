@@ -6,7 +6,7 @@
 
 Compare to another instance of `HLQTStake`<!-- -->.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 equals(that: HLQTStake): boolean;
@@ -14,11 +14,38 @@ equals(that: HLQTStake): boolean;
 
 ## Parameters
 
-|  Parameter | Type | Description |
-|  --- | --- | --- |
-|  that | [HLQTStake](./lib-base.hlqtstake.md) |  |
+<table><thead><tr><th>
 
-<b>Returns:</b>
+Parameter
+
+
+</th><th>
+
+Type
+
+
+</th><th>
+
+Description
+
+
+</th></tr></thead>
+<tbody><tr><td>
+
+that
+
+
+</td><td>
+
+[HLQTStake](./lib-base.hlqtstake.md)
+
+
+</td><td>
+
+
+</td></tr>
+</tbody></table>
+**Returns:**
 
 boolean
 

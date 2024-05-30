@@ -6,7 +6,7 @@
 
 Calculate the current redemption rate.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 redemptionRate(redeemedFractionOfSupply?: Decimalish, when?: Date): Decimal;
@@ -14,12 +14,56 @@ redemptionRate(redeemedFractionOfSupply?: Decimalish, when?: Date): Decimal;
 
 ## Parameters
 
-|  Parameter | Type | Description |
-|  --- | --- | --- |
-|  redeemedFractionOfSupply | [Decimalish](./lib-base.decimalish.md) | The amount of HCHF being redeemed divided by the total supply. |
-|  when | Date | Optional timestamp that can be used to calculate what the redemption rate would decay to at a point of time in the future. |
+<table><thead><tr><th>
 
-<b>Returns:</b>
+Parameter
+
+
+</th><th>
+
+Type
+
+
+</th><th>
+
+Description
+
+
+</th></tr></thead>
+<tbody><tr><td>
+
+redeemedFractionOfSupply
+
+
+</td><td>
+
+[Decimalish](./lib-base.decimalish.md)
+
+
+</td><td>
+
+The amount of HCHF being redeemed divided by the total supply.
+
+
+</td></tr>
+<tr><td>
+
+when
+
+
+</td><td>
+
+Date
+
+
+</td><td>
+
+Optional timestamp that can be used to calculate what the redemption rate would decay to at a point of time in the future.
+
+
+</td></tr>
+</tbody></table>
+**Returns:**
 
 [Decimal](./lib-base.decimal.md)
 
@@ -42,6 +86,5 @@ const redeemedHCHFAmount = Decimal.from(100);
 const redeemedFractionOfSupply = redeemedHCHFAmount.div(total.debt);
 const redemptionRate = fees.redemptionRate(redeemedFractionOfSupply);
 const redemptionFeeHCHF = redemptionRate.mul(redeemedHCHFAmount);
-
 ```
 

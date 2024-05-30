@@ -6,7 +6,7 @@
 
 Adjust existing Trove by depositing more collateral.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 depositCollateral(amount: Decimalish): Promise<PopulatedLiquityTransaction<P, SentLiquityTransaction<S, LiquityReceipt<R, TroveAdjustmentDetails>>>>;
@@ -14,11 +14,40 @@ depositCollateral(amount: Decimalish): Promise<PopulatedLiquityTransaction<P, Se
 
 ## Parameters
 
-|  Parameter | Type | Description |
-|  --- | --- | --- |
-|  amount | [Decimalish](./lib-base.decimalish.md) | The amount of collateral to add to the Trove's existing collateral. |
+<table><thead><tr><th>
 
-<b>Returns:</b>
+Parameter
+
+
+</th><th>
+
+Type
+
+
+</th><th>
+
+Description
+
+
+</th></tr></thead>
+<tbody><tr><td>
+
+amount
+
+
+</td><td>
+
+[Decimalish](./lib-base.decimalish.md)
+
+
+</td><td>
+
+The amount of collateral to add to the Trove's existing collateral.
+
+
+</td></tr>
+</tbody></table>
+**Returns:**
 
 Promise&lt;[PopulatedLiquityTransaction](./lib-base.populatedliquitytransaction.md)<!-- -->&lt;P, [SentLiquityTransaction](./lib-base.sentliquitytransaction.md)<!-- -->&lt;S, [LiquityReceipt](./lib-base.liquityreceipt.md)<!-- -->&lt;R, [TroveAdjustmentDetails](./lib-base.troveadjustmentdetails.md)<!-- -->&gt;&gt;&gt;&gt;
 
@@ -28,6 +57,5 @@ Equivalent to:
 
 ```typescript
 adjustTrove({ depositCollateral: amount })
-
 ```
 

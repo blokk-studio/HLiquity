@@ -29,7 +29,7 @@ export const SideNav: React.FC = () => {
     >
       <Flex variant="layout.sidenav">
         <Button
-          sx={{ position: "fixed", right: "25vw", m: 2 }}
+          sx={{ position: "fixed", right: "25vw", m: 1 }}
           variant="icon"
           onClick={() => setIsVisible(false)}
         >

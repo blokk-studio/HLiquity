@@ -6,7 +6,7 @@
 
 State variables read from the blockchain.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 export interface LiquityStoreBaseState 
@@ -14,30 +14,481 @@ export interface LiquityStoreBaseState
 
 ## Properties
 
-|  Property | Type | Description |
-|  --- | --- | --- |
-|  [accountBalance](./lib-base.liquitystorebasestate.accountbalance.md) | [Decimal](./lib-base.decimal.md) | User's native currency balance (e.g. Ether). |
-|  [collateralSurplusBalance](./lib-base.liquitystorebasestate.collateralsurplusbalance.md) | [Decimal](./lib-base.decimal.md) | Amount of leftover collateral available for withdrawal to the user. |
-|  [frontend](./lib-base.liquitystorebasestate.frontend.md) | [FrontendStatus](./lib-base.frontendstatus.md) | Status of currently used frontend. |
-|  [hchfBalance](./lib-base.liquitystorebasestate.hchfbalance.md) | [Decimal](./lib-base.decimal.md) | User's HCHF token balance. |
-|  [hchfInStabilityPool](./lib-base.liquitystorebasestate.hchfinstabilitypool.md) | [Decimal](./lib-base.decimal.md) | Total amount of HCHF currently deposited in the Stability Pool. |
-|  [hchfTokenAddress](./lib-base.liquitystorebasestate.hchftokenaddress.md) | string | HCHF HST Token address |
-|  [hlqtBalance](./lib-base.liquitystorebasestate.hlqtbalance.md) | [Decimal](./lib-base.decimal.md) | User's HLQT token balance. |
-|  [hlqtStake](./lib-base.liquitystorebasestate.hlqtstake.md) | [HLQTStake](./lib-base.hlqtstake.md) | User's HLQT stake. |
-|  [hlqtTokenAddress](./lib-base.liquitystorebasestate.hlqttokenaddress.md) | string | HLQT HST Token address |
-|  [liquidityMiningHLQTReward](./lib-base.liquitystorebasestate.liquiditymininghlqtreward.md) | [Decimal](./lib-base.decimal.md) | Amount of HLQT the user has earned through mining liquidity. |
-|  [liquidityMiningStake](./lib-base.liquitystorebasestate.liquidityminingstake.md) | [Decimal](./lib-base.decimal.md) | Amount of Uniswap ETH/HCHF LP tokens the user has staked in liquidity mining. |
-|  [numberOfTroves](./lib-base.liquitystorebasestate.numberoftroves.md) | number | Number of Troves that are currently open. |
-|  [ownFrontend](./lib-base.liquitystorebasestate.ownfrontend.md) | [FrontendStatus](./lib-base.frontendstatus.md) | Status of user's own frontend. |
-|  [price](./lib-base.liquitystorebasestate.price.md) | [Decimal](./lib-base.decimal.md) | Current price of the native currency (e.g. Ether) in USD. |
-|  [remainingLiquidityMiningHLQTReward](./lib-base.liquitystorebasestate.remainingliquiditymininghlqtreward.md) | [Decimal](./lib-base.decimal.md) | Remaining HLQT that will be collectively rewarded to liquidity miners. |
-|  [remainingStabilityPoolHLQTReward](./lib-base.liquitystorebasestate.remainingstabilitypoolhlqtreward.md) | [Decimal](./lib-base.decimal.md) | Remaining HLQT that will be collectively rewarded to stability depositors. |
-|  [stabilityDeposit](./lib-base.liquitystorebasestate.stabilitydeposit.md) | [StabilityDeposit](./lib-base.stabilitydeposit.md) | User's stability deposit. |
-|  [total](./lib-base.liquitystorebasestate.total.md) | [Trove](./lib-base.trove.md) | Total collateral and debt in the Liquity system. |
-|  [totalRedistributed](./lib-base.liquitystorebasestate.totalredistributed.md) | [Trove](./lib-base.trove.md) | Total collateral and debt per stake that has been liquidated through redistribution. |
-|  [totalStakedHLQT](./lib-base.liquitystorebasestate.totalstakedhlqt.md) | [Decimal](./lib-base.decimal.md) | Total amount of HLQT currently staked. |
-|  [totalStakedUniTokens](./lib-base.liquitystorebasestate.totalstakedunitokens.md) | [Decimal](./lib-base.decimal.md) | Total amount of Uniswap ETH/HCHF LP tokens currently staked in liquidity mining. |
-|  [troveBeforeRedistribution](./lib-base.liquitystorebasestate.trovebeforeredistribution.md) | [TroveWithPendingRedistribution](./lib-base.trovewithpendingredistribution.md) | User's Trove in its state after the last direct modification. |
-|  [uniTokenAllowance](./lib-base.liquitystorebasestate.unitokenallowance.md) | [Decimal](./lib-base.decimal.md) | The liquidity mining contract's allowance of user's Uniswap ETH/HCHF LP tokens. |
-|  [uniTokenBalance](./lib-base.liquitystorebasestate.unitokenbalance.md) | [Decimal](./lib-base.decimal.md) | User's Uniswap ETH/HCHF LP token balance. |
+<table><thead><tr><th>
 
+Property
+
+
+</th><th>
+
+Modifiers
+
+
+</th><th>
+
+Type
+
+
+</th><th>
+
+Description
+
+
+</th></tr></thead>
+<tbody><tr><td>
+
+[accountBalance](./lib-base.liquitystorebasestate.accountbalance.md)
+
+
+</td><td>
+
+
+</td><td>
+
+[Decimal](./lib-base.decimal.md)
+
+
+</td><td>
+
+User's native currency balance (e.g. Ether).
+
+
+</td></tr>
+<tr><td>
+
+[collateralSurplusBalance](./lib-base.liquitystorebasestate.collateralsurplusbalance.md)
+
+
+</td><td>
+
+
+</td><td>
+
+[Decimal](./lib-base.decimal.md)
+
+
+</td><td>
+
+Amount of leftover collateral available for withdrawal to the user.
+
+
+</td></tr>
+<tr><td>
+
+[frontend](./lib-base.liquitystorebasestate.frontend.md)
+
+
+</td><td>
+
+
+</td><td>
+
+[FrontendStatus](./lib-base.frontendstatus.md)
+
+
+</td><td>
+
+Status of currently used frontend.
+
+
+</td></tr>
+<tr><td>
+
+[hchfBalance](./lib-base.liquitystorebasestate.hchfbalance.md)
+
+
+</td><td>
+
+
+</td><td>
+
+[Decimal](./lib-base.decimal.md)
+
+
+</td><td>
+
+User's HCHF token balance.
+
+
+</td></tr>
+<tr><td>
+
+[hchfInStabilityPool](./lib-base.liquitystorebasestate.hchfinstabilitypool.md)
+
+
+</td><td>
+
+
+</td><td>
+
+[Decimal](./lib-base.decimal.md)
+
+
+</td><td>
+
+Total amount of HCHF currently deposited in the Stability Pool.
+
+
+</td></tr>
+<tr><td>
+
+[hchfTokenAddress](./lib-base.liquitystorebasestate.hchftokenaddress.md)
+
+
+</td><td>
+
+
+</td><td>
+
+string
+
+
+</td><td>
+
+HCHF HST Token address
+
+
+</td></tr>
+<tr><td>
+
+[hlqtBalance](./lib-base.liquitystorebasestate.hlqtbalance.md)
+
+
+</td><td>
+
+
+</td><td>
+
+[Decimal](./lib-base.decimal.md)
+
+
+</td><td>
+
+User's HLQT token balance.
+
+
+</td></tr>
+<tr><td>
+
+[hlqtStake](./lib-base.liquitystorebasestate.hlqtstake.md)
+
+
+</td><td>
+
+
+</td><td>
+
+[HLQTStake](./lib-base.hlqtstake.md)
+
+
+</td><td>
+
+User's HLQT stake.
+
+
+</td></tr>
+<tr><td>
+
+[hlqtTokenAddress](./lib-base.liquitystorebasestate.hlqttokenaddress.md)
+
+
+</td><td>
+
+
+</td><td>
+
+string
+
+
+</td><td>
+
+HLQT HST Token address
+
+
+</td></tr>
+<tr><td>
+
+[liquidityMiningHLQTReward](./lib-base.liquitystorebasestate.liquiditymininghlqtreward.md)
+
+
+</td><td>
+
+
+</td><td>
+
+[Decimal](./lib-base.decimal.md)
+
+
+</td><td>
+
+Amount of HLQT the user has earned through mining liquidity.
+
+
+</td></tr>
+<tr><td>
+
+[liquidityMiningStake](./lib-base.liquitystorebasestate.liquidityminingstake.md)
+
+
+</td><td>
+
+
+</td><td>
+
+[Decimal](./lib-base.decimal.md)
+
+
+</td><td>
+
+Amount of Uniswap ETH/HCHF LP tokens the user has staked in liquidity mining.
+
+
+</td></tr>
+<tr><td>
+
+[numberOfTroves](./lib-base.liquitystorebasestate.numberoftroves.md)
+
+
+</td><td>
+
+
+</td><td>
+
+number
+
+
+</td><td>
+
+Number of Troves that are currently open.
+
+
+</td></tr>
+<tr><td>
+
+[ownFrontend](./lib-base.liquitystorebasestate.ownfrontend.md)
+
+
+</td><td>
+
+
+</td><td>
+
+[FrontendStatus](./lib-base.frontendstatus.md)
+
+
+</td><td>
+
+Status of user's own frontend.
+
+
+</td></tr>
+<tr><td>
+
+[price](./lib-base.liquitystorebasestate.price.md)
+
+
+</td><td>
+
+
+</td><td>
+
+[Decimal](./lib-base.decimal.md)
+
+
+</td><td>
+
+Current price of the native currency (e.g. Ether) in USD.
+
+
+</td></tr>
+<tr><td>
+
+[remainingLiquidityMiningHLQTReward](./lib-base.liquitystorebasestate.remainingliquiditymininghlqtreward.md)
+
+
+</td><td>
+
+
+</td><td>
+
+[Decimal](./lib-base.decimal.md)
+
+
+</td><td>
+
+Remaining HLQT that will be collectively rewarded to liquidity miners.
+
+
+</td></tr>
+<tr><td>
+
+[remainingStabilityPoolHLQTReward](./lib-base.liquitystorebasestate.remainingstabilitypoolhlqtreward.md)
+
+
+</td><td>
+
+
+</td><td>
+
+[Decimal](./lib-base.decimal.md)
+
+
+</td><td>
+
+Remaining HLQT that will be collectively rewarded to stability depositors.
+
+
+</td></tr>
+<tr><td>
+
+[stabilityDeposit](./lib-base.liquitystorebasestate.stabilitydeposit.md)
+
+
+</td><td>
+
+
+</td><td>
+
+[StabilityDeposit](./lib-base.stabilitydeposit.md)
+
+
+</td><td>
+
+User's stability deposit.
+
+
+</td></tr>
+<tr><td>
+
+[total](./lib-base.liquitystorebasestate.total.md)
+
+
+</td><td>
+
+
+</td><td>
+
+[Trove](./lib-base.trove.md)
+
+
+</td><td>
+
+Total collateral and debt in the Liquity system.
+
+
+</td></tr>
+<tr><td>
+
+[totalRedistributed](./lib-base.liquitystorebasestate.totalredistributed.md)
+
+
+</td><td>
+
+
+</td><td>
+
+[Trove](./lib-base.trove.md)
+
+
+</td><td>
+
+Total collateral and debt per stake that has been liquidated through redistribution.
+
+
+</td></tr>
+<tr><td>
+
+[totalStakedHLQT](./lib-base.liquitystorebasestate.totalstakedhlqt.md)
+
+
+</td><td>
+
+
+</td><td>
+
+[Decimal](./lib-base.decimal.md)
+
+
+</td><td>
+
+Total amount of HLQT currently staked.
+
+
+</td></tr>
+<tr><td>
+
+[totalStakedUniTokens](./lib-base.liquitystorebasestate.totalstakedunitokens.md)
+
+
+</td><td>
+
+
+</td><td>
+
+[Decimal](./lib-base.decimal.md)
+
+
+</td><td>
+
+Total amount of Uniswap ETH/HCHF LP tokens currently staked in liquidity mining.
+
+
+</td></tr>
+<tr><td>
+
+[troveBeforeRedistribution](./lib-base.liquitystorebasestate.trovebeforeredistribution.md)
+
+
+</td><td>
+
+
+</td><td>
+
+[TroveWithPendingRedistribution](./lib-base.trovewithpendingredistribution.md)
+
+
+</td><td>
+
+User's Trove in its state after the last direct modification.
+
+
+</td></tr>
+<tr><td>
+
+[uniTokenAllowance](./lib-base.liquitystorebasestate.unitokenallowance.md)
+
+
+</td><td>
+
+
+</td><td>
+
+[Decimal](./lib-base.decimal.md)
+
+
+</td><td>
+
+The liquidity mining contract's allowance of user's Uniswap ETH/HCHF LP tokens.
+
+
+</td></tr>
+<tr><td>
+
+[uniTokenBalance](./lib-base.liquitystorebasestate.unitokenbalance.md)
+
+
+</td><td>
+
+
+</td><td>
+
+[Decimal](./lib-base.decimal.md)
+
+
+</td><td>
+
+User's Uniswap ETH/HCHF LP token balance.
+
+
+</td></tr>
+</tbody></table>

@@ -6,7 +6,7 @@
 
 Constructs a new instance of the `PopulatableEthersLiquity` class
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 constructor(readable: ReadableEthersLiquity);
@@ -14,7 +14,34 @@ constructor(readable: ReadableEthersLiquity);
 
 ## Parameters
 
-|  Parameter | Type | Description |
-|  --- | --- | --- |
-|  readable | [ReadableEthersLiquity](./lib-ethers.readableethersliquity.md) |  |
+<table><thead><tr><th>
 
+Parameter
+
+
+</th><th>
+
+Type
+
+
+</th><th>
+
+Description
+
+
+</th></tr></thead>
+<tbody><tr><td>
+
+readable
+
+
+</td><td>
+
+[ReadableEthersLiquity](./lib-ethers.readableethersliquity.md)
+
+
+</td><td>
+
+
+</td></tr>
+</tbody></table>

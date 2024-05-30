@@ -6,7 +6,7 @@
 
 Allow the liquidity mining contract to use Uniswap ETH/HCHF LP tokens for [staking](./lib-base.transactableliquity.stakeunitokens.md)<!-- -->.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 approveUniTokens(allowance?: Decimalish, overrides?: EthersTransactionOverrides): Promise<SentEthersLiquityTransaction<void>>;
@@ -14,12 +14,54 @@ approveUniTokens(allowance?: Decimalish, overrides?: EthersTransactionOverrides)
 
 ## Parameters
 
-|  Parameter | Type | Description |
-|  --- | --- | --- |
-|  allowance | [Decimalish](./lib-base.decimalish.md) | Maximum amount of LP tokens that will be transferrable to liquidity mining (<code>2^256 - 1</code> by default). |
-|  overrides | [EthersTransactionOverrides](./lib-ethers.etherstransactionoverrides.md) |  |
+<table><thead><tr><th>
 
-<b>Returns:</b>
+Parameter
+
+
+</th><th>
+
+Type
+
+
+</th><th>
+
+Description
+
+
+</th></tr></thead>
+<tbody><tr><td>
+
+allowance
+
+
+</td><td>
+
+[Decimalish](./lib-base.decimalish.md)
+
+
+</td><td>
+
+Maximum amount of LP tokens that will be transferrable to liquidity mining (`2^256 - 1` by default).
+
+
+</td></tr>
+<tr><td>
+
+overrides
+
+
+</td><td>
+
+[EthersTransactionOverrides](./lib-ethers.etherstransactionoverrides.md)
+
+
+</td><td>
+
+
+</td></tr>
+</tbody></table>
+**Returns:**
 
 Promise&lt;[SentEthersLiquityTransaction](./lib-ethers.sentethersliquitytransaction.md)<!-- -->&lt;void&gt;&gt;
 

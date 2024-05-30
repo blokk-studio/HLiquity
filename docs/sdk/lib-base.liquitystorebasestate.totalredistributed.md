@@ -6,7 +6,7 @@
 
 Total collateral and debt per stake that has been liquidated through redistribution.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 totalRedistributed: Trove;

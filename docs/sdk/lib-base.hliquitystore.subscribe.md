@@ -6,7 +6,7 @@
 
 Register a state change listener.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 subscribe(listener: (params: LiquityStoreListenerParams<T>) => void): () => void;
@@ -14,11 +14,40 @@ subscribe(listener: (params: LiquityStoreListenerParams<T>) => void): () => void
 
 ## Parameters
 
-|  Parameter | Type | Description |
-|  --- | --- | --- |
-|  listener | (params: [LiquityStoreListenerParams](./lib-base.liquitystorelistenerparams.md)<!-- -->&lt;T&gt;) =&gt; void | Function that will be called whenever state changes. |
+<table><thead><tr><th>
 
-<b>Returns:</b>
+Parameter
+
+
+</th><th>
+
+Type
+
+
+</th><th>
+
+Description
+
+
+</th></tr></thead>
+<tbody><tr><td>
+
+listener
+
+
+</td><td>
+
+(params: [LiquityStoreListenerParams](./lib-base.liquitystorelistenerparams.md)<!-- -->&lt;T&gt;) =&gt; void
+
+
+</td><td>
+
+Function that will be called whenever state changes.
+
+
+</td></tr>
+</tbody></table>
+**Returns:**
 
 () =&gt; void
 

@@ -6,7 +6,7 @@
 
 Withdraw HLQT from staking.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 unstakeHLQT(amount: Decimalish): Promise<void>;
@@ -14,11 +14,42 @@ unstakeHLQT(amount: Decimalish): Promise<void>;
 
 ## Parameters
 
-| Parameter | Type                                   | Description                 |
-| --------- | -------------------------------------- | --------------------------- |
-| amount    | [Decimalish](./lib-base.decimalish.md) | Amount of HLQT to withdraw. |
+|  Parameter | Type | Description |
+|  --- | --- | --- |
+|  amount | [Decimalish](./lib-base.decimalish.md) | Amount of HLQT to withdraw. |
 
-<b>Returns:</b>
+Parameter
+
+
+</th><th>
+
+Type
+
+
+</th><th>
+
+Description
+
+
+</th></tr></thead>
+<tbody><tr><td>
+
+amount
+
+
+</td><td>
+
+[Decimalish](./lib-base.decimalish.md)
+
+
+</td><td>
+
+Amount of HLQT to withdraw.
+
+
+</td></tr>
+</tbody></table>
+**Returns:**
 
 Promise&lt;void&gt;
 
@@ -29,3 +60,4 @@ Throws [TransactionFailedError](./lib-base.transactionfailederror.md) in case of
 ## Remarks
 
 As a side-effect, the transaction will also pay out the HLQT stake's [collateral gain](./lib-base.hlqtstake.collateralgain.md) and [HCHF gain](./lib-base.hlqtstake.hchfgain.md)<!-- -->.
+

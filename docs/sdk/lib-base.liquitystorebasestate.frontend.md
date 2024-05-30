@@ -6,7 +6,7 @@
 
 Status of currently used frontend.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 frontend: FrontendStatus;

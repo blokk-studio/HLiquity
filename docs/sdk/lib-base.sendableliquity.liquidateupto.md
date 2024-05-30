@@ -6,7 +6,7 @@
 
 Liquidate the least collateralized Troves up to a maximum number.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 liquidateUpTo(maximumNumberOfTrovesToLiquidate: number): Promise<SentLiquityTransaction<S, LiquityReceipt<R, LiquidationDetails>>>;
@@ -14,11 +14,40 @@ liquidateUpTo(maximumNumberOfTrovesToLiquidate: number): Promise<SentLiquityTran
 
 ## Parameters
 
-|  Parameter | Type | Description |
-|  --- | --- | --- |
-|  maximumNumberOfTrovesToLiquidate | number | Stop after liquidating this many Troves. |
+<table><thead><tr><th>
 
-<b>Returns:</b>
+Parameter
+
+
+</th><th>
+
+Type
+
+
+</th><th>
+
+Description
+
+
+</th></tr></thead>
+<tbody><tr><td>
+
+maximumNumberOfTrovesToLiquidate
+
+
+</td><td>
+
+number
+
+
+</td><td>
+
+Stop after liquidating this many Troves.
+
+
+</td></tr>
+</tbody></table>
+**Returns:**
 
 Promise&lt;[SentLiquityTransaction](./lib-base.sentliquitytransaction.md)<!-- -->&lt;S, [LiquityReceipt](./lib-base.liquityreceipt.md)<!-- -->&lt;R, [LiquidationDetails](./lib-base.liquidationdetails.md)<!-- -->&gt;&gt;&gt;
 

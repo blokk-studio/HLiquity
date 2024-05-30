@@ -6,12 +6,12 @@
 
 Get the total collateral and debt per stake that has been liquidated through redistribution.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 getTotalRedistributed(): Promise<Trove>;
 ```
-<b>Returns:</b>
+**Returns:**
 
 Promise&lt;[Trove](./lib-base.trove.md)<!-- -->&gt;
 

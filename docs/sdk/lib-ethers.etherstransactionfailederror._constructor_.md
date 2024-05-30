@@ -6,7 +6,7 @@
 
 Constructs a new instance of the `EthersTransactionFailedError` class
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 constructor(message: string, failedReceipt: FailedReceipt<EthersTransactionReceipt>);
@@ -14,8 +14,48 @@ constructor(message: string, failedReceipt: FailedReceipt<EthersTransactionRecei
 
 ## Parameters
 
-|  Parameter | Type | Description |
-|  --- | --- | --- |
-|  message | string |  |
-|  failedReceipt | [FailedReceipt](./lib-base.failedreceipt.md)<!-- -->&lt;[EthersTransactionReceipt](./lib-ethers.etherstransactionreceipt.md)<!-- -->&gt; |  |
+<table><thead><tr><th>
 
+Parameter
+
+
+</th><th>
+
+Type
+
+
+</th><th>
+
+Description
+
+
+</th></tr></thead>
+<tbody><tr><td>
+
+message
+
+
+</td><td>
+
+string
+
+
+</td><td>
+
+
+</td></tr>
+<tr><td>
+
+failedReceipt
+
+
+</td><td>
+
+[FailedReceipt](./lib-base.failedreceipt.md)<!-- -->&lt;[EthersTransactionReceipt](./lib-ethers.etherstransactionreceipt.md)<!-- -->&gt;
+
+
+</td><td>
+
+
+</td></tr>
+</tbody></table>

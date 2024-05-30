@@ -18,11 +18,8 @@ import {
 } from "./validation/validateStabilityDepositChange";
 import { Step } from "../Steps";
 import { useLoadingState } from "../../loading_state";
-import { useHedera } from "../../hedera/hedera_context";
 import { useLiquity } from "../../hooks/LiquityContext";
-import { BigNumber } from "ethers";
 import { LoadingButton } from "../LoadingButton";
-import { useDeployment } from "../../configuration/deployments";
 
 const init = ({ stabilityDeposit }: LiquityStoreState) => ({
   originalDeposit: stabilityDeposit,
@@ -36,9 +33,10 @@ type StabilityDepositManagerAction =
   | { type: "startChange" | "finishChange" | "revert" }
   | { type: "setDeposit"; newValue: Decimalish };
 
-const reduceWith = (action: StabilityDepositManagerAction) => (
-  state: StabilityDepositManagerState
-): StabilityDepositManagerState => reduce(state, action);
+const reduceWith =
+  (action: StabilityDepositManagerAction) =>
+  (state: StabilityDepositManagerState): StabilityDepositManagerState =>
+    reduce(state, action);
 
 const finishChange = reduceWith({ type: "finishChange" });
 const revert = reduceWith({ type: "revert" });
@@ -137,42 +135,23 @@ export const StabilityDepositManager: React.FC = () => {
   }, [myTransactionState.type, dispatch, dispatchEvent]);
 
   // consent & approval
-  const {
-    liquity: {
-      connection: { addresses }
-    }
-  } = useLiquity();
-  const {
-    hasAssociatedWithHlqt,
-    hasAssociatedWithHchf,
-    associateWithToken,
-    approveSpender
-  } = useHedera();
-  const deployment = useDeployment();
-  const needsHlqtAssociation = !hasAssociatedWithHlqt && (!validChange || validChange?.depositHCHF);
+  const { liquity } = useLiquity();
+  const { userHasAssociatedWithHchf, userHasAssociatedWithHlqt } = useLiquitySelector(
+    state => state
+  );
+  const needsHlqtAssociation =
+    !userHasAssociatedWithHlqt && (!validChange || validChange?.depositHCHF);
   // hlqt token association (deposition)
   const { call: associateWithHlqt, state: hlqtAssociationLoadingState } = useLoadingState(
     async () => {
-      if (!deployment) {
-        const errorMessage = `i cannot get the hlqt token id if there is no deployment. please connect to a chain first.`;
-        console.error(errorMessage, "context:", { deployment });
-        throw new Error(errorMessage);
-      }
-
-      await associateWithToken({ tokenAddress: deployment.hlqtTokenAddress });
+      await liquity.associateWithHlqt();
     }
   );
   // hchf token association (withdrawal)
-  const needsHchfAssociation = !hasAssociatedWithHchf && validChange?.withdrawHCHF;
+  const needsHchfAssociation = !userHasAssociatedWithHchf && validChange?.withdrawHCHF;
   const { call: associateWithHchf, state: hchfAssociationLoadingState } = useLoadingState(
     async () => {
-      if (!deployment) {
-        const errorMessage = `i cannot get the hchf token id if there is no deployment. please connect to a chain first.`;
-        console.error(errorMessage, "context:", { deployment });
-        throw new Error(errorMessage);
-      }
-
-      await associateWithToken({ tokenAddress: deployment.hchfTokenAddress });
+      await liquity.associateWithHchf();
     }
   );
   // hchf spender approval
@@ -184,33 +163,19 @@ export const StabilityDepositManager: React.FC = () => {
       throw new Error(errorMessage);
     }
 
-    if (!deployment) {
-      const errorMessage = `i cannot get the hchf token id if there is no deployment. please connect to a chain first.`;
-      console.error(errorMessage, "context:", { deployment });
-      throw new Error(errorMessage);
-    }
-
-    const contractAddress = addresses.hchfToken as `0x${string}`;
-    const tokenAddress = deployment.hchfTokenAddress;
-    const amount = BigNumber.from(validChange.depositHCHF.bigNumber);
-
-    await approveSpender({
-      contractAddress,
-      tokenAddress,
-      amount
-    });
+    await liquity.approveHchfToSpendHchf(validChange.depositHCHF);
   });
 
   const transactionSteps: Step[] = [];
   if (!validChange || validChange?.depositHCHF) {
     transactionSteps.push({
       title: "Associate with HLQT",
-      status: hasAssociatedWithHlqt
+      status: userHasAssociatedWithHlqt
         ? "success"
         : hlqtAssociationLoadingState === "error"
         ? "danger"
         : hlqtAssociationLoadingState,
-      description: hasAssociatedWithHlqt
+      description: userHasAssociatedWithHlqt
         ? "You've already associated with HLQT."
         : "You have to associate with HLQT tokens before you can use HLiquity."
     });
@@ -218,12 +183,12 @@ export const StabilityDepositManager: React.FC = () => {
   if (validChange?.withdrawHCHF) {
     transactionSteps.push({
       title: "Associate with HCHF",
-      status: hasAssociatedWithHchf
+      status: userHasAssociatedWithHchf
         ? "success"
         : hlqtAssociationLoadingState === "error"
         ? "danger"
         : hlqtAssociationLoadingState,
-      description: hasAssociatedWithHchf
+      description: userHasAssociatedWithHchf
         ? "You've already associated with HCHF."
         : "You have to associate with HCHF tokens before you can use HLiquity."
     });

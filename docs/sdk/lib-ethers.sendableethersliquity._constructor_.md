@@ -6,15 +6,56 @@
 
 Constructs a new instance of the `SendableEthersLiquity` class
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
-constructor(populatable: PopulatableEthersLiquity);
+constructor(populatable: PopulatableEthersLiquity, store?: HLiquityStore);
 ```
 
 ## Parameters
 
-|  Parameter | Type | Description |
-|  --- | --- | --- |
-|  populatable | [PopulatableEthersLiquity](./lib-ethers.populatableethersliquity.md) |  |
+<table><thead><tr><th>
 
+Parameter
+
+
+</th><th>
+
+Type
+
+
+</th><th>
+
+Description
+
+
+</th></tr></thead>
+<tbody><tr><td>
+
+populatable
+
+
+</td><td>
+
+[PopulatableEthersLiquity](./lib-ethers.populatableethersliquity.md)
+
+
+</td><td>
+
+
+</td></tr>
+<tr><td>
+
+store
+
+
+</td><td>
+
+[HLiquityStore](./lib-base.hliquitystore.md)
+
+
+</td><td>
+
+
+</td></tr>
+</tbody></table>

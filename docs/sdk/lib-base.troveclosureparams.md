@@ -6,7 +6,7 @@
 
 Parameters of a [closeTrove()](./lib-base.transactableliquity.closetrove.md) transaction.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 export declare type TroveClosureParams<T> = _CollateralWithdrawal<T> & _NoCollateralDeposit & Partial<_HCHFRepayment<T>> & _NoHCHFBorrowing;

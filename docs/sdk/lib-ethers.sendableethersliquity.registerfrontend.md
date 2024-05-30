@@ -6,7 +6,7 @@
 
 Register current wallet address as a Liquity frontend.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 registerFrontend(kickbackRate: Decimalish, overrides?: EthersTransactionOverrides): Promise<SentEthersLiquityTransaction<void>>;
@@ -14,12 +14,54 @@ registerFrontend(kickbackRate: Decimalish, overrides?: EthersTransactionOverride
 
 ## Parameters
 
-|  Parameter | Type | Description |
-|  --- | --- | --- |
-|  kickbackRate | [Decimalish](./lib-base.decimalish.md) | The portion of HLQT rewards to pass onto users of the frontend (between 0 and 1). |
-|  overrides | [EthersTransactionOverrides](./lib-ethers.etherstransactionoverrides.md) |  |
+<table><thead><tr><th>
 
-<b>Returns:</b>
+Parameter
+
+
+</th><th>
+
+Type
+
+
+</th><th>
+
+Description
+
+
+</th></tr></thead>
+<tbody><tr><td>
+
+kickbackRate
+
+
+</td><td>
+
+[Decimalish](./lib-base.decimalish.md)
+
+
+</td><td>
+
+The portion of HLQT rewards to pass onto users of the frontend (between 0 and 1).
+
+
+</td></tr>
+<tr><td>
+
+overrides
+
+
+</td><td>
+
+[EthersTransactionOverrides](./lib-ethers.etherstransactionoverrides.md)
+
+
+</td><td>
+
+
+</td></tr>
+</tbody></table>
+**Returns:**
 
 Promise&lt;[SentEthersLiquityTransaction](./lib-ethers.sentethersliquitytransaction.md)<!-- -->&lt;void&gt;&gt;
 

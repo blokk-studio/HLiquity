@@ -22,6 +22,7 @@ export const LiquidationManager: React.FC = () => {
 
           <Input
             type="number"
+            onWheel={(e) => e.target.blur()}
             min="1"
             step="1"
             value={numberOfTrovesToLiquidate}

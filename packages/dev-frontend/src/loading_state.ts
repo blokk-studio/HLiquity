@@ -21,12 +21,14 @@ export const useLoadingState = <Type>(
       const result = await callback();
       setState("success");
       setResult(result);
+
       return result;
     } catch (error: unknown) {
       setState("error");
       setError(error as Error);
       console.warn("callback resulted in an error", error, callback);
     }
+
     return null;
   };
 

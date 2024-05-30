@@ -6,12 +6,12 @@
 
 Get the address of the HST Token of HLQT
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 getHLQTTokenAddress(): Promise<string>;
 ```
-<b>Returns:</b>
+**Returns:**
 
 Promise&lt;string&gt;
 

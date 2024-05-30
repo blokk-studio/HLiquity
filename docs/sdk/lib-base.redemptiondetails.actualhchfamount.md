@@ -6,7 +6,7 @@
 
 Amount of HCHF that was actually redeemed by the transaction.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 actualHCHFAmount: Decimal;

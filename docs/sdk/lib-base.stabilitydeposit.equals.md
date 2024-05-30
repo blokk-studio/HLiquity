@@ -6,7 +6,7 @@
 
 Compare to another instance of `StabilityDeposit`<!-- -->.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 equals(that: StabilityDeposit): boolean;
@@ -14,11 +14,38 @@ equals(that: StabilityDeposit): boolean;
 
 ## Parameters
 
-|  Parameter | Type | Description |
-|  --- | --- | --- |
-|  that | [StabilityDeposit](./lib-base.stabilitydeposit.md) |  |
+<table><thead><tr><th>
 
-<b>Returns:</b>
+Parameter
+
+
+</th><th>
+
+Type
+
+
+</th><th>
+
+Description
+
+
+</th></tr></thead>
+<tbody><tr><td>
+
+that
+
+
+</td><td>
+
+[StabilityDeposit](./lib-base.stabilitydeposit.md)
+
+
+</td><td>
+
+
+</td></tr>
+</tbody></table>
+**Returns:**
 
 boolean
 

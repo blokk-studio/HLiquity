@@ -113,13 +113,13 @@ export const ActiveDeposit: React.FC = () => {
             &nbsp;Adjust
           </Button>
 
-          <ClaimRewards disabled={!hasGain && !hasReward}>
+          <ClaimRewards>
             Claim {COLLATERAL_COIN} and {GT}
           </ClaimRewards>
         </Flex>
 
         {hasTrove && (
-          <ClaimAndMove disabled={!hasGain}>
+          <ClaimAndMove>
             Claim {GT} and move {COLLATERAL_COIN} to Trove
           </ClaimAndMove>
         )}

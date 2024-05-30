@@ -6,12 +6,12 @@
 
 A Trove that is associated with a single owner.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 export declare class UserTrove extends Trove 
 ```
-<b>Extends:</b> [Trove](./lib-base.trove.md)
+**Extends:** [Trove](./lib-base.trove.md)
 
 ## Remarks
 
@@ -23,14 +23,95 @@ The constructor for this class is marked as internal. Third-party code should no
 
 ## Properties
 
-|  Property | Modifiers | Type | Description |
-|  --- | --- | --- | --- |
-|  [ownerAddress](./lib-base.usertrove.owneraddress.md) |  | string | Address that owns this Trove. |
-|  [status](./lib-base.usertrove.status.md) |  | [UserTroveStatus](./lib-base.usertrovestatus.md) | Provides more information when the UserTrove is empty. |
+<table><thead><tr><th>
+
+Property
+
+
+</th><th>
+
+Modifiers
+
+
+</th><th>
+
+Type
+
+
+</th><th>
+
+Description
+
+
+</th></tr></thead>
+<tbody><tr><td>
+
+[ownerAddress](./lib-base.usertrove.owneraddress.md)
+
+
+</td><td>
+
+
+</td><td>
+
+string
+
+
+</td><td>
+
+Address that owns this Trove.
+
+
+</td></tr>
+<tr><td>
+
+[status](./lib-base.usertrove.status.md)
+
+
+</td><td>
+
+
+</td><td>
+
+[UserTroveStatus](./lib-base.usertrovestatus.md)
+
+
+</td><td>
+
+Provides more information when the UserTrove is empty.
+
+
+</td></tr>
+</tbody></table>
 
 ## Methods
 
-|  Method | Modifiers | Description |
-|  --- | --- | --- |
-|  [equals(that)](./lib-base.usertrove.equals.md) |  |  |
+<table><thead><tr><th>
 
+Method
+
+
+</th><th>
+
+Modifiers
+
+
+</th><th>
+
+Description
+
+
+</th></tr></thead>
+<tbody><tr><td>
+
+[equals(that)](./lib-base.usertrove.equals.md)
+
+
+</td><td>
+
+
+</td><td>
+
+
+</td></tr>
+</tbody></table>

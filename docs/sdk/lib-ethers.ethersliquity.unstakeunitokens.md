@@ -6,7 +6,7 @@
 
 Withdraw Uniswap ETH/HCHF LP tokens from liquidity mining.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 unstakeUniTokens(amount: Decimalish, overrides?: EthersTransactionOverrides): Promise<void>;
@@ -14,12 +14,54 @@ unstakeUniTokens(amount: Decimalish, overrides?: EthersTransactionOverrides): Pr
 
 ## Parameters
 
-|  Parameter | Type | Description |
-|  --- | --- | --- |
-|  amount | [Decimalish](./lib-base.decimalish.md) | Amount of LP tokens to withdraw. |
-|  overrides | [EthersTransactionOverrides](./lib-ethers.etherstransactionoverrides.md) |  |
+<table><thead><tr><th>
 
-<b>Returns:</b>
+Parameter
+
+
+</th><th>
+
+Type
+
+
+</th><th>
+
+Description
+
+
+</th></tr></thead>
+<tbody><tr><td>
+
+amount
+
+
+</td><td>
+
+[Decimalish](./lib-base.decimalish.md)
+
+
+</td><td>
+
+Amount of LP tokens to withdraw.
+
+
+</td></tr>
+<tr><td>
+
+overrides
+
+
+</td><td>
+
+[EthersTransactionOverrides](./lib-ethers.etherstransactionoverrides.md)
+
+
+</td><td>
+
+
+</td></tr>
+</tbody></table>
+**Returns:**
 
 Promise&lt;void&gt;
 

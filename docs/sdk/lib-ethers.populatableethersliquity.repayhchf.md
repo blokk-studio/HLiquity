@@ -6,7 +6,7 @@
 
 Adjust existing Trove by repaying some of its debt.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 repayHCHF(amount: Decimalish, overrides?: EthersTransactionOverrides): Promise<PopulatedEthersLiquityTransaction<TroveAdjustmentDetails>>;
@@ -14,12 +14,54 @@ repayHCHF(amount: Decimalish, overrides?: EthersTransactionOverrides): Promise<P
 
 ## Parameters
 
-|  Parameter | Type | Description |
-|  --- | --- | --- |
-|  amount | [Decimalish](./lib-base.decimalish.md) | The amount of HCHF to repay. |
-|  overrides | [EthersTransactionOverrides](./lib-ethers.etherstransactionoverrides.md) |  |
+<table><thead><tr><th>
 
-<b>Returns:</b>
+Parameter
+
+
+</th><th>
+
+Type
+
+
+</th><th>
+
+Description
+
+
+</th></tr></thead>
+<tbody><tr><td>
+
+amount
+
+
+</td><td>
+
+[Decimalish](./lib-base.decimalish.md)
+
+
+</td><td>
+
+The amount of HCHF to repay.
+
+
+</td></tr>
+<tr><td>
+
+overrides
+
+
+</td><td>
+
+[EthersTransactionOverrides](./lib-ethers.etherstransactionoverrides.md)
+
+
+</td><td>
+
+
+</td></tr>
+</tbody></table>
+**Returns:**
 
 Promise&lt;[PopulatedEthersLiquityTransaction](./lib-ethers.populatedethersliquitytransaction.md)<!-- -->&lt;[TroveAdjustmentDetails](./lib-base.troveadjustmentdetails.md)<!-- -->&gt;&gt;
 
@@ -29,6 +71,5 @@ Equivalent to:
 
 ```typescript
 adjustTrove({ repayHCHF: amount })
-
 ```
 

@@ -6,7 +6,7 @@
 
 Withdraw HLQT from staking.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 unstakeHLQT(amount: Decimalish, overrides?: EthersTransactionOverrides): Promise<PopulatedEthersLiquityTransaction<void>>;
@@ -14,15 +14,61 @@ unstakeHLQT(amount: Decimalish, overrides?: EthersTransactionOverrides): Promise
 
 ## Parameters
 
-| Parameter | Type                                                                     | Description                 |
-| --------- | ------------------------------------------------------------------------ | --------------------------- |
-| amount    | [Decimalish](./lib-base.decimalish.md)                                   | Amount of HLQT to withdraw. |
-| overrides | [EthersTransactionOverrides](./lib-ethers.etherstransactionoverrides.md) |                             |
+|  Parameter | Type | Description |
+|  --- | --- | --- |
+|  amount | [Decimalish](./lib-base.decimalish.md) | Amount of HLQT to withdraw. |
+|  overrides | [EthersTransactionOverrides](./lib-ethers.etherstransactionoverrides.md) |  |
 
-<b>Returns:</b>
+Parameter
+
+
+</th><th>
+
+Type
+
+
+</th><th>
+
+Description
+
+
+</th></tr></thead>
+<tbody><tr><td>
+
+amount
+
+
+</td><td>
+
+[Decimalish](./lib-base.decimalish.md)
+
+
+</td><td>
+
+Amount of HLQT to withdraw.
+
+
+</td></tr>
+<tr><td>
+
+overrides
+
+
+</td><td>
+
+[EthersTransactionOverrides](./lib-ethers.etherstransactionoverrides.md)
+
+
+</td><td>
+
+
+</td></tr>
+</tbody></table>
+**Returns:**
 
 Promise&lt;[PopulatedEthersLiquityTransaction](./lib-ethers.populatedethersliquitytransaction.md)<!-- -->&lt;void&gt;&gt;
 
 ## Remarks
 
 As a side-effect, the transaction will also pay out the HLQT stake's [collateral gain](./lib-base.hlqtstake.collateralgain.md) and [HCHF gain](./lib-base.hlqtstake.hchfgain.md)<!-- -->.
+

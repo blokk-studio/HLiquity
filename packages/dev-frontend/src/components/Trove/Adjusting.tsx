@@ -27,11 +27,8 @@ import {
 } from "./validation/validateTroveChange";
 import { Step, Steps } from "../Steps";
 import { useLiquity } from "../../hooks/LiquityContext";
-import { useHedera } from "../../hedera/hedera_context";
 import { useLoadingState } from "../../loading_state";
-import { BigNumber } from "ethers";
 import { LoadingButton } from "../LoadingButton";
-import { useDeployment } from "../../configuration/deployments";
 
 const selector = (state: LiquityStoreState) => {
   const { trove, fees, price, accountBalance } = state;
@@ -138,10 +135,10 @@ export const Adjusting: React.FC = () => {
   const maxBorrowingRate = borrowingRate.add(0.005);
   const updatedTrove = isDirty ? new Trove(collateral, totalDebt) : trove;
   const feePct = new Percent(borrowingRate);
-  const availableEth = accountBalance.gt(TX_MAX_COSTS)
-    ? accountBalance.sub(TX_MAX_COSTS)
+  const availableEth = trove.collateral.add(accountBalance);
+  const maxCollateral = availableEth.gt(TX_MAX_COSTS)
+    ? availableEth.sub(TX_MAX_COSTS)
     : Decimal.ZERO;
-  const maxCollateral = availableEth;
   const collateralMaxedOut = collateral.eq(maxCollateral);
   const collateralRatio =
     !collateral.isZero && !netDebt.isZero ? updatedTrove.collateralRatio(price) : undefined;
@@ -162,24 +159,13 @@ export const Adjusting: React.FC = () => {
     transactionState.type === "waitingForConfirmation";
 
   // consent & approval
-  const {
-    liquity: {
-      connection: { addresses }
-    }
-  } = useLiquity();
-  const deployment = useDeployment();
   const needsHchfAssociation = !stableTroveChange || stableTroveChange?.params.borrowHCHF;
-  const { hasAssociatedWithHchf, associateWithToken, approveSpender } = useHedera();
   // hchf token association
+  const { liquity } = useLiquity();
+  const { userHasAssociatedWithHchf } = useLiquitySelector(state => state);
   const { call: associateWithHchf, state: hchfAssociationLoadingState } = useLoadingState(
     async () => {
-      if (!deployment) {
-        const errorMessage = `i cannot get the hlqt token id if there is no deployment. please connect to a chain first.`;
-        console.error(errorMessage, "context:", { deployment });
-        throw new Error(errorMessage);
-      }
-
-      await associateWithToken({ tokenAddress: deployment.hlqtTokenAddress });
+      await liquity.associateWithHchf();
     }
   );
   // hchf spender approval
@@ -189,21 +175,7 @@ export const Adjusting: React.FC = () => {
       throw "cannot approve a withdrawal (negative spending/negative deposit) or deposit of 0";
     }
 
-    if (!deployment) {
-      const errorMessage = `i cannot get the hchf token id if there is no deployment. please connect to a chain first.`;
-      console.error(errorMessage, "context:", { deployment });
-      throw new Error(errorMessage);
-    }
-
-    const contractAddress = addresses.hchfToken as `0x${string}`;
-    const tokenAddress = deployment.hchfTokenAddress;
-    const amount = BigNumber.from(stableTroveChange.params.repayHCHF.bigNumber);
-
-    await approveSpender({
-      contractAddress,
-      tokenAddress,
-      amount
-    });
+    await liquity.approveHchfToSpendHchf(stableTroveChange.params.repayHCHF);
   });
 
   if (trove.status !== "open") {
@@ -214,12 +186,12 @@ export const Adjusting: React.FC = () => {
   if (needsHchfAssociation) {
     transactionSteps.push({
       title: "Associate with HCHF",
-      status: hasAssociatedWithHchf
+      status: userHasAssociatedWithHchf
         ? "success"
         : hchfAssociationLoadingState === "error"
         ? "danger"
         : hchfAssociationLoadingState,
-      description: hasAssociatedWithHchf
+      description: userHasAssociatedWithHchf
         ? "You've already associated with HCHF."
         : "You have to associate with HCHF tokens before you can use HLiquity."
     });
@@ -303,7 +275,7 @@ export const Adjusting: React.FC = () => {
           label="Borrowing Fee"
           inputId="trove-borrowing-fee"
           amount={fee.prettify(2)}
-          pendingAmount={feePct.toString(2)}
+          pendingAmount={`currently ${feePct.toString(2)} of debt`}
           unit={COIN}
           infoIcon={
             <InfoIcon
@@ -361,7 +333,7 @@ export const Adjusting: React.FC = () => {
             Cancel
           </Button>
 
-          {needsHchfAssociation && !hasAssociatedWithHchf ? (
+          {needsHchfAssociation && !userHasAssociatedWithHchf ? (
             <LoadingButton
               disabled={!stableTroveChange}
               loading={hchfAssociationLoadingState === "pending"}

@@ -6,12 +6,12 @@
 
 Thrown by [TransactableLiquity](./lib-base.transactableliquity.md) functions in case of transaction failure.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 export declare class TransactionFailedError<T extends FailedReceipt = FailedReceipt> extends Error 
 ```
-<b>Extends:</b> Error
+**Extends:** Error
 
 ## Remarks
 
@@ -19,7 +19,42 @@ The constructor for this class is marked as internal. Third-party code should no
 
 ## Properties
 
-|  Property | Modifiers | Type | Description |
-|  --- | --- | --- | --- |
-|  [failedReceipt](./lib-base.transactionfailederror.failedreceipt.md) |  | T |  |
+<table><thead><tr><th>
 
+Property
+
+
+</th><th>
+
+Modifiers
+
+
+</th><th>
+
+Type
+
+
+</th><th>
+
+Description
+
+
+</th></tr></thead>
+<tbody><tr><td>
+
+[failedReceipt](./lib-base.transactionfailederror.failedreceipt.md)
+
+
+</td><td>
+
+
+</td><td>
+
+T
+
+
+</td><td>
+
+
+</td></tr>
+</tbody></table>

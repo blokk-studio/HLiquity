@@ -6,12 +6,11 @@
 
 Withdraw [collateral gain](./lib-base.hlqtstake.collateralgain.md) and [HCHF gain](./lib-base.hlqtstake.hchfgain.md) from HLQT stake.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 withdrawGainsFromStaking(): Promise<void>;
 ```
-
 <b>Returns:</b>
 
 Promise&lt;void&gt;
@@ -19,3 +18,4 @@ Promise&lt;void&gt;
 ## Exceptions
 
 Throws [TransactionFailedError](./lib-base.transactionfailederror.md) in case of transaction failure.
+

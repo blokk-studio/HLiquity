@@ -1,15 +1,39 @@
 import { Chain } from "@wagmi/core";
-import { useNetwork } from "wagmi";
-import { enabledChainIds } from "../configuration/enabled_chains";
-import { deployments } from "../configuration/deployments";
+import { LedgerId } from "@hashgraph/sdk";
 
-interface HederaChain extends Chain {
-  apiBaseUrl: string;
+const parseEnabledChainIdsFromEnv = (env: Record<string, string>) => {
+  const enabledChainsString: string = env.VITE_ENABLED_CHAINS;
+  if (!enabledChainsString) {
+    const errorMessage = `there is no configuration for enabled chains. set the environment variable \`VITE_ENABLED_CHAINS\` to a string of comma-separated numbers (f.e. \`VITE_ENABLED_CHAINS=296,297,298\`).`;
+    console.error(errorMessage, { env });
+
+    return [];
+  }
+
+  const enabledChainIdStrings = enabledChainsString.split(",").filter(Boolean);
+  const enabledChainIds = enabledChainIdStrings
+    .map(idString => parseInt(idString, 10))
+    .filter(number => !isNaN(number));
+
+  return enabledChainIds;
+};
+
+export const enabledChainIds = parseEnabledChainIdsFromEnv(import.meta.env);
+
+/** returns the ids for all currently enabled chains configured in the environment */
+export const useEnabledChainIds = () => {
+  return enabledChainIds;
+};
+
+export interface HederaChain extends Chain {
+  apiBaseUrl: `https://${string}`;
   color: `#${string}`;
+  ledgerId: LedgerId;
 }
 
 export const testnet: HederaChain = {
   id: 0x128,
+  ledgerId: LedgerId.TESTNET,
   name: "Hedera Testnet",
   nativeCurrency: {
     name: "HBAR",
@@ -19,13 +43,17 @@ export const testnet: HederaChain = {
   network: "hederaTestnet",
   rpcUrls: {
     default: {
-      http: ["https://starter.arkhia.io/hedera/testnet/json-rpc/v1/7542b249WGllfVd4Gf7l8bf18V1G8fWW"],
+      http: [
+        "https://starter.arkhia.io/hedera/testnet/json-rpc/v1/7542b249WGllfVd4Gf7l8bf18V1G8fWW"
+      ],
       webSocket: [
         "wss://starter.arkhia.io/hedera/testnet/watchtower/v1/7542b249WGllfVd4Gf7l8bf18V1G8fWW"
       ]
     },
     public: {
-      http: ["https://starter.arkhia.io/hedera/testnet/json-rpc/v1/7542b249WGllfVd4Gf7l8bf18V1G8fWW"],
+      http: [
+        "https://starter.arkhia.io/hedera/testnet/json-rpc/v1/7542b249WGllfVd4Gf7l8bf18V1G8fWW"
+      ],
       webSocket: [
         "wss://starter.arkhia.io/hedera/testnet/watchtower/v1/7542b249WGllfVd4Gf7l8bf18V1G8fWW"
       ]
@@ -38,6 +66,7 @@ export const testnet: HederaChain = {
 
 export const previewnet: HederaChain = {
   id: 0x129,
+  ledgerId: LedgerId.PREVIEWNET,
   name: "Hedera Previewnet",
   nativeCurrency: {
     name: "HBAR",
@@ -62,6 +91,7 @@ export const previewnet: HederaChain = {
 
 export const mainnet: HederaChain = {
   id: 0x127,
+  ledgerId: LedgerId.MAINNET,
   name: "Hedera Mainnet",
   nativeCurrency: {
     name: "HBAR",
@@ -71,13 +101,17 @@ export const mainnet: HederaChain = {
   network: "hedera",
   rpcUrls: {
     default: {
-      http: ["https://starter.arkhia.io/hedera/mainnet/json-rpc/v1/7542b249WGllfVd4Gf7l8bf18V1G8fWW"],
+      http: [
+        "https://starter.arkhia.io/hedera/mainnet/json-rpc/v1/7542b249WGllfVd4Gf7l8bf18V1G8fWW"
+      ],
       webSocket: [
         "wss://starter.arkhia.io/hedera/mainnet/watchtower/v1/7542b249WGllfVd4Gf7l8bf18V1G8fWW"
       ]
     },
     public: {
-      http: ["https://starter.arkhia.io/hedera/mainnet/json-rpc/v1/7542b249WGllfVd4Gf7l8bf18V1G8fWW"],
+      http: [
+        "https://starter.arkhia.io/hedera/mainnet/json-rpc/v1/7542b249WGllfVd4Gf7l8bf18V1G8fWW"
+      ],
       webSocket: [
         "wss://starter.arkhia.io/hedera/mainnet/watchtower/v1/7542b249WGllfVd4Gf7l8bf18V1G8fWW"
       ]
@@ -88,14 +122,10 @@ export const mainnet: HederaChain = {
   color: "#1896b2"
 };
 
-const chains = [mainnet, previewnet, testnet];
+export const chains = [mainnet, previewnet, testnet];
 
 const enabledChainIdsSet = new Set(enabledChainIds);
-const enabledChains = chains.filter(chain => enabledChainIdsSet.has(chain.id));
-const setOfChainIdsWithDeployment = new Set(deployments.map(deployment => deployment.chainId));
-const chainsWithDeployment = enabledChains.filter(chain =>
-  setOfChainIdsWithDeployment.has(chain.id)
-);
+export const enabledChains = chains.filter(chain => enabledChainIdsSet.has(chain.id));
 
 export const getChainFromId = (chainId: number) => {
   const chain = chains.find(chain => chain.id === chainId);
@@ -108,24 +138,4 @@ export const getChainFromId = (chainId: number) => {
   }
 
   return chain;
-};
-
-export const useHederaChains = () => {
-  return chainsWithDeployment;
-};
-
-export const useHederaChain = () => {
-  const network = useNetwork();
-
-  const chainId = network.chain?.id;
-  if (chainId === undefined) {
-    return null;
-  }
-
-  const hederaChain = chains.find(chain => chain.id === chainId);
-  if (!hederaChain) {
-    return null;
-  }
-
-  return hederaChain;
 };

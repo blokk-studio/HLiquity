@@ -11,3 +11,6 @@ export * from "./src/SendableLiquity";
 export * from "./src/PopulatableLiquity";
 export * from "./src/HLiquityStore";
 export * from "./src/_CachedReadableLiquity";
+export * from "./src/ConsentableLiquity";
+export * from "./src/LiquityDeployment";
+export * from "./src/Address";

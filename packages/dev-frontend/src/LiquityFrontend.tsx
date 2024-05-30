@@ -5,7 +5,6 @@ import { HashRouter as Router, Switch, Route } from "react-router-dom";
 import { Wallet } from "@ethersproject/wallet";
 
 import { Decimal, Difference, Trove } from "@liquity/lib-base";
-import { LiquityStoreProvider } from "@liquity/lib-react";
 
 import { useLiquity } from "./hooks/LiquityContext";
 import { TransactionMonitor } from "./components/Transaction";
@@ -20,23 +19,20 @@ import { TroveViewProvider } from "./components/Trove/context/TroveViewProvider"
 import { StabilityViewProvider } from "./components/Stability/context/StabilityViewProvider";
 import { StakingViewProvider } from "./components/Staking/context/StakingViewProvider";
 import "tippy.js/dist/tippy.css"; // Tooltip default style
-import { BondsProvider } from "./components/Bonds/context/BondsProvider";
 
 import { Imprint } from "./components/Imprint";
 import { AutomaticDevelopmentDebugMenu } from "./components/DevelopmentDebugMenu";
 import { Dashboard } from "./pages/Dashboard";
+import { BondsProvider } from "./components/Bonds/context/BondsProvider";
+import { PrivacyPolicyPage } from "./pages/PrivacyPolicyPage";
+import { ImprintPage } from "./pages/ImprintPage";
 
-type LiquityFrontendProps = {
-  loader?: React.ReactNode;
-};
-
-export const LiquityFrontend: React.FC<LiquityFrontendProps> = ({ loader }) => {
-  const { account: accountAddress, provider, liquity } = useLiquity();
+export const LiquityFrontend: React.FC = () => {
+  const { account: accountAddress, liquity } = useLiquity();
 
   // For console tinkering ;-)
   Object.assign(window, {
     account: accountAddress,
-    provider,
     liquity,
     Trove,
     Decimal,
@@ -45,53 +41,56 @@ export const LiquityFrontend: React.FC<LiquityFrontendProps> = ({ loader }) => {
   });
 
   return (
-    <LiquityStoreProvider {...{ loader }} store={liquity.store}>
-      {
-        <Router>
-          <TroveViewProvider>
-            <StabilityViewProvider>
-              <StakingViewProvider>
-                <BondsProvider>
-                  <Flex sx={{ flexDirection: "column", minHeight: "100%" }}>
-                    <Header>
-                      <UserAccount />
-                      <SystemStatsPopup />
-                    </Header>
+    <>
+      <Router>
+        <TroveViewProvider>
+          <StabilityViewProvider>
+            <StakingViewProvider>
+              <BondsProvider>
+                <Flex sx={{ flexDirection: "column", minHeight: "100%" }}>
+                  <Header>
+                    <UserAccount />
+                    <SystemStatsPopup />
+                  </Header>
 
-                    <Container
-                      variant="main"
-                      sx={{
-                        display: "flex",
-                        flexGrow: 1,
-                        flexDirection: "column",
-                        alignItems: "center"
-                      }}
-                    >
-                      <PageSwitcher>
-                        <Switch>
-                          <Route path="/" exact>
-                            <Dashboard />
-                          </Route>
-                          <Route path="/risky-troves">
-                            <RiskyTrovesPage />
-                          </Route>
-                        </Switch>
-                      </PageSwitcher>
-                    </Container>
-                  </Flex>
-                </BondsProvider>
-              </StakingViewProvider>
-            </StabilityViewProvider>
-          </TroveViewProvider>
-        </Router>
-      }
-
-      <footer sx={{ marginInline: "clamp(2rem, 100%, 50% - 38rem)", paddingBottom: "2rem" }}>
-        <Imprint />
-      </footer>
+                  <Container
+                    variant="main"
+                    sx={{
+                      display: "flex",
+                      flexGrow: 1,
+                      flexDirection: "column",
+                      alignItems: "center"
+                    }}
+                  >
+                    <PageSwitcher>
+                      <Switch>
+                        <Route path="/" exact>
+                          <Dashboard />
+                        </Route>
+                        <Route path="/risky-troves">
+                          <RiskyTrovesPage />
+                        </Route>
+                        <Route path="/privacy-policy">
+                          <PrivacyPolicyPage />
+                        </Route>
+                        <Route path="/imprint">
+                          <ImprintPage />
+                        </Route>
+                      </Switch>
+                    </PageSwitcher>
+                  </Container>
+                </Flex>
+              </BondsProvider>
+            </StakingViewProvider>
+          </StabilityViewProvider>
+        </TroveViewProvider>
+        <footer sx={{ marginInline: "clamp(2rem, 100%, 50% - 38rem)", paddingBottom: "2rem" }}>
+          <Imprint />
+        </footer>
+      </Router>
 
       <TransactionMonitor />
       <AutomaticDevelopmentDebugMenu />
-    </LiquityStoreProvider>
+    </>
   );
 };

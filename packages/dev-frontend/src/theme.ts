@@ -49,6 +49,10 @@ const buttonBase: ThemeUIStyleObject = {
   alignItems: "center",
   justifyContent: "center",
   fontSize: 4,
+  fontWeight: 300,
+  '@media screen and (max-width: 767px)': {
+    fontSize: 3,
+  },
 
   ":enabled": { cursor: "pointer" }
 };
@@ -61,7 +65,7 @@ const button: ThemeUIStyleObject = {
   // transition: "box-shadow .5s, border .2s",
   color: "primary",
   borderRadius: 2,
-  fontWeight: "regular",
+  fontWeight: 300,
   fontFamily: "inherit",
 
   ":disabled": {
@@ -118,7 +122,7 @@ const infoCard: ThemeUIStyleObject = {
   h2: {
     mb: 2,
     fontSize: cardHeadingFontSize
-  }
+  },
 };
 
 const formBase: ThemeUIStyleObject = {
@@ -184,12 +188,12 @@ const theme: Theme = {
   fontSizes: [12, 14, 16, 20, 24, 32, 48, 64, 96],
 
   fontWeights: {
-    body: 400,
-    heading: 600,
+    body: 300,
+    heading: 700,
 
-    light: 200,
-    medium: 500,
-    bold: 600
+    light: 100,
+    medium: 300,
+    bold: 700
   },
 
   lineHeights: {
@@ -313,6 +317,11 @@ const theme: Theme = {
         // bg: "muted",
 
         fontSize: cardHeadingFontSize
+      },
+
+      "h3": {
+        fontSize: "20px",
+        fontWeight: 500,
       }
     },
 
@@ -495,7 +504,8 @@ const theme: Theme = {
     sidenav: {
       display: ["flex", "none"],
       flexDirection: "column",
-      p: 0,
+      px: 0,
+      py: '6px',
       m: 0,
       borderColor: "muted",
       mr: "25vw",
@@ -549,6 +559,17 @@ const theme: Theme = {
       letterSpacing: "2px",
       width: ["100%", "auto"],
       mt: [3, "auto"]
+    },
+    default: {
+      color: "primary",
+      ":hover": { fontWeight: "bold" },
+      textDecoration: "none",
+      px: "inherit",
+      py: "inherit",
+      textTransform: "unset",
+      letterSpacing: "unset",
+      mt: "unset",
+      fontWeight: "unset",
     },
   }
 };

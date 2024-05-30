@@ -6,7 +6,7 @@
 
 Parameters of an [openTrove()](./lib-base.transactableliquity.opentrove.md) transaction.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 export declare type TroveCreationParams<T = unknown> = _CollateralDeposit<T> & _NoCollateralWithdrawal & _HCHFBorrowing<T> & _NoHCHFRepayment;

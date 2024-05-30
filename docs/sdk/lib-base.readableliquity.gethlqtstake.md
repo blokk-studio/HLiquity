@@ -6,7 +6,7 @@
 
 Get the current state of an HLQT Stake.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 getHLQTStake(address?: string): Promise<HLQTStake>;
@@ -14,11 +14,40 @@ getHLQTStake(address?: string): Promise<HLQTStake>;
 
 ## Parameters
 
-|  Parameter | Type | Description |
-|  --- | --- | --- |
-|  address | string | Address that owns the HLQT Stake. |
+<table><thead><tr><th>
 
-<b>Returns:</b>
+Parameter
+
+
+</th><th>
+
+Type
+
+
+</th><th>
+
+Description
+
+
+</th></tr></thead>
+<tbody><tr><td>
+
+address
+
+
+</td><td>
+
+string
+
+
+</td><td>
+
+Address that owns the HLQT Stake.
+
+
+</td></tr>
+</tbody></table>
+**Returns:**
 
 Promise&lt;[HLQTStake](./lib-base.hlqtstake.md)<!-- -->&gt;
 

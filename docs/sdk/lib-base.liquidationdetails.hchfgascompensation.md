@@ -6,7 +6,7 @@
 
 Amount of HCHF paid to the liquidator as gas compensation.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 hchfGasCompensation: Decimal;

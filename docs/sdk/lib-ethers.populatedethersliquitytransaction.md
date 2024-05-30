@@ -6,12 +6,12 @@
 
 A transaction that has been prepared for sending.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 export declare class PopulatedEthersLiquityTransaction<T = unknown> implements PopulatedLiquityTransaction<EthersPopulatedTransaction, SentEthersLiquityTransaction<T>> 
 ```
-<b>Implements:</b> [PopulatedLiquityTransaction](./lib-base.populatedliquitytransaction.md)<!-- -->&lt;[EthersPopulatedTransaction](./lib-ethers.etherspopulatedtransaction.md)<!-- -->, [SentEthersLiquityTransaction](./lib-ethers.sentethersliquitytransaction.md)<!-- -->&lt;T&gt;&gt;
+**Implements:** [PopulatedLiquityTransaction](./lib-base.populatedliquitytransaction.md)<!-- -->&lt;[EthersPopulatedTransaction](./lib-ethers.etherspopulatedtransaction.md)<!-- -->, [SentEthersLiquityTransaction](./lib-ethers.sentethersliquitytransaction.md)<!-- -->&lt;T&gt;&gt;
 
 ## Remarks
 
@@ -21,13 +21,78 @@ The constructor for this class is marked as internal. Third-party code should no
 
 ## Properties
 
-|  Property | Modifiers | Type | Description |
-|  --- | --- | --- | --- |
-|  [rawPopulatedTransaction](./lib-ethers.populatedethersliquitytransaction.rawpopulatedtransaction.md) |  | [EthersPopulatedTransaction](./lib-ethers.etherspopulatedtransaction.md) | Unsigned transaction object populated by Ethers. |
+<table><thead><tr><th>
+
+Property
+
+
+</th><th>
+
+Modifiers
+
+
+</th><th>
+
+Type
+
+
+</th><th>
+
+Description
+
+
+</th></tr></thead>
+<tbody><tr><td>
+
+[rawPopulatedTransaction](./lib-ethers.populatedethersliquitytransaction.rawpopulatedtransaction.md)
+
+
+</td><td>
+
+
+</td><td>
+
+[EthersPopulatedTransaction](./lib-ethers.etherspopulatedtransaction.md)
+
+
+</td><td>
+
+Unsigned transaction object populated by Ethers.
+
+
+</td></tr>
+</tbody></table>
 
 ## Methods
 
-|  Method | Modifiers | Description |
-|  --- | --- | --- |
-|  [send()](./lib-ethers.populatedethersliquitytransaction.send.md) |  | Send the transaction. |
+<table><thead><tr><th>
 
+Method
+
+
+</th><th>
+
+Modifiers
+
+
+</th><th>
+
+Description
+
+
+</th></tr></thead>
+<tbody><tr><td>
+
+[send()](./lib-ethers.populatedethersliquitytransaction.send.md)
+
+
+</td><td>
+
+
+</td><td>
+
+Send the transaction.
+
+
+</td></tr>
+</tbody></table>

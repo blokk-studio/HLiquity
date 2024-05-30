@@ -6,7 +6,7 @@
 
 A Stability Deposit and its accrued gains.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 export declare class StabilityDeposit 
@@ -18,20 +18,199 @@ The constructor for this class is marked as internal. Third-party code should no
 
 ## Properties
 
-|  Property | Modifiers | Type | Description |
-|  --- | --- | --- | --- |
-|  [collateralGain](./lib-base.stabilitydeposit.collateralgain.md) |  | [Decimal](./lib-base.decimal.md) | Amount of native currency (e.g. Ether) received in exchange for the used-up HCHF. |
-|  [currentHCHF](./lib-base.stabilitydeposit.currenthchf.md) |  | [Decimal](./lib-base.decimal.md) | Amount of HCHF left in the Stability Deposit. |
-|  [frontendTag](./lib-base.stabilitydeposit.frontendtag.md) |  | string | Address of frontend through which this Stability Deposit was made. |
-|  [hlqtReward](./lib-base.stabilitydeposit.hlqtreward.md) |  | [Decimal](./lib-base.decimal.md) | Amount of HLQT rewarded since the last modification of the Stability Deposit. |
-|  [initialHCHF](./lib-base.stabilitydeposit.initialhchf.md) |  | [Decimal](./lib-base.decimal.md) | Amount of HCHF in the Stability Deposit at the time of the last direct modification. |
-|  [isEmpty](./lib-base.stabilitydeposit.isempty.md) |  | boolean |  |
+<table><thead><tr><th>
+
+Property
+
+
+</th><th>
+
+Modifiers
+
+
+</th><th>
+
+Type
+
+
+</th><th>
+
+Description
+
+
+</th></tr></thead>
+<tbody><tr><td>
+
+[collateralGain](./lib-base.stabilitydeposit.collateralgain.md)
+
+
+</td><td>
+
+
+</td><td>
+
+[Decimal](./lib-base.decimal.md)
+
+
+</td><td>
+
+Amount of native currency (e.g. Ether) received in exchange for the used-up HCHF.
+
+
+</td></tr>
+<tr><td>
+
+[currentHCHF](./lib-base.stabilitydeposit.currenthchf.md)
+
+
+</td><td>
+
+
+</td><td>
+
+[Decimal](./lib-base.decimal.md)
+
+
+</td><td>
+
+Amount of HCHF left in the Stability Deposit.
+
+
+</td></tr>
+<tr><td>
+
+[frontendTag](./lib-base.stabilitydeposit.frontendtag.md)
+
+
+</td><td>
+
+
+</td><td>
+
+string
+
+
+</td><td>
+
+Address of frontend through which this Stability Deposit was made.
+
+
+</td></tr>
+<tr><td>
+
+[hlqtReward](./lib-base.stabilitydeposit.hlqtreward.md)
+
+
+</td><td>
+
+
+</td><td>
+
+[Decimal](./lib-base.decimal.md)
+
+
+</td><td>
+
+Amount of HLQT rewarded since the last modification of the Stability Deposit.
+
+
+</td></tr>
+<tr><td>
+
+[initialHCHF](./lib-base.stabilitydeposit.initialhchf.md)
+
+
+</td><td>
+
+
+</td><td>
+
+[Decimal](./lib-base.decimal.md)
+
+
+</td><td>
+
+Amount of HCHF in the Stability Deposit at the time of the last direct modification.
+
+
+</td></tr>
+<tr><td>
+
+[isEmpty](./lib-base.stabilitydeposit.isempty.md)
+
+
+</td><td>
+
+
+</td><td>
+
+boolean
+
+
+</td><td>
+
+
+</td></tr>
+</tbody></table>
 
 ## Methods
 
-|  Method | Modifiers | Description |
-|  --- | --- | --- |
-|  [apply(change)](./lib-base.stabilitydeposit.apply.md) |  | Apply a [StabilityDepositChange](./lib-base.stabilitydepositchange.md) to this Stability Deposit. |
-|  [equals(that)](./lib-base.stabilitydeposit.equals.md) |  | Compare to another instance of <code>StabilityDeposit</code>. |
-|  [whatChanged(thatHCHF)](./lib-base.stabilitydeposit.whatchanged.md) |  | Calculate the difference between the <code>currentHCHF</code> in this Stability Deposit and <code>thatHCHF</code>. |
+<table><thead><tr><th>
 
+Method
+
+
+</th><th>
+
+Modifiers
+
+
+</th><th>
+
+Description
+
+
+</th></tr></thead>
+<tbody><tr><td>
+
+[apply(change)](./lib-base.stabilitydeposit.apply.md)
+
+
+</td><td>
+
+
+</td><td>
+
+Apply a [StabilityDepositChange](./lib-base.stabilitydepositchange.md) to this Stability Deposit.
+
+
+</td></tr>
+<tr><td>
+
+[equals(that)](./lib-base.stabilitydeposit.equals.md)
+
+
+</td><td>
+
+
+</td><td>
+
+Compare to another instance of `StabilityDeposit`<!-- -->.
+
+
+</td></tr>
+<tr><td>
+
+[whatChanged(thatHCHF)](./lib-base.stabilitydeposit.whatchanged.md)
+
+
+</td><td>
+
+
+</td><td>
+
+Calculate the difference between the `currentHCHF` in this Stability Deposit and `thatHCHF`<!-- -->.
+
+
+</td></tr>
+</tbody></table>

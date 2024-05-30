@@ -6,12 +6,12 @@
 
 Send the transaction.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 send(): Promise<SentEthersLiquityTransaction<T>>;
 ```
-<b>Returns:</b>
+**Returns:**
 
 Promise&lt;[SentEthersLiquityTransaction](./lib-ethers.sentethersliquitytransaction.md)<!-- -->&lt;T&gt;&gt;
 

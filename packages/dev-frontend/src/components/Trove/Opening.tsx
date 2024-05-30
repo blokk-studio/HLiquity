@@ -25,10 +25,9 @@ import {
   selectForTroveChangeValidation,
   validateTroveChange
 } from "./validation/validateTroveChange";
-import { useHedera } from "../../hedera/hedera_context";
 import { Step, Steps } from "../Steps";
 import { useLoadingState } from "../../loading_state";
-import { useDeployment } from "../../configuration/deployments";
+import { useLiquity } from "../../hooks/LiquityContext";
 
 const selector = (state: LiquityStoreState) => {
   const { fees, price, accountBalance } = state;
@@ -98,28 +97,22 @@ export const Opening: React.FC = () => {
   }, [collateral, borrowAmount]);
 
   // consent & approval
-  const deployment = useDeployment();
-  const { hasAssociatedWithHchf, associateWithToken } = useHedera();
+  const { liquity } = useLiquity();
+  const { userHasAssociatedWithHchf } = useLiquitySelector(state => state);
   const { call: associateWithHchf, state: hchfAssociationLoadingState } = useLoadingState(
     async () => {
-      if (!deployment) {
-        const errorMessage = `i cannot get the hchf token id if there is no deployment. please connect to a chain first.`;
-        console.error(errorMessage, "context:", { deployment });
-        throw new Error(errorMessage);
-      }
-
-      await associateWithToken({ tokenAddress: deployment.hchfTokenAddress });
+      await liquity.associateWithHchf();
     }
   );
   const steps: Step[] = [
     {
       title: "Associate with HCHF",
-      status: hasAssociatedWithHchf
+      status: userHasAssociatedWithHchf
         ? "success"
         : hchfAssociationLoadingState === "error"
         ? "danger"
         : hchfAssociationLoadingState,
-      description: hasAssociatedWithHchf
+      description: userHasAssociatedWithHchf
         ? "You've already associated with HCHF."
         : "You have to associate with HCHF tokens before you can use HLiquity."
     },
@@ -258,7 +251,7 @@ export const Opening: React.FC = () => {
             <Button disabled>
               <Spinner size="24px" sx={{ color: "background" }} />
             </Button>
-          ) : !hasAssociatedWithHchf ? (
+          ) : !userHasAssociatedWithHchf ? (
             <Button
               onClick={associateWithHchf}
               disabled={!stableTroveChange || hchfAssociationLoadingState === "pending"}

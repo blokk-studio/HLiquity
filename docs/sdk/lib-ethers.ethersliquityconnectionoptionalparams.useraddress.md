@@ -6,7 +6,7 @@
 
 Address whose Trove, Stability Deposit, HLQT Stake and balances will be read by default.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 readonly userAddress?: string;

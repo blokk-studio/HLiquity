@@ -6,7 +6,7 @@
 
 Withdraw HCHF from Stability Deposit.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 withdrawHCHFFromStabilityPool(amount: Decimalish): Promise<PopulatedLiquityTransaction<P, SentLiquityTransaction<S, LiquityReceipt<R, StabilityDepositChangeDetails>>>>;
@@ -14,11 +14,40 @@ withdrawHCHFFromStabilityPool(amount: Decimalish): Promise<PopulatedLiquityTrans
 
 ## Parameters
 
-|  Parameter | Type | Description |
-|  --- | --- | --- |
-|  amount | [Decimalish](./lib-base.decimalish.md) | Amount of HCHF to withdraw. |
+<table><thead><tr><th>
 
-<b>Returns:</b>
+Parameter
+
+
+</th><th>
+
+Type
+
+
+</th><th>
+
+Description
+
+
+</th></tr></thead>
+<tbody><tr><td>
+
+amount
+
+
+</td><td>
+
+[Decimalish](./lib-base.decimalish.md)
+
+
+</td><td>
+
+Amount of HCHF to withdraw.
+
+
+</td></tr>
+</tbody></table>
+**Returns:**
 
 Promise&lt;[PopulatedLiquityTransaction](./lib-base.populatedliquitytransaction.md)<!-- -->&lt;P, [SentLiquityTransaction](./lib-base.sentliquitytransaction.md)<!-- -->&lt;S, [LiquityReceipt](./lib-base.liquityreceipt.md)<!-- -->&lt;R, [StabilityDepositChangeDetails](./lib-base.stabilitydepositchangedetails.md)<!-- -->&gt;&gt;&gt;&gt;
 

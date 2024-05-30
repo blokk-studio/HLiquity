@@ -1,9 +1,10 @@
 import { Signer as EthersSigner, Contract, BigNumber, Signer } from "ethers";
 import { TransactionResponse } from "@ethersproject/abstract-provider";
+import { Address } from "@liquity/lib-base";
 
 export const associateWithToken = async (options: {
   signer: EthersSigner;
-  tokenAddress: `0x${string}`;
+  tokenAddress: Address;
 }) => {
   const abi = [`function associate()`];
   const gasLimit = 1000000;
@@ -20,13 +21,13 @@ export const associateWithToken = async (options: {
       (error as Error).message
     }`;
     console.error(errorMessage, error);
-    throw new Error(errorMessage, { cause: error });
+    throw new Error(errorMessage);
   }
 };
 
 export const dissociateFromToken = async (options: {
   signer: EthersSigner;
-  tokenAddress: `0x${string}`;
+  tokenAddress: Address;
 }) => {
   const abi = [`function dissociate()`];
   const gasLimit = 1000000;
@@ -43,13 +44,13 @@ export const dissociateFromToken = async (options: {
       (error as Error).message
     }`;
     console.error(errorMessage, error);
-    throw new Error(errorMessage, { cause: error });
+    throw new Error(errorMessage);
   }
 };
 
 export const approveSpender = async (options: {
-  contractAddress: `0x${string}`;
-  tokenAddress: `0x${string}`;
+  contractAddress: Address;
+  tokenAddress: Address;
   amount: BigNumber;
   signer: Signer;
 }) => {

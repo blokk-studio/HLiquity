@@ -6,7 +6,7 @@
 
 Total amount of HLQT currently staked.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 totalStakedHLQT: Decimal;

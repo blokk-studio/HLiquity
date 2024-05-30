@@ -5,8 +5,7 @@ import { Flex, Heading, ThemeProvider } from "theme-ui";
 import { Global, css } from "@emotion/react";
 
 import getDefaultClient from "./connectkit/defaultClient";
-import { LiquityProvider } from "./hooks/LiquityContext";
-import { WalletConnector } from "./components/WalletConnector";
+import { LiquityProvider, LiquityConsumer } from "./hooks/LiquityContext";
 import { TransactionProvider } from "./components/Transaction";
 import { Icon } from "./components/Icon";
 import { getConfig } from "./config";
@@ -16,12 +15,16 @@ import { DisposableWalletProvider } from "./testUtils/DisposableWalletProvider";
 import { LiquityFrontend } from "./LiquityFrontend";
 import { AppLoader } from "./components/AppLoader";
 import { useAsyncValue } from "./hooks/AsyncValue";
-import { useHederaChains } from "./hedera/wagmi-chains";
+import { useHederaChains } from "./hooks/chains";
 import { AuthenticationProvider, LoginForm } from "./authentication";
-import { HederaTokensProvider } from "./hedera/hedera_context";
-import { Lexicon } from "./lexicon";
 import { useConfiguration } from "./configuration";
 import "./App.scss";
+import { HashConnectProvider, HashConnectLoader } from "./components/HashConnectProvider";
+import { LiquityStoreProvider } from "@liquity/lib-react";
+import { MultiWalletGatekeeper } from "./components/MultiWalletGatekeeper";
+import { SelectedChainProvider } from "./components/chain_context";
+import { MultiWalletProvider } from "./multi_wallet";
+import { AppErrorBoundary } from "./components/AppErrorBoundary";
 
 const isDemoMode = import.meta.env.VITE_APP_DEMO_MODE === "true";
 
@@ -80,28 +83,6 @@ const UnsupportedNetworkFallback: React.FC<{ availableNetworks: Chain[] }> = ({
   );
 };
 
-const jsonifyLexicon = (lexicon: Record<string, Lexicon>) => {
-  const entries = Object.entries(lexicon).map(([lexiconKey, value]) => {
-    const jsonKey = lexiconKey
-      .split("_")
-      .map((string, index) => {
-        if (index === 0) {
-          return string.toLowerCase();
-        }
-
-        const firstLetter = string.substring(0, 1);
-        const rest = string.substring(1);
-
-        return `${firstLetter.toUpperCase()}${rest.toLowerCase()}`;
-      })
-      .join("");
-
-    return [jsonKey, value];
-  });
-
-  return Object.fromEntries(entries);
-};
-
 const App = () => {
   const config = useAsyncValue(getConfig);
   const chains = useHederaChains();
@@ -111,7 +92,6 @@ const App = () => {
     return <ThemeProvider theme={theme} />;
   }
 
-  const loader = <AppLoader />;
   const client = createClient(
     getDefaultClient({
       appName: "Liquity",
@@ -122,39 +102,111 @@ const App = () => {
 
   return (
     <ThemeProvider theme={theme}>
-      <Global
-        styles={css`
-        @font-face {
-          font-family: "museo";
-          src: url('fonts/Museo_Sans_Cyrl_300.ttf') format("truetype");
-          font-style: normal;
-          font-weight: 300;
-        }
-      `}
-      />
-      <AuthenticationProvider loginForm={<LoginForm />}>
-        <WagmiConfig client={client}>
-          <ConnectKitProvider options={{ hideBalance: true }}>
-            <WalletConnector loader={loader}>
-              <LiquityProvider
-                loader={loader}
-                unsupportedNetworkFallback={
-                  <UnsupportedNetworkFallback availableNetworks={chains} />
-                }
-                unsupportedMainnetFallback={
-                  <UnsupportedNetworkFallback availableNetworks={chains} />
-                }
-              >
-                <TransactionProvider>
-                  <HederaTokensProvider>
-                    <LiquityFrontend loader={loader} />
-                  </HederaTokensProvider>
-                </TransactionProvider>
-              </LiquityProvider>
-            </WalletConnector>
-          </ConnectKitProvider>
-        </WagmiConfig>
-      </AuthenticationProvider>
+      <AppErrorBoundary>
+        <Global
+          styles={css`
+            @font-face {
+              font-family: "museo";
+              src: url("fonts/Museo_Sans_Cyrl_100.ttf") format("truetype");
+              font-style: normal;
+              font-weight: 100;
+            }
+            @font-face {
+              font-family: "museo";
+              src: url("fonts/Museo_Sans_Cyrl_100_Italic.ttf") format("truetype");
+              font-style: italic;
+              font-weight: 100;
+            }
+            @font-face {
+              font-family: "museo";
+              src: url("fonts/Museo_Sans_Cyrl_300.ttf") format("truetype");
+              font-style: normal;
+              font-weight: 300;
+            }
+            @font-face {
+              font-family: "museo";
+              src: url("fonts/Museo_Sans_Cyrl_300_Italic.ttf") format("truetype");
+              font-style: italic;
+              font-weight: 300;
+            }
+            @font-face {
+              font-family: "museo";
+              src: url("fonts/Museo_Sans_Cyrl_500.ttf") format("truetype");
+              font-style: normal;
+              font-weight: 500;
+            }
+            @font-face {
+              font-family: "museo";
+              src: url("fonts/Museo_Sans_Cyrl_500_Italic.ttf") format("truetype");
+              font-style: italic;
+              font-weight: 500;
+            }
+            @font-face {
+              font-family: "museo";
+              src: url("fonts/Museo_Sans_Cyrl_700.ttf") format("truetype");
+              font-style: normal;
+              font-weight: 700;
+            }
+            @font-face {
+              font-family: "museo";
+              src: url("fonts/Museo_Sans_Cyrl_700_Italic.ttf") format("truetype");
+              font-style: italic;
+              font-weight: 700;
+            }
+            @font-face {
+              font-family: "museo";
+              src: url("fonts/Museo_Sans_Cyrl_900_Italic.ttf") format("truetype");
+              font-style: italic;
+              font-weight: 900;
+            }
+          `}
+        />
+        <AuthenticationProvider loginForm={<LoginForm />}>
+          <SelectedChainProvider>
+            <WagmiConfig client={client}>
+              <ConnectKitProvider options={{ hideBalance: true }}>
+                <HashConnectProvider walletConnectProjectId={config.value.walletConnectProjectId}>
+                  <TransactionProvider>
+                    <HashConnectLoader
+                      loader={<AppLoader content={<Heading>Setting up HashPack</Heading>} />}
+                    >
+                      <MultiWalletProvider>
+                        <MultiWalletGatekeeper>
+                          <LiquityProvider
+                            unsupportedNetworkFallback={
+                              <UnsupportedNetworkFallback availableNetworks={chains} />
+                            }
+                            unsupportedMainnetFallback={
+                              <UnsupportedNetworkFallback availableNetworks={chains} />
+                            }
+                          >
+                            <LiquityConsumer>
+                              {liquityContext => {
+                                if (!liquityContext) {
+                                  return;
+                                }
+
+                                return (
+                                  <LiquityStoreProvider
+                                    store={liquityContext.store}
+                                    loader={<AppLoader content={<Heading>Loading data</Heading>} />}
+                                  >
+                                    <LiquityFrontend />
+                                  </LiquityStoreProvider>
+                                );
+                              }}
+                            </LiquityConsumer>
+                          </LiquityProvider>
+                        </MultiWalletGatekeeper>
+                      </MultiWalletProvider>
+                    </HashConnectLoader>
+                  </TransactionProvider>
+                </HashConnectProvider>
+              </ConnectKitProvider>
+            </WagmiConfig>
+          </SelectedChainProvider>
+        </AuthenticationProvider>
+      </AppErrorBoundary>
     </ThemeProvider>
   );
 };

@@ -6,7 +6,7 @@
 
 Number of Troves that are currently open.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 numberOfTroves: number;

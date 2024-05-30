@@ -4,7 +4,7 @@
 
 ## ReadableEthersLiquity.connect() method
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 static connect(signerOrProvider: EthersSigner | EthersProvider, optionalParams?: EthersLiquityConnectionOptionalParams): Promise<ReadableEthersLiquity>;
@@ -12,12 +12,52 @@ static connect(signerOrProvider: EthersSigner | EthersProvider, optionalParams?:
 
 ## Parameters
 
-|  Parameter | Type | Description |
-|  --- | --- | --- |
-|  signerOrProvider | [EthersSigner](./lib-ethers.etherssigner.md) \| [EthersProvider](./lib-ethers.ethersprovider.md) |  |
-|  optionalParams | [EthersLiquityConnectionOptionalParams](./lib-ethers.ethersliquityconnectionoptionalparams.md) |  |
+<table><thead><tr><th>
 
-<b>Returns:</b>
+Parameter
+
+
+</th><th>
+
+Type
+
+
+</th><th>
+
+Description
+
+
+</th></tr></thead>
+<tbody><tr><td>
+
+signerOrProvider
+
+
+</td><td>
+
+[EthersSigner](./lib-ethers.etherssigner.md) \| [EthersProvider](./lib-ethers.ethersprovider.md)
+
+
+</td><td>
+
+
+</td></tr>
+<tr><td>
+
+optionalParams
+
+
+</td><td>
+
+[EthersLiquityConnectionOptionalParams](./lib-ethers.ethersliquityconnectionoptionalparams.md)
+
+
+</td><td>
+
+
+</td></tr>
+</tbody></table>
+**Returns:**
 
 Promise&lt;[ReadableEthersLiquity](./lib-ethers.readableethersliquity.md)<!-- -->&gt;
 

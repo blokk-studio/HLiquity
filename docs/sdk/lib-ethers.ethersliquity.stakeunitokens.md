@@ -6,7 +6,7 @@
 
 Stake Uniswap ETH/HCHF LP tokens to participate in liquidity mining and earn HLQT.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 stakeUniTokens(amount: Decimalish, overrides?: EthersTransactionOverrides): Promise<void>;
@@ -14,12 +14,54 @@ stakeUniTokens(amount: Decimalish, overrides?: EthersTransactionOverrides): Prom
 
 ## Parameters
 
-|  Parameter | Type | Description |
-|  --- | --- | --- |
-|  amount | [Decimalish](./lib-base.decimalish.md) | Amount of LP tokens to add to new or existing stake. |
-|  overrides | [EthersTransactionOverrides](./lib-ethers.etherstransactionoverrides.md) |  |
+<table><thead><tr><th>
 
-<b>Returns:</b>
+Parameter
+
+
+</th><th>
+
+Type
+
+
+</th><th>
+
+Description
+
+
+</th></tr></thead>
+<tbody><tr><td>
+
+amount
+
+
+</td><td>
+
+[Decimalish](./lib-base.decimalish.md)
+
+
+</td><td>
+
+Amount of LP tokens to add to new or existing stake.
+
+
+</td></tr>
+<tr><td>
+
+overrides
+
+
+</td><td>
+
+[EthersTransactionOverrides](./lib-ethers.etherstransactionoverrides.md)
+
+
+</td><td>
+
+
+</td></tr>
+</tbody></table>
+**Returns:**
 
 Promise&lt;void&gt;
 

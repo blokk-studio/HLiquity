@@ -9,10 +9,10 @@ import { useLiquity } from "../hooks/LiquityContext";
 import { Statistic } from "./Statistic";
 import * as l from "../lexicon";
 import { COLLATERAL_COIN } from "../strings";
-import { useHederaChain } from "../hedera/wagmi-chains";
 import { Tooltip } from "./Tooltip";
 import { TokenId } from "@hashgraph/sdk";
-import { useDeployment } from "../configuration/deployments";
+import { useDeployment } from "../hooks/deployments";
+import { useMultiWallet } from "../multi_wallet";
 
 const selectBalances = ({ accountBalance, hchfBalance, hlqtBalance }: LiquityStoreState) => ({
   accountBalance,
@@ -33,11 +33,11 @@ const Balances: React.FC = () => {
   );
 };
 
-const chainKeys = {
+const chainKeys: Record<number, string> = {
   295: "mainnet",
   296: "testnet",
-  297: "previewnet",
-}
+  297: "previewnet"
+};
 
 type SystemStatsProps = {
   variant?: string;
@@ -86,13 +86,13 @@ export const SystemStats: React.FC<SystemStatsProps> = ({ variant = "info", show
   const totalCollateralRatioPct = new Percent(total.collateralRatio(price));
   const borrowingFeePct = new Percent(borrowingRate);
   const kickbackRatePct = frontendTag === AddressZero ? "100" : kickbackRate?.mul(100).prettify();
-  const chain = useHederaChain();
+  const { chain } = useMultiWallet();
   const deployment = useDeployment();
 
   const getHederaLink = (tokenId: string, chainId?: number) => {
-    return `https://hashscan.io/${chainKeys[chainId] || 'testnet'}/token/${tokenId}`
-  }
-
+    const network = chainId && chainId in chainKeys ? chainKeys[chainId] : "testnet";
+    return `https://hashscan.io/${network}/token/${tokenId}`;
+  };
 
   return (
     <Card {...{ variant }}>
@@ -176,7 +176,11 @@ export const SystemStats: React.FC<SystemStatsProps> = ({ variant = "info", show
         <Box sx={{ fontSize: 0 }}>
           Contracts version:{" "}
           {contractsVersion ? (
-            <Link sx={{ color: "info" }} href={`https://github.com/SwisscoastAG/HLiquity/commit/${contractsVersion}`}>
+            <Link
+              target="_blank"
+              sx={{ color: "info" }}
+              href={`https://github.com/SwisscoastAG/HLiquity/commit/${contractsVersion}`}
+            >
               {contractsVersion.substring(0, 7)}
             </Link>
           ) : (
@@ -189,8 +193,10 @@ export const SystemStats: React.FC<SystemStatsProps> = ({ variant = "info", show
           {import.meta.env.VITE_APP_VERSION ? (
             <Link
               sx={{ color: "info" }}
-              href={`https://github.com/blokk-studio/HLiquity/commit/${import.meta.env.VITE_APP_VERSION
-                }`}
+              target="_blank"
+              href={`https://github.com/blokk-studio/HLiquity/commit/${
+                import.meta.env.VITE_APP_VERSION
+              }`}
             >
               {import.meta.env.VITE_APP_VERSION.substring(0, 7)}
             </Link>
@@ -220,7 +226,11 @@ export const SystemStats: React.FC<SystemStatsProps> = ({ variant = "info", show
         <Box sx={{ fontSize: 0 }}>
           HCHF Token ID:{" "}
           {deployment ? (
-            <Link sx={{ color: "info" }} href={getHederaLink(deployment.hchfTokenAddress, chain?.id)}>
+            <Link
+              target="_blank"
+              sx={{ color: "info" }}
+              href={getHederaLink(deployment.hchfTokenAddress, chain?.id)}
+            >
               {TokenId.fromSolidityAddress(deployment.hchfTokenAddress).toString()}
             </Link>
           ) : (
@@ -230,8 +240,26 @@ export const SystemStats: React.FC<SystemStatsProps> = ({ variant = "info", show
         <Box sx={{ fontSize: 0 }}>
           HLQT Token ID:{" "}
           {deployment ? (
-            <Link sx={{ color: "info" }} href={getHederaLink(deployment.hlqtTokenAddress, chain?.id)}>
+            <Link
+              target="_blank"
+              sx={{ color: "info" }}
+              href={getHederaLink(deployment.hlqtTokenAddress, chain?.id)}
+            >
               {TokenId.fromSolidityAddress(deployment.hlqtTokenAddress).toString()}
+            </Link>
+          ) : (
+            <>unknown</>
+          )}
+        </Box>
+        <Box sx={{ fontSize: 0 }}>
+          LP Token ID:{" "}
+          {deployment ? (
+            <Link
+              target="_blank"
+              sx={{ color: "info" }}
+              href={getHederaLink(deployment.addresses.uniToken, chain?.id)}
+            >
+              {TokenId.fromSolidityAddress(deployment.addresses.uniToken).toString()}
             </Link>
           ) : (
             <>unknown</>

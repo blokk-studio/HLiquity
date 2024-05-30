@@ -123,9 +123,13 @@ export type MinedReceipt<R = unknown, D = unknown> = FailedReceipt<R> | Successf
 export type LiquityReceipt<R = unknown, D = unknown> = PendingReceipt | MinedReceipt<R, D>;
 
 /** @internal */
-export type _SendableFrom<T, R, S> = {
-  [M in keyof T]: T[M] extends (...args: infer A) => Promise<infer D>
-    ? (...args: A) => Promise<SentLiquityTransaction<S, LiquityReceipt<R, D>>>
+export type _SendableFrom<TransactableLiquity, Receipt, SentTransaction> = {
+  [MethodName in keyof TransactableLiquity]: TransactableLiquity[MethodName] extends (
+    ...args: infer Arguments
+  ) => Promise<infer Data>
+    ? (
+        ...args: Arguments
+      ) => Promise<SentLiquityTransaction<SentTransaction, LiquityReceipt<Receipt, Data>>>
     : never;
 };
 

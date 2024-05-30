@@ -4,7 +4,7 @@
 
 ## ReadableEthersLiquity.getHCHFTokenAddress() method
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 getHCHFTokenAddress(overrides?: EthersCallOverrides): Promise<string>;
@@ -12,11 +12,38 @@ getHCHFTokenAddress(overrides?: EthersCallOverrides): Promise<string>;
 
 ## Parameters
 
-|  Parameter | Type | Description |
-|  --- | --- | --- |
-|  overrides | [EthersCallOverrides](./lib-ethers.etherscalloverrides.md) |  |
+<table><thead><tr><th>
 
-<b>Returns:</b>
+Parameter
+
+
+</th><th>
+
+Type
+
+
+</th><th>
+
+Description
+
+
+</th></tr></thead>
+<tbody><tr><td>
+
+overrides
+
+
+</td><td>
+
+[EthersCallOverrides](./lib-ethers.etherscalloverrides.md)
+
+
+</td><td>
+
+
+</td></tr>
+</tbody></table>
+**Returns:**
 
 Promise&lt;string&gt;
 

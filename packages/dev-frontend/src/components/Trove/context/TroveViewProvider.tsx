@@ -81,14 +81,14 @@ const select = ({ trove: { status } }: LiquityStoreState) => status;
 export const TroveViewProvider: React.FC = props => {
   const { children } = props;
   const troveStatus = useLiquitySelector(select);
-  const { liquity } = useLiquity();
+  const { store } = useLiquity();
 
   const [view, setView] = useState<TroveView>(getInitialView(troveStatus));
   const viewRef = useRef<TroveView>(view);
 
   const dispatchEvent = useCallback((event: TroveEvent) => {
     const nextView = transition(viewRef.current, event);
-    liquity.store.refresh();
+    store.refresh();
     
     console.log(
       "dispatchEvent() [current-view, event, next-view]",

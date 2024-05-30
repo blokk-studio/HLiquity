@@ -6,7 +6,7 @@
 
 Calculate the difference between the `currentHCHF` in this Stability Deposit and `thatHCHF`<!-- -->.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 whatChanged(thatHCHF: Decimalish): StabilityDepositChange<Decimal> | undefined;
@@ -14,11 +14,38 @@ whatChanged(thatHCHF: Decimalish): StabilityDepositChange<Decimal> | undefined;
 
 ## Parameters
 
-|  Parameter | Type | Description |
-|  --- | --- | --- |
-|  thatHCHF | [Decimalish](./lib-base.decimalish.md) |  |
+<table><thead><tr><th>
 
-<b>Returns:</b>
+Parameter
+
+
+</th><th>
+
+Type
+
+
+</th><th>
+
+Description
+
+
+</th></tr></thead>
+<tbody><tr><td>
+
+thatHCHF
+
+
+</td><td>
+
+[Decimalish](./lib-base.decimalish.md)
+
+
+</td><td>
+
+
+</td></tr>
+</tbody></table>
+**Returns:**
 
 [StabilityDepositChange](./lib-base.stabilitydepositchange.md)<!-- -->&lt;[Decimal](./lib-base.decimal.md)<!-- -->&gt; \| undefined
 

@@ -6,7 +6,7 @@
 
 Prepare a new transaction by increasing the attempted amount to the next lowest redeemable value.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 increaseAmountByMinimumNetDebt(maxRedemptionRate?: Decimalish): Promise<PopulatedEthersRedemption>;
@@ -14,11 +14,40 @@ increaseAmountByMinimumNetDebt(maxRedemptionRate?: Decimalish): Promise<Populate
 
 ## Parameters
 
-|  Parameter | Type | Description |
-|  --- | --- | --- |
-|  maxRedemptionRate | [Decimalish](./lib-base.decimalish.md) | Maximum acceptable [redemption rate](./lib-base.fees.redemptionrate.md) to use in the new transaction. |
+<table><thead><tr><th>
 
-<b>Returns:</b>
+Parameter
+
+
+</th><th>
+
+Type
+
+
+</th><th>
+
+Description
+
+
+</th></tr></thead>
+<tbody><tr><td>
+
+maxRedemptionRate
+
+
+</td><td>
+
+[Decimalish](./lib-base.decimalish.md)
+
+
+</td><td>
+
+Maximum acceptable [redemption rate](./lib-base.fees.redemptionrate.md) to use in the new transaction.
+
+
+</td></tr>
+</tbody></table>
+**Returns:**
 
 Promise&lt;[PopulatedEthersRedemption](./lib-ethers.populatedethersredemption.md)<!-- -->&gt;
 

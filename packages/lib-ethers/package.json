@@ -68,7 +68,18 @@
     "ws": "7.4.6"
   },
   "dependencies": {
-    "@hashgraph/sdk": "^2.42.0",
     "axios": "^1.6.7"
+  },
+  "exports": {
+    "./package.json": "./package.json",
+    ".": {
+      "default": "./index.ts"
+    },
+    "./index": {
+      "default": "./index.ts"
+    },
+    "./abi/": {
+      "default": "./abi/"
+    }
   }
 }

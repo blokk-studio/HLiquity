@@ -6,7 +6,7 @@
 
 Liquidate one or more undercollateralized Troves.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 liquidate(address: string | string[], overrides?: EthersTransactionOverrides): Promise<LiquidationDetails>;
@@ -14,12 +14,54 @@ liquidate(address: string | string[], overrides?: EthersTransactionOverrides): P
 
 ## Parameters
 
-|  Parameter | Type | Description |
-|  --- | --- | --- |
-|  address | string \| string\[\] | Address or array of addresses whose Troves to liquidate. |
-|  overrides | [EthersTransactionOverrides](./lib-ethers.etherstransactionoverrides.md) |  |
+<table><thead><tr><th>
 
-<b>Returns:</b>
+Parameter
+
+
+</th><th>
+
+Type
+
+
+</th><th>
+
+Description
+
+
+</th></tr></thead>
+<tbody><tr><td>
+
+address
+
+
+</td><td>
+
+string \| string\[\]
+
+
+</td><td>
+
+Address or array of addresses whose Troves to liquidate.
+
+
+</td></tr>
+<tr><td>
+
+overrides
+
+
+</td><td>
+
+[EthersTransactionOverrides](./lib-ethers.etherstransactionoverrides.md)
+
+
+</td><td>
+
+
+</td></tr>
+</tbody></table>
+**Returns:**
 
 Promise&lt;[LiquidationDetails](./lib-base.liquidationdetails.md)<!-- -->&gt;
 
