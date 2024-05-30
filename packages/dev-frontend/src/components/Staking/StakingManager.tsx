@@ -177,9 +177,9 @@ export const StakingManager: React.FC = () => {
   ];
   if (needsSpenderApproval) {
     transactionSteps.push({
-      title: "Approve HLQT spender",
+      title: "Approve HLQT allowance",
       status: hlqtApprovalLoadingState === "error" ? "danger" : hlqtApprovalLoadingState,
-      description: "You have to approve the HLQT contract to spend your HLQT tokens."
+      description: "You have to give the HLQT contract an HLQT token allowance."
     });
   }
   transactionSteps.push({
@@ -222,7 +222,7 @@ export const StakingManager: React.FC = () => {
             loading={hlqtApprovalLoadingState === "pending"}
             onClick={approveHlqtSpender}
           >
-            Approve spending {validChange?.stakeHLQT?.toString(2)} HLQT
+            Approve allowance of {validChange?.stakeHLQT?.toString(2)} HLQT
           </LoadingButton>
         ) : validChange ? (
           <StakingManagerAction change={validChange} loading={changePending}>

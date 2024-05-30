@@ -63,7 +63,7 @@ export const Approve: React.FC<ApproveProps> = ({ amount }) => {
           loading={LPApprovalLoadingState === "pending"}
           onClick={approveLPSpender}
         >
-          Approve spending {amount.prettify(2)} {LP}
+          Approve allowance of {amount.prettify(2)} {LP}
         </LoadingButton>
       )}
     </>

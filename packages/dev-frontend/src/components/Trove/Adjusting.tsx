@@ -197,9 +197,9 @@ export const Adjusting: React.FC = () => {
   }
   if (needsSpenderApproval) {
     transactionSteps.push({
-      title: "Approve HCHF spender",
+      title: "Approve HCHF allowance",
       status: hchfApprovalLoadingState === "error" ? "danger" : hchfApprovalLoadingState,
-      description: "You have to approve the HCHF contract to spend your HCHF tokens."
+      description: "You have to give HCHF contract an HCHF token allowance."
     });
   }
   transactionSteps.push({
@@ -346,7 +346,7 @@ export const Adjusting: React.FC = () => {
               loading={hchfApprovalLoadingState === "pending"}
               onClick={approveHchfSpender}
             >
-              Approve spending {stableTroveChange?.params.repayHCHF?.toString(2)} HCHF
+              Approve allowance of {stableTroveChange?.params.repayHCHF?.toString(2)} HCHF
             </LoadingButton>
           ) : stableTroveChange ? (
             <TroveAction

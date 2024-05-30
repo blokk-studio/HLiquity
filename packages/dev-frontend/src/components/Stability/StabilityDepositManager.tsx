@@ -193,9 +193,9 @@ export const StabilityDepositManager: React.FC = () => {
   }
   if (needsHchfSpenderApproval) {
     transactionSteps.push({
-      title: "Approve HCHF spender",
+      title: "Approve HCHF allowance",
       status: hchfApprovalLoadingState === "error" ? "danger" : hchfApprovalLoadingState,
-      description: "You have to approve the HCHF contract to spend your HCHF tokens."
+      description: "You have to give the HCHF contract an HCHF token allowance."
     });
   }
   transactionSteps.push({
@@ -248,7 +248,7 @@ export const StabilityDepositManager: React.FC = () => {
             loading={hchfApprovalLoadingState === "pending"}
             onClick={approveHchfSpender}
           >
-            Approve spending {validChange?.depositHCHF?.toString(2)} HCHF
+            Approve allowance of {validChange?.depositHCHF?.toString(2)} HCHF
           </LoadingButton>
         ) : validChange ? (
           <StabilityDepositAction
