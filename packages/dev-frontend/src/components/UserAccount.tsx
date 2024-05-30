@@ -48,8 +48,8 @@ export const UserAccount: React.FC = () => {
           onClick={() => {
             disconnect();
           }}
-          aria-label={t("userAccount.disconnectHashPack")}
-          title={t("userAccount.disconnectHashPack")}
+          aria-label={t("userAccount.disconnectWallet")}
+          title={t("userAccount.disconnectWallet")}
         >
           <Icon name="window-close" />
         </Button>

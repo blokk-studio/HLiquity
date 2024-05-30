@@ -745,6 +745,10 @@ export class EthersLiquity
       contractAddress,
       amount: BigNumber.from(amount.bigNumber)
     });
+
+    if (this.hasStore()) {
+      await this.store.refresh();
+    }
   }
 
   async associateWithHlqt(): Promise<void> {
@@ -790,6 +794,10 @@ export class EthersLiquity
       contractAddress,
       amount: BigNumber.from(amount.bigNumber)
     });
+
+    if (this.hasStore()) {
+      await this.store.refresh();
+    }
   }
 
   async associateWithLpToken(): Promise<void> {
@@ -835,6 +843,10 @@ export class EthersLiquity
       contractAddress,
       amount: BigNumber.from(amount.bigNumber)
     });
+
+    if (this.hasStore()) {
+      await this.store.refresh();
+    }
   }
 }
 
