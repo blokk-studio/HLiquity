@@ -6,7 +6,6 @@ import { useLiquitySelector } from "@liquity/lib-react";
 import { LP, GT } from "../../../../strings";
 import { Icon } from "../../../Icon";
 import { EditableRow, StaticRow } from "../../../Trove/Editor";
-import { LoadingOverlay } from "../../../LoadingOverlay";
 import { useMineView } from "../../context/MineViewContext";
 import { Transaction, useMyTransactionState } from "../../../Transaction";
 import { Description } from "../Description";
@@ -203,7 +202,6 @@ export const Adjusting: React.FC = () => {
           )}
         </Flex>
       </Box>
-      {isTransactionPending && <LoadingOverlay />}
     </Card>
   );
 };

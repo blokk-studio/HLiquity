@@ -4,7 +4,6 @@ import { LP, GT } from "../../../../strings";
 import { LiquityStoreState } from "@liquity/lib-base";
 import { useLiquitySelector } from "@liquity/lib-react";
 import { Icon } from "../../../Icon";
-import { LoadingOverlay } from "../../../LoadingOverlay";
 import { useMyTransactionState } from "../../../Transaction";
 import { DisabledEditableRow, StaticRow } from "../../../Trove/Editor";
 import { useMineView } from "../../context/MineViewContext";
@@ -68,7 +67,6 @@ export const Active: React.FC = () => {
           <ClaimReward />
         </Flex>
       </Box>
-      {isTransactionPending && <LoadingOverlay />}
     </Card>
   );
 };

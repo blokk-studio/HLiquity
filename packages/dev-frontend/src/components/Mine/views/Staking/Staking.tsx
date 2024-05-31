@@ -4,7 +4,6 @@ import { Decimal } from "@liquity/lib-base";
 import { LP } from "../../../../strings";
 import { Icon } from "../../../Icon";
 import { EditableRow } from "../../../Trove/Editor";
-import { LoadingOverlay } from "../../../LoadingOverlay";
 import { useMineView } from "../../context/MineViewContext";
 import { Transaction, useMyTransactionState } from "../../../Transaction";
 import { Description } from "../Description";
@@ -179,7 +178,6 @@ export const Staking: React.FC = () => {
           )}
         </Flex>
       </Box>
-      {isTransactionPending && <LoadingOverlay />}
     </Card>
   );
 };
