@@ -125,32 +125,26 @@ export const Opening: React.FC = () => {
   const collateralHandler = (amount: string) => {
     const newCol = Decimal.from(amount);
     const collRat = newCol.mul(price).div(totalDebt);
-
-    console.log('col rat', collRat.prettify(5), borrowAmount.prettify(5));
+    setCollateral(newCol)
 
     if (auto && collRat.lt(Decimal.from(1.5))) {
-      // console.log('newNetDebt', newNetDebt.prettify());
-      const newNetDebt = newCol.mul(price).div(Decimal.from(1.5)).sub(HCHF_LIQUIDATION_RESERVE).sub(fee);
-      console.log('newNetDebt', newNetDebt.prettify());
+      const newNetDebt = newCol.mul(price).div(Decimal.from(1.5)).sub(HCHF_LIQUIDATION_RESERVE).div(borrowingRate.add(Decimal.from(1)));
 
       setBorrowAmount(newNetDebt.isZero ? Decimal.ZERO : newNetDebt);
     }
-
-    setCollateral(newCol)
   }
 
   const netDebtHandler = (amount: string) => {
     const newDebt = Decimal.from(amount)
     const newTotalDebt = newDebt.add(HCHF_LIQUIDATION_RESERVE).add(newDebt.mul(borrowingRate))
     const collRat = collateral.mul(price).div(newTotalDebt)
+    setBorrowAmount(newDebt)
 
     if (auto && collRat.lt(Decimal.from(1.5))) {
       const newCol = newDebt.add(HCHF_LIQUIDATION_RESERVE).add(newDebt.mul(borrowingRate)).mul(Decimal.from(1.5)).div(price)
 
       setCollateral(newCol)
     }
-
-    setBorrowAmount(newDebt)
   }
 
   return (
