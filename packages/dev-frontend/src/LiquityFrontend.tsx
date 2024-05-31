@@ -26,6 +26,7 @@ import { Dashboard } from "./pages/Dashboard";
 import { BondsProvider } from "./components/Bonds/context/BondsProvider";
 import { PrivacyPolicyPage } from "./pages/PrivacyPolicyPage";
 import { ImprintPage } from "./pages/ImprintPage";
+import ScrollToTop from "./components/ScrollToTop";
 
 export const LiquityFrontend: React.FC = () => {
   const { account: accountAddress, liquity } = useLiquity();
@@ -63,6 +64,7 @@ export const LiquityFrontend: React.FC = () => {
                     }}
                   >
                     <PageSwitcher>
+                      <ScrollToTop />
                       <Switch>
                         <Route path="/" exact>
                           <Dashboard />
