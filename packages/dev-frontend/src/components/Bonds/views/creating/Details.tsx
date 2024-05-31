@@ -283,7 +283,7 @@ export const Details: React.FC<DetailsProps> = ({ onBack }) => {
       )}
 
       {statuses.APPROVE === "FAILED" && (
-        <Warning>Failed to approve spend of HCHF. Please try again.</Warning>
+        <Warning>Failed to approve HCHF token allowance. Please try again.</Warning>
       )}
 
       {statuses.CREATE === "FAILED" && <Warning>Failed to create bond. Please try again.</Warning>}

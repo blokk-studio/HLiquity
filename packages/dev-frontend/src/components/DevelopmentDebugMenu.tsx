@@ -118,7 +118,7 @@ export const DevelopmentDebugMenu: React.FC = () => {
               loading={hchfApprovalLoadingState === "pending"}
               onClick={approveHchfToSpendHchf}
             >
-              Approve HCHF to spend 1 HCHF
+              Approve allowance of 1 HCHF
             </LoadingButton>
           </dd>
 
@@ -150,7 +150,7 @@ export const DevelopmentDebugMenu: React.FC = () => {
               loading={hlqtApprovalLoadingState === "pending"}
               onClick={approveHlqtToSpendHlqt}
             >
-              Approve HLQT to spend 1 HLQT
+              Approve allowance of 1 HLQT
             </LoadingButton>
           </dd>
 
@@ -181,7 +181,7 @@ export const DevelopmentDebugMenu: React.FC = () => {
               loading={lpTokenApprovalLoadingState === "pending"}
               onClick={approveSaucerSwapToSpendLpToken}
             >
-              Approve SaucerSwap pool to spend 1 LP Token
+              Approve allowance of 1 LP Token
             </LoadingButton>
           </dd>
 

@@ -25,7 +25,7 @@ import {
   selectForTroveChangeValidation,
   validateTroveChange
 } from "./validation/validateTroveChange";
-import { Step, Steps } from "../Steps";
+import { Step, Steps, getAssociationStepStatus } from "../Steps";
 import { useLoadingState } from "../../loading_state";
 import { useLiquity } from "../../hooks/LiquityContext";
 
@@ -100,19 +100,18 @@ export const Opening: React.FC = () => {
   // consent & approval
   const { liquity } = useLiquity();
   const { userHasAssociatedWithHchf } = useLiquitySelector(state => state);
-  const { call: associateWithHchf, state: hchfAssociationLoadingState } = useLoadingState(
-    async () => {
+  const { call: associateWithHchf, state: hchfAssociationLoadingState } =
+    useLoadingState(async () => {
       await liquity.associateWithHchf();
-    }
-  );
+    }, [userHasAssociatedWithHchf]);
+
   const steps: Step[] = [
     {
       title: "Associate with HCHF",
-      status: userHasAssociatedWithHchf
-        ? "success"
-        : hchfAssociationLoadingState === "error"
-          ? "danger"
-          : hchfAssociationLoadingState,
+      status: getAssociationStepStatus({
+        userHasAssociatedWithToken: userHasAssociatedWithHchf,
+        tokenAssociationLoadingState: hchfAssociationLoadingState
+      }),
       description: userHasAssociatedWithHchf
         ? "You've already associated with HCHF."
         : "You have to associate with HCHF tokens before you can use HLiquity."
@@ -304,7 +303,7 @@ export const Opening: React.FC = () => {
 
           {gasEstimationState.type === "inProgress" ? (
             <Button disabled>
-              <Spinner size="24px" sx={{ color: "background" }} />
+              <Spinner size="24px" />
             </Button>
           ) : !userHasAssociatedWithHchf ? (
             <Button

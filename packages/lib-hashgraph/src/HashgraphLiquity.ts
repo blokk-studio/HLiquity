@@ -37,7 +37,6 @@ import {
   _normalizeTroveAdjustment,
   _normalizeTroveCreation,
 } from '@liquity/lib-base'
-import { BigNumber } from 'bignumber.js'
 import { HashConnect } from 'hashconnect'
 import Web3, { Contract, MatchPrimitiveType } from 'web3'
 
@@ -436,9 +435,6 @@ export class HashgraphLiquity
               hlqtBalance: this.getHLQTBalance(this.userAccountAddress, { blockTag }),
               uniTokenBalance: this.getUniTokenBalance(this.userAccountAddress, { blockTag }),
               uniTokenAllowance: this.getUniTokenAllowance(this.userAccountAddress, { blockTag }),
-              // uniTokenBalance: Decimal.ZERO,
-              lpReward: this.getLPReward(this.userAccountAddress, { blockTag }),
-              // uniTokenAllowance: Decimal.ZERO,
               liquidityMiningStake: this.getLiquidityMiningStake(this.userAccountAddress, {
                 blockTag,
               }),
@@ -468,7 +464,6 @@ export class HashgraphLiquity
               hchfTokenAddress: '0x',
               hlqtTokenAddress: '0x',
               uniTokenBalance: Decimal.ZERO,
-              lpReward: Decimal.ZERO,
               uniTokenAllowance: Decimal.ZERO,
               liquidityMiningStake: Decimal.ZERO,
               liquidityMiningHLQTReward: Decimal.ZERO,
@@ -2341,15 +2336,9 @@ export class HashgraphLiquity
     amount: Decimalish,
     options?: TransactionOptions,
   ): Promise<PopulatedHashgraphLiquityTransaction<void, ContractExecuteTransaction>> {
-    console.log('Amount', amount)
-    console.log('Decimal', Decimal.from(amount))
-    console.log('Big Number', new BigNumber(Decimal.from(amount).hex))
-
     const functionParameters = TypedContractFunctionParameters<UnipoolAbi, 'stake'>().addUint256(
       Decimal.from(amount).bigNumber,
     )
-
-    console.log('passed stake')
 
     const gas = 3000000 + gasForUnipoolRewardUpdate
     const unfrozenRawPopulatedTransaction = TypedContractExecuteTransaction<UnipoolAbi>({
@@ -2583,6 +2572,8 @@ export class HashgraphLiquity
     )
     const transaction = await unfrozenTransaction.freezeWithSigner(this.signer)
     const receipt = await transaction.executeWithSigner(this.signer)
+
+    await this.refresh()
   }
 
   async approveHlqtToSpendHlqt(amount: Decimal): Promise<void> {
@@ -2602,6 +2593,8 @@ export class HashgraphLiquity
     )
     const transaction = await unfrozenTransaction.freezeWithSigner(this.signer)
     const receipt = await transaction.executeWithSigner(this.signer)
+
+    await this.refresh()
   }
 
   async approveSaucerSwapToSpendLpToken(amount: Decimal): Promise<void> {
@@ -2619,7 +2612,10 @@ export class HashgraphLiquity
       spenderAccountId,
       Long.fromString(amount.hex, true, 16),
     )
+
     const transaction = await unfrozenTransaction.freezeWithSigner(this.signer)
     const receipt = await transaction.executeWithSigner(this.signer)
+
+    await this.refresh()
   }
 }

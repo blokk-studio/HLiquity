@@ -20,7 +20,7 @@ import { ActionDescription, Amount } from "../ActionDescription";
 import { ErrorDescription } from "../ErrorDescription";
 import { useLiquity } from "../../hooks/LiquityContext";
 import { useLoadingState } from "../../loading_state";
-import { Step } from "../Steps";
+import { Step, getAssociationStepStatus } from "../Steps";
 import { LoadingButton } from "../LoadingButton";
 
 const init = ({ hlqtStake }: LiquityStoreState) => ({
@@ -166,11 +166,10 @@ export const StakingManager: React.FC = () => {
   const transactionSteps: Step[] = [
     {
       title: "Associate with HCHF",
-      status: userHasAssociatedWithHchf
-        ? "success"
-        : hchfAssociationLoadingState === "error"
-        ? "danger"
-        : hchfAssociationLoadingState,
+      status: getAssociationStepStatus({
+        userHasAssociatedWithToken: userHasAssociatedWithHchf,
+        tokenAssociationLoadingState: hchfAssociationLoadingState
+      }),
       description: userHasAssociatedWithHchf
         ? "You've already associated with HCHF."
         : "You have to associate with HCHF tokens before you can use HLiquity."
@@ -178,9 +177,9 @@ export const StakingManager: React.FC = () => {
   ];
   if (needsSpenderApproval) {
     transactionSteps.push({
-      title: "Approve HLQT spender",
+      title: "Approve HLQT allowance",
       status: hlqtApprovalLoadingState === "error" ? "danger" : hlqtApprovalLoadingState,
-      description: "You have to approve the HLQT contract to spend your HLQT tokens."
+      description: "You have to give the HLQT contract an HLQT token allowance."
     });
   }
   transactionSteps.push({
@@ -223,7 +222,7 @@ export const StakingManager: React.FC = () => {
             loading={hlqtApprovalLoadingState === "pending"}
             onClick={approveHlqtSpender}
           >
-            Approve spending {validChange?.stakeHLQT?.toString(2)} HLQT
+            Approve allowance of {validChange?.stakeHLQT?.toString(2)} HLQT
           </LoadingButton>
         ) : validChange ? (
           <StakingManagerAction change={validChange} loading={changePending}>

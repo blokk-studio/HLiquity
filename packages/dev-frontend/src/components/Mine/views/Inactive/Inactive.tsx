@@ -7,9 +7,9 @@ import { LiquityStoreState } from "@liquity/lib-base";
 import { InfoMessage } from "../../../InfoMessage";
 import { LP } from "../../../../strings";
 
-const select = ({ lpReward, liquidityMiningStake }: LiquityStoreState) => ({
-  lpReward,
-  liquidityMiningStake,
+const select = ({ liquidityMiningHLQTReward, liquidityMiningStake }: LiquityStoreState) => ({
+  liquidityMiningHLQTReward,
+  liquidityMiningStake
 });
 
 export const Inactive: React.FC = () => {
@@ -19,17 +19,13 @@ export const Inactive: React.FC = () => {
     dispatchEvent("STAKE_PRESSED");
   }, [dispatchEvent]);
 
-  const { lpReward, liquidityMiningStake } = useLiquitySelector(select);
+  const { liquidityMiningHLQTReward, liquidityMiningStake } = useLiquitySelector(select);
 
   return (
     <Card>
-      <Heading>
-        SaucerSwap LP Staking
-      </Heading>
+      <Heading>SaucerSwap LP Staking</Heading>
       <Box sx={{ p: [2, 3] }}>
-        <InfoMessage title={`You haven't staked ${LP} yet.`}>
-
-        </InfoMessage>
+        <InfoMessage title={`You haven't staked ${LP} yet.`}></InfoMessage>
         <StaticRow
           label="Staked"
           inputId="deposit-share"
@@ -39,7 +35,7 @@ export const Inactive: React.FC = () => {
         <StaticRow
           label="Reward Per Token"
           inputId="deposit-share"
-          amount={lpReward.prettify()}
+          amount={liquidityMiningHLQTReward.prettify()}
           unit=""
         />
         <Flex variant="layout.actions">

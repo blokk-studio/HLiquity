@@ -25,7 +25,7 @@ import {
   selectForTroveChangeValidation,
   validateTroveChange
 } from "./validation/validateTroveChange";
-import { Step, Steps } from "../Steps";
+import { Step, Steps, getAssociationStepStatus } from "../Steps";
 import { useLiquity } from "../../hooks/LiquityContext";
 import { useLoadingState } from "../../loading_state";
 import { LoadingButton } from "../LoadingButton";
@@ -187,11 +187,10 @@ export const Adjusting: React.FC = () => {
   if (needsHchfAssociation) {
     transactionSteps.push({
       title: "Associate with HCHF",
-      status: userHasAssociatedWithHchf
-        ? "success"
-        : hchfAssociationLoadingState === "error"
-          ? "danger"
-          : hchfAssociationLoadingState,
+      status: getAssociationStepStatus({
+        userHasAssociatedWithToken: userHasAssociatedWithHchf,
+        tokenAssociationLoadingState: hchfAssociationLoadingState
+      }),
       description: userHasAssociatedWithHchf
         ? "You've already associated with HCHF."
         : "You have to associate with HCHF tokens before you can use HLiquity."
@@ -199,9 +198,9 @@ export const Adjusting: React.FC = () => {
   }
   if (needsSpenderApproval) {
     transactionSteps.push({
-      title: "Approve HCHF spender",
+      title: "Approve HCHF allowance",
       status: hchfApprovalLoadingState === "error" ? "danger" : hchfApprovalLoadingState,
-      description: "You have to approve the HCHF contract to spend your HCHF tokens."
+      description: "You have to give HCHF contract an HCHF token allowance."
     });
   }
   transactionSteps.push({
@@ -398,7 +397,7 @@ export const Adjusting: React.FC = () => {
               loading={hchfApprovalLoadingState === "pending"}
               onClick={approveHchfSpender}
             >
-              Approve spending {stableTroveChange?.params.repayHCHF?.toString(2)} HCHF
+              Approve allowance of {stableTroveChange?.params.repayHCHF?.toString(2)} HCHF
             </LoadingButton>
           ) : stableTroveChange ? (
             <TroveAction

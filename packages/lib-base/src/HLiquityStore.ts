@@ -28,15 +28,6 @@ export interface LiquityStoreBaseState {
   /** User's HCHF token balance. */
   hchfBalance: Decimal;
 
-  /** User's LP token balance. */
-  lpBalance: Decimal;
-
-  /** User's LP reward. */
-  lpReward: Decimal;
-
-  /** User's LP token earnings. */
-  lpEarnings: Decimal;
-
   /** HCHF HST Token address */
   hchfTokenAddress: string;
 
@@ -214,8 +205,8 @@ const showFrontendStatus = (x: FrontendStatus) =>
 
 const wrap =
   <A extends unknown[], R>(f: (...args: A) => R) =>
-    (...args: A) =>
-      f(...args);
+  (...args: A) =>
+    f(...args);
 
 const difference = <T>(a: T, b: T) =>
   Object.fromEntries(
@@ -280,12 +271,9 @@ export abstract class HLiquityStore<T = unknown> {
       },
       haveUndercollateralizedTroves: false,
       hchfBalance: Decimal.from(0),
+      hlqtBalance: Decimal.from(0),
       hchfInStabilityPool: Decimal.from(0),
       hchfTokenAddress: "",
-      hlqtBalance: Decimal.from(0),
-      lpBalance: Decimal.from(0),
-      lpReward: Decimal.from(0),
-      lpEarnings: Decimal.from(0),
       hlqtStake: new HLQTStake(),
       hlqtTokenAddress: "",
       liquidityMiningHLQTReward: Decimal.from(0),
@@ -428,27 +416,6 @@ export abstract class HLiquityStore<T = unknown> {
         "hchfBalance",
         baseState.hchfBalance,
         baseStateUpdate.hchfBalance
-      ),
-
-      lpBalance: this._updateIfChanged(
-        eq,
-        "lpBalance",
-        baseState.lpBalance,
-        baseStateUpdate.lpBalance
-      ),
-
-      lpReward: this._updateIfChanged(
-        eq,
-        "lpReward",
-        baseState.lpReward,
-        baseStateUpdate.lpReward
-      ),
-
-      lpEarnings: this._updateIfChanged(
-        eq,
-        "lpEarnings",
-        baseState.lpEarnings,
-        baseStateUpdate.lpEarnings
       ),
 
       hchfTokenAddress: this._updateIfChanged(

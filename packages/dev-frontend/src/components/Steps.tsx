@@ -3,11 +3,19 @@ import React, { ReactNode } from "react";
 import { Icon } from "./Icon";
 import { Card, Spinner, ThemeUIStyleObject } from "theme-ui";
 import { Tooltip } from "./Tooltip";
+import { LoadingState } from "../loading_state";
 
 export interface Step {
   title: string;
   status: "idle" | "pending" | "success" | "danger" | "warning";
   description?: ReactNode;
+}
+
+export interface ExtendedStep extends Step {
+  color: string;
+  icon: ReactNode;
+  /** whether or not the next step is available */
+  canContinue: boolean;
 }
 
 const getStepIconElement = (step: Step, stepNumber: number) => {
@@ -63,6 +71,25 @@ export const Steps: React.FunctionComponent<{ steps: Step[]; sx?: ThemeUIStyleOb
   steps,
   sx
 }) => {
+  const extendedSteps: ExtendedStep[] = [];
+  for (let index = 0; index < steps.length; index++) {
+    const step = steps[index];
+    const icon = getStepIconElement(step, index + 1);
+    const color = getStepColor(step);
+    const stepHasContinuableStatus = step.status === "success" || step.status === "warning";
+    const previousStep: ExtendedStep | undefined = extendedSteps[extendedSteps.length - 1];
+    const previousStepCanContinue = !previousStep || previousStep.canContinue;
+    const canContinue = previousStepCanContinue && stepHasContinuableStatus;
+
+    const extendedStep: ExtendedStep = {
+      ...step,
+      icon,
+      color,
+      canContinue
+    };
+    extendedSteps.push(extendedStep);
+  }
+
   return (
     <ul
       sx={{
@@ -74,12 +101,9 @@ export const Steps: React.FunctionComponent<{ steps: Step[]; sx?: ThemeUIStyleOb
         ...sx
       }}
     >
-      {steps.map((step, index) => {
-        const icon = getStepIconElement(step, index + 1);
-        const color = getStepColor(step);
-
+      {extendedSteps.map((step, index, steps) => {
         return (
-          <li key={step.title} sx={{ color }}>
+          <li key={step.title} sx={{ color: step.color }}>
             <Tooltip
               placement="top"
               message={
@@ -99,15 +123,16 @@ export const Steps: React.FunctionComponent<{ steps: Step[]; sx?: ThemeUIStyleOb
                 }}
               >
                 <span role="presentation" sx={{ zIndex: "1", height: "1.5rem" }}>
-                  {icon}
+                  {step.icon}
                 </span>
                 {/* connecting line. one for every step except the last one. */}
                 {index < steps.length - 1 && (
                   <span
                     aria-hidden="true"
                     sx={{
+                      // unless previous steps are continuable, we don't color the line because it looks like we've started in the middle and can continue.
                       // danger steps imply that we can't continue. we don't color the the continuing line in this case.
-                      backgroundColor: step.status === "danger" ? idleStepColor : color,
+                      backgroundColor: step.canContinue ? step.color : idleStepColor,
                       height: "0.2rem",
                       width: "0.7rem",
                       marginInline: "-0.1rem",
@@ -123,4 +148,27 @@ export const Steps: React.FunctionComponent<{ steps: Step[]; sx?: ThemeUIStyleOb
       })}
     </ul>
   );
+};
+
+export const getAssociationStepStatus = (options: {
+  userHasAssociatedWithToken: boolean;
+  tokenAssociationLoadingState: LoadingState;
+}) => {
+  if (options.userHasAssociatedWithToken) {
+    return "success";
+  }
+
+  const hasAssociationError = options.tokenAssociationLoadingState === "error";
+  if (hasAssociationError) {
+    return "danger";
+  }
+
+  const isWaitingForAssociation =
+    options.tokenAssociationLoadingState === "pending" ||
+    (!options.userHasAssociatedWithToken && options.tokenAssociationLoadingState === "success");
+  if (isWaitingForAssociation) {
+    return "pending";
+  }
+
+  return "idle";
 };
