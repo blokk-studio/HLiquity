@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { Flex, Button, Box, Card, Heading, Spinner } from "theme-ui";
+import { Flex, Button, Box, Card, Heading, Spinner, Checkbox, Label } from "theme-ui";
 import {
   LiquityStoreState,
   Decimal,
@@ -51,6 +51,7 @@ export const Opening: React.FC = () => {
 
   const [collateral, setCollateral] = useState<Decimal>(Decimal.ZERO);
   const [borrowAmount, setBorrowAmount] = useState<Decimal>(Decimal.ZERO);
+  const [auto, setAuto] = useState<boolean>(false);
 
   const maxBorrowingRate = borrowingRate.add(0.005);
 
@@ -110,8 +111,8 @@ export const Opening: React.FC = () => {
       status: userHasAssociatedWithHchf
         ? "success"
         : hchfAssociationLoadingState === "error"
-        ? "danger"
-        : hchfAssociationLoadingState,
+          ? "danger"
+          : hchfAssociationLoadingState,
       description: userHasAssociatedWithHchf
         ? "You've already associated with HCHF."
         : "You have to associate with HCHF tokens before you can use HLiquity."
@@ -121,6 +122,37 @@ export const Opening: React.FC = () => {
       status: isTransactionPending ? "pending" : "idle"
     }
   ];
+
+  const collateralHandler = (amount: string) => {
+    const newCol = Decimal.from(amount);
+    const collRat = newCol.mul(price).div(totalDebt);
+
+    console.log('col rat', collRat.prettify(5), borrowAmount.prettify(5));
+
+    if (auto && collRat.lt(Decimal.from(1.5))) {
+      // console.log('newNetDebt', newNetDebt.prettify());
+      const newNetDebt = newCol.mul(price).div(Decimal.from(1.5)).sub(HCHF_LIQUIDATION_RESERVE).sub(fee);
+      console.log('newNetDebt', newNetDebt.prettify());
+
+      setBorrowAmount(newNetDebt.isZero ? Decimal.ZERO : newNetDebt);
+    }
+
+    setCollateral(newCol)
+  }
+
+  const netDebtHandler = (amount: string) => {
+    const newDebt = Decimal.from(amount)
+    const newTotalDebt = newDebt.add(HCHF_LIQUIDATION_RESERVE).add(newDebt.mul(borrowingRate))
+    const collRat = collateral.mul(price).div(newTotalDebt)
+
+    if (auto && collRat.lt(Decimal.from(1.5))) {
+      const newCol = newDebt.add(HCHF_LIQUIDATION_RESERVE).add(newDebt.mul(borrowingRate)).mul(Decimal.from(1.5)).div(price)
+
+      setCollateral(newCol)
+    }
+
+    setBorrowAmount(newDebt)
+  }
 
   return (
     <Card>
@@ -154,7 +186,7 @@ export const Opening: React.FC = () => {
           editingState={editingState}
           unit={COLLATERAL_COIN}
           editedAmount={collateral.toString(2)}
-          setEditedAmount={(amount: string) => setCollateral(Decimal.from(amount))}
+          setEditedAmount={collateralHandler}
         />
 
         <EditableRow
@@ -164,8 +196,31 @@ export const Opening: React.FC = () => {
           unit={COIN}
           editingState={editingState}
           editedAmount={borrowAmount.toString(2)}
-          setEditedAmount={(amount: string) => setBorrowAmount(Decimal.from(amount))}
+          setEditedAmount={netDebtHandler}
         />
+
+        <Flex
+          sx={{
+            alignItems: 'center',
+            py: 0,
+            mb: 3,
+            mt: "-10px",
+            fontSize: 1
+          }}>
+          <Box>
+            <Checkbox id="switch-auto" checked={auto} onChange={(e) => setAuto(e.target.checked)}></Checkbox>
+          </Box>
+          <Label htmlFor="switch-auto" sx={{ flex: "0 0 auto", px: 0, cursor: "pointer", fontSize: 1, ml: 1 }}>
+            Adjust automatically
+          </Label>
+          <InfoIcon
+            tooltip={
+              <Card variant="tooltip" sx={{ width: "200px" }}>
+                Automatically adjusts HBAR/HCHF ratio to keep your CR above 150%.
+              </Card>
+            }
+          />
+        </Flex>
 
         <StaticRow
           label="Liquidation Reserve"

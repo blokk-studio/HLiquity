@@ -360,7 +360,7 @@ const theme: Theme = {
     switch: {
       backgroundColor: 'primary',
       mr: 0,
-      ml: 3,
+      ml: 0,
       pr: 0,
 
       '&:checked': {
@@ -369,6 +369,33 @@ const theme: Theme = {
 
       'input:checked ~ & > div': {
         backgroundColor: 'secondary',
+      },
+    },
+
+    checkbox: {
+      // backgroundColor: 'primary',
+      mr: 0,
+      ml: 0,
+      pr: 0,
+
+      '&': {
+        backgroundColor: "transparent"
+      },
+
+      '&:focus': {
+        backgroundColor: "transparent"
+      },
+
+      'input:checked ~ &': {
+        backgroundColor: 'transparent',
+      },
+
+      'input ~ &': {
+        backgroundColor: 'transparent',
+      },
+
+      'input:focus ~ &': {
+        backgroundColor: 'transparent',
       },
     },
 
