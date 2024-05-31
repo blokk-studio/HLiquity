@@ -37,7 +37,7 @@ export const Imprint: React.FC = () => {
       </ImprintItem>
       <ImprintItem title="Legal Stuff">
         <RouteLink variant="default" to="/imprint">Imprint</RouteLink>
-        <RouteLink variant="default" to="/imprint">Privacy policy</RouteLink>
+        <RouteLink variant="default" to="/privacy-policy">Privacy policy</RouteLink>
       </ImprintItem>
       <ImprintItem title="Social Media">
         <Link href="https://x.com/blokkstudio" target="_blank">X</Link>
