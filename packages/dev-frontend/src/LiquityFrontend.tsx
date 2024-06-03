@@ -26,6 +26,7 @@ import { Dashboard } from "./pages/Dashboard";
 import { PrivacyPolicyPage } from "./pages/PrivacyPolicyPage";
 import { ImprintPage } from "./pages/ImprintPage";
 import ScrollToTop from "./components/ScrollToTop";
+import { ComponentTree } from "./components/ComponentTree";
 
 export const LiquityFrontend: React.FC = () => {
   const { account: accountAddress, liquity } = useLiquity();
@@ -42,51 +43,54 @@ export const LiquityFrontend: React.FC = () => {
 
   return (
     <>
-      <Router>
-        <TroveViewProvider>
-          <StabilityViewProvider>
-            <StakingViewProvider>
-              <Flex sx={{ flexDirection: "column", minHeight: "100%" }}>
-                <Header>
-                  <UserAccount />
-                  <SystemStatsPopup />
-                </Header>
+      <ComponentTree
+        renderers={[
+          children => <Router>{children}</Router>,
+          children => <TroveViewProvider>{children}</TroveViewProvider>,
+          children => <StabilityViewProvider>{children}</StabilityViewProvider>,
+          children => <StakingViewProvider>{children}</StakingViewProvider>,
+          children => <StabilityViewProvider>{children}</StabilityViewProvider>
+        ]}
+      >
+        <Flex sx={{ flexDirection: "column", minHeight: "100%" }}>
+          <Header>
+            <UserAccount />
+            <SystemStatsPopup />
+          </Header>
 
-                <Container
-                  variant="main"
-                  sx={{
-                    display: "flex",
-                    flexGrow: 1,
-                    flexDirection: "column",
-                    alignItems: "center"
-                  }}
-                >
-                  <PageSwitcher>
-                    <ScrollToTop />
-                    <Switch>
-                      <Route path="/" exact>
-                        <Dashboard />
-                      </Route>
-                      <Route path="/risky-troves">
-                        <RiskyTrovesPage />
-                      </Route>
-                      <Route path="/privacy-policy">
-                        <PrivacyPolicyPage />
-                      </Route>
-                      <Route path="/imprint">
-                        <ImprintPage />
-                      </Route>
-                    </Switch>
-                  </PageSwitcher>
-                </Container>
-              </Flex>
-            </StakingViewProvider>
-          </StabilityViewProvider>
-        </TroveViewProvider>
+          <Container
+            variant="main"
+            sx={{
+              display: "flex",
+              flexGrow: 1,
+              flexDirection: "column",
+              alignItems: "center"
+            }}
+          >
+            <PageSwitcher>
+              <ScrollToTop />
+              <Switch>
+                <Route path="/" exact>
+                  <Dashboard />
+                </Route>
+                <Route path="/risky-troves">
+                  <RiskyTrovesPage />
+                </Route>
+                <Route path="/privacy-policy">
+                  <PrivacyPolicyPage />
+                </Route>
+                <Route path="/imprint">
+                  <ImprintPage />
+                </Route>
+              </Switch>
+            </PageSwitcher>
+          </Container>
+        </Flex>
+
         <footer sx={{ marginInline: "clamp(2rem, 100%, 50% - 38rem)", paddingBottom: "2rem" }}>
           <Imprint />
         </footer>
-      </Router>
+      </ComponentTree>
 
       <TransactionMonitor />
       <AutomaticDevelopmentDebugMenu />
