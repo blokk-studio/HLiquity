@@ -8,13 +8,11 @@ import getDefaultClient from "./connectkit/defaultClient";
 import { LiquityProvider, LiquityConsumer } from "./hooks/LiquityContext";
 import { TransactionProvider } from "./components/Transaction";
 import { Icon } from "./components/Icon";
-import { getConfig } from "./config";
 import theme from "./theme";
 
 import { DisposableWalletProvider } from "./testUtils/DisposableWalletProvider";
 import { LiquityFrontend } from "./LiquityFrontend";
 import { AppLoader } from "./components/AppLoader";
-import { useAsyncValue } from "./hooks/AsyncValue";
 import { useHederaChains } from "./hooks/chains";
 import { AuthenticationProvider, LoginForm } from "./authentication";
 import { useConfiguration } from "./configuration";
@@ -36,13 +34,6 @@ if (isDemoMode) {
 
   Object.assign(window, { ethereum });
 }
-
-// Start pre-fetching the config
-getConfig().then(config => {
-  // console.log("Frontend config:");
-  // console.log(config);
-  Object.assign(window, { config });
-});
 
 const getChainNameListString = (chains: Chain[]) => {
   if (chains.length === 1) {
@@ -84,13 +75,8 @@ const UnsupportedNetworkFallback: React.FC<{ availableNetworks: Chain[] }> = ({
 };
 
 const App = () => {
-  const config = useAsyncValue(getConfig);
   const chains = useHederaChains();
   const { walletConnectProjectId } = useConfiguration();
-
-  if (!config.loaded) {
-    return <ThemeProvider theme={theme} />;
-  }
 
   const client = createClient(
     getDefaultClient({
@@ -165,7 +151,7 @@ const App = () => {
           <SelectedChainProvider>
             <WagmiConfig client={client}>
               <ConnectKitProvider options={{ hideBalance: true }}>
-                <HashConnectProvider walletConnectProjectId={config.value.walletConnectProjectId}>
+                <HashConnectProvider walletConnectProjectId={walletConnectProjectId}>
                   <TransactionProvider>
                     <HashConnectLoader
                       loader={<AppLoader content={<Heading>Setting up HashPack</Heading>} />}
