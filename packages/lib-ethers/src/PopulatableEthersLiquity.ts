@@ -416,15 +416,15 @@ export class PopulatableEthersLiquity
     const { stabilityPool } = _getContracts(this._readable.connection);
 
     const [newHCHFDeposit] = stabilityPool
-      .extractEvents(logs, "UserDepositChanged")
+      .extractEvents(logs ?? [], "UserDepositChanged")
       .map(({ args: { _newDeposit } }) => decimalify(_newDeposit));
 
     const [[collateralGain, hchfLoss]] = stabilityPool
-      .extractEvents(logs, "ETHGainWithdrawn")
+      .extractEvents(logs ?? [], "ETHGainWithdrawn")
       .map(({ args: { _ETH, _HCHFLoss } }) => [decimalify(_ETH), decimalify(_HCHFLoss)]);
 
     const [hlqtReward] = stabilityPool
-      .extractEvents(logs, "HLQTPaidToDepositor")
+      .extractEvents(logs ?? [], "HLQTPaidToDepositor")
       .map(({ args: { _HLQT } }) => decimalify(_HLQT));
 
     return {
