@@ -76,7 +76,7 @@ export const useBondContracts = (): BondContracts => {
   } = addresses;
 
   const [lusdTokenDefault, lusdTokenDefaultStatus] = useContract<HCHFToken>(
-    liquity.connection.addresses.lusdToken,
+    liquity.connection.addresses.hchfToken,
     HCHFTokenAbi
   );
 
@@ -88,7 +88,7 @@ export const useBondContracts = (): BondContracts => {
   const [lusdToken, lusdTokenStatus] =
     LUSD_OVERRIDE_ADDRESS === null
       ? [lusdTokenDefault, lusdTokenDefaultStatus]
-      : [(lusdTokenOverride as unknown) as HCHFToken, lusdTokenOverrideStatus];
+      : [lusdTokenOverride as unknown as HCHFToken, lusdTokenOverrideStatus];
 
   const [bLusdToken, bLusdTokenStatus] = useContract<BLUSDToken>(
     BLUSD_TOKEN_ADDRESS,
