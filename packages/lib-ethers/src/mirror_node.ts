@@ -44,15 +44,15 @@ export const fetchTokens = async (
 
   if (!response.ok) {
     const responseText = await response.text();
-    const message = `tokens api responded with ${response.status}: \`${responseText}\` for account ${accountAddressUrlSegment}`;
-    console.error(message, { ...options, accountAddressUrlSegment, responseText, response });
-    throw new Error(
-      `${message}. received: ${JSON.stringify({
-        ...options,
-        accountAddressUrlSegment,
-        responseText
-      })}`
-    );
+    const message = `tokens api responded with ${
+      response.status
+    }: \`${responseText}\` for account ${accountAddressUrlSegment}. received: ${JSON.stringify({
+      ...options,
+      accountAddressUrlSegment,
+      responseText,
+      response
+    })}`;
+    throw new Error(message);
   }
 
   const data = (await response.json()) as HederaApiTokensData;
