@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { ContractInterface, ethers } from "ethers";
-import { useLiquity } from "./LiquityContext";
+import { useProvider } from "wagmi";
 
 type ContractStatus = "UNKNOWN" | "LOADED" | "FAILED";
 type Contract<TContractType> = { instance: TContractType | undefined; status: ContractStatus };
@@ -9,13 +9,14 @@ export function useContract<TContractType>(
   address: string | null,
   abi: ContractInterface
 ): [TContractType | undefined, ContractStatus] {
-  const { provider } = useLiquity();
+  const provider = useProvider();
   const [contract, setContract] = useState<Contract<TContractType>>();
 
   useEffect(() => {
     (async () => {
       try {
         if (contract !== undefined) return;
+        if (!provider) return;
         if (address === null) {
           setContract({ instance: undefined, status: "FAILED" });
           return;
@@ -24,11 +25,11 @@ export function useContract<TContractType>(
         const exists = (await provider.getCode(address)) !== "0x";
         if (!exists) throw new Error(`Contract ${address} doesn't exist.`);
 
-        const connectedContract = (new ethers.Contract(
+        const connectedContract = new ethers.Contract(
           address,
           abi,
           provider
-        ) as unknown) as TContractType;
+        ) as unknown as TContractType;
 
         setContract({ instance: connectedContract, status: "LOADED" });
       } catch (e) {
