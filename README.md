@@ -1,4 +1,4 @@
-# https://TBA.com/ - Hedera Frontend for HLiquity
+# https://hliquity.finance/ - Hedera Frontend for HLiquity
 
 [Small Company Logo]
 
