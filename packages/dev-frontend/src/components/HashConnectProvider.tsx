@@ -2,8 +2,6 @@ import { createContext, useContext, useEffect, useState } from "react";
 import { DappMetadata, HashConnect, SessionData, HashConnectConnectionState } from "hashconnect";
 import { AccountId, LedgerId } from "@hashgraph/sdk";
 import { getConsumer, getHook, getLoader, getOptionalHook } from "../optional_context";
-import { Flex, Heading, Paragraph } from "theme-ui";
-import { Icon } from "./Icon";
 import { t } from "../i18n";
 import { useSelectedChain } from "./chain_context";
 import { chains } from "../configuration/chains";
