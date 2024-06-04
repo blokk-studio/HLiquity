@@ -1,4 +1,4 @@
-import { Flex } from "theme-ui";
+import { Flex, Heading } from "theme-ui";
 import { useDeployment } from "../hooks/deployments";
 import { LoadingButton } from "./LoadingButton";
 import { useLoadingState } from "../loading_state";
@@ -84,7 +84,9 @@ export const DevelopmentDebugMenu: React.FC = () => {
   });
 
   return (
-    <Flex sx={{ flexDirection: "column" }}>
+    <Flex sx={{ flexDirection: "column", padding: "2rem" }}>
+      <Heading>debug menu</Heading>
+
       {deployment && (
         <dl>
           <dt>Frontend tag</dt>
