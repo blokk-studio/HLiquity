@@ -1,7 +1,5 @@
 # https://hliquity.finance/ - Hedera Frontend for HLiquity
 
-[Small Company Logo]
-
 Optimized liquity frontend for HLiquity, delivering fast transaction experience and showcasing blokk.'s Hedera expertise.
 
 ## Why HLiquity from blokk.
