@@ -1405,14 +1405,13 @@ export class HashgraphLiquity
       .addAddress(hints[0])
       .addAddress(hints[1])
 
-    const unfrozenTransaction = TypedContractExecuteTransaction<BorrowerOperationsAbi>({
+    const rawPopulatedTransaction = TypedContractExecuteTransaction<BorrowerOperationsAbi>({
       contractId: this.borrowerOperationsContractId,
       functionName: 'openTrove',
       functionParameters,
       hbar,
       gas,
     })
-    const rawPopulatedTransaction = await unfrozenTransaction.freezeWithSigner(this.signer)
 
     const getDetails = async () => {
       const newStoreState = await this.refresh()
@@ -1443,12 +1442,11 @@ export class HashgraphLiquity
     PopulatedHashgraphLiquityTransaction<TroveClosureDetails, ContractExecuteTransaction>
   > {
     const gas = 3000000
-    const unfrozenTransaction = TypedContractExecuteTransaction<BorrowerOperationsAbi>({
+    const rawPopulatedTransaction = TypedContractExecuteTransaction<BorrowerOperationsAbi>({
       contractId: this.borrowerOperationsContractId,
       functionName: 'closeTrove',
       gas,
     })
-    const rawPopulatedTransaction = await unfrozenTransaction.freezeWithSigner(this.signer)
 
     const troveBeforeClosure = this.state.trove
     const getDetails = async () => {
@@ -1681,15 +1679,11 @@ export class HashgraphLiquity
     options?: TransactionOptions,
   ): Promise<PopulatedHashgraphLiquityTransaction<void, ContractExecuteTransaction>> {
     const gas = 3000000
-    const unfrozenRawPopulatedTransaction = TypedContractExecuteTransaction<BorrowerOperationsAbi>({
+    const rawPopulatedTransaction = TypedContractExecuteTransaction<BorrowerOperationsAbi>({
       contractId: this.borrowerOperationsContractId,
       functionName: 'claimCollateral',
       gas,
     })
-
-    const rawPopulatedTransaction = await unfrozenRawPopulatedTransaction.freezeWithSigner(
-      this.signer,
-    )
 
     const PopulatedHashgraphLiquityTransaction = this.getPopulatedHashgraphLiquityTransaction({
       rawPopulatedTransaction,
@@ -1717,15 +1711,11 @@ export class HashgraphLiquity
     //   'setPrice'
     // >().addUint256(new BigNumber(Decimal.from(price).hex))
 
-    // const unfrozenRawPopulatedTransaction = TypedContractExecuteTransaction<PriceFeedAbi>({
+    // const rawPopulatedTransaction = TypedContractExecuteTransaction<PriceFeedAbi>({
     //   contractId: this.priceFeedContractId,
     //   gas: 3000000,
     //   functionName: 'setPrice',
     // })
-
-    // const rawPopulatedTransaction = await unfrozenRawPopulatedTransaction.freezeWithSigner(
-    //   this.signer,
-    // )
 
     // const PopulatedHashgraphLiquityTransaction = this.getPopulatedHashgraphLiquityTransaction({
     //   rawPopulatedTransaction,
@@ -1740,7 +1730,7 @@ export class HashgraphLiquity
     addressOrAddresses: Address | Address[],
     options?: TransactionOptions,
   ): Promise<PopulatedHashgraphLiquityTransaction<LiquidationDetails, ContractExecuteTransaction>> {
-    let unfrozenRawPopulatedTransaction: ContractExecuteTransaction
+    let rawPopulatedTransaction: ContractExecuteTransaction
     const gas = 3000000 + gasForHLQTIssuance
     if (Array.isArray(addressOrAddresses)) {
       // batch-liquidate multiple addresses
@@ -1749,7 +1739,7 @@ export class HashgraphLiquity
         'batchLiquidateTroves'
       >().addAddressArray(addressOrAddresses)
 
-      unfrozenRawPopulatedTransaction = TypedContractExecuteTransaction<TroveManagerAbi>({
+      rawPopulatedTransaction = TypedContractExecuteTransaction<TroveManagerAbi>({
         contractId: this.troveManagerContractId,
         gas,
         functionName: 'batchLiquidateTroves',
@@ -1762,17 +1752,13 @@ export class HashgraphLiquity
         'liquidate'
       >().addAddress(addressOrAddresses)
 
-      unfrozenRawPopulatedTransaction = TypedContractExecuteTransaction<TroveManagerAbi>({
+      rawPopulatedTransaction = TypedContractExecuteTransaction<TroveManagerAbi>({
         contractId: this.troveManagerContractId,
         gas,
         functionName: 'liquidate',
         functionParameters,
       })
     }
-
-    const rawPopulatedTransaction = await unfrozenRawPopulatedTransaction.freezeWithSigner(
-      this.signer,
-    )
 
     const getDetails = (): LiquidationDetails => {
       // TODO: we can't listen to events without websocket
@@ -1807,16 +1793,12 @@ export class HashgraphLiquity
     >().addUint256(Decimal.from(maximumNumberOfTrovesToLiquidate).bigNumber)
 
     const gas = 3000000 + gasForHLQTIssuance
-    const unfrozenRawPopulatedTransaction = TypedContractExecuteTransaction<TroveManagerAbi>({
+    const rawPopulatedTransaction = TypedContractExecuteTransaction<TroveManagerAbi>({
       contractId: this.troveManagerContractId,
       functionName: 'liquidateTroves',
       gas,
       functionParameters,
     })
-
-    const rawPopulatedTransaction = await unfrozenRawPopulatedTransaction.freezeWithSigner(
-      this.signer,
-    )
 
     const getDetails = () => {
       // TODO: we can't listen to events without websocket
@@ -1851,16 +1833,12 @@ export class HashgraphLiquity
       .addAddress(frontendAddress)
 
     const gas = 3000000 + gasForHLQTIssuance
-    const unfrozenRawPopulatedTransaction = TypedContractExecuteTransaction<StabilityPoolAbi>({
+    const rawPopulatedTransaction = TypedContractExecuteTransaction<StabilityPoolAbi>({
       contractId: this.stabilityPoolContractId,
       functionName: 'provideToSP',
       gas,
       functionParameters,
     })
-
-    const rawPopulatedTransaction = await unfrozenRawPopulatedTransaction.freezeWithSigner(
-      this.signer,
-    )
 
     const getDetails = () => {
       // TODO: we can't listen to events without websocket
@@ -1902,16 +1880,12 @@ export class HashgraphLiquity
     >().addUint256(Decimal.from(amount).bigNumber)
 
     const gas = 3000000 + gasForHLQTIssuance
-    const unfrozenRawPopulatedTransaction = TypedContractExecuteTransaction<StabilityPoolAbi>({
+    const rawPopulatedTransaction = TypedContractExecuteTransaction<StabilityPoolAbi>({
       contractId: this.stabilityPoolContractId,
       functionName: 'withdrawFromSP',
       gas,
       functionParameters,
     })
-
-    const rawPopulatedTransaction = await unfrozenRawPopulatedTransaction.freezeWithSigner(
-      this.signer,
-    )
 
     const getDetails = () => {
       // TODO: we can't listen to events without websocket
@@ -1947,16 +1921,12 @@ export class HashgraphLiquity
     >().addUint256(Decimal.from(0).bigNumber)
 
     const gas = 3000000 + gasForHLQTIssuance
-    const unfrozenRawPopulatedTransaction = TypedContractExecuteTransaction<StabilityPoolAbi>({
+    const rawPopulatedTransaction = TypedContractExecuteTransaction<StabilityPoolAbi>({
       contractId: this.stabilityPoolContractId,
       functionName: 'withdrawFromSP',
       gas,
       functionParameters,
     })
-
-    const rawPopulatedTransaction = await unfrozenRawPopulatedTransaction.freezeWithSigner(
-      this.signer,
-    )
 
     const getDetails = () => {
       // TODO: we can't listen to events without websocket
@@ -2006,16 +1976,12 @@ export class HashgraphLiquity
       .addAddress(hints[1])
 
     const gas = 3000000 + gasForHLQTIssuance
-    const unfrozenRawPopulatedTransaction = TypedContractExecuteTransaction<StabilityPoolAbi>({
+    const rawPopulatedTransaction = TypedContractExecuteTransaction<StabilityPoolAbi>({
       contractId: this.stabilityPoolContractId,
       functionName: 'withdrawETHGainToTrove',
       gas,
       functionParameters,
     })
-
-    const rawPopulatedTransaction = await unfrozenRawPopulatedTransaction.freezeWithSigner(
-      this.signer,
-    )
 
     const getDetails = () => {
       // TODO: we can't listen to events without websocket
@@ -2129,16 +2095,12 @@ export class HashgraphLiquity
         .addUint256(Decimal.from(redeemMaxIterations).bigNumber)
         .addUint256(maxRedemptionRateOrDefault.bigNumber)
       const gas = 3000000 + gasForPotentialLastFeeOperationTimeUpdate
-      const unfrozenRawPopulatedTransaction = TypedContractExecuteTransaction<TroveManagerAbi>({
+      const rawPopulatedTransaction = TypedContractExecuteTransaction<TroveManagerAbi>({
         contractId: this.troveManagerContractId,
         gas,
         functionName: 'redeemCollateral',
         functionParameters,
       })
-
-      const rawPopulatedTransaction = await unfrozenRawPopulatedTransaction.freezeWithSigner(
-        this.signer,
-      )
 
       const getDetails = () => {
         // TODO: we can't listen to events without websocket
@@ -2213,16 +2175,12 @@ export class HashgraphLiquity
     >().addUint256(Decimal.from(amount).bigNumber)
 
     const gas = 3000000
-    const unfrozenRawPopulatedTransaction = TypedContractExecuteTransaction<HLQTStakingAbi>({
+    const rawPopulatedTransaction = TypedContractExecuteTransaction<HLQTStakingAbi>({
       contractId: this.hlqtStakingContractId,
       functionName: 'stake',
       gas,
       functionParameters,
     })
-
-    const rawPopulatedTransaction = await unfrozenRawPopulatedTransaction.freezeWithSigner(
-      this.signer,
-    )
 
     const getDetails = () => undefined
     const PopulatedHashgraphLiquityTransaction = this.getPopulatedHashgraphLiquityTransaction({
@@ -2244,16 +2202,12 @@ export class HashgraphLiquity
     >().addUint256(Decimal.from(amount).bigNumber)
 
     const gas = 3000000
-    const unfrozenRawPopulatedTransaction = TypedContractExecuteTransaction<HLQTStakingAbi>({
+    const rawPopulatedTransaction = TypedContractExecuteTransaction<HLQTStakingAbi>({
       contractId: this.hlqtStakingContractId,
       functionName: 'unstake',
       gas,
       functionParameters,
     })
-
-    const rawPopulatedTransaction = await unfrozenRawPopulatedTransaction.freezeWithSigner(
-      this.signer,
-    )
 
     const getDetails = () => undefined
     const PopulatedHashgraphLiquityTransaction = this.getPopulatedHashgraphLiquityTransaction({
@@ -2281,16 +2235,12 @@ export class HashgraphLiquity
     >().addUint256(Decimal.from(kickbackRate).bigNumber)
 
     const gas = 3000000
-    const unfrozenRawPopulatedTransaction = TypedContractExecuteTransaction<StabilityPoolAbi>({
+    const rawPopulatedTransaction = TypedContractExecuteTransaction<StabilityPoolAbi>({
       contractId: this.stabilityPoolContractId,
       functionName: 'registerFrontEnd',
       gas,
       functionParameters,
     })
-
-    const rawPopulatedTransaction = await unfrozenRawPopulatedTransaction.freezeWithSigner(
-      this.signer,
-    )
 
     const getDetails = () => undefined
     const PopulatedHashgraphLiquityTransaction = this.getPopulatedHashgraphLiquityTransaction({
@@ -2316,16 +2266,12 @@ export class HashgraphLiquity
       .addUint256(Decimal.from(allowance).bigNumber)
 
     const gas = 3000000
-    const unfrozenRawPopulatedTransaction = TypedContractExecuteTransaction<IERC20Abi>({
+    const rawPopulatedTransaction = TypedContractExecuteTransaction<IERC20Abi>({
       contractId: getTypedContractId<IERC20Abi>(0, 0, uniTokenAddress as Address),
       functionName: 'approve',
       gas,
       functionParameters,
     })
-
-    const rawPopulatedTransaction = await unfrozenRawPopulatedTransaction.freezeWithSigner(
-      this.signer,
-    )
 
     const getDetails = () => undefined
     const PopulatedHashgraphLiquityTransaction = this.getPopulatedHashgraphLiquityTransaction({
@@ -2346,16 +2292,12 @@ export class HashgraphLiquity
     )
 
     const gas = 3000000 + gasForUnipoolRewardUpdate
-    const unfrozenRawPopulatedTransaction = TypedContractExecuteTransaction<UnipoolAbi>({
+    const rawPopulatedTransaction = TypedContractExecuteTransaction<UnipoolAbi>({
       contractId: this.saucerSwapPoolContractId,
       functionName: 'stake',
       gas,
       functionParameters,
     })
-
-    const rawPopulatedTransaction = await unfrozenRawPopulatedTransaction.freezeWithSigner(
-      this.signer,
-    )
 
     const getDetails = () => undefined
     const PopulatedHashgraphLiquityTransaction = this.getPopulatedHashgraphLiquityTransaction({
@@ -2376,16 +2318,12 @@ export class HashgraphLiquity
     )
 
     const gas = 3000000 + gasForUnipoolRewardUpdate
-    const unfrozenRawPopulatedTransaction = TypedContractExecuteTransaction<UnipoolAbi>({
+    const rawPopulatedTransaction = TypedContractExecuteTransaction<UnipoolAbi>({
       contractId: this.saucerSwapPoolContractId,
       functionName: 'withdraw',
       gas,
       functionParameters,
     })
-
-    const rawPopulatedTransaction = await unfrozenRawPopulatedTransaction.freezeWithSigner(
-      this.signer,
-    )
 
     const getDetails = () => undefined
     const PopulatedHashgraphLiquityTransaction = this.getPopulatedHashgraphLiquityTransaction({
@@ -2401,15 +2339,11 @@ export class HashgraphLiquity
     options?: TransactionOptions,
   ): Promise<PopulatedHashgraphLiquityTransaction<void, ContractExecuteTransaction>> {
     const gas = 3000000 + gasForUnipoolRewardUpdate
-    const unfrozenRawPopulatedTransaction = TypedContractExecuteTransaction<UnipoolAbi>({
+    const rawPopulatedTransaction = TypedContractExecuteTransaction<UnipoolAbi>({
       contractId: this.saucerSwapPoolContractId,
       functionName: 'claimReward',
       gas,
     })
-
-    const rawPopulatedTransaction = await unfrozenRawPopulatedTransaction.freezeWithSigner(
-      this.signer,
-    )
 
     const getDetails = () => undefined
     const PopulatedHashgraphLiquityTransaction = this.getPopulatedHashgraphLiquityTransaction({
@@ -2425,15 +2359,11 @@ export class HashgraphLiquity
     options?: TransactionOptions,
   ): Promise<PopulatedHashgraphLiquityTransaction<void, ContractExecuteTransaction>> {
     const gas = 3000000 + gasForUnipoolRewardUpdate
-    const unfrozenRawPopulatedTransaction = TypedContractExecuteTransaction<UnipoolAbi>({
+    const rawPopulatedTransaction = TypedContractExecuteTransaction<UnipoolAbi>({
       contractId: this.saucerSwapPoolContractId,
       functionName: 'withdrawAndClaim',
       gas,
     })
-
-    const rawPopulatedTransaction = await unfrozenRawPopulatedTransaction.freezeWithSigner(
-      this.signer,
-    )
 
     const getDetails = () => undefined
     const PopulatedHashgraphLiquityTransaction = this.getPopulatedHashgraphLiquityTransaction({
@@ -2453,8 +2383,8 @@ export class HashgraphLiquity
       tokenIds: [tokenId],
       accountId: this.userAccountId,
     })
-    const transaction = await unfrozenTransaction.freezeWithSigner(this.signer)
-    const receipt = await transaction.executeWithSigner(this.signer)
+
+    const receipt = await this.hashConnect.sendTransaction(this.userAccountId, unfrozenTransaction)
 
     await waitForTokenState({
       accountId: this.userAccountId,
@@ -2472,8 +2402,8 @@ export class HashgraphLiquity
       tokenIds: [tokenId],
       accountId: this.userAccountId,
     })
-    const transaction = await unfrozenTransaction.freezeWithSigner(this.signer)
-    const receipt = await transaction.executeWithSigner(this.signer)
+
+    const receipt = await this.hashConnect.sendTransaction(this.userAccountId, unfrozenTransaction)
 
     await waitForTokenState({
       accountId: this.userAccountId,
@@ -2491,8 +2421,8 @@ export class HashgraphLiquity
       tokenIds: [tokenId],
       accountId: this.userAccountId,
     })
-    const transaction = await unfrozenTransaction.freezeWithSigner(this.signer)
-    const receipt = await transaction.executeWithSigner(this.signer)
+
+    const receipt = await this.hashConnect.sendTransaction(this.userAccountId, unfrozenTransaction)
 
     await waitForTokenState({
       accountId: this.userAccountId,
@@ -2510,8 +2440,8 @@ export class HashgraphLiquity
       tokenIds: [tokenId],
       accountId: this.userAccountId,
     })
-    const transaction = await unfrozenTransaction.freezeWithSigner(this.signer)
-    const receipt = await transaction.executeWithSigner(this.signer)
+
+    const receipt = await this.hashConnect.sendTransaction(this.userAccountId, unfrozenTransaction)
 
     await waitForTokenState({
       accountId: this.userAccountId,
@@ -2529,8 +2459,8 @@ export class HashgraphLiquity
       tokenIds: [tokenId],
       accountId: this.userAccountId,
     })
-    const transaction = await unfrozenTransaction.freezeWithSigner(this.signer)
-    const receipt = await transaction.executeWithSigner(this.signer)
+
+    const receipt = await this.hashConnect.sendTransaction(this.userAccountId, unfrozenTransaction)
 
     await waitForTokenState({
       accountId: this.userAccountId,
@@ -2548,8 +2478,8 @@ export class HashgraphLiquity
       tokenIds: [tokenId],
       accountId: this.userAccountId,
     })
-    const transaction = await unfrozenTransaction.freezeWithSigner(this.signer)
-    const receipt = await transaction.executeWithSigner(this.signer)
+
+    const receipt = await this.hashConnect.sendTransaction(this.userAccountId, unfrozenTransaction)
 
     await waitForTokenState({
       accountId: this.userAccountId,
@@ -2575,8 +2505,8 @@ export class HashgraphLiquity
       spenderAccountId,
       Long.fromString(amount.hex, true, 16),
     )
-    const transaction = await unfrozenTransaction.freezeWithSigner(this.signer)
-    const receipt = await transaction.executeWithSigner(this.signer)
+
+    const receipt = await this.hashConnect.sendTransaction(this.userAccountId, unfrozenTransaction)
 
     await this.refresh()
   }
@@ -2596,8 +2526,8 @@ export class HashgraphLiquity
       spenderAccountId,
       Long.fromString(amount.hex, true, 16),
     )
-    const transaction = await unfrozenTransaction.freezeWithSigner(this.signer)
-    const receipt = await transaction.executeWithSigner(this.signer)
+
+    const receipt = await this.hashConnect.sendTransaction(this.userAccountId, unfrozenTransaction)
 
     await this.refresh()
   }
@@ -2618,8 +2548,7 @@ export class HashgraphLiquity
       Long.fromString(amount.hex, true, 16),
     )
 
-    const transaction = await unfrozenTransaction.freezeWithSigner(this.signer)
-    const receipt = await transaction.executeWithSigner(this.signer)
+    const receipt = await this.hashConnect.sendTransaction(this.userAccountId, unfrozenTransaction)
 
     await this.refresh()
   }
