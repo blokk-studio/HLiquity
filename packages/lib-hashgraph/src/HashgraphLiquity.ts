@@ -1472,6 +1472,11 @@ export class HashgraphLiquity
     return populatedEthersLiquityTransaction
   }
 
+  /**
+   * builds the populated -> sent -> receipt pyramid/lasagna
+   *
+   * TODO: sending and getting the receipt should not be the responsibility of population. WHEEEEN the code hits your eye like a big lasagna pie it's-a odio.
+   */
   private getPopulatedHashgraphLiquityTransaction<
     Details,
     RawPopulatedTransaction extends Transaction = Transaction,
