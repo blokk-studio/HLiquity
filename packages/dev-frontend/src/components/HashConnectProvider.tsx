@@ -69,7 +69,11 @@ export const HashConnectProvider: React.FC<{ walletConnectProjectId: string }> =
     walletConnectProjectId: string;
     ledgerId: LedgerId;
   }) => {
-    // TODO: handle all chains
+    const verifyApiIframes = document.querySelectorAll("#verify-api");
+    for (const verifyApiIframe of verifyApiIframes) {
+      verifyApiIframe.remove();
+    }
+
     const hashConnect = new HashConnect(
       options.ledgerId,
       options.walletConnectProjectId,
