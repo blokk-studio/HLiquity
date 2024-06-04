@@ -12,10 +12,10 @@ Optimized liquity frontend for HLiquity, delivering fast transaction experience 
 We help your ventures succeed with beautiful and easy to use blockchain solutions that work. We think beyond the chains and help you design and build solutions that create value in the context of use. We're committed to leveraging Hedera's speed and security for next-generation DeFi experiences. 
 Learn more: https://blokk.studio/
 
-**Key Changes:**
+## Key Changes:
 
-    * This fork only implements changes to the front-end that are necessary to work with the Hedera contracts of [HLiquity](https://github.com/SwisscoastAG/HLiquity).
-    * The only packages that are guaranteed to be up-to-date and functional are [`dev-frontend`](/packages/dev-frontend) and [`lib-ethers`](packages/lib-ethers).
+* This fork only implements changes to the front-end that are necessary to work with the Hedera contracts of [HLiquity](https://github.com/SwisscoastAG/HLiquity).
+* The only packages that are guaranteed to be up-to-date and functional are [`dev-frontend`](/packages/dev-frontend) and [`lib-ethers`](packages/lib-ethers).
 
 ## Contributing
 
