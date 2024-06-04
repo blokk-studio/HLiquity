@@ -69,7 +69,9 @@ export const HashConnectProvider: React.FC<{ walletConnectProjectId: string }> =
     walletConnectProjectId: string;
     ledgerId: LedgerId;
   }) => {
-    const verifyApiIframes = document.querySelectorAll("#verify-api");
+    const verifyApiIframes = [...document.querySelectorAll("iframe")].filter(
+      iframeElement => iframeElement.id === "verify-api"
+    );
     for (const verifyApiIframe of verifyApiIframes) {
       verifyApiIframe.remove();
     }
