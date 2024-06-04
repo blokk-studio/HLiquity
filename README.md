@@ -8,8 +8,6 @@ Optimized liquity frontend for HLiquity, delivering fast transaction experience 
 
 * First liquity frontend on hedera blockchain
 * Redesigned intuitive UI 
-* TBA 
-* Secure: bug bounty programm with TBA announced
 
 ## About Us
 We help your ventures succeed with beautiful and easy to use blockchain solutions that work. We think beyond the chains and help you design and build solutions that create value in the context of use. We're committed to leveraging Hedera's speed and security for next-generation DeFi experiences. 
