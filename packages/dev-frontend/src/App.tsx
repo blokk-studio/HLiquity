@@ -24,6 +24,7 @@ import { SelectedChainProvider } from "./components/chain_context";
 import { MultiWalletProvider } from "./multi_wallet";
 import { AppErrorBoundary } from "./components/AppErrorBoundary";
 import { ComponentTree } from "./components/ComponentTree";
+import { SnackbarProvider } from "./components/Snackbar";
 
 const isDemoMode = import.meta.env.VITE_APP_DEMO_MODE === "true";
 
@@ -152,6 +153,7 @@ const App = () => {
         renderers={[
           children => <ThemeProvider theme={theme}>{children}</ThemeProvider>,
           children => <AppErrorBoundary>{children}</AppErrorBoundary>,
+          children => <SnackbarProvider>{children}</SnackbarProvider>,
           children => (
             <AuthenticationProvider loginForm={<LoginForm />}>{children}</AuthenticationProvider>
           ),

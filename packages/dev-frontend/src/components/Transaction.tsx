@@ -17,6 +17,8 @@ import { Tooltip } from "./Tooltip";
 import type { TooltipProps } from "./Tooltip";
 
 import { TransactionStatus } from "./TransactionStatus";
+import { useSnackbar } from "./Snackbar";
+import { getNoMatchingKeyErrorSnack, isError, isNoMatchingKeyError } from "../errors";
 
 type TransactionIdle = {
   type: "idle";
@@ -130,6 +132,7 @@ export const useTransactionFunction = (
 ): [sendTransaction: () => Promise<void>, transactionState: TransactionState] => {
   const [transactionState, setTransactionState] = useTransactionState();
   const { store } = useLiquity();
+  const snackbar = useSnackbar();
 
   const sendTransaction = useCallback(async () => {
     setTransactionState({ type: "waitingForApproval", id });
@@ -142,11 +145,16 @@ export const useTransactionFunction = (
         id,
         tx
       });
-    } catch (error) {
-      if (hasMessage(error) && error.message.includes("User denied transaction signature")) {
+    } catch (throwable) {
+      if (hasMessage(throwable) && throwable.message.includes("User denied transaction signature")) {
         setTransactionState({ type: "cancelled", id });
       } else {
-        console.error(error);
+        console.error(throwable);
+        const error = isError(throwable) ? throwable : new Error(`${throwable}`);
+
+        if (isNoMatchingKeyError(error)) {
+          snackbar.addSnack(getNoMatchingKeyErrorSnack());
+        }
 
         setTransactionState({
           type: "failed",

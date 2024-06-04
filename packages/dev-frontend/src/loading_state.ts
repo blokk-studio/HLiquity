@@ -1,4 +1,6 @@
 import { useEffect, useState } from "react";
+import { useSnackbar } from "./components/Snackbar";
+import { getNoMatchingKeyErrorSnack, isNoMatchingKeyError, isError } from "./errors";
 
 export type LoadingState = "idle" | "pending" | "success" | "error";
 
@@ -11,6 +13,7 @@ export const useLoadingState = <Type>(
   result: Type | null;
   error: Error | null;
 } => {
+  const snackbar = useSnackbar();
   const [state, setState] = useState<LoadingState>("idle");
   const [result, setResult] = useState<Type | null>(null);
   const [error, setError] = useState<Error | null>(null);
@@ -22,12 +25,20 @@ export const useLoadingState = <Type>(
       const result = await callback();
       setState("success");
       setResult(result);
+      setError(null);
 
       return result;
-    } catch (error: unknown) {
+    } catch (throwable: unknown) {
+      console.warn("callback resulted in an error", throwable, callback);
+
+      const error = isError(throwable) ? throwable : new Error(`${throwable}`);
       setState("error");
-      setError(error as Error);
-      console.warn("callback resulted in an error", error, callback);
+      setResult(null);
+      setError(error);
+
+      if (isNoMatchingKeyError(error)) {
+        snackbar.addSnack(getNoMatchingKeyErrorSnack());
+      }
     }
 
     return null;
