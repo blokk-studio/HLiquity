@@ -79,8 +79,20 @@ interface WaitForTokensByEvmAddressOptions extends FetchTokensByEvmAddressOption
   requiredDissociations?: TokenId[];
 }
 
-const numberOfWaitForTokenAttempts = 5;
-const millisecondsBetweenTokenAttempts = 2000;
+const getAttemptWaitTime = (attemptNumber: number) => {
+  // 2s for attempts 1-5
+  if (attemptNumber < 5) {
+    return 2000;
+  }
+
+  // 4s for attempts 1-5
+  if (attemptNumber < 10) {
+    return 4000;
+  }
+
+  // every 8s from then on
+  return 8000;
+};
 export const waitForTokenState = async (
   options: WaitForTokensByTokenIdOptions | WaitForTokensByEvmAddressOptions
 ) => {
@@ -91,22 +103,29 @@ export const waitForTokenState = async (
     ? options.requiredDissociations.map(tokenId => tokenId.toString() as TokenIdString)
     : [];
 
+  let attempt = 0;
   let tokens: { id: TokenIdString }[] = [];
-  for (let attempt = 0; attempt < numberOfWaitForTokenAttempts; attempt++) {
-    await new Promise(resolve => setTimeout(resolve, millisecondsBetweenTokenAttempts));
+  let hasAllRequiredAssociations = false;
+  let hasAllRequiredDissociations = false;
+  while (!hasAllRequiredAssociations || !hasAllRequiredDissociations) {
+    const waitTime = getAttemptWaitTime(attempt);
+    await new Promise(resolve => setTimeout(resolve, waitTime));
 
-    tokens = await fetchTokens(options);
+    try {
+      tokens = await fetchTokens(options);
+    } catch {
+      // ignore errors
+    }
+
     const tokenIdStringSet = new Set(tokens.map(token => token.id));
-    const hasAllRequiredAssociations = requiredAssociationIdStrings.every(tokenIdString =>
+    hasAllRequiredAssociations = requiredAssociationIdStrings.every(tokenIdString =>
       tokenIdStringSet.has(tokenIdString)
     );
-    const hasAllRequiredDissociations = requiredDissociationIdStrings.every(
+    hasAllRequiredDissociations = requiredDissociationIdStrings.every(
       tokenIdString => !tokenIdStringSet.has(tokenIdString)
     );
 
-    if (hasAllRequiredAssociations && hasAllRequiredDissociations) {
-      break;
-    }
+    attempt++;
   }
 
   return tokens;
