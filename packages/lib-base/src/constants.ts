@@ -3,21 +3,21 @@ import { Decimal } from "./Decimal";
 /**
  * Total collateral ratio below which recovery mode is triggered.
  *
- * @public
+ * @deprecated use constants from your implementation of `ConstantLiquity`
  */
 export const CRITICAL_COLLATERAL_RATIO = Decimal.from(1.5);
 
 /**
  * Collateral ratio below which a Trove can be liquidated in normal mode.
  *
- * @public
+ * @deprecated use constants from your implementation of `ConstantLiquity`
  */
 export const MINIMUM_COLLATERAL_RATIO = Decimal.from(1.1);
 
 /**
  * Amount of HCHF that's reserved for compensating the liquidator of a Trove.
  *
- * @public
+ * @deprecated use constants from your implementation of `ConstantLiquity`
  */
 export const HCHF_LIQUIDATION_RESERVE = Decimal.from(1);
 
@@ -28,7 +28,7 @@ export const HCHF_LIQUIDATION_RESERVE = Decimal.from(1);
  * @remarks
  * Any transaction that would result in a Trove with less net debt than this will be reverted.
  *
- * @public
+ * @deprecated use constants from your implementation of `ConstantLiquity`
  */
 export const HCHF_MINIMUM_NET_DEBT = Decimal.from(1);
 
@@ -38,7 +38,7 @@ export const HCHF_MINIMUM_NET_DEBT = Decimal.from(1);
  * @remarks
  * Any transaction that would result in a Trove with less debt than this will be reverted.
  *
- * @public
+ * @deprecated use constants from your implementation of `ConstantLiquity`
  */
 export const HCHF_MINIMUM_DEBT = HCHF_LIQUIDATION_RESERVE.add(HCHF_MINIMUM_NET_DEBT);
 
@@ -49,21 +49,21 @@ export const HCHF_MINIMUM_DEBT = HCHF_LIQUIDATION_RESERVE.add(HCHF_MINIMUM_NET_D
  * Note that the borrowing rate can still be lower than this during recovery mode, when it's
  * overridden by zero.
  *
- * @public
+ * @deprecated use constants from your implementation of `ConstantLiquity`
  */
 export const MINIMUM_BORROWING_RATE = Decimal.from(0.005);
 
 /**
  * Value that the {@link Fees.borrowingRate | borrowing rate} will never exceed.
  *
- * @public
+ * @deprecated use constants from your implementation of `ConstantLiquity`
  */
 export const MAXIMUM_BORROWING_RATE = Decimal.from(0.05);
 
 /**
  * Value that the {@link Fees.redemptionRate | redemption rate} will never decay below.
  *
- * @public
+ * @deprecated use constants from your implementation of `ConstantLiquity`
  */
 export const MINIMUM_REDEMPTION_RATE = Decimal.from(0.005);
 
@@ -71,10 +71,10 @@ export const MINIMUM_REDEMPTION_RATE = Decimal.from(0.005);
 // but to avoid having to update them here when we change them in the contracts, we could read
 // them once after deployment and save them to LiquityDeployment."
 /**
- * @public
+ * @deprecated use constants from your implementation of `ConstantLiquity`
  */
 export const MINUTE_DECAY_FACTOR = Decimal.from("0.999037758833783000");
 /**
- * @public
+ * @deprecated use constants from your implementation of `ConstantLiquity`
  */
 export const BETA = Decimal.from(2);

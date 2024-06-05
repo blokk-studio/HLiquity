@@ -2,18 +2,12 @@ import React, { useState, useEffect, useCallback } from "react";
 import CopyToClipboard from "react-copy-to-clipboard";
 import { Card, Button, Text, Box, Heading, Flex } from "theme-ui";
 
-import {
-  Percent,
-  MINIMUM_COLLATERAL_RATIO,
-  CRITICAL_COLLATERAL_RATIO,
-  UserTrove,
-  Decimal
-} from "@liquity/lib-base";
+import { Percent, UserTrove, Decimal } from "@liquity/lib-base";
 import { BlockPolledLiquityStoreState } from "@liquity/lib-ethers";
 import { useLiquitySelector } from "@liquity/lib-react";
 
 import { shortenAddress } from "../utils/shortenAddress";
-import { useLiquity } from "../hooks/LiquityContext";
+import { useLiquity, useLiquityConstants } from "../hooks/LiquityContext";
 import { COIN, COLLATERAL_COIN } from "../strings";
 
 import { Icon } from "./Icon";
@@ -31,7 +25,8 @@ const liquidatableInRecoveryMode = (
   trove: UserTrove,
   price: Decimal,
   totalCollateralRatio: Decimal,
-  hchfInStabilityPool: Decimal
+  hchfInStabilityPool: Decimal,
+  MINIMUM_COLLATERAL_RATIO: Decimal
 ) => {
   const collateralRatio = trove.collateralRatio(price);
 
@@ -65,15 +60,10 @@ const select = ({
 });
 
 export const RiskyTroves: React.FC<RiskyTrovesProps> = ({ pageSize }) => {
-  const {
-    blockTag,
-    numberOfTroves,
-    recoveryMode,
-    totalCollateralRatio,
-    hchfInStabilityPool,
-    price
-  } = useLiquitySelector(select);
+  const { numberOfTroves, recoveryMode, totalCollateralRatio, hchfInStabilityPool, price } =
+    useLiquitySelector(select);
   const { liquity } = useLiquity();
+  const { MINIMUM_COLLATERAL_RATIO, CRITICAL_COLLATERAL_RATIO } = useLiquityConstants();
 
   const [loading, setLoading] = useState(true);
   const [troves, setTroves] = useState<UserTrove[]>();
@@ -109,14 +99,11 @@ export const RiskyTroves: React.FC<RiskyTrovesProps> = ({ pageSize }) => {
     setLoading(true);
 
     liquity
-      .getTroves(
-        {
-          first: pageSize,
-          sortedBy: "ascendingCollateralRatio",
-          startingAt: clampedPage * pageSize
-        },
-        { blockTag }
-      )
+      .getTroves({
+        first: pageSize,
+        sortedBy: "ascendingCollateralRatio",
+        startingAt: clampedPage * pageSize
+      })
       .then(troves => {
         if (mounted) {
           setTroves(troves);
@@ -225,7 +212,9 @@ export const RiskyTroves: React.FC<RiskyTrovesProps> = ({ pageSize }) => {
                 <th>Owner</th>
                 <th>
                   <Abbreviation short="Coll.">Collateral</Abbreviation>
-                  <Box sx={{ fontSize: [0, 1], fontWeight: "body", opacity: 0.5 }}>{COLLATERAL_COIN}</Box>
+                  <Box sx={{ fontSize: [0, 1], fontWeight: "body", opacity: 0.5 }}>
+                    {COLLATERAL_COIN}
+                  </Box>
                 </th>
                 <th>
                   Debt
@@ -307,8 +296,8 @@ export const RiskyTroves: React.FC<RiskyTrovesProps> = ({ pageSize }) => {
                               collateralRatio.gt(CRITICAL_COLLATERAL_RATIO)
                                 ? "success"
                                 : collateralRatio.gt(1.2)
-                                  ? "warning"
-                                  : "danger"
+                                ? "warning"
+                                : "danger"
                             }
                           >
                             {new Percent(collateralRatio).prettify()}
@@ -322,11 +311,12 @@ export const RiskyTroves: React.FC<RiskyTrovesProps> = ({ pageSize }) => {
                           requires={[
                             recoveryMode
                               ? liquidatableInRecoveryMode(
-                                trove,
-                                price,
-                                totalCollateralRatio,
-                                hchfInStabilityPool
-                              )
+                                  trove,
+                                  price,
+                                  totalCollateralRatio,
+                                  hchfInStabilityPool,
+                                  MINIMUM_COLLATERAL_RATIO
+                                )
                               : liquidatableInNormalMode(trove, price)
                           ]}
                           send={liquity.send.liquidate.bind(liquity.send, trove.ownerAddress)}

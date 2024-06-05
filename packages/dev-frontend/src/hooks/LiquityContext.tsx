@@ -1,13 +1,16 @@
-import React, { createContext, useContext, useMemo } from "react";
+import React, { ReactNode, createContext, useContext, useEffect, useMemo, useState } from "react";
 import { useDeployment } from "../hooks/deployments";
 import {
   ConsentableLiquity,
+  Decimal,
   Deployment,
   DeploymentAddressesKey,
   HLiquityStore,
+  LiquityConstants,
   PopulatableLiquity,
   ReadableLiquity,
-  SendableLiquity
+  SendableLiquity,
+  staticConstants
 } from "@liquity/lib-base";
 import { HederaChain, getChainFromId } from "../configuration/chains";
 import {
@@ -32,8 +35,8 @@ import { AppError } from "../components/AppError";
 export type LiquityContextValue = {
   liquity: ReadableLiquity &
     ConsentableLiquity & {
-      send: SendableLiquity,
-      populate: PopulatableLiquity,
+      send: SendableLiquity;
+      populate: PopulatableLiquity;
       connection: {
         addresses: Record<DeploymentAddressesKey, `0x${string}`>;
         version: string;
@@ -42,6 +45,7 @@ export type LiquityContextValue = {
       };
     };
   store: HLiquityStore;
+  constants: LiquityConstants | null;
   /** @deprecated use `const { addressDisplayText } = useMultiWallet()` instead */
   account: string;
 };
@@ -57,6 +61,7 @@ interface HashgraphLiquityProviderProps {
   deployment: Deployment;
   chain: HederaChain;
 }
+
 const HashgraphLiquityProvider: React.FC<HashgraphLiquityProviderProps> = ({
   children,
   deployment,
@@ -85,12 +90,18 @@ const HashgraphLiquityProvider: React.FC<HashgraphLiquityProviderProps> = ({
     return hashgraphLiquity;
   }, [deployment, chain, hashConnectSessionData, hashConnect]);
 
+  const [constants, setConstants] = useState<LiquityConstants | null>(null);
+  useEffect(() => {
+    liquity.getConstants().then(constants => setConstants(constants));
+  }, [liquity]);
+
   return (
     <LiquityContext.Provider
       value={{
         account: hashConnectSessionData.userAccountEvmAddress,
         liquity,
-        store: liquity
+        store: liquity,
+        constants
       }}
     >
       {children}
@@ -136,8 +147,15 @@ const EthersLiquityProvider: React.FC<EthersLiquityProviderProps> = ({
     return liquity;
   }, [provider, signer, userAddress, chain, deployment]);
 
+  const [constants, setConstants] = useState<LiquityConstants | null>(null);
+  useEffect(() => {
+    liquity.getConstants().then(constants => setConstants(constants));
+  }, [liquity]);
+
   return (
-    <LiquityContext.Provider value={{ account: userAddress, store: liquity.store, liquity }}>
+    <LiquityContext.Provider
+      value={{ account: userAddress, store: liquity.store, liquity, constants }}
+    >
       {children}
     </LiquityContext.Provider>
   );
@@ -240,4 +258,26 @@ export const useLiquity = () => {
   }
 
   return liquityContext;
+};
+
+export const LiquityConstantsLoader: React.FC<{ loader: ReactNode }> = props => {
+  const liquityContext = useLiquity();
+
+  if (!liquityContext.constants) {
+    return <>{props.loader}</>;
+  }
+
+  return <>{props.children}</>;
+};
+
+export const useLiquityConstants = () => {
+  const liquityContext = useLiquity();
+
+  if (!liquityContext.constants) {
+    throw new Error(
+      "liquity constants haven't been loaded yet. double-check that you have a <LiquityConstantsLoader> as an ancestor of the component you use useLiquityConstants() in."
+    );
+  }
+
+  return liquityContext.constants;
 };

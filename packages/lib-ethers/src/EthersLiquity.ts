@@ -24,7 +24,9 @@ import {
   TroveWithPendingRedistribution,
   UserTrove,
   ConsentableLiquity,
-  Address
+  Address,
+  LiquityConstants,
+  staticConstants
 } from "@liquity/lib-base";
 import { TokenId } from "@hashgraph/sdk";
 
@@ -870,6 +872,30 @@ export class EthersLiquity
     if (this.hasStore()) {
       await this.store.refresh();
     }
+  }
+
+  async getConstants(): Promise<LiquityConstants> {
+    const { borrowerOperations } = _getContracts(this._readable.connection);
+
+    const [minNetDebtResult, liquidationReserveResult] = await Promise.all([
+      borrowerOperations.MIN_NET_DEBT(),
+      borrowerOperations.HCHF_GAS_COMPENSATION()
+    ]);
+
+    const HCHF_MINIMUM_NET_DEBT = Decimal.fromBigNumberString(minNetDebtResult.toString());
+    const HCHF_LIQUIDATION_RESERVE = Decimal.fromBigNumberString(
+      liquidationReserveResult.toString()
+    );
+    const HCHF_MINIMUM_DEBT = HCHF_MINIMUM_NET_DEBT.add(HCHF_LIQUIDATION_RESERVE);
+
+    const constants: LiquityConstants = {
+      ...staticConstants,
+      HCHF_LIQUIDATION_RESERVE,
+      HCHF_MINIMUM_DEBT,
+      HCHF_MINIMUM_NET_DEBT
+    };
+
+    return constants;
   }
 }
 

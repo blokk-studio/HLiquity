@@ -1,25 +1,19 @@
 import {
   Decimal,
-  HCHF_MINIMUM_DEBT,
-  HCHF_MINIMUM_NET_DEBT,
   Trove,
   TroveAdjustmentParams,
   TroveChange,
   Percent,
-  MINIMUM_COLLATERAL_RATIO,
-  CRITICAL_COLLATERAL_RATIO,
   LiquityStoreState,
   TroveClosureParams,
-  TroveCreationParams
+  TroveCreationParams,
+  LiquityConstants
 } from "@liquity/lib-base";
 
 import { COIN, COLLATERAL_COIN } from "../../../strings";
 
 import { ActionDescription, Amount } from "../../ActionDescription";
 import { ErrorDescription } from "../../ErrorDescription";
-
-const mcrPercent = new Percent(MINIMUM_COLLATERAL_RATIO).toString(0);
-const ccrPercent = new Percent(CRITICAL_COLLATERAL_RATIO).toString(0);
 
 type TroveAdjustmentDescriptionParams = {
   params: TroveAdjustmentParams<Decimal>;
@@ -29,7 +23,11 @@ const TroveChangeDescription: React.FC<TroveAdjustmentDescriptionParams> = ({ pa
   <ActionDescription>
     {params.depositCollateral && params.borrowHCHF ? (
       <>
-        You will deposit <Amount>{params.depositCollateral.prettify()} {COLLATERAL_COIN}</Amount> and receive{" "}
+        You will deposit{" "}
+        <Amount>
+          {params.depositCollateral.prettify()} {COLLATERAL_COIN}
+        </Amount>{" "}
+        and receive{" "}
         <Amount>
           {params.borrowHCHF.prettify()} {COIN}
         </Amount>
@@ -40,29 +38,46 @@ const TroveChangeDescription: React.FC<TroveAdjustmentDescriptionParams> = ({ pa
         <Amount>
           {params.repayHCHF.prettify()} {COIN}
         </Amount>{" "}
-        and receive <Amount>{params.withdrawCollateral.prettify()} {COLLATERAL_COIN}</Amount>
+        and receive{" "}
+        <Amount>
+          {params.withdrawCollateral.prettify()} {COLLATERAL_COIN}
+        </Amount>
       </>
     ) : params.depositCollateral && params.repayHCHF ? (
       <>
-        You will deposit <Amount>{params.depositCollateral.prettify()} {COLLATERAL_COIN}</Amount> and pay{" "}
+        You will deposit{" "}
+        <Amount>
+          {params.depositCollateral.prettify()} {COLLATERAL_COIN}
+        </Amount>{" "}
+        and pay{" "}
         <Amount>
           {params.repayHCHF.prettify()} {COIN}
         </Amount>
       </>
     ) : params.borrowHCHF && params.withdrawCollateral ? (
       <>
-        You will receive <Amount>{params.withdrawCollateral.prettify()} {COLLATERAL_COIN}</Amount> and{" "}
+        You will receive{" "}
+        <Amount>
+          {params.withdrawCollateral.prettify()} {COLLATERAL_COIN}
+        </Amount>{" "}
+        and{" "}
         <Amount>
           {params.borrowHCHF.prettify()} {COIN}
         </Amount>
       </>
     ) : params.depositCollateral ? (
       <>
-        You will deposit <Amount>{params.depositCollateral.prettify()} {COLLATERAL_COIN}</Amount>
+        You will deposit{" "}
+        <Amount>
+          {params.depositCollateral.prettify()} {COLLATERAL_COIN}
+        </Amount>
       </>
     ) : params.withdrawCollateral ? (
       <>
-        You will receive <Amount>{params.withdrawCollateral.prettify()} {COLLATERAL_COIN}</Amount>
+        You will receive{" "}
+        <Amount>
+          {params.withdrawCollateral.prettify()} {COLLATERAL_COIN}
+        </Amount>
       </>
     ) : params.borrowHCHF ? (
       <>
@@ -104,7 +119,14 @@ export const validateTroveChange = (
   originalTrove: Trove,
   adjustedTrove: Trove,
   borrowingRate: Decimal,
-  selectedState: TroveChangeValidationSelectedState
+  selectedState: TroveChangeValidationSelectedState,
+  constants: Pick<
+    LiquityConstants,
+    | "HCHF_MINIMUM_DEBT"
+    | "HCHF_MINIMUM_NET_DEBT"
+    | "MINIMUM_COLLATERAL_RATIO"
+    | "CRITICAL_COLLATERAL_RATIO"
+  >
 ): [
   validChange: Exclude<TroveChange<Decimal>, { type: "invalidCreation" }> | undefined,
   description: JSX.Element | undefined
@@ -140,7 +162,7 @@ export const validateTroveChange = (
       <ErrorDescription>
         Total debt must be at least{" "}
         <Amount>
-          {HCHF_MINIMUM_DEBT.toString()} {COIN}
+          {constants.HCHF_MINIMUM_DEBT.toString()} {COIN}
         </Amount>
         .
       </ErrorDescription>
@@ -149,10 +171,10 @@ export const validateTroveChange = (
 
   const errorDescription =
     change.type === "creation"
-      ? validateTroveCreation(change.params, context)
+      ? validateTroveCreation(change.params, context, constants)
       : change.type === "closure"
-      ? validateTroveClosure(change.params, context)
-      : validateTroveAdjustment(change.params, context);
+      ? validateTroveClosure(change.params, context, constants)
+      : validateTroveAdjustment(change.params, context, constants);
 
   if (errorDescription) {
     return [undefined, errorDescription];
@@ -169,19 +191,26 @@ const validateTroveCreation = (
     wouldTriggerRecoveryMode,
     accountBalance,
     price
-  }: TroveChangeValidationContext
+  }: TroveChangeValidationContext,
+  constants: Pick<
+    LiquityConstants,
+    "HCHF_MINIMUM_NET_DEBT" | "MINIMUM_COLLATERAL_RATIO" | "CRITICAL_COLLATERAL_RATIO"
+  >
 ): JSX.Element | null => {
-  if (borrowHCHF.lt(HCHF_MINIMUM_NET_DEBT)) {
+  if (borrowHCHF.lt(constants.HCHF_MINIMUM_NET_DEBT)) {
     return (
       <ErrorDescription>
         You must borrow at least{" "}
         <Amount>
-          {HCHF_MINIMUM_NET_DEBT.toString()} {COIN}
+          {constants.HCHF_MINIMUM_NET_DEBT.toString()} {COIN}
         </Amount>
         .
       </ErrorDescription>
     );
   }
+
+  const mcrPercent = new Percent(constants.MINIMUM_COLLATERAL_RATIO).toString(0);
+  const ccrPercent = new Percent(constants.CRITICAL_COLLATERAL_RATIO).toString(0);
 
   if (recoveryMode) {
     if (!resultingTrove.isOpenableInRecoveryMode(price)) {
@@ -215,7 +244,10 @@ const validateTroveCreation = (
     return (
       <ErrorDescription>
         The amount you're trying to deposit exceeds your balance by{" "}
-        <Amount>{depositCollateral.sub(accountBalance).prettify()} {COLLATERAL_COIN}</Amount>.
+        <Amount>
+          {depositCollateral.sub(accountBalance).prettify()} {COLLATERAL_COIN}
+        </Amount>
+        .
       </ErrorDescription>
     );
   }
@@ -233,8 +265,15 @@ const validateTroveAdjustment = (
     price,
     accountBalance,
     hchfBalance
-  }: TroveChangeValidationContext
+  }: TroveChangeValidationContext,
+  constants: Pick<
+    LiquityConstants,
+    "HCHF_MINIMUM_DEBT" | "MINIMUM_COLLATERAL_RATIO" | "CRITICAL_COLLATERAL_RATIO"
+  >
 ): JSX.Element | null => {
+  const mcrPercent = new Percent(constants.MINIMUM_COLLATERAL_RATIO).toString(0);
+  const ccrPercent = new Percent(constants.CRITICAL_COLLATERAL_RATIO).toString(0);
+
   if (recoveryMode) {
     if (withdrawCollateral) {
       return (
@@ -282,12 +321,12 @@ const validateTroveAdjustment = (
   }
 
   if (repayHCHF) {
-    if (resultingTrove.debt.lt(HCHF_MINIMUM_DEBT)) {
+    if (resultingTrove.debt.lt(constants.HCHF_MINIMUM_DEBT)) {
       return (
         <ErrorDescription>
           Total debt must be at least{" "}
           <Amount>
-            {HCHF_MINIMUM_DEBT.toString()} {COIN}
+            {constants.HCHF_MINIMUM_DEBT.toString()} {COIN}
           </Amount>
           .
         </ErrorDescription>
@@ -311,7 +350,10 @@ const validateTroveAdjustment = (
     return (
       <ErrorDescription>
         The amount you're trying to deposit exceeds your balance by{" "}
-        <Amount>{depositCollateral.sub(accountBalance).prettify()} {COLLATERAL_COIN}</Amount>.
+        <Amount>
+          {depositCollateral.sub(accountBalance).prettify()} {COLLATERAL_COIN}
+        </Amount>
+        .
       </ErrorDescription>
     );
   }
@@ -326,8 +368,11 @@ const validateTroveClosure = (
     wouldTriggerRecoveryMode,
     numberOfTroves,
     hchfBalance
-  }: TroveChangeValidationContext
+  }: TroveChangeValidationContext,
+  constants: Pick<LiquityConstants, "CRITICAL_COLLATERAL_RATIO">
 ): JSX.Element | null => {
+  const ccrPercent = new Percent(constants.CRITICAL_COLLATERAL_RATIO).toString(0);
+
   if (numberOfTroves === 1) {
     return (
       <ErrorDescription>

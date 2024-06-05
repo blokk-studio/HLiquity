@@ -3,8 +3,7 @@ import assert from "assert";
 import { BigNumber, BigNumberish } from "@ethersproject/bignumber";
 import { AddressZero } from "@ethersproject/constants";
 import { Log } from "@ethersproject/abstract-provider";
-import { Contract, ethers } from "ethers";
-import { TransactionResponse } from "@ethersproject/abstract-provider";
+import { ethers } from "ethers";
 
 import {
   CollateralGainTransferDetails,
@@ -12,7 +11,6 @@ import {
   Decimalish,
   LiquidationDetails,
   LiquityReceipt,
-  HCHF_MINIMUM_NET_DEBT,
   MinedReceipt,
   PopulatableLiquity,
   PopulatedLiquityTransaction,
@@ -857,6 +855,14 @@ export class PopulatableEthersLiquity
     );
   }
 
+  async getMinimumNetDebt() {
+    const { borrowerOperations } = _getContracts(this._readable.connection);
+    const minNetDebtResult = await borrowerOperations.MIN_NET_DEBT();
+    const minimumNetDebt = Decimal.fromBigNumberString(minNetDebtResult.toString());
+
+    return minimumNetDebt;
+  }
+
   /** {@inheritDoc @liquity/lib-base#PopulatableLiquity.redeemHCHF} */
   async redeemHCHF(
     amount: Decimalish,
@@ -876,7 +882,7 @@ export class PopulatableEthersLiquity
 
     if (truncatedAmount.isZero) {
       throw new Error(
-        `redeemHCHF: amount too low to redeem (try at least ${HCHF_MINIMUM_NET_DEBT})`
+        `redeemHCHF: amount too low to redeem (try at least ${await this.getMinimumNetDebt()})`
       );
     }
 
@@ -897,8 +903,8 @@ export class PopulatableEthersLiquity
           ? Decimal.from(maxRedemptionRate)
           : defaultMaxRedemptionRate(truncatedAmount);
 
-      return new PopulatedEthersRedemption(
-        await troveManager.estimateAndPopulate.redeemCollateral(
+      const [populatedTransaction, minimumNetDebt] = await Promise.all([
+        troveManager.estimateAndPopulate.redeemCollateral(
           { gasLimit: 3000000 },
           addGasForPotentialLastFeeOperationTimeUpdate,
           truncatedAmount.hex,
@@ -907,7 +913,11 @@ export class PopulatableEthersLiquity
           _redeemMaxIterations,
           maxRedemptionRateOrDefault.hex
         ),
+        this.getMinimumNetDebt()
+      ]);
 
+      return new PopulatedEthersRedemption(
+        populatedTransaction,
         this._readable.connection,
         attemptedHCHFAmount,
         truncatedAmount,
@@ -915,7 +925,7 @@ export class PopulatableEthersLiquity
         truncatedAmount.lt(attemptedHCHFAmount)
           ? newMaxRedemptionRate =>
               populateRedemption(
-                truncatedAmount.add(HCHF_MINIMUM_NET_DEBT),
+                truncatedAmount.add(minimumNetDebt),
                 newMaxRedemptionRate ?? maxRedemptionRate
               )
           : undefined

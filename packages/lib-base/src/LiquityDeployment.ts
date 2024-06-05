@@ -1,5 +1,7 @@
 import { Address } from "./Address";
 
+// TODO: remove unitoken from addressese & hchf + hlqt token addresses from deployment string. they should all be loaded from the contracts.
+
 export type DeploymentAddressesKey =
   | "activePool"
   | "borrowerOperations"
@@ -19,7 +21,8 @@ export type DeploymentAddressesKey =
   | "gasPool"
   | "saucerSwapPool"
   | "pythCaller"
-  | "supraCaller";
+  | "supraCaller"
+  | "uniToken";
 
 export const getDeployment = (deploymentDefinition: DeploymentDefinition): Deployment => {
   const deploymentDate = new Date(deploymentDefinition.deploymentDate * 1000);

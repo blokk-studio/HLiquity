@@ -1,13 +1,7 @@
 import assert from "assert";
 
 import { Decimal, Decimalish } from "./Decimal";
-
-import {
-  MINIMUM_COLLATERAL_RATIO,
-  CRITICAL_COLLATERAL_RATIO,
-  HCHF_LIQUIDATION_RESERVE,
-  MINIMUM_BORROWING_RATE
-} from "./constants";
+import { LiquityConstants } from "./LiquityConstants";
 
 /** @internal */ export type _CollateralDeposit<T> = { depositCollateral: T };
 /** @internal */ export type _CollateralWithdrawal<T> = { withdrawCollateral: T };
@@ -413,10 +407,13 @@ export class Trove {
   /** Amount of HCHF owed. */
   readonly debt: Decimal;
 
+  protected readonly constants: LiquityConstants;
+
   /** @internal */
-  constructor(collateral = Decimal.ZERO, debt = Decimal.ZERO) {
+  constructor(constants: LiquityConstants, collateral = Decimal.ZERO, debt = Decimal.ZERO) {
     this.collateral = collateral;
     this.debt = debt;
+    this.constants = constants;
   }
 
   get isEmpty(): boolean {
@@ -430,11 +427,13 @@ export class Trove {
    * This doesn't include the liquidation reserve, which is refunded in case of normal closure.
    */
   get netDebt(): Decimal {
-    if (this.debt.lt(HCHF_LIQUIDATION_RESERVE)) {
-      throw new Error(`netDebt should not be used when debt < ${HCHF_LIQUIDATION_RESERVE}`);
+    if (this.debt.lt(this.constants.HCHF_LIQUIDATION_RESERVE)) {
+      throw new Error(
+        `netDebt should not be used when debt < ${this.constants.HCHF_LIQUIDATION_RESERVE}`
+      );
     }
 
-    return this.debt.sub(HCHF_LIQUIDATION_RESERVE);
+    return this.debt.sub(this.constants.HCHF_LIQUIDATION_RESERVE);
   }
 
   /** @internal */
@@ -452,14 +451,14 @@ export class Trove {
    *
    * @returns
    * `true` if the Trove's collateralization ratio is less than the
-   * {@link MINIMUM_COLLATERAL_RATIO}.
+   * {@link this.constants.MINIMUM_COLLATERAL_RATIO}.
    */
   collateralRatioIsBelowMinimum(price: Decimalish): boolean {
-    return this.collateralRatio(price).lt(MINIMUM_COLLATERAL_RATIO);
+    return this.collateralRatio(price).lt(this.constants.MINIMUM_COLLATERAL_RATIO);
   }
 
   /**
-   * Whether the collateralization ratio is less than the {@link CRITICAL_COLLATERAL_RATIO} at a
+   * Whether the collateralization ratio is less than the {@link this.constants.CRITICAL_COLLATERAL_RATIO} at a
    * given price.
    *
    * @example
@@ -476,12 +475,12 @@ export class Trove {
    * ```
    */
   collateralRatioIsBelowCritical(price: Decimalish): boolean {
-    return this.collateralRatio(price).lt(CRITICAL_COLLATERAL_RATIO);
+    return this.collateralRatio(price).lt(this.constants.CRITICAL_COLLATERAL_RATIO);
   }
 
   /** Whether the Trove is sufficiently collateralized to be opened during recovery mode. */
   isOpenableInRecoveryMode(price: Decimalish): boolean {
-    return this.collateralRatio(price).gte(CRITICAL_COLLATERAL_RATIO);
+    return this.collateralRatio(price).gte(this.constants.CRITICAL_COLLATERAL_RATIO);
   }
 
   /** @internal */
@@ -494,21 +493,22 @@ export class Trove {
   }
 
   add(that: Trove): Trove {
-    return new Trove(this.collateral.add(that.collateral), this.debt.add(that.debt));
+    return new Trove(this.constants, this.collateral.add(that.collateral), this.debt.add(that.debt));
   }
 
   addCollateral(collateral: Decimalish): Trove {
-    return new Trove(this.collateral.add(collateral), this.debt);
+    return new Trove(this.constants, this.collateral.add(collateral), this.debt);
   }
 
   addDebt(debt: Decimalish): Trove {
-    return new Trove(this.collateral, this.debt.add(debt));
+    return new Trove(this.constants, this.collateral, this.debt.add(debt));
   }
 
   subtract(that: Trove): Trove {
     const { collateral, debt } = that;
 
     return new Trove(
+      this.constants,
       this.collateral.gt(collateral) ? this.collateral.sub(collateral) : Decimal.ZERO,
       this.debt.gt(debt) ? this.debt.sub(debt) : Decimal.ZERO
     );
@@ -516,25 +516,30 @@ export class Trove {
 
   subtractCollateral(collateral: Decimalish): Trove {
     return new Trove(
+      this.constants,
       this.collateral.gt(collateral) ? this.collateral.sub(collateral) : Decimal.ZERO,
       this.debt
     );
   }
 
   subtractDebt(debt: Decimalish): Trove {
-    return new Trove(this.collateral, this.debt.gt(debt) ? this.debt.sub(debt) : Decimal.ZERO);
+    return new Trove(
+      this.constants,
+      this.collateral,
+      this.debt.gt(debt) ? this.debt.sub(debt) : Decimal.ZERO
+    );
   }
 
   multiply(multiplier: Decimalish): Trove {
-    return new Trove(this.collateral.mul(multiplier), this.debt.mul(multiplier));
+    return new Trove(this.constants, this.collateral.mul(multiplier), this.debt.mul(multiplier));
   }
 
   setCollateral(collateral: Decimalish): Trove {
-    return new Trove(Decimal.from(collateral), this.debt);
+    return new Trove(this.constants, Decimal.from(collateral), this.debt);
   }
 
   setDebt(debt: Decimalish): Trove {
-    return new Trove(this.collateral, Decimal.from(debt));
+    return new Trove(this.constants, this.collateral, Decimal.from(debt));
   }
 
   private _debtChange({ debt }: Trove, borrowingRate: Decimalish): _DebtChange<Decimal> {
@@ -560,14 +565,14 @@ export class Trove {
    */
   whatChanged(
     that: Trove,
-    borrowingRate: Decimalish = MINIMUM_BORROWING_RATE
+    borrowingRate: Decimalish = this.constants.MINIMUM_BORROWING_RATE
   ): TroveChange<Decimal> | undefined {
     if (this.collateral.eq(that.collateral) && this.debt.eq(that.debt)) {
       return undefined;
     }
 
     if (this.isEmpty) {
-      if (that.debt.lt(HCHF_LIQUIDATION_RESERVE)) {
+      if (that.debt.lt(this.constants.HCHF_LIQUIDATION_RESERVE)) {
         return invalidTroveCreation(that, "missingLiquidationReserve");
       }
 
@@ -606,7 +611,7 @@ export class Trove {
    */
   apply(
     change: TroveChange<Decimal> | undefined,
-    borrowingRate: Decimalish = MINIMUM_BORROWING_RATE
+    borrowingRate: Decimalish = this.constants.MINIMUM_BORROWING_RATE
   ): Trove {
     if (!change) {
       return this;
@@ -628,8 +633,9 @@ export class Trove {
         const { depositCollateral, borrowHCHF } = change.params;
 
         return new Trove(
+          this.constants,
           depositCollateral,
-          HCHF_LIQUIDATION_RESERVE.add(applyFee(borrowingRate, borrowHCHF))
+          this.constants.HCHF_LIQUIDATION_RESERVE.add(applyFee(borrowingRate, borrowHCHF))
         );
       }
 
@@ -657,8 +663,8 @@ export class Trove {
           ? this.setDebt(Decimal.ZERO)
               .addCollateral(collateralIncrease)
               .subtractCollateral(collateralDecrease)
-          : this.add(new Trove(collateralIncrease, debtIncrease)).subtract(
-              new Trove(collateralDecrease, debtDecrease)
+          : this.add(new Trove(this.constants, collateralIncrease, debtIncrease)).subtract(
+              new Trove(this.constants, collateralDecrease, debtDecrease)
             );
       }
     }
@@ -670,8 +676,12 @@ export class Trove {
    * @param params - Parameters of the transaction.
    * @param borrowingRate - Borrowing rate to use when calculating the Trove's debt.
    */
-  static create(params: TroveCreationParams<Decimalish>, borrowingRate?: Decimalish): Trove {
-    return _emptyTrove.apply(troveCreation(_normalizeTroveCreation(params)), borrowingRate);
+  static create(
+    constants: LiquityConstants,
+    params: TroveCreationParams<Decimalish>,
+    borrowingRate?: Decimalish
+  ): Trove {
+    return new Trove(constants).apply(troveCreation(_normalizeTroveCreation(params)), borrowingRate);
   }
 
   /**
@@ -681,8 +691,12 @@ export class Trove {
    * @param that - The Trove to recreate.
    * @param borrowingRate - Current borrowing rate.
    */
-  static recreate(that: Trove, borrowingRate?: Decimalish): TroveCreationParams<Decimal> {
-    const change = _emptyTrove.whatChanged(that, borrowingRate);
+  static recreate(
+    constants: LiquityConstants,
+    that: Trove,
+    borrowingRate?: Decimalish
+  ): TroveCreationParams<Decimal> {
+    const change = new Trove(constants).whatChanged(that, borrowingRate);
     assert(change?.type === "creation");
     return change.params;
   }
@@ -711,9 +725,6 @@ export class Trove {
     return change.params;
   }
 }
-
-/** @internal */
-export const _emptyTrove = new Trove();
 
 /**
  * Represents whether a UserTrove is open or not, or why it was closed.
@@ -748,8 +759,14 @@ export class UserTrove extends Trove {
   readonly status: UserTroveStatus;
 
   /** @internal */
-  constructor(ownerAddress: string, status: UserTroveStatus, collateral?: Decimal, debt?: Decimal) {
-    super(collateral, debt);
+  constructor(
+    constants: LiquityConstants,
+    ownerAddress: string,
+    status: UserTroveStatus,
+    collateral?: Decimal,
+    debt?: Decimal
+  ) {
+    super(constants, collateral, debt);
 
     this.ownerAddress = ownerAddress;
     this.status = status;
@@ -788,14 +805,15 @@ export class TroveWithPendingRedistribution extends UserTrove {
 
   /** @internal */
   constructor(
+    constants: LiquityConstants,
     ownerAddress: string,
     status: UserTroveStatus,
     collateral?: Decimal,
     debt?: Decimal,
     stake = Decimal.ZERO,
-    snapshotOfTotalRedistributed = _emptyTrove
+    snapshotOfTotalRedistributed = new Trove(constants)
   ) {
-    super(ownerAddress, status, collateral, debt);
+    super(constants, ownerAddress, status, collateral, debt);
 
     this.stake = stake;
     this.snapshotOfTotalRedistributed = snapshotOfTotalRedistributed;
@@ -807,6 +825,7 @@ export class TroveWithPendingRedistribution extends UserTrove {
     );
 
     return new UserTrove(
+      this.constants,
       this.ownerAddress,
       this.status,
       afterRedistribution.collateral,

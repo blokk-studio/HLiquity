@@ -1,4 +1,3 @@
-export * from "./src/constants";
 export * from "./src/Decimal";
 export * from "./src/Trove";
 export * from "./src/StabilityDeposit";
@@ -14,3 +13,4 @@ export * from "./src/_CachedReadableLiquity";
 export * from "./src/ConsentableLiquity";
 export * from "./src/LiquityDeployment";
 export * from "./src/Address";
+export * from "./src/LiquityConstants";

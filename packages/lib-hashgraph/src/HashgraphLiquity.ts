@@ -13,6 +13,7 @@ import {
   HLQTStake,
   HLiquityStore,
   LiquidationDetails,
+  LiquityConstants,
   LiquityStoreBaseState,
   LiquityStoreState,
   MINUTE_DECAY_FACTOR,
@@ -36,6 +37,7 @@ import {
   UserTrove,
   _normalizeTroveAdjustment,
   _normalizeTroveCreation,
+  staticConstants,
 } from '@liquity/lib-base'
 import { HashConnect } from 'hashconnect'
 import Web3, { Contract, MatchPrimitiveType } from 'web3'
@@ -2551,5 +2553,27 @@ export class HashgraphLiquity
     const receipt = await this.hashConnect.sendTransaction(this.userAccountId, unfrozenTransaction)
 
     await this.refresh()
+  }
+
+  async getConstants(): Promise<LiquityConstants> {
+    const [minNetDebtResult, liquidationReserveResult] = await Promise.all([
+      this.borrowerOperations.methods.MIN_NET_DEBT().call(),
+      this.borrowerOperations.methods.HCHF_GAS_COMPENSATION().call(),
+    ])
+
+    const HCHF_MINIMUM_NET_DEBT = Decimal.fromBigNumberString(minNetDebtResult.toString())
+    const HCHF_LIQUIDATION_RESERVE = Decimal.fromBigNumberString(
+      liquidationReserveResult.toString(),
+    )
+    const HCHF_MINIMUM_DEBT = HCHF_MINIMUM_NET_DEBT.add(HCHF_LIQUIDATION_RESERVE)
+
+    const constants: LiquityConstants = {
+      ...staticConstants,
+      HCHF_LIQUIDATION_RESERVE,
+      HCHF_MINIMUM_DEBT,
+      HCHF_MINIMUM_NET_DEBT,
+    }
+
+    return constants
   }
 }

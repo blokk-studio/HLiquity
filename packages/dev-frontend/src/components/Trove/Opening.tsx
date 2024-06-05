@@ -1,13 +1,6 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { Flex, Button, Box, Card, Heading, Spinner } from "theme-ui";
-import {
-  LiquityStoreState,
-  Decimal,
-  Trove,
-  HCHF_LIQUIDATION_RESERVE,
-  HCHF_MINIMUM_NET_DEBT,
-  Percent
-} from "@liquity/lib-base";
+import { LiquityStoreState, Decimal, Trove, Percent } from "@liquity/lib-base";
 import { useLiquitySelector } from "@liquity/lib-react";
 
 import { useStableTroveChange } from "../../hooks/useStableTroveChange";
@@ -27,7 +20,7 @@ import {
 } from "./validation/validateTroveChange";
 import { Step, Steps, getAssociationStepStatus } from "../Steps";
 import { useLoadingState } from "../../loading_state";
-import { useLiquity } from "../../hooks/LiquityContext";
+import { useLiquity, useLiquityConstants } from "../../hooks/LiquityContext";
 
 const selector = (state: LiquityStoreState) => {
   const { fees, price, accountBalance } = state;
@@ -48,6 +41,7 @@ export const Opening: React.FC = () => {
   const { fees, price, accountBalance, validationContext } = useLiquitySelector(selector);
   const borrowingRate = fees.borrowingRate();
   const editingState = useState<string>();
+  const { HCHF_LIQUIDATION_RESERVE, HCHF_MINIMUM_NET_DEBT } = useLiquityConstants();
 
   const [collateral, setCollateral] = useState<Decimal>(Decimal.ZERO);
   const [borrowAmount, setBorrowAmount] = useState<Decimal>(Decimal.ZERO);
@@ -94,7 +88,7 @@ export const Opening: React.FC = () => {
     if (!collateral.isZero && borrowAmount.isZero) {
       setBorrowAmount(HCHF_MINIMUM_NET_DEBT);
     }
-  }, [collateral, borrowAmount]);
+  }, [collateral, borrowAmount, HCHF_MINIMUM_NET_DEBT]);
 
   // consent & approval
   const { liquity } = useLiquity();
