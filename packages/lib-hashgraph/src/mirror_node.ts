@@ -33,7 +33,7 @@ export const fetchTokens = async (
     'accountId' in options ? options.accountId.toString() : options.evmAddress.replace(/^0x/, '')
 
   const response = await options.fetch(
-    `${options.apiBaseUrl}/accounts/${accountAddressUrlSegment}/tokens`,
+    `${options.apiBaseUrl}/accounts/${accountAddressUrlSegment}/tokens?token.id[]=0.0.6070123&token.id[]=0.0.6070128&token.id[]=0.0.6070469`,
     {
       method: 'GET',
       headers: {
