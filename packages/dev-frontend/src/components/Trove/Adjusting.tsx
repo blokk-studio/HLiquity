@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState, useRef } from "react";
-import { Flex, Button, Box, Card, Heading } from "theme-ui";
+import { Flex, Button, Box, Card, Heading, Switch, Label, Checkbox } from "theme-ui";
 import {
   LiquityStoreState,
   Decimal,
@@ -91,6 +91,7 @@ export const Adjusting: React.FC = () => {
   const previousTrove = useRef<Trove>(trove);
   const [collateral, setCollateral] = useState<Decimal>(trove.collateral);
   const [netDebt, setNetDebt] = useState<Decimal>(trove.netDebt);
+  const [auto, setAuto] = useState<boolean>(false);
 
   const transactionState = useMyTransactionState(TRANSACTION_ID);
   const borrowingRate = fees.borrowingRate();
@@ -113,7 +114,7 @@ export const Adjusting: React.FC = () => {
       setNetDebt(nextNetDebt);
     }
     previousTrove.current = trove;
-  }, [trove, collateral, netDebt]);
+  }, [trove, collateral, netDebt, auto]);
 
   const handleCancelPressed = useCallback(() => {
     dispatchEvent("CANCEL_ADJUST_TROVE_PRESSED");
@@ -207,6 +208,33 @@ export const Adjusting: React.FC = () => {
     status: isTransactionPending ? "pending" : "idle"
   });
 
+  const collateralHandler = (amount: string) => {
+    const newCol = Decimal.from(amount);
+    const collRat = newCol.mul(price).div(totalDebt);
+
+    if (auto && collRat.lt(Decimal.from(1.5))) {
+      const newNetDebt = newCol.mul(price).div(Decimal.from(1.5)).sub(HCHF_LIQUIDATION_RESERVE).sub(fee);
+
+      setNetDebt(newNetDebt.isZero ? Decimal.ZERO : newNetDebt);
+    }
+
+    setCollateral(newCol)
+  }
+
+  const netDebtHandler = (amount: string) => {
+    const newDebt = Decimal.from(amount)
+    const newTotalDebt = newDebt.add(HCHF_LIQUIDATION_RESERVE).add(fee)
+    const collRat = collateral.mul(price).div(newTotalDebt)
+
+    if (auto && collRat.lt(Decimal.from(1.5))) {
+      const newCol = newDebt.add(HCHF_LIQUIDATION_RESERVE).add(fee).mul(Decimal.from(1.5)).div(price)
+
+      setCollateral(newCol)
+    }
+
+    setNetDebt(newDebt)
+  }
+
   return (
     <Card>
       <Heading
@@ -239,7 +267,7 @@ export const Adjusting: React.FC = () => {
           editingState={editingState}
           unit={COLLATERAL_COIN}
           editedAmount={collateral.toString(2)}
-          setEditedAmount={(amount: string) => setCollateral(Decimal.from(amount))}
+          setEditedAmount={collateralHandler}
         />
 
         <EditableRow
@@ -249,8 +277,31 @@ export const Adjusting: React.FC = () => {
           unit={COIN}
           editingState={editingState}
           editedAmount={netDebt.toString(2)}
-          setEditedAmount={(amount: string) => setNetDebt(Decimal.from(amount))}
+          setEditedAmount={netDebtHandler}
         />
+
+        <Flex
+          sx={{
+            alignItems: 'center',
+            py: 0,
+            mb: 3,
+            mt: "-10px",
+            fontSize: 1
+          }}>
+          <Box>
+            <Checkbox id="switch-auto" checked={auto} onChange={(e) => setAuto(e.target.checked)}></Checkbox>
+          </Box>
+          <Label htmlFor="switch-auto" sx={{ flex: "0 0 auto", px: 0, cursor: "pointer", fontSize: 1, ml: 1 }}>
+            Adjust automatically
+          </Label>
+          <InfoIcon
+            tooltip={
+              <Card variant="tooltip" sx={{ width: "200px" }}>
+                Automatically adjusts HBAR/HCHF ratio to keep your CR above 150%.
+              </Card>
+            }
+          />
+        </Flex>
 
         <StaticRow
           label="Liquidation Reserve"
@@ -359,12 +410,12 @@ export const Adjusting: React.FC = () => {
               {stableTroveChange?.params.borrowHCHF
                 ? `Borrow ${stableTroveChange?.params.borrowHCHF.toString(2)} HCHF`
                 : stableTroveChange?.params.repayHCHF
-                ? `Repay ${stableTroveChange?.params.repayHCHF.toString(2)} HCHF`
-                : stableTroveChange?.params.depositCollateral
-                ? `Deposit ${stableTroveChange?.params.depositCollateral.toString(2)} HBAR`
-                : stableTroveChange?.params.withdrawCollateral
-                ? `Withdraw ${stableTroveChange?.params.withdrawCollateral.toString(2)} HBAR`
-                : "Adjust trove"}
+                  ? `Repay ${stableTroveChange?.params.repayHCHF.toString(2)} HCHF`
+                  : stableTroveChange?.params.depositCollateral
+                    ? `Deposit ${stableTroveChange?.params.depositCollateral.toString(2)} HBAR`
+                    : stableTroveChange?.params.withdrawCollateral
+                      ? `Withdraw ${stableTroveChange?.params.withdrawCollateral.toString(2)} HBAR`
+                      : "Adjust trove"}
             </TroveAction>
           ) : (
             <Button disabled>Confirm</Button>
