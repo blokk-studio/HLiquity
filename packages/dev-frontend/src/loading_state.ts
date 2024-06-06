@@ -36,7 +36,7 @@ export const useLoadingState = <Type>(
       setResult(null);
       setError(error);
 
-      if (isNoMatchingKeyError(error)) {
+      if (isNoMatchingKeyError(throwable)) {
         snackbar.addSnack(getNoMatchingKeyErrorSnack());
       }
     }

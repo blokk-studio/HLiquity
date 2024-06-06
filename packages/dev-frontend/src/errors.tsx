@@ -2,8 +2,17 @@ import { Snack } from "./components/Snackbar";
 
 export const isError = (throwable: unknown): throwable is Error => throwable instanceof Error;
 
-export const isNoMatchingKeyError = (error: Error) => {
-  return /no matching key/gi.test(error.message);
+export const isNoMatchingKeyError = (throwable: unknown) => {
+  if (isError(throwable)) {
+    return /no matching key/gi.test(throwable.message);
+  }
+
+  // now throws an empty error object `{}`
+  if (typeof throwable === "object" && throwable && !("message" in throwable)) {
+    return true;
+  }
+
+  return false;
 };
 
 export const getNoMatchingKeyErrorSnack = (): Snack => {

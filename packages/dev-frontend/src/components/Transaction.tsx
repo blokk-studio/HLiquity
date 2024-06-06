@@ -149,10 +149,7 @@ export const useTransactionFunction = (
       if (hasMessage(throwable) && throwable.message.includes("User denied transaction signature")) {
         setTransactionState({ type: "cancelled", id });
       } else {
-        console.error(throwable);
-        const error = isError(throwable) ? throwable : new Error(`${throwable}`);
-
-        if (isNoMatchingKeyError(error)) {
+        if (isNoMatchingKeyError(throwable)) {
           snackbar.addSnack(getNoMatchingKeyErrorSnack());
         }
 
@@ -165,7 +162,7 @@ export const useTransactionFunction = (
     }
 
     store.refresh();
-  }, [send, id, setTransactionState]);
+  }, [send, id, setTransactionState, snackbar, store]);
 
   return [sendTransaction, transactionState];
 };
