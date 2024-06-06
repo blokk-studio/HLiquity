@@ -20,7 +20,7 @@ import "./App.scss";
 import { HashConnectProvider, HashConnectLoader } from "./components/HashConnectProvider";
 import { LiquityStoreProvider } from "./components/LiquityStoreProvider";
 import { MultiWalletGatekeeper } from "./components/MultiWalletGatekeeper";
-import { SelectedChainProvider } from "./components/chain_context";
+import { SelectedChainProvider, useSelectedChain } from "./components/chain_context";
 import { MultiWalletProvider } from "./multi_wallet";
 import { AppErrorBoundary } from "./components/AppErrorBoundary";
 import { ComponentTree } from "./components/ComponentTree";
@@ -76,9 +76,13 @@ const UnsupportedNetworkFallback: React.FC<{ availableNetworks: Chain[] }> = ({
   );
 };
 
-const App = () => {
-  const chains = useHederaChains();
+const DefaultWagmiClientProvider: React.FC = ({ children }) => {
+  const selectedChain = useSelectedChain();
+  const hederaChains = useHederaChains();
   const { walletConnectProjectId } = useConfiguration();
+
+  const chainsOtherThanSelected = hederaChains.filter(chain => chain.id !== selectedChain.id);
+  const chains = [selectedChain, ...chainsOtherThanSelected];
 
   const client = createClient(
     getDefaultClient({
@@ -87,6 +91,13 @@ const App = () => {
       walletConnectProjectId
     })
   );
+
+  return <WagmiConfig client={client}>{children}</WagmiConfig>;
+};
+
+const App = () => {
+  const chains = useHederaChains();
+  const { walletConnectProjectId } = useConfiguration();
 
   return (
     <>
@@ -158,7 +169,7 @@ const App = () => {
             <AuthenticationProvider loginForm={<LoginForm />}>{children}</AuthenticationProvider>
           ),
           children => <SelectedChainProvider>{children}</SelectedChainProvider>,
-          children => <WagmiConfig client={client}>{children}</WagmiConfig>,
+          children => <DefaultWagmiClientProvider>{children}</DefaultWagmiClientProvider>,
           children => (
             <ConnectKitProvider options={{ hideBalance: true }}>{children}</ConnectKitProvider>
           ),
