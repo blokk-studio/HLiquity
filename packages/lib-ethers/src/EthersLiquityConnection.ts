@@ -18,7 +18,8 @@ import {
 } from "./contracts";
 
 import { _connectToMulticall, _Multicall } from "./_Multicall";
-import { Fetch } from "./fetch";
+import { Fetch } from "@liquity/mirror-node";
+import { TokenId } from "@hashgraph/sdk";
 
 const dev = devOrNull as _LiquityDeploymentJSON | null;
 
@@ -380,4 +381,24 @@ export const _connect = async (
   }
 
   return _connectByChainId(provider, signer, (await provider.getNetwork()).chainId, optionalParams);
+};
+
+export const getTokenIds = async (connection: EthersLiquityConnection) => {
+  const { hchfToken, hlqtToken, saucerSwapPool } = _getContracts(connection);
+
+  const [hchfTokenAddress, hlqtTokenAddress, lpTokenAddress] = await Promise.all([
+    hchfToken.tokenAddress(),
+    hlqtToken.tokenAddress(),
+    saucerSwapPool.uniToken()
+  ]);
+  const tokenAddresses = [hchfTokenAddress, hlqtTokenAddress, lpTokenAddress];
+  const [hchfTokenId, hlqtTokenId, lpTokenId] = tokenAddresses.map(tokenAddress =>
+    TokenId.fromSolidityAddress(tokenAddress)
+  );
+
+  return {
+    hchfTokenId,
+    hlqtTokenId,
+    lpTokenId
+  };
 };

@@ -2223,6 +2223,7 @@ __metadata:
   dependencies:
     "@hashgraph/sdk": 2.41.0
     "@liquity/lib-base": "workspace:^"
+    "@liquity/mirror-node": "workspace:^"
     "@typescript-eslint/eslint-plugin": ^7.6.0
     "@typescript-eslint/parser": ^7.6.0
     bignumber.js: 9.1.2
@@ -2270,6 +2271,20 @@ __metadata:
     typescript: ~4.1.0
   peerDependencies:
     "@liquity/lib-base": ^3.0.0
+  languageName: unknown
+  linkType: soft
+
+"@liquity/mirror-node@workspace:^, @liquity/mirror-node@workspace:packages/mirror-node":
+  version: 0.0.0-use.local
+  resolution: "@liquity/mirror-node@workspace:packages/mirror-node"
+  dependencies:
+    "@hashgraph/sdk": 2.41.0
+    "@typescript-eslint/eslint-plugin": ^7.6.0
+    "@typescript-eslint/parser": ^7.6.0
+    eslint: ^9.0.0
+    prettier: ^3.2.5
+    prettier-plugin-organize-imports: ^3.2.4
+    typescript: ^5.4.5
   languageName: unknown
   linkType: soft
 

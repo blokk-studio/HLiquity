@@ -1,8 +1,19 @@
-import { AccountId, TokenId } from '@hashgraph/sdk'
+import type { AccountId, TokenId } from '@hashgraph/sdk'
 import { Address } from '@liquity/lib-base'
-import { type Fetch } from './fetch'
 
-// there is a duplicate of this in lib-hashgraph because of bundling limitations
+export type Fetch = (
+  url: string,
+  requestInit?: {
+    headers?: Record<string, string>
+    mode?: 'cors'
+    method?: 'post' | 'get' | 'POST' | 'GET'
+  },
+) => Promise<{
+  status: number
+  ok: boolean
+  json: () => Promise<unknown>
+  text: () => Promise<string>
+}>
 
 type TokenIdString = `0.0.${number}`
 
@@ -15,12 +26,14 @@ interface HederaApiTokensData {
 }
 
 interface FetchTokensByTokenIdOptions {
+  tokenIds: TokenId[]
   apiBaseUrl: string
   accountId: AccountId
   fetch: Fetch
 }
 
 interface FetchTokensByEvmAddressOptions {
+  tokenIds: TokenId[]
   apiBaseUrl: string
   evmAddress: Address
   fetch: Fetch
@@ -32,8 +45,16 @@ export const fetchTokens = async (
   const accountAddressUrlSegment =
     'accountId' in options ? options.accountId.toString() : options.evmAddress.replace(/^0x/, '')
 
+  const tokenFilter = `?${options.tokenIds
+    .map((tokenId) => {
+      const tokenIdString = tokenId.toString()
+      const filter = `token.id[]=${tokenIdString}`
+
+      return filter
+    })
+    .join('&')}`
   const response = await options.fetch(
-    `${options.apiBaseUrl}/accounts/${accountAddressUrlSegment}/tokens?token.id[]=0.0.6070123&token.id[]=0.0.6070128&token.id[]=0.0.6070469`,
+    `${options.apiBaseUrl}/accounts/${accountAddressUrlSegment}/tokens${tokenFilter}`,
     {
       method: 'GET',
       headers: {

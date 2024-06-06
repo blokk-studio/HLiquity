@@ -36,7 +36,8 @@ import {
   _connect,
   _getContracts,
   _usingStore,
-  getConnectionWithBlockPolledStore
+  getConnectionWithBlockPolledStore,
+  getTokenIds
 } from "./EthersLiquityConnection";
 
 import {
@@ -53,8 +54,7 @@ import { SendableEthersLiquity } from "./SendableEthersLiquity";
 import { BlockPolledLiquityStore } from "./BlockPolledLiquityStore";
 import { approveSpender, associateWithToken, dissociateFromToken } from "./consentable";
 import { BigNumber } from "ethers";
-import { Fetch } from "./fetch";
-import { waitForTokenState } from "./mirror_node";
+import { Fetch, waitForTokenState } from "@liquity/mirror-node";
 
 /**
  * Thrown by {@link EthersLiquity} in case of transaction failure.
@@ -688,17 +688,20 @@ export class EthersLiquity
 
     return tokenAddress as Address;
   }
-
   async associateWithHchf(): Promise<void> {
     if (!this.connection.signer) {
       throw new Error("this.connection.signer is falsy! i cannot associate without a signer!");
     }
 
     const tokenAddress = await this.getHchfTokenAddress();
-    await associateWithToken({ signer: this.connection.signer, tokenAddress });
+    const [, tokenIds] = await Promise.all([
+      associateWithToken({ signer: this.connection.signer, tokenAddress }),
+      getTokenIds(this.connection)
+    ]);
 
     if (this.hasStore()) {
       await waitForTokenState({
+        tokenIds: Object.values(tokenIds),
         evmAddress: this.connection.userAddress as Address,
         apiBaseUrl: this.connection.mirrorNodeBaseUrl,
         fetch: this.connection.fetch,
@@ -714,10 +717,14 @@ export class EthersLiquity
     }
 
     const tokenAddress = await this.getHchfTokenAddress();
-    await dissociateFromToken({ signer: this.connection.signer, tokenAddress });
+    const [, tokenIds] = await Promise.all([
+      dissociateFromToken({ signer: this.connection.signer, tokenAddress }),
+      getTokenIds(this.connection)
+    ]);
 
     if (this.hasStore()) {
       await waitForTokenState({
+        tokenIds: Object.values(tokenIds),
         evmAddress: this.connection.userAddress as Address,
         apiBaseUrl: this.connection.mirrorNodeBaseUrl,
         fetch: this.connection.fetch,
@@ -756,10 +763,14 @@ export class EthersLiquity
     }
 
     const tokenAddress = await this.getHlqtTokenAddress();
-    await associateWithToken({ signer: this.connection.signer, tokenAddress });
+    const [, tokenIds] = await Promise.all([
+      associateWithToken({ signer: this.connection.signer, tokenAddress }),
+      getTokenIds(this.connection)
+    ]);
 
     if (this.hasStore()) {
       await waitForTokenState({
+        tokenIds: Object.values(tokenIds),
         evmAddress: this.connection.userAddress as Address,
         apiBaseUrl: this.connection.mirrorNodeBaseUrl,
         fetch: this.connection.fetch,
@@ -775,10 +786,14 @@ export class EthersLiquity
     }
 
     const tokenAddress = await this.getHlqtTokenAddress();
-    await dissociateFromToken({ signer: this.connection.signer, tokenAddress });
+    const [, tokenIds] = await Promise.all([
+      dissociateFromToken({ signer: this.connection.signer, tokenAddress }),
+      getTokenIds(this.connection)
+    ]);
 
     if (this.hasStore()) {
       await waitForTokenState({
+        tokenIds: Object.values(tokenIds),
         evmAddress: this.connection.userAddress as Address,
         apiBaseUrl: this.connection.mirrorNodeBaseUrl,
         fetch: this.connection.fetch,
@@ -817,10 +832,14 @@ export class EthersLiquity
     }
 
     const tokenAddress = await this.getLpTokenAddress();
-    await associateWithToken({ signer: this.connection.signer, tokenAddress });
+    const [, tokenIds] = await Promise.all([
+      associateWithToken({ signer: this.connection.signer, tokenAddress }),
+      getTokenIds(this.connection)
+    ]);
 
     if (this.hasStore()) {
       await waitForTokenState({
+        tokenIds: Object.values(tokenIds),
         evmAddress: this.connection.userAddress as Address,
         apiBaseUrl: this.connection.mirrorNodeBaseUrl,
         fetch: this.connection.fetch,
@@ -836,10 +855,14 @@ export class EthersLiquity
     }
 
     const tokenAddress = await this.getLpTokenAddress();
-    await dissociateFromToken({ signer: this.connection.signer, tokenAddress });
+    const [, tokenIds] = await Promise.all([
+      dissociateFromToken({ signer: this.connection.signer, tokenAddress }),
+      getTokenIds(this.connection)
+    ]);
 
     if (this.hasStore()) {
       await waitForTokenState({
+        tokenIds: Object.values(tokenIds),
         evmAddress: this.connection.userAddress as Address,
         apiBaseUrl: this.connection.mirrorNodeBaseUrl,
         fetch: this.connection.fetch,

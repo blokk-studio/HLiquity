@@ -16,11 +16,11 @@ import {
   EthersLiquityConnection,
   _getBlockTimestamp,
   _getContracts,
-  _getProvider
+  _getProvider,
+  getTokenIds
 } from "./EthersLiquityConnection";
 import { EthersCallOverrides, EthersProvider } from "./types";
-import { Fetch } from "./fetch";
-import { fetchTokens } from "./mirror_node";
+import { Fetch, fetchTokens } from "@liquity/mirror-node";
 import { TokenId } from "@hashgraph/sdk";
 
 /**
@@ -111,10 +111,12 @@ export class BlockPolledLiquityStore extends HLiquityStore<BlockPolledLiquitySto
   ): Promise<[baseState: LiquityStoreBaseState, extraState: BlockPolledLiquityStoreExtraState]> {
     const { userAddress, frontendTag } = this.connection;
     const { hchfToken, hlqtToken, saucerSwapPool } = _getContracts(this.connection);
+    const tokenIds = await getTokenIds(this.connection);
 
     const tokenAssociationsPromise = (async () => {
       const [tokens, hchfTokenAddress, hlqtTokenAddress, lpTokenAddress] = await Promise.all([
         fetchTokens({
+          tokenIds: Object.values(tokenIds),
           apiBaseUrl: this.mirrorNodeBaseUrl,
           evmAddress: userAddress as Address,
           fetch: this.fetch

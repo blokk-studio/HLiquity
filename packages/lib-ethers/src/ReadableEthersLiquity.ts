@@ -33,7 +33,7 @@ import {
 } from "./EthersLiquityConnection";
 
 import { BlockPolledLiquityStore } from "./BlockPolledLiquityStore";
-import { Fetch } from "./fetch";
+import { Fetch } from "@liquity/mirror-node";
 
 // TODO: these are constant in the contracts, so it doesn't make sense to make a call for them,
 // but to avoid having to update them here when we change them in the contracts, we could read

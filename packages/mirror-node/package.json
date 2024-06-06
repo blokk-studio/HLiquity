@@ -1,5 +1,5 @@
 {
-  "name": "@liquity/lib-hashgraph",
+  "name": "@liquity/mirror-node",
   "type": "module",
   "packageManager": "yarn@3.5.1",
   "devDependencies": {
@@ -11,13 +11,7 @@
     "typescript": "^5.4.5"
   },
   "dependencies": {
-    "@hashgraph/sdk": "2.41.0",
-    "@liquity/lib-base": "workspace:^",
-    "@liquity/mirror-node": "workspace:^",
-    "bignumber.js": "9.1.2",
-    "emittery": "^1.0.3",
-    "hashconnect": "^3.0.13",
-    "web3": "^4.8.0"
+    "@hashgraph/sdk": "2.41.0"
   },
   "exports": {
     "./package.json": "./package.json",

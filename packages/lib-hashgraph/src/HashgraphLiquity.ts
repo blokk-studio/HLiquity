@@ -53,6 +53,7 @@ import {
   Transaction,
   TransactionReceipt,
 } from '@hashgraph/sdk'
+import { Fetch, fetchTokens, waitForTokenState } from '@liquity/mirror-node'
 import { default as Emittery } from 'emittery'
 import { HashConnectSigner } from 'hashconnect/dist/signer'
 import { EventEmitter } from 'node:events'
@@ -81,7 +82,6 @@ import {
   getTypedContractId,
 } from './contract_functions'
 import { LiquityEvents } from './events'
-import { Fetch } from './fetch'
 import {
   gasForHLQTIssuance,
   gasForPotentialLastFeeOperationTimeUpdate,
@@ -90,7 +90,6 @@ import {
 } from './gas'
 import { generateTrials } from './hints'
 import { PrefixProperties } from './interface_collision'
-import { fetchTokens, waitForTokenState } from './mirror_node'
 import { asPopulatable } from './populatable'
 import { asSendable } from './sendable'
 import {
@@ -343,31 +342,44 @@ export class HashgraphLiquity
     this.connection = options.connection
   }
 
+  private async getTokenIds() {
+    const [hchfTokenAddress, hlqtTokenAddress, lpTokenAddress] = await Promise.all([
+      this.hchfToken.methods.tokenAddress().call(),
+      this.hlqtToken.methods.tokenAddress().call(),
+      this.saucerSwapPool.methods.uniToken().call(),
+    ])
+
+    const tokenAddresses = [hchfTokenAddress, hlqtTokenAddress, lpTokenAddress]
+    const [hchfTokenId, hlqtTokenId, lpTokenId] = tokenAddresses.map((tokenAddress) =>
+      TokenId.fromSolidityAddress(tokenAddress),
+    )
+
+    return {
+      hchfTokenId,
+      hlqtTokenId,
+      lpTokenId,
+    }
+  }
+
   private async fetchStoreValues(
     blockTag?: string | number,
   ): Promise<[baseState: LiquityStoreBaseState, extraState: HashgraphLiquityStoreState]> {
     const tokenAssociationsPromise = (async () => {
-      const [tokens, hchfTokenAddress, hlqtTokenAddress, lpTokenAddress] = await Promise.all([
-        fetchTokens({
-          apiBaseUrl: this.mirrorNodeBaseUrl,
-          accountId: this.userAccountId,
-          fetch: this.fetch,
-        }).catch(() => {
-          return [] as { id: `0.0.${number}` }[]
-        }),
-        this.hchfToken.methods.tokenAddress().call(),
-        this.hlqtToken.methods.tokenAddress().call(),
-        this.saucerSwapPool.methods.uniToken().call(),
-      ])
+      const tokenIds = Object.values(await this.getTokenIds())
+      const associatedTokens = await fetchTokens({
+        tokenIds,
+        apiBaseUrl: this.mirrorNodeBaseUrl,
+        accountId: this.userAccountId,
+        fetch: this.fetch,
+      }).catch(() => {
+        return [] as { id: `0.0.${number}` }[]
+      })
 
-      const tokenIdStringSet = new Set(tokens.map((token) => token.id))
+      const tokenIdStrings = tokenIds.map((tokenId) => tokenId.toString() as `0.0.${number}`)
+      const associatedTokenIdStringSet = new Set(associatedTokens.map((token) => token.id))
 
-      const tokenAddresses = [hchfTokenAddress, hlqtTokenAddress, lpTokenAddress]
-      const tokenIdStrings = tokenAddresses.map(
-        (tokenAddress) => TokenId.fromSolidityAddress(tokenAddress).toString() as `0.0.${number}`,
-      )
       const [userHasAssociatedWithHchf, userHasAssociatedWithHlqt, userHasAssociatedWithLpToken] =
-        tokenIdStrings.map((tokenIdString) => tokenIdStringSet.has(tokenIdString))
+        tokenIdStrings.map((tokenIdString) => associatedTokenIdStringSet.has(tokenIdString))
 
       return {
         userHasAssociatedWithHchf,
@@ -2384,9 +2396,13 @@ export class HashgraphLiquity
       accountId: this.userAccountId,
     })
 
-    const receipt = await this.hashConnect.sendTransaction(this.userAccountId, unfrozenTransaction)
+    const [, tokenIds] = await Promise.all([
+      this.hashConnect.sendTransaction(this.userAccountId, unfrozenTransaction),
+      this.getTokenIds(),
+    ])
 
     await waitForTokenState({
+      tokenIds: Object.values(tokenIds),
       accountId: this.userAccountId,
       apiBaseUrl: this.mirrorNodeBaseUrl,
       fetch: this.fetch,
@@ -2403,9 +2419,13 @@ export class HashgraphLiquity
       accountId: this.userAccountId,
     })
 
-    const receipt = await this.hashConnect.sendTransaction(this.userAccountId, unfrozenTransaction)
+    const [, tokenIds] = await Promise.all([
+      this.hashConnect.sendTransaction(this.userAccountId, unfrozenTransaction),
+      this.getTokenIds(),
+    ])
 
     await waitForTokenState({
+      tokenIds: Object.values(tokenIds),
       accountId: this.userAccountId,
       apiBaseUrl: this.mirrorNodeBaseUrl,
       fetch: this.fetch,
@@ -2422,9 +2442,13 @@ export class HashgraphLiquity
       accountId: this.userAccountId,
     })
 
-    const receipt = await this.hashConnect.sendTransaction(this.userAccountId, unfrozenTransaction)
+    const [, tokenIds] = await Promise.all([
+      this.hashConnect.sendTransaction(this.userAccountId, unfrozenTransaction),
+      this.getTokenIds(),
+    ])
 
     await waitForTokenState({
+      tokenIds: Object.values(tokenIds),
       accountId: this.userAccountId,
       apiBaseUrl: this.mirrorNodeBaseUrl,
       fetch: this.fetch,
@@ -2441,9 +2465,13 @@ export class HashgraphLiquity
       accountId: this.userAccountId,
     })
 
-    const receipt = await this.hashConnect.sendTransaction(this.userAccountId, unfrozenTransaction)
+    const [, tokenIds] = await Promise.all([
+      this.hashConnect.sendTransaction(this.userAccountId, unfrozenTransaction),
+      this.getTokenIds(),
+    ])
 
     await waitForTokenState({
+      tokenIds: Object.values(tokenIds),
       accountId: this.userAccountId,
       apiBaseUrl: this.mirrorNodeBaseUrl,
       fetch: this.fetch,
@@ -2460,9 +2488,13 @@ export class HashgraphLiquity
       accountId: this.userAccountId,
     })
 
-    const receipt = await this.hashConnect.sendTransaction(this.userAccountId, unfrozenTransaction)
+    const [, tokenIds] = await Promise.all([
+      this.hashConnect.sendTransaction(this.userAccountId, unfrozenTransaction),
+      this.getTokenIds(),
+    ])
 
     await waitForTokenState({
+      tokenIds: Object.values(tokenIds),
       accountId: this.userAccountId,
       apiBaseUrl: this.mirrorNodeBaseUrl,
       fetch: this.fetch,
@@ -2479,9 +2511,13 @@ export class HashgraphLiquity
       accountId: this.userAccountId,
     })
 
-    const receipt = await this.hashConnect.sendTransaction(this.userAccountId, unfrozenTransaction)
+    const [, tokenIds] = await Promise.all([
+      this.hashConnect.sendTransaction(this.userAccountId, unfrozenTransaction),
+      this.getTokenIds(),
+    ])
 
     await waitForTokenState({
+      tokenIds: Object.values(tokenIds),
       accountId: this.userAccountId,
       apiBaseUrl: this.mirrorNodeBaseUrl,
       fetch: this.fetch,
