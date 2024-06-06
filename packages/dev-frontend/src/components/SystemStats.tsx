@@ -133,6 +133,7 @@ export const SystemStats: React.FC<SystemStatsProps> = ({ variant = "info", show
               The price of 1 HBAR in CHF (and HCHF) as calculated by the HLiquity smart contract. The
               value is calculated in two steps based on HBAR/USDT and USD/CHF using Pyth (
               <a
+                target="_blank"
                 href="https://pyth.network/price-feeds/crypto-hbar-usd?range=LIVE"
                 rel="noreferrer noopener"
               >
@@ -140,6 +141,7 @@ export const SystemStats: React.FC<SystemStatsProps> = ({ variant = "info", show
               </a>
               ,
               <a
+                target="_blank"
                 href="https://pyth.network/price-feeds/fx-usd-chf?range=LIVE"
                 rel="noreferrer noopener"
               >
@@ -147,14 +149,16 @@ export const SystemStats: React.FC<SystemStatsProps> = ({ variant = "info", show
               </a>
               ) and Supra (
               <a
-                href="https://supra.com/data/catalog/details?instrumentName=hbar_usd&providerName=supra"
+                target="_blank"
+                href="https://supra.com/data/details?instrumentName=hbar_usd&providerName=supra"
                 rel="noreferrer noopener"
               >
                 HBAR/USD
               </a>
               ,
               <a
-                href="https://supra.com/data/catalog/details?instrumentName=usd_chf&providerName=supra"
+                target="_blank"
+                href="https://supra.com/data/details?instrumentName=usd_chf&providerName=supra"
                 rel="noreferrer noopener"
               >
                 USD/CHF
@@ -194,9 +198,8 @@ export const SystemStats: React.FC<SystemStatsProps> = ({ variant = "info", show
             <Link
               sx={{ color: "info" }}
               target="_blank"
-              href={`https://github.com/blokk-studio/HLiquity/commit/${
-                import.meta.env.VITE_APP_VERSION
-              }`}
+              href={`https://github.com/blokk-studio/HLiquity/commit/${import.meta.env.VITE_APP_VERSION
+                }`}
             >
               {import.meta.env.VITE_APP_VERSION.substring(0, 7)}
             </Link>

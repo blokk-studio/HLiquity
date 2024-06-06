@@ -7,9 +7,6 @@ const parseDeploymentsFromEnv = (env: Record<string, string>): Deployment[] => {
     const deploymentJsonString: string | undefined = env[`VITE_CHAIN_${chainId}_DEPLOYMENT`];
 
     if (!deploymentJsonString) {
-      console.warn(
-        `there is no deployment configured for enabled chain with id ${chainId}. set the environment variable \`VITE_CHAIN_${chainId}_DEPLOYMENT\` to the JSON-encoded string of the deployment. see https://github.com/blokk-studio/HLiquity/blob/main/packages/lib-ethers/deployments/default/hedera.json for an example deployment configuration.`
-      );
       continue;
     }
 
