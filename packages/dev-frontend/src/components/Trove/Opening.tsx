@@ -25,7 +25,7 @@ import {
   selectForTroveChangeValidation,
   validateTroveChange
 } from "./validation/validateTroveChange";
-import { Step, Steps, getAssociationStepStatus } from "../Steps";
+import { Step, Steps, getCompletableStepStatus } from "../Steps";
 import { useLoadingState } from "../../loading_state";
 import { useLiquity } from "../../hooks/LiquityContext";
 
@@ -107,9 +107,9 @@ export const Opening: React.FC = () => {
   const steps: Step[] = [
     {
       title: "Associate with HCHF",
-      status: getAssociationStepStatus({
-        userHasAssociatedWithToken: userHasAssociatedWithHchf,
-        tokenAssociationLoadingState: hchfAssociationLoadingState
+      status: getCompletableStepStatus({
+        isCompleted: userHasAssociatedWithHchf,
+        completionLoadingState: hchfAssociationLoadingState
       }),
       description: userHasAssociatedWithHchf
         ? "You've already associated with HCHF."

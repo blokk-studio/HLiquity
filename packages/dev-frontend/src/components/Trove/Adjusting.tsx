@@ -25,7 +25,7 @@ import {
   selectForTroveChangeValidation,
   validateTroveChange
 } from "./validation/validateTroveChange";
-import { Step, Steps, getAssociationStepStatus } from "../Steps";
+import { Step, Steps, getCompletableStepStatus } from "../Steps";
 import { useLiquity } from "../../hooks/LiquityContext";
 import { useLoadingState } from "../../loading_state";
 import { LoadingButton } from "../LoadingButton";
@@ -191,9 +191,9 @@ export const Adjusting: React.FC = () => {
   if (needsHchfAssociation) {
     transactionSteps.push({
       title: "Associate with HCHF",
-      status: getAssociationStepStatus({
-        userHasAssociatedWithToken: userHasAssociatedWithHchf,
-        tokenAssociationLoadingState: hchfAssociationLoadingState
+      status: getCompletableStepStatus({
+        isCompleted: userHasAssociatedWithHchf,
+        completionLoadingState: hchfAssociationLoadingState
       }),
       description: userHasAssociatedWithHchf
         ? "You've already associated with HCHF."
@@ -203,9 +203,9 @@ export const Adjusting: React.FC = () => {
   if (needsSpenderApproval) {
     transactionSteps.push({
       title: "Approve HCHF allowance",
-      status: getAssociationStepStatus({
-        userHasAssociatedWithToken: hchfContractHasHchfTokenAllowance,
-        tokenAssociationLoadingState: hchfApprovalLoadingState
+      status: getCompletableStepStatus({
+        isCompleted: hchfContractHasHchfTokenAllowance,
+        completionLoadingState: hchfApprovalLoadingState
       }),
       description: hchfContractHasHchfTokenAllowance
         ? "You've already given the HCHF contract allowance to spend the requested amount of HCHF tokens."

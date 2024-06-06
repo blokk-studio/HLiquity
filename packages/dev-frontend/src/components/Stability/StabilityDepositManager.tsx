@@ -16,7 +16,7 @@ import {
   selectForStabilityDepositChangeValidation,
   validateStabilityDepositChange
 } from "./validation/validateStabilityDepositChange";
-import { Step, getAssociationStepStatus } from "../Steps";
+import { Step, getCompletableStepStatus } from "../Steps";
 import { useLoadingState } from "../../loading_state";
 import { useLiquity } from "../../hooks/LiquityContext";
 import { LoadingButton } from "../LoadingButton";
@@ -173,9 +173,9 @@ export const StabilityDepositManager: React.FC = () => {
   if (!validChange || validChange?.depositHCHF) {
     transactionSteps.push({
       title: "Associate with HLQT",
-      status: getAssociationStepStatus({
-        userHasAssociatedWithToken: userHasAssociatedWithHlqt,
-        tokenAssociationLoadingState: hlqtAssociationLoadingState
+      status: getCompletableStepStatus({
+        isCompleted: userHasAssociatedWithHlqt,
+        completionLoadingState: hlqtAssociationLoadingState
       }),
       description: userHasAssociatedWithHlqt
         ? "You've already associated with HLQT."
@@ -185,9 +185,9 @@ export const StabilityDepositManager: React.FC = () => {
   if (validChange?.withdrawHCHF) {
     transactionSteps.push({
       title: "Associate with HCHF",
-      status: getAssociationStepStatus({
-        userHasAssociatedWithToken: userHasAssociatedWithHchf,
-        tokenAssociationLoadingState: hchfAssociationLoadingState
+      status: getCompletableStepStatus({
+        isCompleted: userHasAssociatedWithHchf,
+        completionLoadingState: hchfAssociationLoadingState
       }),
       description: userHasAssociatedWithHchf
         ? "You've already associated with HCHF."
@@ -197,9 +197,9 @@ export const StabilityDepositManager: React.FC = () => {
   if (needsHchfSpenderApproval) {
     transactionSteps.push({
       title: "Approve HCHF allowance",
-      status: getAssociationStepStatus({
-        userHasAssociatedWithToken: hchfContractHasHchfTokenAllowance,
-        tokenAssociationLoadingState: hchfApprovalLoadingState
+      status: getCompletableStepStatus({
+        isCompleted: hchfContractHasHchfTokenAllowance,
+        completionLoadingState: hchfApprovalLoadingState
       }),
       description: hchfContractHasHchfTokenAllowance
         ? "You've already given the HCHF contract allowance to spend the requested amount of HCHF tokens."

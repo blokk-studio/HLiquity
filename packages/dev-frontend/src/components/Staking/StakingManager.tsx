@@ -20,7 +20,7 @@ import { ActionDescription, Amount } from "../ActionDescription";
 import { ErrorDescription } from "../ErrorDescription";
 import { useLiquity } from "../../hooks/LiquityContext";
 import { useLoadingState } from "../../loading_state";
-import { Step, getAssociationStepStatus } from "../Steps";
+import { Step, getCompletableStepStatus } from "../Steps";
 import { LoadingButton } from "../LoadingButton";
 
 const init = ({ hlqtStake }: LiquityStoreState) => ({
@@ -171,9 +171,9 @@ export const StakingManager: React.FC = () => {
   const transactionSteps: Step[] = [
     {
       title: "Associate with HCHF",
-      status: getAssociationStepStatus({
-        userHasAssociatedWithToken: userHasAssociatedWithHchf,
-        tokenAssociationLoadingState: hchfAssociationLoadingState
+      status: getCompletableStepStatus({
+        isCompleted: userHasAssociatedWithHchf,
+        completionLoadingState: hchfAssociationLoadingState
       }),
       description: userHasAssociatedWithHchf
         ? "You've already associated with HCHF."
@@ -183,9 +183,9 @@ export const StakingManager: React.FC = () => {
   if (needsSpenderApproval) {
     transactionSteps.push({
       title: "Approve HLQT allowance",
-      status: getAssociationStepStatus({
-        userHasAssociatedWithToken: hlqtContractHasHlqtAllowance,
-        tokenAssociationLoadingState: hlqtApprovalLoadingState
+      status: getCompletableStepStatus({
+        isCompleted: hlqtContractHasHlqtAllowance,
+        completionLoadingState: hlqtApprovalLoadingState
       }),
       description: hlqtContractHasHlqtAllowance
         ? "You've already given the HLQT contract allowance to spend the requested amount of HLQT tokens."

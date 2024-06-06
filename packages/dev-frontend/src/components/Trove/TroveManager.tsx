@@ -17,7 +17,7 @@ import {
   validateTroveChange
 } from "./validation/validateTroveChange";
 import { COLLATERAL_COIN } from "../../strings";
-import { Step, getAssociationStepStatus } from "../Steps";
+import { Step, getCompletableStepStatus } from "../Steps";
 import { useLiquity } from "../../hooks/LiquityContext";
 import { useLoadingState } from "../../loading_state";
 import { LoadingButton } from "../LoadingButton";
@@ -234,9 +234,9 @@ export const TroveManager: React.FC<TroveManagerProps> = ({ collateral, debt }) 
   const transactionSteps: Step[] = [
     {
       title: "Approve HCHF allowance",
-      status: getAssociationStepStatus({
-        userHasAssociatedWithToken: hchfContractHasHchfTokenAllowance,
-        tokenAssociationLoadingState: hchfApprovalLoadingState
+      status: getCompletableStepStatus({
+        isCompleted: hchfContractHasHchfTokenAllowance,
+        completionLoadingState: hchfApprovalLoadingState
       }),
       description: hchfContractHasHchfTokenAllowance
         ? "You've already given the HCHF contract allowance to spend the requested amount of HCHF tokens."

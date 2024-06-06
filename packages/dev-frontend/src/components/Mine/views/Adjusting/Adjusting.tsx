@@ -10,7 +10,7 @@ import { useMineView } from "../../context/MineViewContext";
 import { Transaction, useMyTransactionState } from "../../../Transaction";
 import { Description } from "../Description";
 import { Validation } from "../Validation";
-import { Step, Steps, getAssociationStepStatus } from "../../../Steps";
+import { Step, Steps, getCompletableStepStatus } from "../../../Steps";
 import { useLoadingState } from "../../../../loading_state";
 import { useLiquity } from "../../../../hooks/LiquityContext";
 import { useValidationState } from "../../context/useValidationState";
@@ -85,9 +85,9 @@ export const Adjusting: React.FC = () => {
   const steps: Step[] = [
     {
       title: "Associate with the LP token",
-      status: getAssociationStepStatus({
-        userHasAssociatedWithToken: userHasAssociatedWithLpToken,
-        tokenAssociationLoadingState: lpTokenAssociationLoadingState
+      status: getCompletableStepStatus({
+        isCompleted: userHasAssociatedWithLpToken,
+        completionLoadingState: lpTokenAssociationLoadingState
       }),
       description: userHasAssociatedWithLpToken
         ? "You've already associated with the LP token."
@@ -95,9 +95,9 @@ export const Adjusting: React.FC = () => {
     },
     {
       title: "Associate with HLQT",
-      status: getAssociationStepStatus({
-        userHasAssociatedWithToken: userHasAssociatedWithHlqt,
-        tokenAssociationLoadingState: hlqtAssociationLoadingState
+      status: getCompletableStepStatus({
+        isCompleted: userHasAssociatedWithHlqt,
+        completionLoadingState: hlqtAssociationLoadingState
       }),
       description: userHasAssociatedWithHlqt
         ? "You've already associated with HLQT."
@@ -105,9 +105,9 @@ export const Adjusting: React.FC = () => {
     },
     {
       title: "Approve LP allowance",
-      status: getAssociationStepStatus({
-        userHasAssociatedWithToken: hasApproved,
-        tokenAssociationLoadingState: LPApprovalLoadingState
+      status: getCompletableStepStatus({
+        isCompleted: hasApproved,
+        completionLoadingState: LPApprovalLoadingState
       }),
       description: "You have to give the SaucerSwap contract an LP token allowance."
     },

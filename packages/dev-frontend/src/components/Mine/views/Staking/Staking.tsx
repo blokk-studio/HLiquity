@@ -11,7 +11,7 @@ import { Validation } from "../Validation";
 import { useValidationState } from "../../context/useValidationState";
 import { useLiquity } from "../../../../hooks/LiquityContext";
 import { useLiquitySelector } from "@liquity/lib-react";
-import { Step, Steps, getAssociationStepStatus } from "../../../Steps";
+import { Step, Steps, getCompletableStepStatus } from "../../../Steps";
 import { useLoadingState } from "../../../../loading_state";
 import { LoadingButton } from "../../../LoadingButton";
 
@@ -68,9 +68,9 @@ export const Staking: React.FC = () => {
   const steps: Step[] = [
     {
       title: "Associate with the LP token",
-      status: getAssociationStepStatus({
-        userHasAssociatedWithToken: userHasAssociatedWithLpToken,
-        tokenAssociationLoadingState: lpTokenAssociationLoadingState
+      status: getCompletableStepStatus({
+        isCompleted: userHasAssociatedWithLpToken,
+        completionLoadingState: lpTokenAssociationLoadingState
       }),
       description: userHasAssociatedWithLpToken
         ? "You've already associated with the LP token."
@@ -78,9 +78,9 @@ export const Staking: React.FC = () => {
     },
     {
       title: "Associate with HLQT",
-      status: getAssociationStepStatus({
-        userHasAssociatedWithToken: userHasAssociatedWithHlqt,
-        tokenAssociationLoadingState: hlqtAssociationLoadingState
+      status: getCompletableStepStatus({
+        isCompleted: userHasAssociatedWithHlqt,
+        completionLoadingState: hlqtAssociationLoadingState
       }),
       description: userHasAssociatedWithHlqt
         ? "You've already associated with HLQT."
@@ -88,9 +88,9 @@ export const Staking: React.FC = () => {
     },
     {
       title: "Approve LP allowance",
-      status: getAssociationStepStatus({
-        userHasAssociatedWithToken: hasApproved,
-        tokenAssociationLoadingState: LPApprovalLoadingState
+      status: getCompletableStepStatus({
+        isCompleted: hasApproved,
+        completionLoadingState: LPApprovalLoadingState
       }),
       description: "You have to give the SaucerSwap contract an LP token allowance."
     },

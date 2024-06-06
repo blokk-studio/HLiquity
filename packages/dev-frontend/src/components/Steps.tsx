@@ -150,22 +150,22 @@ export const Steps: React.FunctionComponent<{ steps: Step[]; sx?: ThemeUIStyleOb
   );
 };
 
-export const getAssociationStepStatus = (options: {
-  userHasAssociatedWithToken: boolean;
-  tokenAssociationLoadingState: LoadingState;
+export const getCompletableStepStatus = (options: {
+  isCompleted: boolean;
+  completionLoadingState: LoadingState;
 }) => {
-  if (options.userHasAssociatedWithToken) {
+  if (options.isCompleted) {
     return "success";
   }
 
-  const hasAssociationError = options.tokenAssociationLoadingState === "error";
+  const hasAssociationError = options.completionLoadingState === "error";
   if (hasAssociationError) {
     return "danger";
   }
 
   const isWaitingForAssociation =
-    options.tokenAssociationLoadingState === "pending" ||
-    (!options.userHasAssociatedWithToken && options.tokenAssociationLoadingState === "success");
+    options.completionLoadingState === "pending" ||
+    (!options.isCompleted && options.completionLoadingState === "success");
   if (isWaitingForAssociation) {
     return "pending";
   }
