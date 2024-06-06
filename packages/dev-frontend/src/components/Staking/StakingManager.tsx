@@ -147,14 +147,19 @@ export const StakingManager: React.FC = () => {
 
   // consent & approval
   const { liquity } = useLiquity();
-  const { userHasAssociatedWithHchf } = useLiquitySelector(state => state);
+  const { userHasAssociatedWithHchf, hlqtTokenAllowanceOfHlqtContract } = useLiquitySelector(
+    state => state
+  );
   const { call: associateWithHchf, state: hchfAssociationLoadingState } = useLoadingState(
     async () => {
       await liquity.associateWithHchf();
     }
   );
   // hchf spender approval
-  const needsSpenderApproval = !validChange || validChange?.stakeHLQT;
+  const needsSpenderApproval = !validChange || validChange.stakeHLQT;
+  const hlqtContractHasHlqtAllowance = validChange?.stakeHLQT
+    ? validChange.stakeHLQT.lte(hlqtTokenAllowanceOfHlqtContract)
+    : false;
   const { call: approveHlqtSpender, state: hlqtApprovalLoadingState } = useLoadingState(async () => {
     if (!validChange?.stakeHLQT) {
       throw "cannot approve a withdrawal (negative spending/negative deposit) or deposit of 0";
@@ -178,8 +183,13 @@ export const StakingManager: React.FC = () => {
   if (needsSpenderApproval) {
     transactionSteps.push({
       title: "Approve HLQT allowance",
-      status: hlqtApprovalLoadingState === "error" ? "danger" : hlqtApprovalLoadingState,
-      description: "You have to give the HLQT contract an HLQT token allowance."
+      status: getAssociationStepStatus({
+        userHasAssociatedWithToken: hlqtContractHasHlqtAllowance,
+        tokenAssociationLoadingState: hlqtApprovalLoadingState
+      }),
+      description: hlqtContractHasHlqtAllowance
+        ? "You've already given the HLQT contract allowance to spend the requested amount of HLQT tokens."
+        : "You have to give the HLQT contract an HLQT token allowance."
     });
   }
   transactionSteps.push({
@@ -216,7 +226,7 @@ export const StakingManager: React.FC = () => {
           >
             Associate with HCHF
           </LoadingButton>
-        ) : needsSpenderApproval && hlqtApprovalLoadingState !== "success" ? (
+        ) : needsSpenderApproval && !hlqtContractHasHlqtAllowance ? (
           <LoadingButton
             disabled={!validChange}
             loading={hlqtApprovalLoadingState === "pending"}

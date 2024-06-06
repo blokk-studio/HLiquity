@@ -240,4 +240,18 @@ export class _CachedReadableLiquity<T extends unknown[]>
       this._readable.getFrontendStatus(address, ...extraParams)
     );
   }
+
+  async getHchfTokenAllowanceOfHchfContract(address?: string, ...extraParams: T): Promise<Decimal> {
+    return (
+      this._cache.getHchfTokenAllowanceOfHchfContract(address, ...extraParams) ??
+      this._readable.getHchfTokenAllowanceOfHchfContract(address, ...extraParams)
+    );
+  }
+
+  async getHlqtTokenAllowanceOfHlqtContract(address?: string, ...extraParams: T): Promise<Decimal> {
+    return (
+      this._cache.getHlqtTokenAllowanceOfHlqtContract(address, ...extraParams) ??
+      this._readable.getHlqtTokenAllowanceOfHlqtContract(address, ...extraParams)
+    );
+  }
 }

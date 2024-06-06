@@ -136,9 +136,8 @@ export const StabilityDepositManager: React.FC = () => {
 
   // consent & approval
   const { liquity } = useLiquity();
-  const { userHasAssociatedWithHchf, userHasAssociatedWithHlqt } = useLiquitySelector(
-    state => state
-  );
+  const { userHasAssociatedWithHchf, hchfTokenAllowanceOfHchfContract, userHasAssociatedWithHlqt } =
+    useLiquitySelector(state => state);
   const needsHlqtAssociation =
     !userHasAssociatedWithHlqt && (!validChange || validChange?.depositHCHF);
   // hlqt token association (deposition)
@@ -155,7 +154,11 @@ export const StabilityDepositManager: React.FC = () => {
     }
   );
   // hchf spender approval
-  const needsHchfSpenderApproval = !validChange || validChange?.depositHCHF;
+  const needsHchfSpenderApproval = !validChange || validChange.depositHCHF;
+  const hchfContractHasHchfTokenAllowance = validChange?.depositHCHF
+    ? validChange.depositHCHF.lte(hchfTokenAllowanceOfHchfContract)
+    : false;
+
   const { call: approveHchfSpender, state: hchfApprovalLoadingState } = useLoadingState(async () => {
     if (!validChange?.depositHCHF) {
       const errorMessage = `you cannot approve a withdrawal (negative spending/negative deposit) or deposit of 0`;
@@ -194,8 +197,13 @@ export const StabilityDepositManager: React.FC = () => {
   if (needsHchfSpenderApproval) {
     transactionSteps.push({
       title: "Approve HCHF allowance",
-      status: hchfApprovalLoadingState === "error" ? "danger" : hchfApprovalLoadingState,
-      description: "You have to give the HCHF contract an HCHF token allowance."
+      status: getAssociationStepStatus({
+        userHasAssociatedWithToken: hchfContractHasHchfTokenAllowance,
+        tokenAssociationLoadingState: hchfApprovalLoadingState
+      }),
+      description: hchfContractHasHchfTokenAllowance
+        ? "You've already given the HCHF contract allowance to spend the requested amount of HCHF tokens."
+        : "You have to give the HCHF contract an HCHF token allowance."
     });
   }
   transactionSteps.push({
@@ -242,7 +250,7 @@ export const StabilityDepositManager: React.FC = () => {
           >
             Associate with HCHF
           </LoadingButton>
-        ) : needsHchfSpenderApproval && hchfApprovalLoadingState !== "success" ? (
+        ) : needsHchfSpenderApproval && !hchfContractHasHchfTokenAllowance ? (
           <LoadingButton
             disabled={!validChange}
             loading={hchfApprovalLoadingState === "pending"}

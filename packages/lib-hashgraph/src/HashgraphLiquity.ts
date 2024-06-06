@@ -468,6 +468,14 @@ export class HashgraphLiquity
               stabilityDeposit: this.getStabilityDeposit(this.userAccountAddress, { blockTag }),
               hlqtStake: this.getHLQTStake(this.userAccountAddress, { blockTag }),
               ownFrontend: this.getFrontendStatus(this.userAccountAddress, { blockTag }),
+              hchfTokenAllowanceOfHchfContract: this.getHchfTokenAllowanceOfHchfContract(
+                this.userAccountAddress,
+                { blockTag },
+              ),
+              hlqtTokenAllowanceOfHlqtContract: this.getHlqtTokenAllowanceOfHlqtContract(
+                this.userAccountAddress,
+                { blockTag },
+              ),
             }
           : {
               accountBalance: Decimal.ZERO,
@@ -493,6 +501,8 @@ export class HashgraphLiquity
               ),
               hlqtStake: new HLQTStake(),
               ownFrontend: { status: 'unregistered' as const },
+              hchfTokenAllowanceOfHchfContract: Decimal.ZERO,
+              hlqtTokenAllowanceOfHlqtContract: Decimal.ZERO,
             }),
       })
 
@@ -716,6 +726,22 @@ export class HashgraphLiquity
     return hchfBalance
   }
 
+  async getHchfTokenAllowanceOfHchfContract(
+    address?: Address,
+    options?: ContractCallOptions,
+  ): Promise<Decimal> {
+    const addressOrUserAddress = this.getAddressOrUserAddress(address)
+    const tokenAddress = await this.getHCHFTokenAddress(options)
+    const tokenContract = new this.web3.eth.Contract(iERC20Abi, tokenAddress)
+
+    const allowanceResult = await tokenContract.methods
+      .allowance(addressOrUserAddress, this.hchfToken.options.address)
+      .call(undefined, options?.blockTag)
+    const allowance = decimalify(allowanceResult)
+
+    return allowance
+  }
+
   async getHLQTTokenAddress(options?: ContractCallOptions): Promise<string> {
     const hlqtTokenAddressResult = await this.hlqtToken.methods
       .getTokenAddress()
@@ -741,6 +767,22 @@ export class HashgraphLiquity
     const hlqtBalance = decimalify(hlqtBalanceResult)
 
     return hlqtBalance
+  }
+
+  async getHlqtTokenAllowanceOfHlqtContract(
+    address?: Address,
+    options?: ContractCallOptions,
+  ): Promise<Decimal> {
+    const addressOrUserAddress = this.getAddressOrUserAddress(address)
+    const tokenAddress = await this.getHLQTTokenAddress(options)
+    const tokenContract = new this.web3.eth.Contract(iERC20Abi, tokenAddress)
+
+    const allowanceResult = await tokenContract.methods
+      .allowance(addressOrUserAddress, this.hlqtToken.options.address)
+      .call(undefined, options?.blockTag)
+    const allowance = decimalify(allowanceResult)
+
+    return allowance
   }
 
   async getUniTokenBalance(address?: Address, options?: ContractCallOptions): Promise<Decimal> {
@@ -2545,6 +2587,8 @@ export class HashgraphLiquity
     const receipt = await this.hashConnect.sendTransaction(this.userAccountId, unfrozenTransaction)
 
     await this.refresh()
+    // optimistic update
+    this._update({ hchfTokenAllowanceOfHchfContract: amount })
   }
 
   async approveHlqtToSpendHlqt(amount: Decimal): Promise<void> {
@@ -2566,6 +2610,8 @@ export class HashgraphLiquity
     const receipt = await this.hashConnect.sendTransaction(this.userAccountId, unfrozenTransaction)
 
     await this.refresh()
+    // optimistic update
+    this._update({ hlqtTokenAllowanceOfHlqtContract: amount })
   }
 
   async approveSaucerSwapToSpendLpToken(amount: Decimal): Promise<void> {
@@ -2587,5 +2633,7 @@ export class HashgraphLiquity
     const receipt = await this.hashConnect.sendTransaction(this.userAccountId, unfrozenTransaction)
 
     await this.refresh()
+    // optimistic update
+    this._update({ uniTokenAllowance: amount })
   }
 }

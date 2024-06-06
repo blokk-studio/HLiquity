@@ -17,7 +17,7 @@ import {
   validateTroveChange
 } from "./validation/validateTroveChange";
 import { COLLATERAL_COIN } from "../../strings";
-import { Step } from "../Steps";
+import { Step, getAssociationStepStatus } from "../Steps";
 import { useLiquity } from "../../hooks/LiquityContext";
 import { useLoadingState } from "../../loading_state";
 import { LoadingButton } from "../LoadingButton";
@@ -150,7 +150,7 @@ const feeFrom = (original: Trove, edited: Trove, borrowingRate: Decimal): Decima
 };
 
 const select = (state: LiquityStoreState) => ({
-  fees: state.fees,
+  ...state,
   validationContext: selectForTroveChangeValidation(state)
 });
 
@@ -164,7 +164,7 @@ type TroveManagerProps = {
 
 export const TroveManager: React.FC<TroveManagerProps> = ({ collateral, debt }) => {
   const [{ original, edited, changePending }, dispatch] = useLiquityReducer(reduce, init);
-  const { fees, validationContext } = useLiquitySelector(select);
+  const { fees, validationContext, hchfTokenAllowanceOfHchfContract } = useLiquitySelector(select);
 
   useEffect(() => {
     if (collateral !== undefined) {
@@ -227,11 +227,20 @@ export const TroveManager: React.FC<TroveManagerProps> = ({ collateral, debt }) 
     await liquity.approveHchfToSpendHchf(validChange.params.repayHCHF);
   });
 
+  const hchfContractHasHchfTokenAllowance = validChange?.params.repayHCHF
+    ? validChange.params.repayHCHF.lte(hchfTokenAllowanceOfHchfContract)
+    : false;
+
   const transactionSteps: Step[] = [
     {
       title: "Approve HCHF allowance",
-      status: hchfApprovalLoadingState === "error" ? "danger" : hchfApprovalLoadingState,
-      description: "You have to give the HCHF contract an HCHF token allowance."
+      status: getAssociationStepStatus({
+        userHasAssociatedWithToken: hchfContractHasHchfTokenAllowance,
+        tokenAssociationLoadingState: hchfApprovalLoadingState
+      }),
+      description: hchfContractHasHchfTokenAllowance
+        ? "You've already given the HCHF contract allowance to spend the requested amount of HCHF tokens."
+        : "You have to give the HCHF contract an HCHF token allowance."
     },
     {
       title: "Close your trove",
@@ -265,7 +274,7 @@ export const TroveManager: React.FC<TroveManagerProps> = ({ collateral, debt }) 
           Cancel
         </Button>
 
-        {hchfApprovalLoadingState !== "success" ? (
+        {!hchfContractHasHchfTokenAllowance ? (
           <LoadingButton
             disabled={!validChange}
             loading={hchfApprovalLoadingState === "pending"}

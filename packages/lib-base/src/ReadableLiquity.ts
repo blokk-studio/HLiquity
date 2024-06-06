@@ -222,4 +222,8 @@ export interface ReadableLiquity {
    * @param address - Address to check.
    */
   getFrontendStatus(address?: string): Promise<FrontendStatus>;
+
+  getHchfTokenAllowanceOfHchfContract(address?: string): Promise<Decimal>;
+
+  getHlqtTokenAllowanceOfHlqtContract(address?: string): Promise<Decimal>;
 }

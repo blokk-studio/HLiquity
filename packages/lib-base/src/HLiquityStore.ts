@@ -113,6 +113,9 @@ export interface LiquityStoreBaseState {
   userHasAssociatedWithHchf: boolean;
   userHasAssociatedWithHlqt: boolean;
   userHasAssociatedWithLpToken: boolean;
+
+  hchfTokenAllowanceOfHchfContract: Decimal;
+  hlqtTokenAllowanceOfHlqtContract: Decimal;
 }
 
 /**
@@ -304,7 +307,9 @@ export abstract class HLiquityStore<T = unknown> {
       uniTokenBalance: Decimal.from(0),
       userHasAssociatedWithHchf: false,
       userHasAssociatedWithHlqt: false,
-      userHasAssociatedWithLpToken: false
+      userHasAssociatedWithLpToken: false,
+      hchfTokenAllowanceOfHchfContract: Decimal.ZERO,
+      hlqtTokenAllowanceOfHlqtContract: Decimal.ZERO
     };
     return Object.assign(defaultState, this._baseState, this._derivedState, this._extraState);
   }
@@ -569,6 +574,20 @@ export abstract class HLiquityStore<T = unknown> {
         "userHasAssociatedWithLpToken",
         baseState.userHasAssociatedWithLpToken,
         baseStateUpdate.userHasAssociatedWithLpToken
+      ),
+
+      hchfTokenAllowanceOfHchfContract: this._updateIfChanged(
+        (a, b) => a === b,
+        "hchfTokenAllowanceOfHchfContract",
+        baseState.hchfTokenAllowanceOfHchfContract,
+        baseStateUpdate.hchfTokenAllowanceOfHchfContract
+      ),
+
+      hlqtTokenAllowanceOfHlqtContract: this._updateIfChanged(
+        (a, b) => a === b,
+        "hlqtTokenAllowanceOfHlqtContract",
+        baseState.hlqtTokenAllowanceOfHlqtContract,
+        baseStateUpdate.hlqtTokenAllowanceOfHlqtContract
       )
     };
   }

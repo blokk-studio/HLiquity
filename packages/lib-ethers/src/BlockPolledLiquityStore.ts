@@ -204,7 +204,15 @@ export class BlockPolledLiquityStore extends HLiquityStore<BlockPolledLiquitySto
               }),
               stabilityDeposit: this._readable.getStabilityDeposit(userAddress, { blockTag }),
               hlqtStake: this._readable.getHLQTStake(userAddress, { blockTag }),
-              ownFrontend: this._readable.getFrontendStatus(userAddress, { blockTag })
+              ownFrontend: this._readable.getFrontendStatus(userAddress, { blockTag }),
+              hchfTokenAllowanceOfHchfContract: this._readable.getHchfTokenAllowanceOfHchfContract(
+                userAddress,
+                { blockTag }
+              ),
+              hlqtTokenAllowanceOfHlqtContract: this._readable.getHlqtTokenAllowanceOfHlqtContract(
+                userAddress,
+                { blockTag }
+              )
             }
           : {
               accountBalance: Decimal.ZERO,
@@ -229,7 +237,9 @@ export class BlockPolledLiquityStore extends HLiquityStore<BlockPolledLiquitySto
                 AddressZero
               ),
               hlqtStake: new HLQTStake(),
-              ownFrontend: { status: "unregistered" as const }
+              ownFrontend: { status: "unregistered" as const },
+              hchfTokenAllowanceOfHchfContract: Decimal.ZERO,
+              hlqtTokenAllowanceOfHlqtContract: Decimal.ZERO
             })
       });
 

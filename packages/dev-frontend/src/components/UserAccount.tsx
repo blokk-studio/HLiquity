@@ -1,7 +1,7 @@
 import React from "react";
 import { Text, Flex, Box, Heading, Button } from "theme-ui";
 
-import { Decimal, LiquityStoreState } from "@liquity/lib-base";
+import { Decimal } from "@liquity/lib-base";
 import { useLiquitySelector } from "@liquity/lib-react";
 
 import { COIN, COLLATERAL_COIN, GT, LP } from "../strings";
@@ -10,20 +10,10 @@ import { Icon } from "./Icon";
 import { t } from "../i18n";
 import { useMultiWallet } from "../multi_wallet";
 
-const select = ({
-  accountBalance,
-  hchfBalance,
-  hlqtBalance,
-  uniTokenBalance
-}: LiquityStoreState) => ({
-  accountBalance,
-  hchfBalance,
-  hlqtBalance,
-  uniTokenBalance
-});
-
 export const UserAccount: React.FC = () => {
-  const { accountBalance, hchfBalance, hlqtBalance, uniTokenBalance } = useLiquitySelector(select);
+  const { accountBalance, hchfBalance, hlqtBalance, uniTokenBalance } = useLiquitySelector(
+    state => state
+  );
   const { addressDisplayText, disconnect } = useMultiWallet();
 
   return (

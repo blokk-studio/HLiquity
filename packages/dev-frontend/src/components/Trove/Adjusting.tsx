@@ -162,7 +162,9 @@ export const Adjusting: React.FC = () => {
   const needsHchfAssociation = !stableTroveChange || stableTroveChange?.params.borrowHCHF;
   // hchf token association
   const { liquity } = useLiquity();
-  const { userHasAssociatedWithHchf } = useLiquitySelector(state => state);
+  const { userHasAssociatedWithHchf, hchfTokenAllowanceOfHchfContract } = useLiquitySelector(
+    state => state
+  );
   const { call: associateWithHchf, state: hchfAssociationLoadingState } = useLoadingState(
     async () => {
       await liquity.associateWithHchf();
@@ -170,6 +172,9 @@ export const Adjusting: React.FC = () => {
   );
   // hchf spender approval
   const needsSpenderApproval = stableTroveChange?.params.repayHCHF;
+  const hchfContractHasHchfTokenAllowance = stableTroveChange?.params.repayHCHF
+    ? stableTroveChange.params.repayHCHF.lte(hchfTokenAllowanceOfHchfContract)
+    : false;
   const { call: approveHchfSpender, state: hchfApprovalLoadingState } = useLoadingState(async () => {
     if (!stableTroveChange?.params.repayHCHF) {
       throw "cannot approve a withdrawal (negative spending/negative deposit) or deposit of 0";
@@ -198,8 +203,13 @@ export const Adjusting: React.FC = () => {
   if (needsSpenderApproval) {
     transactionSteps.push({
       title: "Approve HCHF allowance",
-      status: hchfApprovalLoadingState === "error" ? "danger" : hchfApprovalLoadingState,
-      description: "You have to give HCHF contract an HCHF token allowance."
+      status: getAssociationStepStatus({
+        userHasAssociatedWithToken: hchfContractHasHchfTokenAllowance,
+        tokenAssociationLoadingState: hchfApprovalLoadingState
+      }),
+      description: hchfContractHasHchfTokenAllowance
+        ? "You've already given the HCHF contract allowance to spend the requested amount of HCHF tokens."
+        : "You have to give HCHF contract an HCHF token allowance."
     });
   }
   transactionSteps.push({
@@ -340,7 +350,7 @@ export const Adjusting: React.FC = () => {
             >
               Associate with HCHF
             </LoadingButton>
-          ) : needsSpenderApproval && hchfApprovalLoadingState !== "success" ? (
+          ) : needsSpenderApproval && !hchfContractHasHchfTokenAllowance ? (
             <LoadingButton
               disabled={!stableTroveChange}
               loading={hchfApprovalLoadingState === "pending"}

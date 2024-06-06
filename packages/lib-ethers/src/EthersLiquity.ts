@@ -372,6 +372,20 @@ export class EthersLiquity
     return this._readable.getFrontendStatus(address, overrides);
   }
 
+  getHchfTokenAllowanceOfHchfContract(
+    address?: string | undefined,
+    overrides?: EthersCallOverrides | undefined
+  ): Promise<Decimal> {
+    return this._readable.getHchfTokenAllowanceOfHchfContract(address, overrides);
+  }
+
+  getHlqtTokenAllowanceOfHlqtContract(
+    address?: string | undefined,
+    overrides?: EthersCallOverrides | undefined
+  ): Promise<Decimal> {
+    return this._readable.getHlqtTokenAllowanceOfHlqtContract(address, overrides);
+  }
+
   /**
    * {@inheritDoc @liquity/lib-base#TransactableLiquity.openTrove}
    *
@@ -754,6 +768,10 @@ export class EthersLiquity
 
     if (this.hasStore()) {
       await this.store.refresh();
+      // optimistic update
+      (this.store as unknown as { _update: HLiquityStore["_update"] })._update({
+        hchfTokenAllowanceOfHchfContract: amount
+      });
     }
   }
 
@@ -823,6 +841,10 @@ export class EthersLiquity
 
     if (this.hasStore()) {
       await this.store.refresh();
+      // optimistic update
+      (this.store as unknown as { _update: HLiquityStore["_update"] })._update({
+        hlqtTokenAllowanceOfHlqtContract: amount
+      });
     }
   }
 
@@ -892,6 +914,10 @@ export class EthersLiquity
 
     if (this.hasStore()) {
       await this.store.refresh();
+      // optimistic update
+      (this.store as unknown as { _update: HLiquityStore["_update"] })._update({
+        uniTokenAllowance: amount
+      });
     }
   }
 }

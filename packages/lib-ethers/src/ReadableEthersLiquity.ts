@@ -17,7 +17,7 @@ import {
   _LiquityReadCache
 } from "@liquity/lib-base";
 
-import { MultiTroveGetter } from "../types";
+import { IERC20, MultiTroveGetter } from "../types";
 
 import { EthersCallOverrides, EthersProvider, EthersSigner } from "./types";
 
@@ -34,6 +34,8 @@ import {
 
 import { BlockPolledLiquityStore } from "./BlockPolledLiquityStore";
 import { Fetch } from "@liquity/mirror-node";
+import { Contract } from "ethers";
+import ierc20Abi from "../abi/IERC20.json";
 
 // TODO: these are constant in the contracts, so it doesn't make sense to make a call for them,
 // but to avoid having to update them here when we change them in the contracts, we could read
@@ -553,6 +555,54 @@ export class ReadableEthersLiquity implements ReadableLiquity {
       ? { status: "registered", kickbackRate: decimalify(kickbackRate) }
       : { status: "unregistered" };
   }
+
+  async getHchfTokenAllowanceOfHchfContract(
+    address?: string,
+    overrides?: EthersCallOverrides
+  ): Promise<Decimal> {
+    address ??= _requireFrontendAddress(this.connection);
+
+    const { hchfToken } = _getContracts(this.connection);
+
+    const tokenAddress = await this.getHCHFTokenAddress(overrides);
+    const tokenContract = new Contract(
+      tokenAddress,
+      ierc20Abi,
+      this.connection.signer ?? this.connection.provider
+    ) as IERC20;
+    console.debug({ tokenAddress, allowance: tokenContract.allowance });
+    try {
+      const allowanceResult = await tokenContract.allowance(address, hchfToken.address, overrides);
+
+      console.debug({ allowanceResult });
+      const allowance = decimalify(allowanceResult);
+
+      return allowance;
+    } catch (error) {
+      console.trace(error);
+      throw error;
+    }
+  }
+
+  async getHlqtTokenAllowanceOfHlqtContract(
+    address?: string,
+    overrides?: EthersCallOverrides
+  ): Promise<Decimal> {
+    address ??= _requireFrontendAddress(this.connection);
+
+    const { hlqtToken } = _getContracts(this.connection);
+
+    const tokenAddress = await this.getHLQTTokenAddress(overrides);
+    const tokenContract = new Contract(
+      tokenAddress,
+      ierc20Abi,
+      this.connection.signer ?? this.connection.provider
+    ) as IERC20;
+    const allowanceResult = await tokenContract.allowance(address, hlqtToken.address, overrides);
+    const allowance = decimalify(allowanceResult);
+
+    return allowance;
+  }
 }
 
 type Resolved<T> = T extends Promise<infer U> ? U : T;
@@ -774,6 +824,24 @@ class BlockPolledLiquityStoreBasedCache
 
   getTroves() {
     return undefined;
+  }
+
+  getHchfTokenAllowanceOfHchfContract(
+    address?: string,
+    overrides?: EthersCallOverrides
+  ): Decimal | undefined {
+    if (this._userHit(address, overrides)) {
+      return this._store.state.hchfTokenAllowanceOfHchfContract;
+    }
+  }
+
+  getHlqtTokenAllowanceOfHlqtContract(
+    address?: string,
+    overrides?: EthersCallOverrides
+  ): Decimal | undefined {
+    if (this._userHit(address, overrides)) {
+      return this._store.state.hlqtTokenAllowanceOfHlqtContract;
+    }
   }
 }
 

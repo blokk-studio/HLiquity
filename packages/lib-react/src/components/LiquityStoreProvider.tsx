@@ -32,6 +32,7 @@ export const LiquityStoreProvider: React.FC<LiquityStoreProviderProps> = ({
 
   if (storeError) {
     // TODO: move this stupid component to dev-frontend or everything here
+    console.warn(`[LiquityStoreProvider] refreshing the store caused an error`, storeError);
     return <AppError error={storeError} />;
   }
 
