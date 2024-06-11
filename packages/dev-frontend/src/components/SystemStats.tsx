@@ -135,6 +135,7 @@ export const SystemStats: React.FC<SystemStatsProps> = ({ variant = "info", show
               <a
                 href="https://pyth.network/price-feeds/crypto-hbar-usd?range=LIVE"
                 rel="noreferrer noopener"
+                target="_blank"
               >
                 HBAR/USD
               </a>
@@ -142,20 +143,23 @@ export const SystemStats: React.FC<SystemStatsProps> = ({ variant = "info", show
               <a
                 href="https://pyth.network/price-feeds/fx-usd-chf?range=LIVE"
                 rel="noreferrer noopener"
+                target="_blank"
               >
                 USD/CHF
               </a>
               ) and Supra (
               <a
-                href="https://supra.com/data/catalog/details?instrumentName=hbar_usd&providerName=supra"
+                href="https://supra.com/data/details?instrumentName=hbar_usd&providerName=supra"
                 rel="noreferrer noopener"
+                target="_blank"
               >
                 HBAR/USD
               </a>
               ,
               <a
-                href="https://supra.com/data/catalog/details?instrumentName=usd_chf&providerName=supra"
+                href="https://supra.com/data/details?instrumentName=usd_chf&providerName=supra"
                 rel="noreferrer noopener"
+                target="_blank"
               >
                 USD/CHF
               </a>
