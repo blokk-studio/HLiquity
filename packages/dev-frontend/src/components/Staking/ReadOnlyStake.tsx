@@ -45,7 +45,7 @@ export const ReadOnlyStake: React.FC = () => {
         <StaticRow
           label="Redemption gain"
           inputId="stake-gain-eth"
-          amount={hlqtStake.collateralGain.prettify(4)}
+          amount={hlqtStake.collateralGain.prettify(6)}
           color={hlqtStake.collateralGain.nonZero && "success"}
           unit={COLLATERAL_COIN}
         />
@@ -53,7 +53,7 @@ export const ReadOnlyStake: React.FC = () => {
         <StaticRow
           label="Issuance gain"
           inputId="stake-gain-lusd"
-          amount={hlqtStake.hchfGain.prettify()}
+          amount={hlqtStake.hchfGain.prettify(4)}
           color={hlqtStake.hchfGain.nonZero && "success"}
           unit={COIN}
         />
