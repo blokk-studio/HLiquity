@@ -1,5 +1,5 @@
 import React, { useCallback } from "react";
-import { Card, Heading, Box, Flex, Button } from "theme-ui";
+import { Card, Heading, Box, Flex, Button, Paragraph, Link } from "theme-ui";
 import { useMineView } from "../../context/MineViewContext";
 import { StaticRow } from "../../../Trove/Editor";
 import { useLiquitySelector } from "@liquity/lib-react";
@@ -23,9 +23,13 @@ export const Inactive: React.FC = () => {
 
   return (
     <Card>
-      <Heading>SaucerSwap LP Staking</Heading>
+      <Heading>SaucerSwap HBAR/HCHF-LP Staking</Heading>
       <Box sx={{ p: [2, 3] }}>
-        <InfoMessage title={`You haven't staked ${LP} yet.`}></InfoMessage>
+        <InfoMessage title={`You haven't staked your Liquidity Provider (${LP}) tokens yet.`}>
+          <Paragraph>
+            Deposit your tokens into the <Link sx={{textDecoration: "underline"}} target="_blank" href="https://www.saucerswap.finance/liquidity/0.0.6070468">HBAR/HCHF liquidity pool</Link>
+          </Paragraph>
+        </InfoMessage>
         <StaticRow
           label="Staked"
           inputId="deposit-share"

@@ -312,7 +312,7 @@ const theme: Theme = {
         justifyContent: "space-between",
         alignItems: "center",
 
-        height: "56px",
+        minHeight: "56px",
 
         pl: 3,
         py: 2,
