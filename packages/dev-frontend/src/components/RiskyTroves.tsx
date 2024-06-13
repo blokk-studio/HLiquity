@@ -21,6 +21,9 @@ import { LoadingOverlay } from "./LoadingOverlay";
 import { Transaction } from "./Transaction";
 import { Tooltip } from "./Tooltip";
 import { Abbreviation } from "./Abbreviation";
+import {
+  AccountId,
+} from '@hashgraph/sdk'
 
 const rowHeight = "40px";
 
@@ -153,6 +156,17 @@ export const RiskyTroves: React.FC<RiskyTrovesProps> = ({ pageSize }) => {
     }
   }, [copied]);
 
+  const getTroveAccountId = (troveOwnerAddress: string, shortened: boolean = false) => {
+    const accountId = AccountId.fromEvmAddress(0, 0, troveOwnerAddress)
+    const troveOwnerAddressDigits = troveOwnerAddress.substring(2) // remove `0x`
+
+    if (accountId.toString().endsWith(troveOwnerAddressDigits.toLocaleLowerCase())) {
+      return shortened ? shortenAddress(troveOwnerAddress.toLowerCase()) : troveOwnerAddress.toLowerCase();
+    }
+
+    return accountId.toString()
+  }
+
   return (
     <Card sx={{ width: "100%" }}>
       <Heading>
@@ -253,7 +267,7 @@ export const RiskyTroves: React.FC<RiskyTrovesProps> = ({ pageSize }) => {
                           height: rowHeight
                         }}
                       >
-                        <Tooltip message={trove.ownerAddress} placement="top">
+                        <Tooltip message={getTroveAccountId(trove.ownerAddress)} placement="top">
                           <Text
                             variant="address"
                             sx={{
@@ -262,7 +276,7 @@ export const RiskyTroves: React.FC<RiskyTrovesProps> = ({ pageSize }) => {
                               position: "relative"
                             }}
                           >
-                            {shortenAddress(trove.ownerAddress)}
+                            {getTroveAccountId(trove.ownerAddress, true)}
                             <Box
                               sx={{
                                 display: ["block", "none"],
@@ -279,12 +293,12 @@ export const RiskyTroves: React.FC<RiskyTrovesProps> = ({ pageSize }) => {
                         </Tooltip>
 
                         <CopyToClipboard
-                          text={trove.ownerAddress}
-                          onCopy={() => setCopied(trove.ownerAddress)}
+                          text={getTroveAccountId(trove.ownerAddress)}
+                          onCopy={() => setCopied(getTroveAccountId(trove.ownerAddress))}
                         >
                           <Button variant="icon" sx={{ width: "24px", height: "24px" }}>
                             <Icon
-                              name={copied === trove.ownerAddress ? "clipboard-check" : "clipboard"}
+                              name={copied === getTroveAccountId(trove.ownerAddress) ? "clipboard-check" : "clipboard"}
                               size="sm"
                             />
                           </Button>
