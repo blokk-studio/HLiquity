@@ -4,25 +4,32 @@ import { Trove } from "../components/Trove/Trove";
 import { Stability } from "../components/Stability/Stability";
 import { SystemStats } from "../components/SystemStats";
 import { Staking } from "../components/Staking/Staking";
-// import { StakingLP } from "../components/StakingLP/StakingLP";
-import { BondsTable } from "../components/Bonds/BondsTable";
 import { MineViewProvider } from "../components/Mine/context/MineViewProvider";
 import { Mine } from "../components/Mine/Mine";
+import { RedeemHchf } from "../components/RedeemHchf/RedeemHchf";
+import { useTimebasedFeatures } from "../timebased_features";
 
-export const Dashboard: React.FC = () => (
-  <Container variant="columns">
-    <Container variant="left">
-      <Trove />
-      <Stability />
-      <Staking />
-      {/* <StakingLP /> */}
-      <MineViewProvider>
-          <Mine />
-      </MineViewProvider>
-    </Container>
+export const Dashboard: React.FC = () => {
+  const { canRedeemHchf, canStakeLp } = useTimebasedFeatures();
 
-    <Container variant="right">
-      <SystemStats />
+  return (
+    <Container variant="columns">
+      <Container variant="left">
+        <Trove />
+        <Stability />
+        <Staking />
+        {canStakeLp && (
+          <MineViewProvider>
+            <Mine />
+          </MineViewProvider>
+        )}
+
+        {canRedeemHchf && <RedeemHchf />}
+      </Container>
+
+      <Container variant="right">
+        <SystemStats />
+      </Container>
     </Container>
-  </Container>
-);
+  );
+};
