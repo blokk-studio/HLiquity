@@ -34,7 +34,7 @@ export const Active: React.FC = () => {
   return (
     <Card>
       <Heading>
-        SaucerSwap LP Staking
+        SaucerSwap HBAR/HCHF-LP Staking
       </Heading>
       <Box sx={{ p: [2, 3] }}>
         <Box>

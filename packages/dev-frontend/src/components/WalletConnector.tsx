@@ -33,18 +33,11 @@ export const WalletConnector: React.FC<WalletConnectorProps> = () => {
         }}
       >
         <hgroup>
-          <Heading sx={{ color: "primary" }}>HLiquity.finance</Heading>
-
-          <Paragraph sx={{ marginTop: "0.5rem", fontSize: "1.125rem" }}>
-            {t("startScreen.subHeading")}
-          </Paragraph>
+          <Heading as="h1" sx={{ color: "primary" }}>HLiquity.finance</Heading>
         </hgroup>
 
         <Paragraph sx={{ marginTop: "2rem", fontSize: "1.125rem" }}>
-          {t("startScreen.introText.0")}
-          <span sx={{ color: "primary", fontWeight: "bold" }}>{t("startScreen.introText.1")}</span>
-          {t("startScreen.introText.2")}
-          <span sx={{ color: "primary", fontWeight: "bold" }}>{t("startScreen.introText.3")}</span>
+          HLiquity.finance is the pioneering front-end for decentralized, <span sx={{ color: "primary", fontWeight: "bold" }}>interest-free</span> DeFi borrowing on the Hedera Network, using HCHF pegged to the <span sx={{ color: "primary", fontWeight: "bold" }}>Swiss Franc</span>.
         </Paragraph>
 
         <Flex sx={{ flexDirection: "column", alignSelf: "center", marginTop: "2rem" }}>
