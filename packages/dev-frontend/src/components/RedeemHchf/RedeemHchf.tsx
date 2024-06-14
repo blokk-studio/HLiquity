@@ -106,7 +106,7 @@ export const RedeemHchf: React.FC = () => {
           maxAmount={hchfBalance.prettify()}
           maxedOut={amountOfHchfToRedeem.eq(hchfBalance)}
           editingState={editingState}
-          unit={COLLATERAL_COIN}
+          unit={COIN}
           editedAmount={amountOfHchfToRedeem.prettify(2)}
           setEditedAmount={amount => {
             setAmountOfHchfToRedeem(Decimal.from(amount));
