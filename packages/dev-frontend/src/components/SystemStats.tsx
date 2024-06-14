@@ -198,9 +198,8 @@ export const SystemStats: React.FC<SystemStatsProps> = ({ variant = "info", show
             <Link
               sx={{ color: "info" }}
               target="_blank"
-              href={`https://github.com/blokk-studio/HLiquity/commit/${
-                import.meta.env.VITE_APP_VERSION
-              }`}
+              href={`https://github.com/blokk-studio/HLiquity/commit/${import.meta.env.VITE_APP_VERSION
+                }`}
             >
               {import.meta.env.VITE_APP_VERSION.substring(0, 7)}
             </Link>
