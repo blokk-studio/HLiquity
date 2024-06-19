@@ -120,7 +120,7 @@ export const Adjusting: React.FC = () => {
   return (
     <Card>
       <Heading>
-        SaucerSwap LP Staking
+        SaucerSwap HBAR/HCHF-LP Staking
         <Steps steps={steps} />
         {isDirty && (
           <Button

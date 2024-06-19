@@ -109,7 +109,7 @@ export const Staking: React.FC = () => {
           gridTemplateColumns: "1fr repeat(2, auto)"
         }}
       >
-        SaucerSwap LP Staking
+        SaucerSwap HBAR/HCHF-LP Staking
         <Steps steps={steps} />
         {isDirty && (
           <Button
