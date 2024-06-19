@@ -103,7 +103,7 @@ export const RedeemHchf: React.FC = () => {
           label="HCHF to redeem for HBAR"
           inputId="hchf-redemption-amount"
           amount={amountOfHchfToRedeem.prettify()}
-          maxAmount={hchfBalance.prettify()}
+          maxAmount={hchfBalance.toString()}
           maxedOut={amountOfHchfToRedeem.eq(hchfBalance)}
           editingState={editingState}
           unit={COIN}
