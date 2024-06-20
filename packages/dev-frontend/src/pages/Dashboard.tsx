@@ -10,7 +10,7 @@ import { RedeemHchf } from "../components/RedeemHchf/RedeemHchf";
 import { useTimebasedFeatures } from "../timebased_features";
 
 export const Dashboard: React.FC = () => {
-  const { canRedeemHchf, canStakeLp } = useTimebasedFeatures();
+  const { canRedeemHchf } = useTimebasedFeatures();
 
   return (
     <Container variant="columns">
@@ -18,11 +18,9 @@ export const Dashboard: React.FC = () => {
         <Trove />
         <Stability />
         <Staking />
-        {canStakeLp && (
-          <MineViewProvider>
-            <Mine />
-          </MineViewProvider>
-        )}
+        <MineViewProvider>
+          <Mine />
+        </MineViewProvider>
 
         {canRedeemHchf && <RedeemHchf />}
       </Container>
