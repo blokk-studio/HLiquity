@@ -1,5 +1,5 @@
 import React, { useCallback } from "react";
-import { Card, Heading, Box, Flex, Button } from "theme-ui";
+import { Card, Heading, Box, Flex, Button, Text, Link } from "theme-ui";
 import { LP, GT } from "../../../../strings";
 import { LiquityStoreState } from "@liquity/lib-base";
 import { useLiquitySelector } from "@liquity/lib-react";
@@ -8,6 +8,7 @@ import { useMyTransactionState } from "../../../Transaction";
 import { DisabledEditableRow, StaticRow } from "../../../Trove/Editor";
 import { useMineView } from "../../context/MineViewContext";
 import { ClaimReward } from "./ClaimReward";
+import { ActionDescription } from "../../../ActionDescription";
 
 const selector = ({ liquidityMiningStake, liquidityMiningHLQTReward, totalStakedUniTokens }: LiquityStoreState) => ({
   liquidityMiningStake,
@@ -58,6 +59,10 @@ export const Active: React.FC = () => {
             unit={GT}
           />
         </Box>
+
+        <ActionDescription>
+          <Text>Deposit your tokens into the <Link sx={{ textDecoration: "underline" }} target="_blank" href="https://www.saucerswap.finance/liquidity/0.0.6070468">HBAR/HCHF liquidity pool</Link></Text>
+        </ActionDescription>
 
         <Flex variant="layout.actions">
           <Button variant="outline" onClick={handleAdjustPressed}>
