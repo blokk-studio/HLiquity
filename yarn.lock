@@ -2113,7 +2113,7 @@ __metadata:
     "@types/react": 17.0.3
     "@types/react-copy-to-clipboard": 5.0.0
     "@types/react-dom": 17.0.2
-    "@types/react-modal": ^3.13.1
+    "@types/react-modal": ^3.16.3
     "@types/react-router-dom": 5.1.7
     "@types/testing-library__jest-dom": 5.9.5
     "@types/testing-library__react": 10.2.0
@@ -2138,7 +2138,7 @@ __metadata:
     react-copy-to-clipboard: 5.0.3
     react-dom: 17.0.2
     react-i18next: ^15.0.2
-    react-modal: ^3.15.1
+    react-modal: ^3.16.1
     react-router-dom: 5.2.0
     recharts: 2.1.10
     rollup-plugin-polyfill-node: ^0.12.0
@@ -5259,12 +5259,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react-modal@npm:^3.13.1":
-  version: 3.13.1
-  resolution: "@types/react-modal@npm:3.13.1"
+"@types/react-modal@npm:^3.16.3":
+  version: 3.16.3
+  resolution: "@types/react-modal@npm:3.16.3"
   dependencies:
     "@types/react": "*"
-  checksum: b0ad403e0051a2882e9086c6006cc342901b1c90caf760893b31717a5cbc04f86cc1ea7b5ce12a2c8350c9c09e9b344de3783404e70b7c7ea6a037d0ffd70e99
+  checksum: 53c92dfbe46aae6f4ca4d96a166fd69a4b8dc539c5e8f755086dd1471656924ca6dd0a179be746c634686a0073aef67bb9615ee8600d9536cc1521b738e48453
   languageName: node
   linkType: hard
 
@@ -21672,9 +21672,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-modal@npm:^3.15.1":
-  version: 3.15.1
-  resolution: "react-modal@npm:3.15.1"
+"react-modal@npm:^3.16.1":
+  version: 3.16.1
+  resolution: "react-modal@npm:3.16.1"
   dependencies:
     exenv: ^1.2.0
     prop-types: ^15.7.2
@@ -21683,7 +21683,7 @@ __metadata:
   peerDependencies:
     react: ^0.14.0 || ^15.0.0 || ^16 || ^17 || ^18
     react-dom: ^0.14.0 || ^15.0.0 || ^16 || ^17 || ^18
-  checksum: ee99ca312c35bcec9ef0868babf970ce03c52801731e29be336bb6bdc867a1ecf00a73e1fb5bc3b1b1ef66ceb0c9b4a0199fadb85b1b9829f731409951b018f0
+  checksum: 978936e9320fad839c039b9ee4de55d40888156cb40e093615d6fbc2ff07139d5db06f14782cb7767f780bd5fb57956778669426c535ebc0068a7a03882c7e75
   languageName: node
   linkType: hard
 
