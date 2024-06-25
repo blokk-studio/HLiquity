@@ -2121,7 +2121,7 @@ __metadata:
     react-circular-progressbar: 2.0.3
     react-copy-to-clipboard: 5.0.3
     react-dom: 17.0.2
-    react-i18next: ^14.1.1
+    react-i18next: ^14.1.2
     react-modal: ^3.15.1
     react-router-dom: 5.2.0
     recharts: 2.1.10
@@ -21607,9 +21607,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-i18next@npm:^14.1.1":
-  version: 14.1.1
-  resolution: "react-i18next@npm:14.1.1"
+"react-i18next@npm:^14.1.2":
+  version: 14.1.2
+  resolution: "react-i18next@npm:14.1.2"
   dependencies:
     "@babel/runtime": ^7.23.9
     html-parse-stringify: ^3.0.1
@@ -21621,7 +21621,7 @@ __metadata:
       optional: true
     react-native:
       optional: true
-  checksum: e1a00f82f355c439bc9e98cb8bc6fccbab769fa8f0e5da1545cfb262dc228183615aa89bad91b90db6d8de1949bb54f0c1655aec04c8947daf8383af07b1eff3
+  checksum: 1e943bc1537136a0054801f2df8cd114e0789aa94dd7397e0b98e2848371a2bb5c7d855e99393ac9381fe5d8242bb4e2c27cc6d8e7f3a0e9c1b241ecd2d4bdab
   languageName: node
   linkType: hard
 
