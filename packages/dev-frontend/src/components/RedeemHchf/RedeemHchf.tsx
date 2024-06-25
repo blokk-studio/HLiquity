@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import { Flex, Button, Box, Card, Heading } from "theme-ui";
-import { Decimal } from "@liquity/lib-base";
+import { Decimal, HCHF_MINIMUM_DEBT } from "@liquity/lib-base";
 import { useLiquitySelector } from "@liquity/lib-react";
 
 import { Amount } from "../ActionDescription";
 import { useMyTransactionState, useTransactionFunction } from "../Transaction";
-import { COIN, COLLATERAL_COIN } from "../../strings";
+import { COIN } from "../../strings";
 import { Icon } from "../Icon";
 
 import { Step, Steps, getCompletableStepStatus } from "../Steps";
@@ -38,7 +38,9 @@ export const RedeemHchf: React.FC = () => {
 
   const isDirty = amountOfHchfToRedeem.gt(Decimal.ZERO);
   const isRedemptionAmountWithinBalance = amountOfHchfToRedeem.lte(hchfBalance);
-  const isValidRedemption = amountOfHchfToRedeem.gt(Decimal.ZERO) && isRedemptionAmountWithinBalance;
+  const isRedeemingMinimum = amountOfHchfToRedeem.gte(HCHF_MINIMUM_DEBT);
+  const isValidRedemption =
+    amountOfHchfToRedeem.gt(Decimal.ZERO) && isRedemptionAmountWithinBalance && isRedeemingMinimum;
 
   // consent & approval
   // hchf token association
@@ -112,6 +114,16 @@ export const RedeemHchf: React.FC = () => {
             setAmountOfHchfToRedeem(Decimal.from(amount));
           }}
         />
+
+        {!isRedeemingMinimum && (
+          <ErrorDescription>
+            You need to redeem at least{" "}
+            <Amount>
+              {HCHF_MINIMUM_DEBT.prettify(0)} {COIN}
+            </Amount>
+            .
+          </ErrorDescription>
+        )}
 
         {!isRedemptionAmountWithinBalance && (
           <ErrorDescription>
