@@ -387,129 +387,131 @@ export class HashgraphLiquity
         userHasAssociatedWithLpToken,
       }
     })()
-    const { blockTimestamp, createFees, calculateRemainingHLQT, ...baseState } =
-      await promiseAllValues({
-        // _getFeesFactory({ blockTag }),
-        calculateRemainingHLQT: this.getRemainingLiquidityMiningHLQTReward({ blockTag }),
-        blockTimestamp: getBlockTimestamp(this.web3, blockTag),
-        createFees: (blockTimestamp: number, isInRecoveryMode: boolean) =>
-          new Fees(
-            0,
-            MINUTE_DECAY_FACTOR,
-            BETA,
-            new Date(),
-            new Date(blockTimestamp * 100),
-            isInRecoveryMode,
-          ),
-        // calculateRemainingHLQT: (blockTimestamp: number) => Decimal.from(0),
+    const {
+      blockTimestamp,
+      calculateRemainingHLQT,
+      lastFeeOperationTimeResult,
+      baseRateResult,
+      ...baseState
+    } = await promiseAllValues({
+      blockTimestamp: getBlockTimestamp(this.web3, blockTag),
+      calculateRemainingHLQT: this.getRemainingLiquidityMiningHLQTReward({ blockTag }),
+      lastFeeOperationTimeResult: this.troveManager.methods
+        .lastFeeOperationTime()
+        .call(undefined, blockTag),
+      baseRateResult: this.troveManager.methods.baseRate().call(undefined, blockTag),
+      price: this.getPrice({ blockTag }),
+      numberOfTroves: this.getNumberOfTroves({ blockTag }),
+      totalRedistributed: this.getTotalRedistributed({ blockTag }),
+      total: this.getTotal({ blockTag }),
+      hchfInStabilityPool: this.getHCHFInStabilityPool({ blockTag }),
+      totalStakedHLQT: this.getTotalStakedHLQT({ blockTag }),
+      _riskiestTroveBeforeRedistribution: new TroveWithPendingRedistribution(
+        this.userAccountAddress,
+        userTroveStatusFrom(BackendTroveStatus.nonExistent),
+      ),
+      totalStakedUniTokens: this.getTotalStakedUniTokens({ blockTag }),
+      remainingStabilityPoolHLQTReward: this.getRemainingStabilityPoolHLQTReward({
+        blockTag,
+      }),
 
-        price: this.getPrice({ blockTag }),
-        numberOfTroves: this.getNumberOfTroves({ blockTag }),
-        totalRedistributed: this.getTotalRedistributed({ blockTag }),
-        total: this.getTotal({ blockTag }),
-        hchfInStabilityPool: this.getHCHFInStabilityPool({ blockTag }),
-        totalStakedHLQT: this.getTotalStakedHLQT({ blockTag }),
-        // _riskiestTroveBeforeRedistribution: this._getRiskiestTroveBeforeRedistribution({
-        //   blockTag,
-        // }),
-        _riskiestTroveBeforeRedistribution: new TroveWithPendingRedistribution(
-          this.userAccountAddress,
-          userTroveStatusFrom(BackendTroveStatus.nonExistent),
-        ),
-        totalStakedUniTokens: this.getTotalStakedUniTokens({ blockTag }),
-        remainingStabilityPoolHLQTReward: this.getRemainingStabilityPoolHLQTReward({
-          blockTag,
-        }),
+      frontend: this.frontendAddress
+        ? this.getFrontendStatus(this.frontendAddress, { blockTag })
+        : { status: 'unregistered' as const },
+      userHasAssociatedWithHchf: tokenAssociationsPromise.then(
+        (associations) => associations.userHasAssociatedWithHchf,
+      ),
+      userHasAssociatedWithHlqt: tokenAssociationsPromise.then(
+        (associations) => associations.userHasAssociatedWithHlqt,
+      ),
+      userHasAssociatedWithLpToken: tokenAssociationsPromise.then(
+        (associations) => associations.userHasAssociatedWithLpToken,
+      ),
 
-        frontend: this.frontendAddress
-          ? this.getFrontendStatus(this.frontendAddress, { blockTag })
-          : { status: 'unregistered' as const },
-        userHasAssociatedWithHchf: tokenAssociationsPromise.then(
-          (associations) => associations.userHasAssociatedWithHchf,
-        ),
-        userHasAssociatedWithHlqt: tokenAssociationsPromise.then(
-          (associations) => associations.userHasAssociatedWithHlqt,
-        ),
-        userHasAssociatedWithLpToken: tokenAssociationsPromise.then(
-          (associations) => associations.userHasAssociatedWithLpToken,
-        ),
-
-        ...(this.userAccountAddress
-          ? {
-              accountBalance: this.web3.eth
-                .getBalance(this.userAccountAddress, blockTag)
-                .then((bigInt) =>
-                  Decimal.fromBigNumberStringWithPrecision(`0x${bigInt.toString(16)}`, 18),
-                ),
-              hchfBalance: this.getHCHFBalance(this.userAccountAddress, { blockTag }),
-              hchfTokenAddress: this.getHCHFTokenAddress({ blockTag }),
-              hlqtTokenAddress: this.getHLQTTokenAddress({ blockTag }),
-              hlqtBalance: this.getHLQTBalance(this.userAccountAddress, { blockTag }),
-              uniTokenBalance: this.getUniTokenBalance(this.userAccountAddress, { blockTag }),
-              uniTokenAllowance: this.getUniTokenAllowance(this.userAccountAddress, { blockTag }),
-              liquidityMiningStake: this.getLiquidityMiningStake(this.userAccountAddress, {
-                blockTag,
-              }),
-              liquidityMiningHLQTReward: this.getLiquidityMiningHLQTReward(
-                this.userAccountAddress,
-                {
-                  blockTag,
-                },
+      ...(this.userAccountAddress
+        ? {
+            accountBalance: this.web3.eth
+              .getBalance(this.userAccountAddress, blockTag)
+              .then((bigInt) =>
+                Decimal.fromBigNumberStringWithPrecision(`0x${bigInt.toString(16)}`, 18),
               ),
-              collateralSurplusBalance: this.getCollateralSurplusBalance(this.userAccountAddress, {
-                blockTag,
-              }),
-              troveBeforeRedistribution: this.getTroveBeforeRedistribution(
-                this.userAccountAddress,
-                {
-                  blockTag,
-                },
-              ),
-              stabilityDeposit: this.getStabilityDeposit(this.userAccountAddress, { blockTag }),
-              hlqtStake: this.getHLQTStake(this.userAccountAddress, { blockTag }),
-              ownFrontend: this.getFrontendStatus(this.userAccountAddress, { blockTag }),
-              hchfTokenAllowanceOfHchfContract: this.getHchfTokenAllowanceOfHchfContract(
-                this.userAccountAddress,
-                { blockTag },
-              ),
-              hlqtTokenAllowanceOfHlqtContract: this.getHlqtTokenAllowanceOfHlqtContract(
-                this.userAccountAddress,
-                { blockTag },
-              ),
-            }
-          : {
-              accountBalance: Decimal.ZERO,
-              hchfBalance: Decimal.ZERO,
-              hlqtBalance: Decimal.ZERO,
-              hchfTokenAddress: '0x',
-              hlqtTokenAddress: '0x',
-              uniTokenBalance: Decimal.ZERO,
-              uniTokenAllowance: Decimal.ZERO,
-              liquidityMiningStake: Decimal.ZERO,
-              liquidityMiningHLQTReward: Decimal.ZERO,
-              collateralSurplusBalance: Decimal.ZERO,
-              troveBeforeRedistribution: new TroveWithPendingRedistribution(
-                AddressZero,
-                'nonExistent',
-              ),
-              stabilityDeposit: new StabilityDeposit(
-                Decimal.ZERO,
-                Decimal.ZERO,
-                Decimal.ZERO,
-                Decimal.ZERO,
-                AddressZero,
-              ),
-              hlqtStake: new HLQTStake(),
-              ownFrontend: { status: 'unregistered' as const },
-              hchfTokenAllowanceOfHchfContract: Decimal.ZERO,
-              hlqtTokenAllowanceOfHlqtContract: Decimal.ZERO,
+            hchfBalance: this.getHCHFBalance(this.userAccountAddress, { blockTag }),
+            hchfTokenAddress: this.getHCHFTokenAddress({ blockTag }),
+            hlqtTokenAddress: this.getHLQTTokenAddress({ blockTag }),
+            hlqtBalance: this.getHLQTBalance(this.userAccountAddress, { blockTag }),
+            uniTokenBalance: this.getUniTokenBalance(this.userAccountAddress, { blockTag }),
+            uniTokenAllowance: this.getUniTokenAllowance(this.userAccountAddress, { blockTag }),
+            liquidityMiningStake: this.getLiquidityMiningStake(this.userAccountAddress, {
+              blockTag,
             }),
-      })
+            liquidityMiningHLQTReward: this.getLiquidityMiningHLQTReward(this.userAccountAddress, {
+              blockTag,
+            }),
+            collateralSurplusBalance: this.getCollateralSurplusBalance(this.userAccountAddress, {
+              blockTag,
+            }),
+            troveBeforeRedistribution: this.getTroveBeforeRedistribution(this.userAccountAddress, {
+              blockTag,
+            }),
+            stabilityDeposit: this.getStabilityDeposit(this.userAccountAddress, { blockTag }),
+            hlqtStake: this.getHLQTStake(this.userAccountAddress, { blockTag }),
+            ownFrontend: this.getFrontendStatus(this.userAccountAddress, { blockTag }),
+            hchfTokenAllowanceOfHchfContract: this.getHchfTokenAllowanceOfHchfContract(
+              this.userAccountAddress,
+              { blockTag },
+            ),
+            hlqtTokenAllowanceOfHlqtContract: this.getHlqtTokenAllowanceOfHlqtContract(
+              this.userAccountAddress,
+              { blockTag },
+            ),
+          }
+        : {
+            accountBalance: Decimal.ZERO,
+            hchfBalance: Decimal.ZERO,
+            hlqtBalance: Decimal.ZERO,
+            hchfTokenAddress: '0x',
+            hlqtTokenAddress: '0x',
+            uniTokenBalance: Decimal.ZERO,
+            uniTokenAllowance: Decimal.ZERO,
+            liquidityMiningStake: Decimal.ZERO,
+            liquidityMiningHLQTReward: Decimal.ZERO,
+            collateralSurplusBalance: Decimal.ZERO,
+            troveBeforeRedistribution: new TroveWithPendingRedistribution(
+              AddressZero,
+              'nonExistent',
+            ),
+            stabilityDeposit: new StabilityDeposit(
+              Decimal.ZERO,
+              Decimal.ZERO,
+              Decimal.ZERO,
+              Decimal.ZERO,
+              AddressZero,
+            ),
+            hlqtStake: new HLQTStake(),
+            ownFrontend: { status: 'unregistered' as const },
+            hchfTokenAllowanceOfHchfContract: Decimal.ZERO,
+            hlqtTokenAllowanceOfHlqtContract: Decimal.ZERO,
+          }),
+    })
+
+    const baseRateWithoutDecay = decimalify(baseRateResult)
+    const lastFeeOperationTimestamp = parseInt(lastFeeOperationTimeResult.toString())
+    const lastFeeOperationDate = new Date(lastFeeOperationTimestamp * 1000)
+    const timeOfLatestBlock = new Date(blockTimestamp * 1000)
+
+    const _feesInNormalMode = new Fees(
+      baseRateWithoutDecay,
+      MINUTE_DECAY_FACTOR,
+      BETA,
+      lastFeeOperationDate,
+      timeOfLatestBlock,
+      false,
+    )
 
     return [
       {
         ...baseState,
-        _feesInNormalMode: createFees(blockTimestamp, false),
+        _feesInNormalMode,
         remainingLiquidityMiningHLQTReward: calculateRemainingHLQT,
       },
       {
