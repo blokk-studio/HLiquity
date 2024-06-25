@@ -2111,7 +2111,7 @@ __metadata:
     "@testing-library/user-event": 12.8.3
     "@tippyjs/react": 4.2.5
     "@types/react": 17.0.3
-    "@types/react-copy-to-clipboard": 5.0.0
+    "@types/react-copy-to-clipboard": 5.0.7
     "@types/react-dom": 17.0.2
     "@types/react-modal": ^3.13.1
     "@types/react-router-dom": 5.1.7
@@ -2135,7 +2135,7 @@ __metadata:
     npm-run-all: 4.1.5
     react: 17.0.2
     react-circular-progressbar: 2.0.3
-    react-copy-to-clipboard: 5.0.3
+    react-copy-to-clipboard: 5.1.0
     react-dom: 17.0.2
     react-i18next: ^15.0.2
     react-modal: ^3.15.1
@@ -5241,12 +5241,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react-copy-to-clipboard@npm:5.0.0":
-  version: 5.0.0
-  resolution: "@types/react-copy-to-clipboard@npm:5.0.0"
+"@types/react-copy-to-clipboard@npm:5.0.7":
+  version: 5.0.7
+  resolution: "@types/react-copy-to-clipboard@npm:5.0.7"
   dependencies:
     "@types/react": "*"
-  checksum: 498c9edcda5dbc78c594d3f1565b843a30251d24cc56f4365f90624552acdd03bb3342b2fbcbafdb660a59245368d977d19460679e00288e1327b53c4f1e6bbf
+  checksum: adc2970c8756e648daa06e294c422df3dc076a784344ab2ecb78a17ebd7e8e3dfd7f31e68c24267de4815cdeec573a743d952a308b45b8380f6b7912a9a8b911
   languageName: node
   linkType: hard
 
@@ -10080,7 +10080,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"copy-to-clipboard@npm:^3, copy-to-clipboard@npm:^3.3.1, copy-to-clipboard@npm:^3.3.3":
+"copy-to-clipboard@npm:^3.3.1, copy-to-clipboard@npm:^3.3.3":
   version: 3.3.3
   resolution: "copy-to-clipboard@npm:3.3.3"
   dependencies:
@@ -21134,7 +21134,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"prop-types@npm:^15.5.8, prop-types@npm:^15.6.2, prop-types@npm:^15.7.2":
+"prop-types@npm:^15.6.2, prop-types@npm:^15.7.2":
   version: 15.7.2
   resolution: "prop-types@npm:15.7.2"
   dependencies:
@@ -21142,6 +21142,17 @@ __metadata:
     object-assign: ^4.1.1
     react-is: ^16.8.1
   checksum: 5eef82fdda64252c7e75aa5c8cc28a24bbdece0f540adb60ce67c205cf978a5bd56b83e4f269f91c6e4dcfd80b36f2a2dec24d362e278913db2086ca9c6f9430
+  languageName: node
+  linkType: hard
+
+"prop-types@npm:^15.8.1":
+  version: 15.8.1
+  resolution: "prop-types@npm:15.8.1"
+  dependencies:
+    loose-envify: ^1.4.0
+    object-assign: ^4.1.1
+    react-is: ^16.13.1
+  checksum: c056d3f1c057cb7ff8344c645450e14f088a915d078dcda795041765047fa080d38e5d626560ccaac94a4e16e3aa15f3557c1a9a8d1174530955e992c675e459
   languageName: node
   linkType: hard
 
@@ -21608,15 +21619,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-copy-to-clipboard@npm:5.0.3":
-  version: 5.0.3
-  resolution: "react-copy-to-clipboard@npm:5.0.3"
+"react-copy-to-clipboard@npm:5.1.0":
+  version: 5.1.0
+  resolution: "react-copy-to-clipboard@npm:5.1.0"
   dependencies:
-    copy-to-clipboard: ^3
-    prop-types: ^15.5.8
+    copy-to-clipboard: ^3.3.1
+    prop-types: ^15.8.1
   peerDependencies:
-    react: ^15.3.0 || ^16.0.0 || ^17.0.0
-  checksum: b10d846ffa283d3de4cccc8e25927cb32d5ab8bf3d21586e1665459859653583971f7db6594176a807d42bce2a443c2c0a094b1657eb75cf04b95dfb64a22d84
+    react: ^15.3.0 || 16 || 17 || 18
+  checksum: f00a4551b9b63c944a041a6ab46af5ef20ba1106b3bc25173e7ef9bffbfba17a613368682ab8820cfe8d4b3acc5335cd9ce20229145bcc1e6aa8d1db04c512e5
   languageName: node
   linkType: hard
 
@@ -21651,7 +21662,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-is@npm:^16.10.2, react-is@npm:^16.6.0, react-is@npm:^16.7.0, react-is@npm:^16.8.1":
+"react-is@npm:^16.10.2, react-is@npm:^16.13.1, react-is@npm:^16.6.0, react-is@npm:^16.7.0, react-is@npm:^16.8.1":
   version: 16.13.1
   resolution: "react-is@npm:16.13.1"
   checksum: f7a19ac3496de32ca9ae12aa030f00f14a3d45374f1ceca0af707c831b2a6098ef0d6bdae51bd437b0a306d7f01d4677fcc8de7c0d331eb47ad0f46130e53c5f
