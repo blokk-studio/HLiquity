@@ -49,8 +49,9 @@ export const useLoadingState = <Type>(
     setResult(null);
     setError(null);
     // man, react sucks bad
+    // I think it's nice xD ^^
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, resetDependencies);
+  }, [resetDependencies]);
 
   return {
     state,
