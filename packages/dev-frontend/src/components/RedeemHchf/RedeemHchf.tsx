@@ -15,7 +15,7 @@ import { LoadingButton } from "../LoadingButton";
 import { EditableRow } from "../Trove/Editor";
 import { ErrorDescription } from "../ErrorDescription";
 
-const TRANSACTION_ID = "trove-adjustment";
+const TRANSACTION_ID = "hchf-redemption";
 
 export const RedeemHchf: React.FC = () => {
   const { hchfBalance } = useLiquitySelector(state => state);
@@ -26,10 +26,16 @@ export const RedeemHchf: React.FC = () => {
     transactionState.type === "waitingForApproval" ||
     transactionState.type === "waitingForConfirmation";
   const [sendTransaction] = useTransactionFunction(TRANSACTION_ID, async () => {
-    const sentTransaction = await liquity.send.redeemHCHF(amountOfHchfToRedeem);
-    setAmountOfHchfToRedeem(Decimal.ZERO);
+    try {
+      const sentTransaction = await liquity.send.redeemHCHF(amountOfHchfToRedeem);
 
-    return sentTransaction;
+      setAmountOfHchfToRedeem(Decimal.ZERO);
+
+      return sentTransaction;
+    } catch (error) {
+      console.debug({ redeemHchf: error });
+      throw error;
+    }
   });
 
   const reset = () => {

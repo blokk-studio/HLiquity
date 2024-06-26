@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { Heading, Box, Flex, Card, Button } from "theme-ui";
+import { Heading, Box, Flex, Card, Button, Text, Link } from "theme-ui";
 import { Decimal, LiquityStoreState } from "@liquity/lib-base";
 import { useLiquitySelector } from "@liquity/lib-react";
 
@@ -15,6 +15,7 @@ import { useLoadingState } from "../../../../loading_state";
 import { useLiquity } from "../../../../hooks/LiquityContext";
 import { useValidationState } from "../../context/useValidationState";
 import { LoadingButton } from "../../../LoadingButton";
+import { ActionDescription } from "../../../ActionDescription";
 
 const selector = ({
   liquidityMiningStake,
@@ -158,9 +159,13 @@ export const Adjusting: React.FC = () => {
           color={liquidityMiningHLQTReward.nonZero && "success"}
           unit={GT}
         />
+        <ActionDescription>
+          <Text>Deposit your tokens into the <Link sx={{ textDecoration: "underline" }} target="_blank" href="https://www.saucerswap.finance/liquidity/0.0.6070468">HBAR/HCHF liquidity pool</Link></Text>
+        </ActionDescription>
 
         {isDirty && <Validation amount={amount} />}
         <Description amount={amount} />
+
 
         <Flex variant="layout.actions">
           <Button variant="cancel" onClick={handleCancelPressed}>
