@@ -149,11 +149,11 @@ export const SystemStats: React.FC<SystemStatsProps> = ({ variant = "info", show
               </a>
               ) and Supra (
               <a
-                href="https://supra.com/data/details?instrumentName=hbar_usd&providerName=supra"
+                href="https://supra.com/data/details?instrumentName=hbar_usdt&providerName=supra"
                 rel="noreferrer noopener"
                 target="_blank"
               >
-                HBAR/USD
+                HBAR/USDT
               </a>
               ,
               <a
