@@ -20,8 +20,7 @@ export const Yield: React.FC = () => {
   const { hchfInStabilityPool, remainingStabilityPoolHLQTReward } = useLiquitySelector(selector);
 
   const [hlqtPrice, setHlqtPrice] = useState<Decimal | undefined>(undefined);
-  const hasZeroValue =
-    remainingStabilityPoolHLQTReward?.isZero || hchfInStabilityPool?.isZero || true;
+  const hasZeroValue = remainingStabilityPoolHLQTReward.isZero || hchfInStabilityPool.isZero;
 
   useEffect(() => {
     (async () => {
@@ -37,8 +36,8 @@ export const Yield: React.FC = () => {
   if (hasZeroValue || hlqtPrice === undefined) return null;
 
   const lqtyIssuanceOneDay = remainingStabilityPoolHLQTReward.mul(dailyIssuanceFraction);
-  const lqtyIssuanceOneDayInUSD = lqtyIssuanceOneDay.mul(hlqtPrice);
-  const aprPercentage = lqtyIssuanceOneDayInUSD.mulDiv(365 * 100, hchfInStabilityPool);
+  const lqtyIssuanceOneDayInCHF = lqtyIssuanceOneDay.mul(hlqtPrice);
+  const aprPercentage = lqtyIssuanceOneDayInCHF.mulDiv(365 * 100, hchfInStabilityPool);
   const remainingHlqtInCHF = remainingStabilityPoolHLQTReward.mul(hlqtPrice);
 
   if (aprPercentage.isZero) return null;
@@ -48,7 +47,7 @@ export const Yield: React.FC = () => {
       <Text>HLQT APR {aprPercentage.toString(2)}%</Text>
       <InfoIcon
         tooltip={
-          <Card variant="tooltip" sx={{ width: ["220px", "518px"] }}>
+          <Card variant="tooltip">
             <Paragraph>
               An <Text sx={{ fontWeight: "bold" }}>estimate</Text> of the {GT} return on the {COIN}
               deposited to the Stability Pool over the next year, not including your{" "}
@@ -59,7 +58,7 @@ export const Yield: React.FC = () => {
               <Text sx={{ fontWeight: "bold" }}> APR</Text>
             </Paragraph>
             <Paragraph sx={{ fontSize: "12px", fontFamily: "monospace" }}>
-              (CHF
+              (CHF {" "}
               {remainingHlqtInCHF.shorten()} * {dailyIssuancePercentage.toString(4)}% / CHF
               {hchfInStabilityPool.shorten()}) * 365 * 100 =
               <Text sx={{ fontWeight: "bold" }}> {aprPercentage.toString(2)}%</Text>
