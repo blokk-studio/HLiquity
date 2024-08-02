@@ -72,10 +72,10 @@ export interface HlqtPriceResponse {
 }
 
 export const fetchHlqtPrice = async (): Promise<HlqtPriceResponse> => {
-  // TODO: hlqt + chf
-  const response = await fetchCoinGeckoSimplePrice(["liquity"] as const, ["usd"] as const);
+  // https://api.coingecko.com/api/v3/simple/price?ids=hedera-liquity&vs_currencies=chf
+  const response = await fetchCoinGeckoSimplePrice(["hedera-liquity"] as const, ["chf"] as const);
 
   return {
-    hlqtPriceCHF: Decimal.from(response.liquity.usd)
+    hlqtPriceCHF: Decimal.from(response?.["hedera-liquity"]?.chf)
   };
 };
