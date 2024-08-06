@@ -27,6 +27,7 @@ import { PrivacyPolicyPage } from "./pages/PrivacyPolicyPage";
 import { ImprintPage } from "./pages/ImprintPage";
 import ScrollToTop from "./components/ScrollToTop";
 import { ComponentTree } from "./components/ComponentTree";
+import { DisclaimerPage } from "./pages/DisclaimerPage.tsx";
 
 export const LiquityFrontend: React.FC = () => {
   const { account: accountAddress, liquity } = useLiquity();
@@ -81,6 +82,9 @@ export const LiquityFrontend: React.FC = () => {
                 </Route>
                 <Route path="/imprint">
                   <ImprintPage />
+                </Route>
+                <Route path="/disclaimer">
+                  <DisclaimerPage />
                 </Route>
               </Switch>
             </PageSwitcher>
