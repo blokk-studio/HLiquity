@@ -49,7 +49,7 @@ export const Yield: React.FC = () => {
         tooltip={
           <Card variant="tooltip">
             <Paragraph>
-              An <Text sx={{ fontWeight: "bold" }}>estimate</Text> of the {GT} return on the {COIN}
+              An <Text sx={{ fontWeight: "bold" }}>estimate</Text> of the {GT} return on the {COIN} {" "}
               deposited to the Stability Pool over the next year, not including your{" "}
               {COLLATERAL_COIN} gains from liquidations.
             </Paragraph>
