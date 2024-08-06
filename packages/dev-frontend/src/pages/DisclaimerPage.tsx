@@ -27,7 +27,7 @@ export const DisclaimerPage: React.FC = () => (
       </Paragraph>
 
       <Heading as="h2" sx={headingSX}>
-        General Disclaimer:
+        General Disclaimer
       </Heading>
 
       <Paragraph sx={paragraphSX}>
@@ -37,7 +37,7 @@ export const DisclaimerPage: React.FC = () => (
       </Paragraph>
 
       <Heading as="h2" sx={headingSX}>
-        No Investment Advice:
+        No Investment Advice
       </Heading>
 
       <Paragraph sx={paragraphSX}>
@@ -67,7 +67,7 @@ export const DisclaimerPage: React.FC = () => (
       </Paragraph>
 
       <Heading as="h2" sx={headingSX}>
-        No Warranties:
+        No Warranties
       </Heading>
 
       <Paragraph sx={paragraphSX}>
@@ -82,7 +82,7 @@ export const DisclaimerPage: React.FC = () => (
       </Paragraph>
 
       <Heading as="h2" sx={headingSX}>
-        Your Responsibility:
+        Your Responsibility
       </Heading>
 
       <Paragraph sx={paragraphSX}>
