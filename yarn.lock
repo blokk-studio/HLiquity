@@ -2107,7 +2107,7 @@ __metadata:
     "@metamask/eth-sig-util": 5.0.1
     "@testing-library/dom": 7.30.0
     "@testing-library/jest-dom": 5.11.9
-    "@testing-library/react": 11.2.5
+    "@testing-library/react": 16.0.1
     "@testing-library/user-event": 12.8.3
     "@tippyjs/react": 4.2.5
     "@types/react": 17.0.3
@@ -4495,7 +4495,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@testing-library/react@npm:*, @testing-library/react@npm:11.2.5":
+"@testing-library/react@npm:*":
   version: 11.2.5
   resolution: "@testing-library/react@npm:11.2.5"
   dependencies:
@@ -4505,6 +4505,26 @@ __metadata:
     react: "*"
     react-dom: "*"
   checksum: d30daf11a52b17af845faa5757e0ea36c89feb8053cbf26ac273195b774da74ecd1d76377031d44d3741841ff0809ce2a294b2f64f3025d08a5015274bfca54d
+  languageName: node
+  linkType: hard
+
+"@testing-library/react@npm:16.0.1":
+  version: 16.0.1
+  resolution: "@testing-library/react@npm:16.0.1"
+  dependencies:
+    "@babel/runtime": ^7.12.5
+  peerDependencies:
+    "@testing-library/dom": ^10.0.0
+    "@types/react": ^18.0.0
+    "@types/react-dom": ^18.0.0
+    react: ^18.0.0
+    react-dom: ^18.0.0
+  peerDependenciesMeta:
+    "@types/react":
+      optional: true
+    "@types/react-dom":
+      optional: true
+  checksum: 1837db473ea018cf2b5d0cbfffb7a30d0d759e5a7f23aad431441c77bcc3d2533250cd003a61878fd908267df47404cedcb5914f12d79e413002c659652b37fd
   languageName: node
   linkType: hard
 
