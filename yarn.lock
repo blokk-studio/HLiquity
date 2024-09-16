@@ -281,12 +281,21 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/runtime@npm:^7.23.2, @babel/runtime@npm:^7.23.9":
+"@babel/runtime@npm:^7.23.2":
   version: 7.24.4
   resolution: "@babel/runtime@npm:7.24.4"
   dependencies:
     regenerator-runtime: ^0.14.0
   checksum: 2f27d4c0ffac7ae7999ac0385e1106f2a06992a8bdcbf3da06adcac7413863cd08c198c2e4e970041bbea849e17f02e1df18875539b6afba76c781b6b59a07c3
+  languageName: node
+  linkType: hard
+
+"@babel/runtime@npm:^7.25.0":
+  version: 7.25.6
+  resolution: "@babel/runtime@npm:7.25.6"
+  dependencies:
+    regenerator-runtime: ^0.14.0
+  checksum: ee1a69d3ac7802803f5ee6a96e652b78b8addc28c6a38c725a4ad7d61a059d9e6cb9f6550ed2f63cce67a1bd82e0b1ef66a1079d895be6bfb536a5cfbd9ccc32
   languageName: node
   linkType: hard
 
@@ -2121,7 +2130,7 @@ __metadata:
     react-circular-progressbar: 2.0.3
     react-copy-to-clipboard: 5.0.3
     react-dom: 17.0.2
-    react-i18next: ^14.1.1
+    react-i18next: ^15.0.2
     react-modal: ^3.15.1
     react-router-dom: 5.2.0
     recharts: 2.1.10
@@ -21607,11 +21616,11 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-i18next@npm:^14.1.1":
-  version: 14.1.1
-  resolution: "react-i18next@npm:14.1.1"
+"react-i18next@npm:^15.0.2":
+  version: 15.0.2
+  resolution: "react-i18next@npm:15.0.2"
   dependencies:
-    "@babel/runtime": ^7.23.9
+    "@babel/runtime": ^7.25.0
     html-parse-stringify: ^3.0.1
   peerDependencies:
     i18next: ">= 23.2.3"
@@ -21621,7 +21630,7 @@ __metadata:
       optional: true
     react-native:
       optional: true
-  checksum: e1a00f82f355c439bc9e98cb8bc6fccbab769fa8f0e5da1545cfb262dc228183615aa89bad91b90db6d8de1949bb54f0c1655aec04c8947daf8383af07b1eff3
+  checksum: 2694433e44548ef116c1ed6d0a4a08194230ae36e2f02c9775565ad181f274291769c2ec308c168125111c67e84523a465f9cff66d775641cbf6a0f826f7ef44
   languageName: node
   linkType: hard
 
