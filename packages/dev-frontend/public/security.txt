@@ -1,0 +1,6 @@
+# Please report technical vulnerabilities in IT systems of Apps with love.
+
+Contact: mailto:support@appswithlove.com
+Preferred-Languages: en, de, fr, it
+Canonical: https://www.appswithlove.com/.well-known/security.txt
+Policy: https://appswithlove.com/datenschutz
