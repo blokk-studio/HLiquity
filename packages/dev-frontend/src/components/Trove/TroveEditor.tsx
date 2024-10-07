@@ -7,18 +7,17 @@ import {
   Decimalish,
   Decimal,
   Trove,
-  LiquityStoreState,
-  HCHF_LIQUIDATION_RESERVE
+  LiquityStoreState
 } from "@liquity/lib-base";
 import { useLiquitySelector } from "@liquity/lib-react";
 
 import { COIN, COLLATERAL_COIN } from "../../strings";
 
 import { StaticRow } from "./Editor";
-import { LoadingOverlay } from "../LoadingOverlay";
 import { CollateralRatio } from "./CollateralRatio";
 import { InfoIcon } from "../InfoIcon";
 import { Step, Steps } from "../Steps";
+import { useConstants } from "../../hooks/constants";
 
 type TroveEditorProps = {
   original: Trove;
@@ -40,9 +39,9 @@ export const TroveEditor: React.FC<TroveEditorProps> = ({
   edited,
   fee,
   borrowingRate,
-  changePending,
   transactionSteps
 }) => {
+  const constants = useConstants();
   const { price } = useLiquitySelector(select);
 
   const feePct = new Percent(borrowingRate);
@@ -78,7 +77,7 @@ export const TroveEditor: React.FC<TroveEditorProps> = ({
           <StaticRow
             label="Liquidation Reserve"
             inputId="trove-liquidation-reserve"
-            amount={`${HCHF_LIQUIDATION_RESERVE}`}
+            amount={`${constants.HCHF_LIQUIDATION_RESERVE}`}
             unit={COIN}
             infoIcon={
               <InfoIcon

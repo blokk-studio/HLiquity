@@ -12,12 +12,12 @@ export const useDeployments = () => {
   return enabledDeployments;
 };
 
-/** returns the deployment for the chain that is currently selected by wagmi */
+/** returns the deployment for the chain that is currently selected in wagmi or hashconnect */
 export const useDeployment = () => {
   const { chain } = useMultiWallet();
 
   if (!chain) {
-    const errorMessage = `i need a chain to get a deployment. useHederaChain() returned ${JSON.stringify(
+    const errorMessage = `i need a chain to get a deployment. useMultiWallet() returned ${JSON.stringify(
       chain
     )}`;
     console.error(errorMessage, { deployments: enabledDeployments });

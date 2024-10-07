@@ -1,7 +1,7 @@
 import { useCallback, useEffect } from "react";
 import { Flex, Button } from "theme-ui";
 
-import { LiquityStoreState, Decimal, Trove, Decimalish, HCHF_MINIMUM_DEBT } from "@liquity/lib-base";
+import { LiquityStoreState, Decimal, Trove, Decimalish, Constants } from "@liquity/lib-base";
 
 import { LiquityStoreUpdate, useLiquityReducer, useLiquitySelector } from "@liquity/lib-react";
 
@@ -21,16 +21,19 @@ import { Step, getCompletableStepStatus } from "../Steps";
 import { useLiquity } from "../../hooks/LiquityContext";
 import { useLoadingState } from "../../loading_state";
 import { LoadingButton } from "../LoadingButton";
+import { useConstants } from "../../hooks/constants";
 
-const init = ({ trove }: LiquityStoreState) => ({
-  original: trove,
-  edited: new Trove(trove.collateral, trove.debt),
-  changePending: false,
-  debtDirty: false,
-  addedMinimumDebt: false
-});
+const getInitializer =
+  (options: { constants: Constants }) =>
+  ({ trove }: LiquityStoreState) => ({
+    original: trove,
+    edited: new Trove(options.constants, trove.collateral, trove.debt),
+    changePending: false,
+    debtDirty: false,
+    addedMinimumDebt: false
+  });
 
-type TroveManagerState = ReturnType<typeof init>;
+type TroveManagerState = ReturnType<ReturnType<typeof getInitializer>>;
 type TroveManagerAction =
   | LiquityStoreUpdate
   | { type: "startChange" | "finishChange" | "revert" | "addMinimumDebt" | "removeMinimumDebt" }
@@ -38,106 +41,104 @@ type TroveManagerAction =
 
 const reduceWith =
   (action: TroveManagerAction) =>
-  (state: TroveManagerState): TroveManagerState =>
-    reduce(state, action);
+  (options: { constants: Constants }, state: TroveManagerState): TroveManagerState =>
+    getReducer(options)(state, action);
 
 const addMinimumDebt = reduceWith({ type: "addMinimumDebt" });
 const removeMinimumDebt = reduceWith({ type: "removeMinimumDebt" });
 const finishChange = reduceWith({ type: "finishChange" });
 const revert = reduceWith({ type: "revert" });
 
-const reduce = (state: TroveManagerState, action: TroveManagerAction): TroveManagerState => {
-  // console.log(state);
-  // console.log(action);
+const getReducer =
+  (options: { constants: Constants }) =>
+  (state: TroveManagerState, action: TroveManagerAction): TroveManagerState => {
+    const { original, edited, changePending, debtDirty, addedMinimumDebt } = state;
 
-  const { original, edited, changePending, debtDirty, addedMinimumDebt } = state;
+    switch (action.type) {
+      case "startChange": {
+        return { ...state, changePending: true };
+      }
 
-  switch (action.type) {
-    case "startChange": {
-      console.log("starting change");
-      return { ...state, changePending: true };
-    }
+      case "finishChange":
+        return { ...state, changePending: false };
 
-    case "finishChange":
-      return { ...state, changePending: false };
+      case "setCollateral": {
+        const newCollateral = Decimal.from(action.newValue);
 
-    case "setCollateral": {
-      const newCollateral = Decimal.from(action.newValue);
+        const newState = {
+          ...state,
+          edited: edited.setCollateral(newCollateral)
+        };
 
-      const newState = {
-        ...state,
-        edited: edited.setCollateral(newCollateral)
-      };
-
-      if (!debtDirty) {
-        if (edited.isEmpty && newCollateral.nonZero) {
-          return addMinimumDebt(newState);
+        if (!debtDirty) {
+          if (edited.isEmpty && newCollateral.nonZero) {
+            return addMinimumDebt(options, newState);
+          }
+          if (addedMinimumDebt && newCollateral.isZero) {
+            return removeMinimumDebt(options, newState);
+          }
         }
-        if (addedMinimumDebt && newCollateral.isZero) {
-          return removeMinimumDebt(newState);
+
+        return newState;
+      }
+
+      case "setDebt":
+        return {
+          ...state,
+          edited: edited.setDebt(action.newValue),
+          debtDirty: true
+        };
+
+      case "addMinimumDebt":
+        return {
+          ...state,
+          edited: edited.setDebt(options.constants.HCHF_MINIMUM_DEBT),
+          addedMinimumDebt: true
+        };
+
+      case "removeMinimumDebt":
+        return {
+          ...state,
+          edited: edited.setDebt(0),
+          addedMinimumDebt: false
+        };
+
+      case "revert":
+        return {
+          ...state,
+          edited: new Trove(options.constants, original.collateral, original.debt),
+          debtDirty: false,
+          addedMinimumDebt: false
+        };
+
+      case "updateStore": {
+        const {
+          newState: { trove },
+          stateChange: { troveBeforeRedistribution: changeCommitted }
+        } = action;
+
+        const newState = {
+          ...state,
+          original: trove
+        };
+
+        if (changePending && changeCommitted) {
+          return finishChange(options, revert(options, newState));
         }
-      }
 
-      return newState;
+        const change = original.whatChanged(edited, 0);
+
+        if (
+          (change?.type === "creation" && !trove.isEmpty) ||
+          (change?.type === "closure" && trove.isEmpty)
+        ) {
+          return revert(options, newState);
+        }
+
+        return { ...newState, edited: trove.apply(change, 0) };
+      }
     }
-
-    case "setDebt":
-      return {
-        ...state,
-        edited: edited.setDebt(action.newValue),
-        debtDirty: true
-      };
-
-    case "addMinimumDebt":
-      return {
-        ...state,
-        edited: edited.setDebt(HCHF_MINIMUM_DEBT),
-        addedMinimumDebt: true
-      };
-
-    case "removeMinimumDebt":
-      return {
-        ...state,
-        edited: edited.setDebt(0),
-        addedMinimumDebt: false
-      };
-
-    case "revert":
-      return {
-        ...state,
-        edited: new Trove(original.collateral, original.debt),
-        debtDirty: false,
-        addedMinimumDebt: false
-      };
-
-    case "updateStore": {
-      const {
-        newState: { trove },
-        stateChange: { troveBeforeRedistribution: changeCommitted }
-      } = action;
-
-      const newState = {
-        ...state,
-        original: trove
-      };
-
-      if (changePending && changeCommitted) {
-        return finishChange(revert(newState));
-      }
-
-      const change = original.whatChanged(edited, 0);
-
-      if (
-        (change?.type === "creation" && !trove.isEmpty) ||
-        (change?.type === "closure" && trove.isEmpty)
-      ) {
-        return revert(newState);
-      }
-
-      return { ...newState, edited: trove.apply(change, 0) };
-    }
-  }
-};
+  };
 
 const feeFrom = (original: Trove, edited: Trove, borrowingRate: Decimal): Decimal => {
   const change = original.whatChanged(edited, borrowingRate);
@@ -163,7 +164,11 @@ type TroveManagerProps = {
 };
 
 export const TroveManager: React.FC<TroveManagerProps> = ({ collateral, debt }) => {
-  const [{ original, edited, changePending }, dispatch] = useLiquityReducer(reduce, init);
+  const constants = useConstants();
+  const [{ original, edited, changePending }, dispatch] = useLiquityReducer(
+    getReducer({ constants }),
+    getInitializer({ constants })
+  );
   const { fees, validationContext, hchfTokenAllowanceOfHchfContract } = useLiquitySelector(select);
 
   useEffect(() => {
@@ -182,7 +187,8 @@ export const TroveManager: React.FC<TroveManagerProps> = ({ collateral, debt }) 
     original,
     edited,
     borrowingRate,
-    validationContext
+    validationContext,
+    constants
   );
 
   const { dispatchEvent } = useTroveView();

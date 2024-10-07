@@ -3,16 +3,15 @@ import assert from "assert";
 import { BigNumber, BigNumberish } from "@ethersproject/bignumber";
 import { AddressZero } from "@ethersproject/constants";
 import { Log } from "@ethersproject/abstract-provider";
-import { Contract, ethers } from "ethers";
-import { TransactionResponse } from "@ethersproject/abstract-provider";
+import { ethers } from "ethers";
 
 import {
   CollateralGainTransferDetails,
+  Constants,
   Decimal,
   Decimalish,
   LiquidationDetails,
   LiquityReceipt,
-  HCHF_MINIMUM_NET_DEBT,
   MinedReceipt,
   PopulatableLiquity,
   PopulatedLiquityTransaction,
@@ -308,9 +307,11 @@ export class PopulatableEthersLiquity
     >
 {
   private readonly _readable: ReadableEthersLiquity;
+  protected readonly constants: Constants;
 
-  constructor(readable: ReadableEthersLiquity) {
-    this._readable = readable;
+  constructor(options: { readable: ReadableEthersLiquity; constants: Constants }) {
+    this._readable = options.readable;
+    this.constants = options.constants;
   }
 
   private _wrapSimpleTransaction(
@@ -335,7 +336,10 @@ export class PopulatableEthersLiquity
       ({ logs }) => {
         const [newTrove] = borrowerOperations
           .extractEvents(logs, "TroveUpdated")
-          .map(({ args: { _coll, _debt } }) => new Trove(decimalify(_coll), decimalify(_debt)));
+          .map(
+            ({ args: { _coll, _debt } }) =>
+              new Trove(this.constants, decimalify(_coll), decimalify(_debt))
+          );
 
         const [fee] = borrowerOperations
           .extractEvents(logs, "HCHFBorrowingFeePaid")
@@ -398,7 +402,11 @@ export class PopulatableEthersLiquity
             }) => ({
               collateralGasCompensation: decimalify(_collGasCompensation),
               hchfGasCompensation: decimalify(_HCHFGasCompensation),
-              totalLiquidated: new Trove(decimalify(_liquidatedColl), decimalify(_liquidatedDebt))
+              totalLiquidated: new Trove(
+                this.constants,
+                decimalify(_liquidatedColl),
+                decimalify(_liquidatedDebt)
+              )
             })
           );
 
@@ -497,7 +505,10 @@ export class PopulatableEthersLiquity
       ({ logs }) => {
         const [newTrove] = borrowerOperations
           .extractEvents(logs, "TroveUpdated")
-          .map(({ args: { _coll, _debt } }) => new Trove(decimalify(_coll), decimalify(_debt)));
+          .map(
+            ({ args: { _coll, _debt } }) =>
+              new Trove(this.constants, decimalify(_coll), decimalify(_debt))
+          );
 
         return {
           ...this._extractStabilityPoolGainsWithdrawalDetails(logs),
@@ -596,12 +607,14 @@ export class PopulatableEthersLiquity
     maxBorrowingRate?: Decimalish,
     overrides?: EthersTransactionOverrides
   ): Promise<PopulatedEthersLiquityTransaction<TroveCreationDetails>> {
+    // reference unused variable to silence eslint
+    overrides;
     const { borrowerOperations } = _getContracts(this._readable.connection);
     const normalized = _normalizeTroveCreation(params);
     const { depositCollateral, borrowHCHF } = normalized;
     const fees = await this._readable.getFees();
     const borrowingRate = fees.borrowingRate();
-    const newTrove = Trove.create(normalized, borrowingRate);
+    const newTrove = Trove.create(this.constants, normalized, borrowingRate);
 
     maxBorrowingRate =
       maxBorrowingRate !== undefined
@@ -623,6 +636,8 @@ export class PopulatableEthersLiquity
   async closeTrove(
     overrides?: EthersTransactionOverrides
   ): Promise<PopulatedEthersLiquityTransaction<TroveClosureDetails>> {
+    // reference unused variable to silence eslint
+    overrides;
     const { borrowerOperations } = _getContracts(this._readable.connection);
 
     return this._wrapTroveClosure(
@@ -714,6 +729,8 @@ export class PopulatableEthersLiquity
   async claimCollateralSurplus(
     overrides?: EthersTransactionOverrides
   ): Promise<PopulatedEthersLiquityTransaction<void>> {
+    // reference unused variable to silence eslint
+    overrides;
     const { borrowerOperations } = _getContracts(this._readable.connection);
 
     return this._wrapSimpleTransaction(
@@ -726,6 +743,8 @@ export class PopulatableEthersLiquity
     price: Decimalish,
     overrides?: EthersTransactionOverrides
   ): Promise<PopulatedEthersLiquityTransaction<void>> {
+    // reference unused variable to silence eslint
+    overrides;
     const { priceFeed } = _getContracts(this._readable.connection);
 
     if (!_priceFeedIsTestnet(priceFeed)) {
@@ -746,6 +765,8 @@ export class PopulatableEthersLiquity
     address: string | string[],
     overrides?: EthersTransactionOverrides
   ): Promise<PopulatedEthersLiquityTransaction<LiquidationDetails>> {
+    // reference unused variable to silence eslint
+    overrides;
     const { troveManager } = _getContracts(this._readable.connection);
 
     if (Array.isArray(address)) {
@@ -772,6 +793,8 @@ export class PopulatableEthersLiquity
     maximumNumberOfTrovesToLiquidate: number,
     overrides?: EthersTransactionOverrides
   ): Promise<PopulatedEthersLiquityTransaction<LiquidationDetails>> {
+    // reference unused variable to silence eslint
+    overrides;
     const { troveManager } = _getContracts(this._readable.connection);
 
     return this._wrapLiquidation(
@@ -789,6 +812,8 @@ export class PopulatableEthersLiquity
     frontendTag?: string,
     overrides?: EthersTransactionOverrides
   ): Promise<PopulatedEthersLiquityTransaction<StabilityDepositChangeDetails>> {
+    // reference unused variable to silence eslint
+    overrides;
     const { stabilityPool } = _getContracts(this._readable.connection);
     const depositHCHF = Decimal.from(amount);
 
@@ -808,6 +833,8 @@ export class PopulatableEthersLiquity
     amount: Decimalish,
     overrides?: EthersTransactionOverrides
   ): Promise<PopulatedEthersLiquityTransaction<StabilityDepositChangeDetails>> {
+    // reference unused variable to silence eslint
+    overrides;
     const { stabilityPool } = _getContracts(this._readable.connection);
 
     return this._wrapStabilityDepositWithdrawal(
@@ -823,6 +850,8 @@ export class PopulatableEthersLiquity
   async withdrawGainsFromStabilityPool(
     overrides?: EthersTransactionOverrides
   ): Promise<PopulatedEthersLiquityTransaction<StabilityPoolGainsWithdrawalDetails>> {
+    // reference unused variable to silence eslint
+    overrides;
     const { stabilityPool } = _getContracts(this._readable.connection);
 
     return this._wrapStabilityPoolGainsWithdrawal(
@@ -863,6 +892,8 @@ export class PopulatableEthersLiquity
     maxRedemptionRate?: Decimalish,
     overrides?: EthersTransactionOverrides
   ): Promise<PopulatedEthersRedemption> {
+    // reference unused variable to silence eslint
+    overrides;
     const { troveManager } = _getContracts(this._readable.connection);
     const attemptedHCHFAmount = Decimal.from(amount);
 
@@ -876,7 +907,7 @@ export class PopulatableEthersLiquity
 
     if (truncatedAmount.isZero) {
       throw new Error(
-        `redeemHCHF: amount too low to redeem (try at least ${HCHF_MINIMUM_NET_DEBT})`
+        `redeemHCHF: amount too low to redeem (try at least ${this.constants.HCHF_MINIMUM_NET_DEBT})`
       );
     }
 
@@ -915,7 +946,7 @@ export class PopulatableEthersLiquity
         truncatedAmount.lt(attemptedHCHFAmount)
           ? newMaxRedemptionRate =>
               populateRedemption(
-                truncatedAmount.add(HCHF_MINIMUM_NET_DEBT),
+                truncatedAmount.add(this.constants.HCHF_MINIMUM_NET_DEBT),
                 newMaxRedemptionRate ?? maxRedemptionRate
               )
           : undefined
@@ -930,6 +961,8 @@ export class PopulatableEthersLiquity
     amount: Decimalish,
     overrides?: EthersTransactionOverrides
   ): Promise<PopulatedEthersLiquityTransaction<void>> {
+    // reference unused variable to silence eslint
+    overrides;
     const { hlqtStaking } = _getContracts(this._readable.connection);
 
     return this._wrapSimpleTransaction(
@@ -946,6 +979,8 @@ export class PopulatableEthersLiquity
     amount: Decimalish,
     overrides?: EthersTransactionOverrides
   ): Promise<PopulatedEthersLiquityTransaction<void>> {
+    // reference unused variable to silence eslint
+    overrides;
     const { hlqtStaking } = _getContracts(this._readable.connection);
 
     return this._wrapSimpleTransaction(
@@ -969,6 +1004,8 @@ export class PopulatableEthersLiquity
     kickbackRate: Decimalish,
     overrides?: EthersTransactionOverrides
   ): Promise<PopulatedEthersLiquityTransaction<void>> {
+    // reference unused variable to silence eslint
+    overrides;
     const { stabilityPool } = _getContracts(this._readable.connection);
 
     return this._wrapSimpleTransaction(
@@ -1008,6 +1045,8 @@ export class PopulatableEthersLiquity
     allowance?: Decimalish,
     overrides?: EthersTransactionOverrides
   ): Promise<PopulatedEthersLiquityTransaction<void>> {
+    // reference unused variable to silence eslint
+    overrides;
     const { uniToken, saucerSwapPool } = _getContracts(this._readable.connection);
 
     return this._wrapSimpleTransaction(
@@ -1025,6 +1064,8 @@ export class PopulatableEthersLiquity
     amount: Decimalish,
     overrides?: EthersTransactionOverrides
   ): Promise<PopulatedEthersLiquityTransaction<void>> {
+    // reference unused variable to silence eslint
+    overrides;
     const { saucerSwapPool } = _getContracts(this._readable.connection);
 
     return this._wrapSimpleTransaction(
@@ -1041,6 +1082,8 @@ export class PopulatableEthersLiquity
     amount: Decimalish,
     overrides?: EthersTransactionOverrides
   ): Promise<PopulatedEthersLiquityTransaction<void>> {
+    // reference unused variable to silence eslint
+    overrides;
     const { saucerSwapPool } = _getContracts(this._readable.connection);
 
     return this._wrapSimpleTransaction(
@@ -1056,6 +1099,8 @@ export class PopulatableEthersLiquity
   async withdrawHLQTRewardFromLiquidityMining(
     overrides?: EthersTransactionOverrides
   ): Promise<PopulatedEthersLiquityTransaction<void>> {
+    // reference unused variable to silence eslint
+    overrides;
     const { saucerSwapPool } = _getContracts(this._readable.connection);
 
     return this._wrapSimpleTransaction(
@@ -1070,6 +1115,8 @@ export class PopulatableEthersLiquity
   async exitLiquidityMining(
     overrides?: EthersTransactionOverrides
   ): Promise<PopulatedEthersLiquityTransaction<void>> {
+    // reference unused variable to silence eslint
+    overrides;
     const { saucerSwapPool } = _getContracts(this._readable.connection);
 
     return this._wrapSimpleTransaction(

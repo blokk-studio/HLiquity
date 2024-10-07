@@ -2,6 +2,7 @@ import React, { createContext, useContext, useMemo } from "react";
 import { useDeployment } from "../hooks/deployments";
 import {
   ConsentableLiquity,
+  Constants,
   Deployment,
   DeploymentAddressesKey,
   HLiquityStore,
@@ -28,12 +29,13 @@ import { BatchedProvider } from "../providers/BatchingProvider";
 import { AppLoader } from "../components/AppLoader";
 import { Heading } from "theme-ui";
 import { AppError } from "../components/AppError";
+import { useConstants } from "./constants";
 
 export type LiquityContextValue = {
   liquity: ReadableLiquity &
     ConsentableLiquity & {
-      send: SendableLiquity,
-      populate: PopulatableLiquity,
+      send: SendableLiquity;
+      populate: PopulatableLiquity;
       connection: {
         addresses: Record<DeploymentAddressesKey, `0x${string}`>;
         version: string;
@@ -56,11 +58,13 @@ type LiquityProviderProps = {
 interface HashgraphLiquityProviderProps {
   deployment: Deployment;
   chain: HederaChain;
+  constants: Constants;
 }
 const HashgraphLiquityProvider: React.FC<HashgraphLiquityProviderProps> = ({
   children,
   deployment,
-  chain
+  chain,
+  constants
 }) => {
   const hashConnectSessionData = useHashConnectSessionData();
   const hashConnect = useHashConnect();
@@ -79,11 +83,12 @@ const HashgraphLiquityProvider: React.FC<HashgraphLiquityProviderProps> = ({
       rpcUrl,
       mirrorNodeBaseUrl,
       fetch: window.fetch.bind(window),
+      constants,
       deployment: deployment
     });
 
     return hashgraphLiquity;
-  }, [deployment, chain, hashConnectSessionData, hashConnect]);
+  }, [deployment, chain, hashConnectSessionData, hashConnect, constants]);
 
   return (
     <LiquityContext.Provider
@@ -104,6 +109,7 @@ interface EthersLiquityProviderProps {
   userAddress: `0x${string}`;
   chain: HederaChain;
   deployment: Deployment;
+  constants: Constants;
 }
 
 const EthersLiquityProvider: React.FC<EthersLiquityProviderProps> = ({
@@ -112,7 +118,8 @@ const EthersLiquityProvider: React.FC<EthersLiquityProviderProps> = ({
   signer,
   userAddress,
   chain,
-  deployment
+  deployment,
+  constants
 }) => {
   const liquity = useMemo(() => {
     const { frontendTag } = deployment;
@@ -129,12 +136,13 @@ const EthersLiquityProvider: React.FC<EthersLiquityProviderProps> = ({
       frontendTag,
       userAddress,
       mirrorNodeBaseUrl: chain.apiBaseUrl,
-      fetch: window.fetch.bind(window)
+      fetch: window.fetch.bind(window),
+      constants
     });
     liquity.store.logging = true;
 
     return liquity;
-  }, [provider, signer, userAddress, chain, deployment]);
+  }, [provider, signer, userAddress, chain, deployment, constants]);
 
   return (
     <LiquityContext.Provider value={{ account: userAddress, store: liquity.store, liquity }}>
@@ -175,6 +183,7 @@ export const LiquityProvider: React.FC<LiquityProviderProps> = ({
   const ethersChain = getChainFromId(ethersChainId);
   // hashpack
   const hashgraphChain = useSelectedChain();
+  const constants = useConstants();
 
   if (!deployment) {
     return <>{unsupportedNetworkFallback}</>;
@@ -189,7 +198,11 @@ export const LiquityProvider: React.FC<LiquityProviderProps> = ({
       <HashConnectSessionDataLoader
         loader={<AppLoader content={<Heading>Setting up HashPack</Heading>} />}
       >
-        <HashgraphLiquityProvider deployment={deployment} chain={hashgraphChain}>
+        <HashgraphLiquityProvider
+          deployment={deployment}
+          chain={hashgraphChain}
+          constants={constants}
+        >
           {children}
         </HashgraphLiquityProvider>
       </HashConnectSessionDataLoader>
@@ -218,6 +231,7 @@ export const LiquityProvider: React.FC<LiquityProviderProps> = ({
         provider={provider}
         signer={ethersSigner.data}
         userAddress={ethersAccount.address}
+        constants={constants}
       >
         {children}
       </EthersLiquityProvider>

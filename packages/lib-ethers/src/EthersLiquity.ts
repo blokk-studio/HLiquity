@@ -24,7 +24,8 @@ import {
   TroveWithPendingRedistribution,
   UserTrove,
   ConsentableLiquity,
-  Address
+  Address,
+  Constants
 } from "@liquity/lib-base";
 import { TokenId } from "@hashgraph/sdk";
 
@@ -35,7 +36,6 @@ import {
   EthersLiquityStoreOption,
   _connect,
   _getContracts,
-  _usingStore,
   getConnectionWithBlockPolledStore,
   getTokenIds
 } from "./EthersLiquityConnection";
@@ -49,7 +49,7 @@ import {
 } from "./types";
 
 import { PopulatableEthersLiquity, SentEthersLiquityTransaction } from "./PopulatableEthersLiquity";
-import { ReadableEthersLiquity, ReadableEthersLiquityWithStore } from "./ReadableEthersLiquity";
+import { ReadableEthersLiquity } from "./ReadableEthersLiquity";
 import { SendableEthersLiquity } from "./SendableEthersLiquity";
 import { BlockPolledLiquityStore } from "./BlockPolledLiquityStore";
 import { approveSpender, associateWithToken, dissociateFromToken } from "./consentable";
@@ -78,23 +78,38 @@ const waitForSuccess = async <T>(tx: SentEthersLiquityTransaction<T>) => {
   return receipt.details;
 };
 
-const optionsUsingStore = (
-  options:
-    | {
-        connection: EthersLiquityConnection & { useStore: "blockPolled" };
-        mirrorNodeBaseUrl: string;
-        fetch: Fetch;
-      }
-    | {
-        connection: EthersLiquityConnection;
-        mirrorNodeBaseUrl: string;
-        fetch: Fetch;
-      }
-): options is {
-  connection: EthersLiquityConnection & { useStore: "blockPolled" };
+interface EthersLiquityFromOptions {
+  connection: EthersLiquityConnection;
   mirrorNodeBaseUrl: string;
   fetch: Fetch;
-} => _usingStore(options.connection);
+  constants: Constants;
+}
+
+interface EthersLiquityWithStoreFromOptions extends EthersLiquityFromOptions {
+  connection: EthersLiquityConnection & { useStore: "blockPolled" };
+}
+
+interface EthersLiquityOptions {
+  readable: ReadableEthersLiquity;
+  connection: EthersLiquityConnection;
+  constants: Constants;
+  mirrorNodeBaseUrl: string;
+  fetch: Fetch;
+}
+
+export interface EthersLiquityConnectOptions extends EthersLiquityConnectionOptionalParams {
+  readonly mirrorNodeBaseUrl: string;
+  readonly fetch: Fetch;
+  readonly constants: Constants;
+}
+
+export interface EthersLiquityConnectWithSignerOptions extends EthersLiquityConnectOptions {
+  signer: EthersSigner;
+}
+
+export interface EthersLiquityConnectWithProviderOptions extends EthersLiquityConnectOptions {
+  provider: EthersProvider;
+}
 
 /**
  * Convenience class that combines multiple interfaces of the library in one object.
@@ -114,65 +129,70 @@ export class EthersLiquity
   readonly send: SendableEthersLiquity;
 
   private _readable: ReadableEthersLiquity;
+  protected readonly constants: Constants;
+  protected readonly mirrorNodeBaseUrl: string;
+  protected readonly fetch: Fetch;
 
   /** @internal */
-  constructor(readable: ReadableEthersLiquity) {
-    this._readable = readable;
-    this.connection = readable.connection;
-    this.populate = new PopulatableEthersLiquity(readable);
+  constructor(options: EthersLiquityOptions) {
+    this._readable = options.readable;
+    this.connection = options.connection ?? options.readable.connection;
+    this.populate = new PopulatableEthersLiquity(options);
     this.send = new SendableEthersLiquity(
       this.populate,
-      readable.hasStore("blockPolled") ? readable.store : undefined
+      options.readable.hasStore("blockPolled") ? options.readable.store : undefined
     );
+    this.constants = options.constants;
+    this.mirrorNodeBaseUrl = options.mirrorNodeBaseUrl;
+    this.fetch = options.fetch;
   }
 
   static fromConnectionOptionsWithBlockPolledStore(
     options: Omit<EthersLiquityConnectionOptions, "useStore"> & {
       mirrorNodeBaseUrl: string;
       fetch: Fetch;
+      constants: Constants;
     }
   ): EthersLiquityWithStore<BlockPolledLiquityStore> {
     const connection = getConnectionWithBlockPolledStore(options);
     const ethersLiquity = EthersLiquity._from({
-      connection,
-      mirrorNodeBaseUrl: options.mirrorNodeBaseUrl,
-      fetch: options.fetch
+      ...options,
+      connection
     });
 
     return ethersLiquity;
   }
 
   /** @internal */
-  static _from(options: {
-    connection: EthersLiquityConnection & { useStore: "blockPolled" };
-    mirrorNodeBaseUrl: string;
-    fetch: Fetch;
-  }): EthersLiquityWithStore<BlockPolledLiquityStore>;
+  static _from(
+    options: EthersLiquityWithStoreFromOptions
+  ): EthersLiquityWithStore<BlockPolledLiquityStore>;
 
   /** @internal */
-  static _from(options: {
-    connection: EthersLiquityConnection;
-    mirrorNodeBaseUrl: string;
-    fetch: Fetch;
-  }): EthersLiquity;
+  static _from(options: EthersLiquityFromOptions): EthersLiquity;
 
   /** @internal */
-  static _from(options: {
-    connection: EthersLiquityConnection;
-    mirrorNodeBaseUrl: string;
-    fetch: Fetch;
-  }): EthersLiquity {
-    if (optionsUsingStore(options)) {
-      return new _EthersLiquityWithStore(ReadableEthersLiquity._from(options));
+  static _from(options: EthersLiquityFromOptions): EthersLiquity {
+    const readable = ReadableEthersLiquity._from(options);
+    if (readable.hasStore("blockPolled")) {
+      return new _EthersLiquityWithStore({
+        ...options,
+        readable,
+        store: readable.store
+      });
     } else {
-      return new EthersLiquity(ReadableEthersLiquity._from(options));
+      return new EthersLiquity({
+        readable,
+        ...options
+      });
     }
   }
 
   /** @internal */
   static connect(
-    signerOrProvider: EthersSigner | EthersProvider,
-    optionalParams: EthersLiquityConnectionOptionalParams & { useStore: "blockPolled" }
+    options:
+      | (EthersLiquityConnectWithProviderOptions & { useStore: "blockPolled" })
+      | (EthersLiquityConnectWithSignerOptions & { useStore: "blockPolled" })
   ): Promise<EthersLiquityWithStore<BlockPolledLiquityStore>>;
 
   /**
@@ -183,33 +203,34 @@ export class EthersLiquity
    * @param optionalParams - Optional parameters that can be used to customize the connection.
    */
   static connect(
-    signerOrProvider: EthersSigner | EthersProvider,
-    optionalParams?: EthersLiquityConnectionOptionalParams
+    options: EthersLiquityConnectWithProviderOptions | EthersLiquityConnectWithSignerOptions
   ): Promise<EthersLiquity>;
 
   static async connect(
-    signerOrProvider: EthersSigner | EthersProvider,
-    optionalParams: EthersLiquityConnectionOptionalParams
+    options: EthersLiquityConnectWithProviderOptions | EthersLiquityConnectWithSignerOptions
   ): Promise<EthersLiquity> {
-    const connection = await _connect(signerOrProvider, optionalParams);
+    const signerOrProvider = "signer" in options ? options.signer : options.provider;
+    const connection = await _connect(signerOrProvider, options);
     return EthersLiquity._from({
       connection,
-      mirrorNodeBaseUrl: optionalParams.mirrorNodeBaseUrl,
-      fetch: optionalParams.fetch
+      ...options
     });
   }
 
   /**
    * Check whether this `EthersLiquity` is an {@link EthersLiquityWithStore}.
    */
+  // @ts-expect-error bad typing
   hasStore(): this is EthersLiquityWithStore;
 
   /**
    * Check whether this `EthersLiquity` is an
    * {@link EthersLiquityWithStore}\<{@link BlockPolledLiquityStore}\>.
    */
+  // @ts-expect-error bad typing
   hasStore(store: "blockPolled"): this is EthersLiquityWithStore<BlockPolledLiquityStore>;
 
+  // @ts-expect-error bad typing
   hasStore(): this is EthersLiquityWithStore {
     return true;
   }
@@ -717,8 +738,8 @@ export class EthersLiquity
       await waitForTokenState({
         tokenIds: Object.values(tokenIds),
         evmAddress: this.connection.userAddress as Address,
-        apiBaseUrl: this.connection.mirrorNodeBaseUrl,
-        fetch: this.connection.fetch,
+        apiBaseUrl: this.mirrorNodeBaseUrl,
+        fetch: this.fetch,
         requiredAssociations: [TokenId.fromSolidityAddress(tokenAddress)]
       });
       await this.store.refresh();
@@ -740,8 +761,8 @@ export class EthersLiquity
       await waitForTokenState({
         tokenIds: Object.values(tokenIds),
         evmAddress: this.connection.userAddress as Address,
-        apiBaseUrl: this.connection.mirrorNodeBaseUrl,
-        fetch: this.connection.fetch,
+        apiBaseUrl: this.mirrorNodeBaseUrl,
+        fetch: this.fetch,
         requiredDissociations: [TokenId.fromSolidityAddress(tokenAddress)]
       });
       await this.store.refresh();
@@ -790,8 +811,8 @@ export class EthersLiquity
       await waitForTokenState({
         tokenIds: Object.values(tokenIds),
         evmAddress: this.connection.userAddress as Address,
-        apiBaseUrl: this.connection.mirrorNodeBaseUrl,
-        fetch: this.connection.fetch,
+        apiBaseUrl: this.mirrorNodeBaseUrl,
+        fetch: this.fetch,
         requiredAssociations: [TokenId.fromSolidityAddress(tokenAddress)]
       });
       await this.store.refresh();
@@ -813,8 +834,8 @@ export class EthersLiquity
       await waitForTokenState({
         tokenIds: Object.values(tokenIds),
         evmAddress: this.connection.userAddress as Address,
-        apiBaseUrl: this.connection.mirrorNodeBaseUrl,
-        fetch: this.connection.fetch,
+        apiBaseUrl: this.mirrorNodeBaseUrl,
+        fetch: this.fetch,
         requiredDissociations: [TokenId.fromSolidityAddress(tokenAddress)]
       });
       await this.store.refresh();
@@ -863,8 +884,8 @@ export class EthersLiquity
       await waitForTokenState({
         tokenIds: Object.values(tokenIds),
         evmAddress: this.connection.userAddress as Address,
-        apiBaseUrl: this.connection.mirrorNodeBaseUrl,
-        fetch: this.connection.fetch,
+        apiBaseUrl: this.mirrorNodeBaseUrl,
+        fetch: this.fetch,
         requiredAssociations: [TokenId.fromSolidityAddress(tokenAddress)]
       });
       await this.store.refresh();
@@ -886,8 +907,8 @@ export class EthersLiquity
       await waitForTokenState({
         tokenIds: Object.values(tokenIds),
         evmAddress: this.connection.userAddress as Address,
-        apiBaseUrl: this.connection.mirrorNodeBaseUrl,
-        fetch: this.connection.fetch,
+        apiBaseUrl: this.mirrorNodeBaseUrl,
+        fetch: this.fetch,
         requiredDissociations: [TokenId.fromSolidityAddress(tokenAddress)]
       });
       await this.store.refresh();
@@ -939,13 +960,15 @@ class _EthersLiquityWithStore<T extends HLiquityStore = HLiquityStore>
 {
   readonly store: T;
 
-  constructor(readable: ReadableEthersLiquityWithStore<T>) {
-    super(readable);
+  constructor(options: EthersLiquityOptions & { store: T }) {
+    super(options);
 
-    this.store = readable.store;
+    this.store = options.store;
   }
 
-  hasStore(store?: EthersLiquityStoreOption): boolean {
+  hasStore(
+    store?: EthersLiquityStoreOption
+  ): this is EthersLiquityWithStore<BlockPolledLiquityStore> {
     return store === undefined || store === this.connection.useStore;
   }
 }

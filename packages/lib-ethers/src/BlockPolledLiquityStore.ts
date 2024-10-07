@@ -8,7 +8,8 @@ import {
   StabilityDeposit,
   HLQTStake,
   HLiquityStore,
-  Address
+  Address,
+  Constants
 } from "@liquity/lib-base";
 
 import { ReadableEthersLiquity } from "./ReadableEthersLiquity";
@@ -81,8 +82,9 @@ export class BlockPolledLiquityStore extends HLiquityStore<BlockPolledLiquitySto
     readable: ReadableEthersLiquity;
     mirrorNodeBaseUrl: string;
     fetch: Fetch;
+    constants: Constants;
   }) {
-    super();
+    super(options);
 
     this.connection = options.readable.connection;
     this._readable = options.readable;
@@ -100,7 +102,7 @@ export class BlockPolledLiquityStore extends HLiquityStore<BlockPolledLiquitySto
     );
 
     if (riskiestTroves.length === 0) {
-      return new TroveWithPendingRedistribution(AddressZero, "nonExistent");
+      return new TroveWithPendingRedistribution(this.constants, AddressZero, "nonExistent");
     }
 
     return riskiestTroves[0];
@@ -226,6 +228,7 @@ export class BlockPolledLiquityStore extends HLiquityStore<BlockPolledLiquitySto
               liquidityMiningHLQTReward: Decimal.ZERO,
               collateralSurplusBalance: Decimal.ZERO,
               troveBeforeRedistribution: new TroveWithPendingRedistribution(
+                this.constants,
                 AddressZero,
                 "nonExistent"
               ),

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Flex, Button, Box, Card, Heading } from "theme-ui";
-import { Decimal, HCHF_MINIMUM_DEBT } from "@liquity/lib-base";
+import { Decimal } from "@liquity/lib-base";
 import { useLiquitySelector } from "@liquity/lib-react";
 
 import { Amount } from "../ActionDescription";
@@ -14,10 +14,12 @@ import { useLoadingState } from "../../loading_state";
 import { LoadingButton } from "../LoadingButton";
 import { EditableRow } from "../Trove/Editor";
 import { ErrorDescription } from "../ErrorDescription";
+import { useConstants } from "../../hooks/constants";
 
 const TRANSACTION_ID = "trove-adjustment";
 
 export const RedeemHchf: React.FC = () => {
+  const constants = useConstants();
   const { hchfBalance } = useLiquitySelector(state => state);
 
   const [amountOfHchfToRedeem, setAmountOfHchfToRedeem] = useState(Decimal.ZERO);
@@ -38,7 +40,7 @@ export const RedeemHchf: React.FC = () => {
 
   const isDirty = amountOfHchfToRedeem.gt(Decimal.ZERO);
   const isRedemptionAmountWithinBalance = amountOfHchfToRedeem.lte(hchfBalance);
-  const isRedeemingMinimum = amountOfHchfToRedeem.gte(HCHF_MINIMUM_DEBT);
+  const isRedeemingMinimum = amountOfHchfToRedeem.gte(constants.HCHF_MINIMUM_DEBT);
   const isValidRedemption =
     amountOfHchfToRedeem.gt(Decimal.ZERO) && isRedemptionAmountWithinBalance && isRedeemingMinimum;
 
@@ -119,7 +121,7 @@ export const RedeemHchf: React.FC = () => {
           <ErrorDescription>
             You need to redeem at least{" "}
             <Amount>
-              {HCHF_MINIMUM_DEBT.prettify(0)} {COIN}
+              {constants.HCHF_MINIMUM_DEBT.prettify(0)} {COIN}
             </Amount>
             .
           </ErrorDescription>

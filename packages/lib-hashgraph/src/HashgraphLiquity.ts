@@ -1,21 +1,19 @@
 import {
   Address,
-  BETA,
   CollateralGainTransferDetails,
   ConsentableLiquity,
+  Constants,
   Decimal,
   Decimalish,
   Deployment,
   DeploymentAddressesKey,
   Fees,
   FrontendStatus,
-  HCHF_MINIMUM_NET_DEBT,
   HLQTStake,
   HLiquityStore,
   LiquidationDetails,
   LiquityStoreBaseState,
   LiquityStoreState,
-  MINUTE_DECAY_FACTOR,
   MinedReceipt,
   PopulatableLiquity,
   PopulatedRedemption,
@@ -180,6 +178,7 @@ export class HashgraphLiquity
   private readonly frontendAddress: Address
   private readonly mirrorNodeBaseUrl: `https://${string}`
   private readonly fetch: Fetch
+  protected readonly constants: Constants
 
   // contracts
   private readonly activePool: Contract<ActivePoolAbi>
@@ -226,6 +225,7 @@ export class HashgraphLiquity
     frontendAddress: Address
     mirrorNodeBaseUrl: `https://${string}`
     fetch: Fetch
+    constants: Constants
 
     // contracts
     activePool: Contract<ActivePoolAbi>
@@ -266,7 +266,7 @@ export class HashgraphLiquity
     // lasagna
     connection: LasagnaConnection
   }) {
-    super()
+    super(options)
 
     this.eventEmitter = new Emittery()
 
@@ -284,6 +284,7 @@ export class HashgraphLiquity
     this.frontendAddress = options.frontendAddress
     this.mirrorNodeBaseUrl = options.mirrorNodeBaseUrl
     this.fetch = options.fetch
+    this.constants = options.constants
 
     this.activePool = options.activePool
     this.activePoolContractId = options.activePoolContractId
@@ -407,6 +408,7 @@ export class HashgraphLiquity
       hchfInStabilityPool: this.getHCHFInStabilityPool({ blockTag }),
       totalStakedHLQT: this.getTotalStakedHLQT({ blockTag }),
       _riskiestTroveBeforeRedistribution: new TroveWithPendingRedistribution(
+        this.constants,
         this.userAccountAddress,
         userTroveStatusFrom(BackendTroveStatus.nonExistent),
       ),
@@ -477,6 +479,7 @@ export class HashgraphLiquity
             liquidityMiningHLQTReward: Decimal.ZERO,
             collateralSurplusBalance: Decimal.ZERO,
             troveBeforeRedistribution: new TroveWithPendingRedistribution(
+              this.constants,
               AddressZero,
               'nonExistent',
             ),
@@ -501,11 +504,12 @@ export class HashgraphLiquity
 
     const _feesInNormalMode = new Fees(
       baseRateWithoutDecay,
-      MINUTE_DECAY_FACTOR,
-      BETA,
+      this.constants.MINUTE_DECAY_FACTOR,
+      this.constants.BETA,
       lastFeeOperationDate,
       timeOfLatestBlock,
       false,
+      this.constants,
     )
 
     return [
@@ -591,7 +595,7 @@ export class HashgraphLiquity
     const collateral = decimalify(collateralResult)
     const debt = decimalify(debtResult)
 
-    return new Trove(collateral, debt)
+    return new Trove(this.constants, collateral, debt)
   }
 
   async getTroveBeforeRedistribution(
@@ -611,9 +615,14 @@ export class HashgraphLiquity
     const userTroveStatus = userTroveStatusFrom(parseInt(troveResult.status.toString()))
 
     if (backendTroveStatus === BackendTroveStatus.active) {
-      const trove = new Trove(decimalify(snapshotResult.ETH), decimalify(snapshotResult.HCHFDebt))
+      const trove = new Trove(
+        this.constants,
+        decimalify(snapshotResult.ETH),
+        decimalify(snapshotResult.HCHFDebt),
+      )
 
       return new TroveWithPendingRedistribution(
+        this.constants,
         addressOrUserAddress,
         userTroveStatus,
         decimalify(troveResult.coll),
@@ -623,7 +632,7 @@ export class HashgraphLiquity
       )
     }
 
-    return new TroveWithPendingRedistribution(addressOrUserAddress, userTroveStatus)
+    return new TroveWithPendingRedistribution(this.constants, addressOrUserAddress, userTroveStatus)
   }
 
   async getTrove(address?: Address): Promise<UserTrove> {
@@ -660,8 +669,13 @@ export class HashgraphLiquity
         this.defaultPool.methods.getHCHFDebt().call(undefined, options?.blockTag),
       ])
 
-    const activePool = new Trove(decimalify(activeCollateralResult), decimalify(activeDebtResult))
+    const activePool = new Trove(
+      this.constants,
+      decimalify(activeCollateralResult),
+      decimalify(activeDebtResult),
+    )
     const defaultPool = new Trove(
+      this.constants,
       decimalify(liquidatedCollateralResult),
       decimalify(closedDebtResult),
     )
@@ -936,10 +950,12 @@ export class HashgraphLiquity
 
     const troves = backendTroves.map((backendTrove) => {
       const trove = new Trove(
+        this.constants,
         decimalify(backendTrove.snapshotETH),
         decimalify(backendTrove.snapshotHCHFDebt),
       )
       const troveWithPendingRedistribution = new TroveWithPendingRedistribution(
+        this.constants,
         backendTrove.owner,
         'open', // These Troves are coming from the SortedTroves list, so they must be open
         decimalify(backendTrove.coll),
@@ -976,11 +992,12 @@ export class HashgraphLiquity
 
     const fees = new Fees(
       baseRateWithoutDecay,
-      MINUTE_DECAY_FACTOR,
-      BETA,
+      this.constants.MINUTE_DECAY_FACTOR,
+      this.constants.BETA,
       lastFeeOperationDate,
       timeOfLatestBlock,
       total.collateralRatioIsBelowCritical(price),
+      this.constants,
     )
 
     return fees
@@ -1043,6 +1060,7 @@ export class HashgraphLiquity
     rpcUrl: `wss://${string}` | `https://${string}`
     mirrorNodeBaseUrl: `https://${string}`
     fetch: Fetch
+    constants: Constants
     // TODO: remove when lasagna is removed
     deployment: Deployment
   }) {
@@ -1211,6 +1229,7 @@ export class HashgraphLiquity
       frontendAddress,
       mirrorNodeBaseUrl,
       fetch,
+      constants,
     } = options
 
     const hashgraphLiquity = new HashgraphLiquity({
@@ -1222,6 +1241,7 @@ export class HashgraphLiquity
       frontendAddress,
       mirrorNodeBaseUrl,
       fetch,
+      constants,
       // contracts
       collSurplusPool,
       collSurplusPoolContractId,
@@ -1444,7 +1464,7 @@ export class HashgraphLiquity
     const { depositCollateral, borrowHCHF } = normalized
     const fees = await this.getFees()
     const borrowingRate = fees.borrowingRate()
-    const newTrove = Trove.create(normalized, borrowingRate)
+    const newTrove = Trove.create(this.constants, normalized, borrowingRate)
 
     const finalMaxBorrowingRate =
       maxBorrowingRate !== undefined
@@ -1824,7 +1844,7 @@ export class HashgraphLiquity
         liquidatedAddresses: Array.isArray(addressOrAddresses)
           ? addressOrAddresses
           : [addressOrAddresses],
-        totalLiquidated: new Trove(),
+        totalLiquidated: new Trove(this.constants,),
       }
 
       return details
@@ -1862,7 +1882,7 @@ export class HashgraphLiquity
         collateralGasCompensation: Decimal.ZERO,
         hchfGasCompensation: Decimal.ZERO,
         liquidatedAddresses: [],
-        totalLiquidated: new Trove(),
+        totalLiquidated: new Trove(this.constants,),
       }
 
       return details
@@ -2113,7 +2133,7 @@ export class HashgraphLiquity
 
     if (truncatedAmount.isZero) {
       throw new Error(
-        `redeemHCHF: amount too low to redeem (try at least ${HCHF_MINIMUM_NET_DEBT})`,
+        `redeemHCHF: amount too low to redeem (try at least ${this.constants.HCHF_MINIMUM_NET_DEBT})`,
       )
     }
 
@@ -2183,7 +2203,7 @@ export class HashgraphLiquity
           : maxRedemptionRate
 
         return populateRedemption(
-          truncatedAmount.add(HCHF_MINIMUM_NET_DEBT),
+          truncatedAmount.add(this.constants.HCHF_MINIMUM_NET_DEBT),
           resolvedMaxRedemptionRate,
         )
       }
