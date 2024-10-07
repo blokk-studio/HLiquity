@@ -1,11 +1,11 @@
 import { render, fireEvent } from "@testing-library/react";
 
-import { Decimal, HCHF_MINIMUM_NET_DEBT, Trove } from "@liquity/lib-base";
+import { Decimal, defaults as constants, Trove } from "@liquity/lib-base";
 
 import App from "./App";
 
-const params = { depositCollateral: Decimal.from(20), borrowHCHF: HCHF_MINIMUM_NET_DEBT };
-const trove = Trove.create(params);
+const params = { depositCollateral: Decimal.from(20), borrowHCHF: constants.HCHF_MINIMUM_NET_DEBT };
+const trove = Trove.create(constants, params);
 
 /*
  * Just a quick and dirty testcase to prove that the approach can work in our CI pipeline.

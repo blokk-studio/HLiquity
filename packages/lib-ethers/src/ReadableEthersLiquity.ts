@@ -14,16 +14,16 @@ import {
   UserTrove,
   UserTroveStatus,
   _CachedReadableLiquity,
-  _LiquityReadCache
+  _LiquityReadCache,
+  Constants
 } from "@liquity/lib-base";
 
 import { IERC20, MultiTroveGetter } from "../types";
 
-import { EthersCallOverrides, EthersProvider, EthersSigner } from "./types";
+import { EthersCallOverrides } from "./types";
 
 import {
   EthersLiquityConnection,
-  EthersLiquityConnectionOptionalParams,
   EthersLiquityStoreOption,
   _connect,
   _getBlockTimestamp,
@@ -36,12 +36,10 @@ import { BlockPolledLiquityStore } from "./BlockPolledLiquityStore";
 import { Fetch } from "@liquity/mirror-node";
 import { Contract } from "ethers";
 import ierc20Abi from "../abi/IERC20.json";
-
-// TODO: these are constant in the contracts, so it doesn't make sense to make a call for them,
-// but to avoid having to update them here when we change them in the contracts, we could read
-// them once after deployment and save them to LiquityDeployment.
-const MINUTE_DECAY_FACTOR = Decimal.from("0.999037758833783000");
-const BETA = Decimal.from(2);
+import {
+  EthersLiquityConnectWithProviderOptions,
+  EthersLiquityConnectWithSignerOptions
+} from "./EthersLiquity";
 
 enum BackendTroveStatus {
   nonExistent,
@@ -87,6 +85,17 @@ const expectPositiveInt = <K extends string>(obj: { [P in K]?: number }, key: K)
   }
 };
 
+interface ReadableEthersLiquityFromOptions {
+  connection: EthersLiquityConnection;
+  mirrorNodeBaseUrl: string;
+  fetch: Fetch;
+  constants: Constants;
+}
+
+interface ReadableEthersLiquityWithStoreFromOptions extends ReadableEthersLiquityFromOptions {
+  connection: EthersLiquityConnection & { useStore: "blockPolled" };
+}
+
 /**
  * Ethers-based implementation of {@link @liquity/lib-base#ReadableLiquity}.
  *
@@ -94,52 +103,44 @@ const expectPositiveInt = <K extends string>(obj: { [P in K]?: number }, key: K)
  */
 export class ReadableEthersLiquity implements ReadableLiquity {
   readonly connection: EthersLiquityConnection;
+  protected readonly constants: Constants;
 
   /** @internal */
-  constructor(connection: EthersLiquityConnection) {
-    this.connection = connection;
+  constructor(options: { connection: EthersLiquityConnection; constants: Constants }) {
+    this.connection = options.connection;
+    this.constants = options.constants;
   }
 
   /** @internal */
-  static _from(options: {
-    connection: EthersLiquityConnection & { useStore: "blockPolled" };
-    mirrorNodeBaseUrl: string;
-    fetch: Fetch;
-  }): ReadableEthersLiquityWithStore<BlockPolledLiquityStore>;
+  static _from(
+    options: ReadableEthersLiquityWithStoreFromOptions
+  ): ReadableEthersLiquityWithStore<BlockPolledLiquityStore>;
 
   /** @internal */
-  static _from(options: {
-    connection: EthersLiquityConnection;
-    mirrorNodeBaseUrl: string;
-    fetch: Fetch;
-  }): ReadableEthersLiquity;
+  static _from(options: ReadableEthersLiquityFromOptions): ReadableEthersLiquity;
 
   /** @internal */
-  static _from(options: {
-    connection: EthersLiquityConnection;
-    mirrorNodeBaseUrl: string;
-    fetch: Fetch;
-  }): ReadableEthersLiquity {
-    const readable = new ReadableEthersLiquity(options.connection);
+  static _from(options: ReadableEthersLiquityFromOptions): ReadableEthersLiquity {
+    const readable = new ReadableEthersLiquity(options);
 
+    // @ts-expect-error bad typing
     return options.connection.useStore === "blockPolled"
       ? new _BlockPolledReadableEthersLiquity({
-          readable,
-          mirrorNodeBaseUrl: options.mirrorNodeBaseUrl,
-          fetch: options.fetch
+          ...options,
+          readable
         })
       : readable;
   }
 
   /** @internal */
   static connect(
-    signerOrProvider: EthersSigner | EthersProvider,
-    optionalParams: EthersLiquityConnectionOptionalParams & { useStore: "blockPolled" }
+    options:
+      | (EthersLiquityConnectWithProviderOptions & { useStore: "blockPolled" })
+      | (EthersLiquityConnectWithSignerOptions & { useStore: "blockPolled" })
   ): Promise<ReadableEthersLiquityWithStore<BlockPolledLiquityStore>>;
 
   static connect(
-    signerOrProvider: EthersSigner | EthersProvider,
-    optionalParams?: EthersLiquityConnectionOptionalParams
+    options: EthersLiquityConnectWithProviderOptions | EthersLiquityConnectWithSignerOptions
   ): Promise<ReadableEthersLiquity>;
 
   /**
@@ -150,20 +151,14 @@ export class ReadableEthersLiquity implements ReadableLiquity {
    * @param optionalParams - Optional parameters that can be used to customize the connection.
    */
   static async connect(
-    signerOrProvider: EthersSigner | EthersProvider,
-    optionalParams?: EthersLiquityConnectionOptionalParams
+    options: EthersLiquityConnectWithProviderOptions | EthersLiquityConnectWithSignerOptions
   ): Promise<ReadableEthersLiquity> {
-    if (!optionalParams) {
-      throw new Error(
-        "you need to pass `mirrorNodeBaseUrl` and `fetch` with the `optionalParams` argument. they're not optional anymore."
-      );
-    }
-    const connection = await _connect(signerOrProvider, optionalParams);
+    const signerOrProvider = "signer" in options ? options.signer : options.provider;
+    const connection = await _connect(signerOrProvider, options);
 
     return ReadableEthersLiquity._from({
-      connection,
-      mirrorNodeBaseUrl: optionalParams.mirrorNodeBaseUrl,
-      fetch: optionalParams.fetch
+      ...options,
+      connection
     });
   }
 
@@ -191,7 +186,7 @@ export class ReadableEthersLiquity implements ReadableLiquity {
       troveManager.L_HCHFDebt({ ...overrides }).then(decimalify)
     ]);
 
-    return new Trove(collateral, debt);
+    return new Trove(this.constants, collateral, debt);
   }
 
   /** {@inheritDoc @liquity/lib-base#ReadableLiquity.getTroveBeforeRedistribution} */
@@ -209,15 +204,20 @@ export class ReadableEthersLiquity implements ReadableLiquity {
 
     if (trove.status === BackendTroveStatus.active) {
       return new TroveWithPendingRedistribution(
+        this.constants,
         address,
         userTroveStatusFrom(trove.status),
         decimalify(trove.coll),
         decimalify(trove.debt),
         decimalify(trove.stake),
-        new Trove(decimalify(snapshot.ETH), decimalify(snapshot.HCHFDebt))
+        new Trove(this.constants, decimalify(snapshot.ETH), decimalify(snapshot.HCHFDebt))
       );
     } else {
-      return new TroveWithPendingRedistribution(address, userTroveStatusFrom(trove.status));
+      return new TroveWithPendingRedistribution(
+        this.constants,
+        address,
+        userTroveStatusFrom(trove.status)
+      );
     }
   }
 
@@ -257,7 +257,7 @@ export class ReadableEthersLiquity implements ReadableLiquity {
       )
     );
 
-    return new Trove(activeCollateral, activeDebt);
+    return new Trove(this.constants, activeCollateral, activeDebt);
   }
 
   /** @internal */
@@ -270,7 +270,7 @@ export class ReadableEthersLiquity implements ReadableLiquity {
       )
     );
 
-    return new Trove(liquidatedCollateral, closedDebt);
+    return new Trove(this.constants, liquidatedCollateral, closedDebt);
   }
 
   /** {@inheritDoc @liquity/lib-base#ReadableLiquity.getTotal} */
@@ -356,11 +356,6 @@ export class ReadableEthersLiquity implements ReadableLiquity {
 
   /** {@inheritDoc @liquity/lib-base#ReadableLiquity.getUniTokenBalance} */
   getUniTokenBalance(address?: string, overrides?: EthersCallOverrides): Promise<Decimal> {
-    // return new Promise(resolve => {
-    //   const decimal = Decimal.from(0);
-    //   resolve(decimal);
-    // });
-
     address ??= _requireAddress(this.connection);
     const { uniToken } = _getContracts(this.connection);
 
@@ -369,11 +364,6 @@ export class ReadableEthersLiquity implements ReadableLiquity {
 
   /** {@inheritDoc @liquity/lib-base#ReadableLiquity.getUniTokenAllowance} */
   getUniTokenAllowance(address?: string, overrides?: EthersCallOverrides): Promise<Decimal> {
-    // return new Promise(resolve => {
-    //   const decimal = Decimal.from(0);
-    //   resolve(decimal);
-    // });
-    // throw "unitoken";
     address ??= _requireAddress(this.connection);
     const { uniToken, saucerSwapPool } = _getContracts(this.connection);
 
@@ -475,7 +465,7 @@ export class ReadableEthersLiquity implements ReadableLiquity {
       )
     ]);
 
-    const troves = mapBackendTroves(backendTroves);
+    const troves = mapBackendTroves({ constants: this.constants, troves: backendTroves });
 
     if (totalRedistributed) {
       return troves.map(trove => trove.applyRedistribution(totalRedistributed));
@@ -498,11 +488,12 @@ export class ReadableEthersLiquity implements ReadableLiquity {
     return (blockTimestamp, recoveryMode) =>
       new Fees(
         baseRateWithoutDecay,
-        MINUTE_DECAY_FACTOR,
-        BETA,
+        this.constants.MINUTE_DECAY_FACTOR,
+        this.constants.BETA,
         convertToDate(lastFeeOperationTime.toNumber()),
         convertToDate(blockTimestamp),
-        recoveryMode
+        recoveryMode,
+        this.constants
       );
   }
 
@@ -570,11 +561,9 @@ export class ReadableEthersLiquity implements ReadableLiquity {
       ierc20Abi,
       this.connection.signer ?? this.connection.provider
     ) as IERC20;
-    console.debug({ tokenAddress, allowance: tokenContract.allowance });
     try {
       const allowanceResult = await tokenContract.allowance(address, hchfToken.address, overrides);
 
-      console.debug({ allowanceResult });
       const allowance = decimalify(allowanceResult);
 
       return allowance;
@@ -608,16 +597,24 @@ export class ReadableEthersLiquity implements ReadableLiquity {
 type Resolved<T> = T extends Promise<infer U> ? U : T;
 type BackendTroves = Resolved<ReturnType<MultiTroveGetter["getMultipleSortedTroves"]>>;
 
-const mapBackendTroves = (troves: BackendTroves): TroveWithPendingRedistribution[] =>
-  troves.map(
+const mapBackendTroves = (options: {
+  constants: Constants;
+  troves: BackendTroves;
+}): TroveWithPendingRedistribution[] =>
+  options.troves.map(
     trove =>
       new TroveWithPendingRedistribution(
+        options.constants,
         trove.owner,
         "open", // These Troves are coming from the SortedTroves list, so they must be open
         decimalify(trove.coll),
         decimalify(trove.debt),
         decimalify(trove.stake),
-        new Trove(decimalify(trove.snapshotETH), decimalify(trove.snapshotHCHFDebt))
+        new Trove(
+          options.constants,
+          decimalify(trove.snapshotETH),
+          decimalify(trove.snapshotHCHFDebt)
+        )
       )
   );
 
@@ -845,17 +842,20 @@ class BlockPolledLiquityStoreBasedCache
   }
 }
 
+// @ts-expect-error there doesn't seem to be a fix for Property 'constants' is protected but type '_BlockPolledReadableEthersLiquity' is not a class derived from 'ReadableEthersLiquity'.
 class _BlockPolledReadableEthersLiquity
   extends _CachedReadableLiquity<[overrides?: EthersCallOverrides]>
   implements ReadableEthersLiquityWithStore<BlockPolledLiquityStore>
 {
   readonly connection: EthersLiquityConnection;
   readonly store: BlockPolledLiquityStore;
+  readonly constants: Constants;
 
   constructor(options: {
     readable: ReadableEthersLiquity;
     mirrorNodeBaseUrl: string;
     fetch: Fetch;
+    constants: Constants;
   }) {
     const store = new BlockPolledLiquityStore(options);
 
@@ -863,9 +863,12 @@ class _BlockPolledReadableEthersLiquity
 
     this.store = store;
     this.connection = options.readable.connection;
+    this.constants = options.constants;
   }
 
-  hasStore(store?: EthersLiquityStoreOption): boolean {
+  hasStore(
+    store?: EthersLiquityStoreOption
+  ): this is ReadableEthersLiquityWithStore<BlockPolledLiquityStore> {
     return store === undefined || store === "blockPolled";
   }
 
