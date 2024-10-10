@@ -2113,9 +2113,9 @@ __metadata:
     "@testing-library/react": 16.0.1
     "@testing-library/user-event": 12.8.3
     "@tippyjs/react": 4.2.6
-    "@types/react": 17.0.3
+    "@types/react": 17.0.83
     "@types/react-copy-to-clipboard": 5.0.7
-    "@types/react-dom": 17.0.2
+    "@types/react-dom": 17.0.25
     "@types/react-modal": ^3.16.3
     "@types/react-router-dom": 5.1.7
     "@types/testing-library__jest-dom": 5.9.5
@@ -2261,12 +2261,12 @@ __metadata:
   resolution: "@liquity/lib-react@workspace:packages/lib-react"
   dependencies:
     "@ethersproject/bignumber": 5.7.0
-    "@types/react": 17.0.3
+    "@types/react": 17.0.83
     "@typescript-eslint/eslint-plugin": 4.17.0
     "@typescript-eslint/parser": 4.18.0
     eslint: 7.22.0
     eslint-plugin-react: 7.22.0
-    eslint-plugin-react-hooks: 4.2.0
+    eslint-plugin-react-hooks: 4.6.2
     npm-run-all2: 5.0.0
     react: 17.0.2
     typescript: 4.1.5
@@ -5477,12 +5477,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react-dom@npm:17.0.2":
-  version: 17.0.2
-  resolution: "@types/react-dom@npm:17.0.2"
+"@types/react-dom@npm:17.0.25":
+  version: 17.0.25
+  resolution: "@types/react-dom@npm:17.0.25"
   dependencies:
-    "@types/react": "*"
-  checksum: 1725928a1c3a0026044e6401e6b53729e1a88849034fc67138d7784ec44a5132fe2e9056a19b741ccb462ff0ec0d8c2c01ef316bda19be0e31f2ead9346f600b
+    "@types/react": ^17
+  checksum: d1e582682478e0848c8d54ea3e89d02047bac6d916266b85ce63731b06987575919653ea7159d98fda47ade3362b8c4d5796831549564b83088e7aa9ce8b60ed
   languageName: node
   linkType: hard
 
@@ -5516,7 +5516,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react@npm:*, @types/react@npm:17.0.3":
+"@types/react@npm:*":
   version: 17.0.3
   resolution: "@types/react@npm:17.0.3"
   dependencies:
@@ -5524,6 +5524,17 @@ __metadata:
     "@types/scheduler": "*"
     csstype: ^3.0.2
   checksum: d29f2a33ed69fae9d9f42f8b39b40352e3209eb821f827d566330adfdffb48d2dc730982356cd50a7fda6171e6bc7deca793f7b105c95fce615a45ab313ecf41
+  languageName: node
+  linkType: hard
+
+"@types/react@npm:17.0.83, @types/react@npm:^17":
+  version: 17.0.83
+  resolution: "@types/react@npm:17.0.83"
+  dependencies:
+    "@types/prop-types": "*"
+    "@types/scheduler": ^0.16
+    csstype: ^3.0.2
+  checksum: c237dc47fc19bbe1af14ff89d0e9b749abfb95c0d9c3bca8292539f3d4a4b22c2a359db5e405cd274999a62e1a5fadc8e0eafe62ecc070ff3b2bbba89600b35e
   languageName: node
   linkType: hard
 
@@ -5547,6 +5558,13 @@ __metadata:
   version: 0.16.1
   resolution: "@types/scheduler@npm:0.16.1"
   checksum: 2ff8034df029a6cbb3623b05fa895cac4fc504806a8e948ebe29675a1edfa5ac04faac7611016076b3ffefc2037bbe344ad1978304059b2d4c78e513ec43c7bf
+  languageName: node
+  linkType: hard
+
+"@types/scheduler@npm:^0.16":
+  version: 0.16.8
+  resolution: "@types/scheduler@npm:0.16.8"
+  checksum: 6c091b096daa490093bf30dd7947cd28e5b2cd612ec93448432b33f724b162587fed9309a0acc104d97b69b1d49a0f3fc755a62282054d62975d53d7fd13472d
   languageName: node
   linkType: hard
 
@@ -11918,12 +11936,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-plugin-react-hooks@npm:4.2.0":
-  version: 4.2.0
-  resolution: "eslint-plugin-react-hooks@npm:4.2.0"
+"eslint-plugin-react-hooks@npm:4.6.2":
+  version: 4.6.2
+  resolution: "eslint-plugin-react-hooks@npm:4.6.2"
   peerDependencies:
-    eslint: ^3.0.0 || ^4.0.0 || ^5.0.0 || ^6.0.0 || ^7.0.0
-  checksum: ead5c5be3ded82a0cf295b064376adb1998a43e2262b605eecc0efc88283dec4e159ca39307fafb3d8e661dd08e5a4c8cdfed97eea78f923954f72bad6e20397
+    eslint: ^3.0.0 || ^4.0.0 || ^5.0.0 || ^6.0.0 || ^7.0.0 || ^8.0.0-0
+  checksum: 395c433610f59577cfcf3f2e42bcb130436c8a0b3777ac64f441d88c5275f4fcfc89094cedab270f2822daf29af1079151a7a6579a8e9ea8cee66540ba0384c4
   languageName: node
   linkType: hard
 
