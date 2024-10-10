@@ -2,7 +2,7 @@ import { Decimal, LiquityStoreState, StabilityDepositChange } from "@liquity/lib
 import { useLiquitySelector } from "@liquity/lib-react";
 
 import { useLiquity } from "../../hooks/LiquityContext";
-import { useTransactionFunction } from "../Transaction";
+import { useTxFunction } from "../Transaction";
 import { LoadingButton, LoadingButtonProps } from "../LoadingButton";
 
 type StabilityDepositActionProps = {
@@ -24,7 +24,7 @@ export const StabilityDepositAction: React.FC<StabilityDepositActionProps> = ({
 
   const frontendTag = frontendRegistered ? liquity.connection.frontendTag : undefined;
 
-  const [sendTransaction] = useTransactionFunction(
+  const [sendTransaction] = useTxFunction(
     transactionId,
     change.depositHCHF
       ? liquity.send.depositHCHFInStabilityPool.bind(liquity.send, change.depositHCHF, frontendTag)

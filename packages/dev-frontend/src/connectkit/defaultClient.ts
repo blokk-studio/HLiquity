@@ -26,7 +26,7 @@
 
 import { Connector, configureChains, ChainProviderFn } from "wagmi";
 import { Chain, mainnet, polygon, optimism, arbitrum } from "wagmi/chains";
-import { Provider } from "@wagmi/core";
+import { Provider, WebSocketProvider } from "@wagmi/core";
 
 import { MetaMaskConnector } from "wagmi/connectors/metaMask";
 import { WalletConnectConnector } from "wagmi/connectors/walletConnect";
@@ -58,6 +58,10 @@ type DefaultConnectorsProps = {
   walletConnectProjectId?: string;
 };
 
+type ProviderOrProviderGetter<ProviderInstance extends Provider | undefined = Provider> =
+  | ProviderInstance
+  | ((options: { chainId?: number }) => ProviderInstance);
+
 type DefaultClientProps = {
   appName: string;
   appIcon?: string;
@@ -67,9 +71,9 @@ type DefaultClientProps = {
   alchemyId?: string;
   infuraId?: string;
   chains?: Chain[];
-  connectors?: any;
-  provider?: any;
-  webSocketProvider?: any;
+  connectors?: Connector[];
+  provider?: ProviderOrProviderGetter;
+  webSocketProvider?: ProviderOrProviderGetter<WebSocketProvider | undefined>;
   enableWebSocketProvider?: boolean;
   stallTimeout?: number;
   /* WC 2.0 requires a project ID (get one here: https://cloud.walletconnect.com/sign-in) */
@@ -79,12 +83,11 @@ type DefaultClientProps = {
 type ConnectKitClientProps = {
   autoConnect?: boolean;
   connectors?: Connector[];
-  provider: Provider;
-  webSocketProvider?: any;
+  provider: ProviderOrProviderGetter;
+  webSocketProvider?: ProviderOrProviderGetter<WebSocketProvider | undefined>;
 };
 
 const getDefaultConnectors = ({ chains, app, walletConnectProjectId }: DefaultConnectorsProps) => {
-  const hasAllAppData = app.name && app.icon && app.description && app.url;
   const shouldUseSafeConnector = !(typeof window === "undefined") && window?.parent !== window;
 
   let connectors: Connector[] = [];
@@ -126,14 +129,15 @@ const getDefaultConnectors = ({ chains, app, walletConnectProjectId }: DefaultCo
           options: {
             showQrModal: false,
             projectId: walletConnectProjectId,
-            metadata: hasAllAppData
-              ? {
-                  name: app.name,
-                  description: app.description!,
-                  url: app.url!,
-                  icons: [app.icon!]
-                }
-              : undefined
+            metadata:
+              app.name && app.icon && app.description && app.url
+                ? {
+                    name: app.name,
+                    description: app.description,
+                    url: app.url,
+                    icons: [app.icon]
+                  }
+                : undefined
           }
         })
       : new WalletConnectLegacyConnector({

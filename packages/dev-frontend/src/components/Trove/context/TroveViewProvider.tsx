@@ -86,18 +86,21 @@ export const TroveViewProvider: React.FC = props => {
   const [view, setView] = useState<TroveView>(getInitialView(troveStatus));
   const viewRef = useRef<TroveView>(view);
 
-  const dispatchEvent = useCallback((event: TroveEvent) => {
-    const nextView = transition(viewRef.current, event);
-    store.refresh();
-    
-    console.log(
-      "dispatchEvent() [current-view, event, next-view]",
-      viewRef.current,
-      event,
-      nextView
-    );
-    setView(nextView);
-  }, []);
+  const dispatchEvent = useCallback(
+    (event: TroveEvent) => {
+      const nextView = transition(viewRef.current, event);
+      store.refresh();
+
+      console.log(
+        "dispatchEvent() [current-view, event, next-view]",
+        viewRef.current,
+        event,
+        nextView
+      );
+      setView(nextView);
+    },
+    [store]
+  );
 
   useEffect(() => {
     viewRef.current = view;

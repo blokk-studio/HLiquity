@@ -14,11 +14,9 @@ const selectPrice = ({ price }: LiquityStoreState) => price;
 
 export const PriceManager: React.FC = () => {
   const {
-    liquity: {
-      send: liquity,
-      connection: { _priceFeedIsTestnet: canSetPrice }
-    }
+    liquity: { send: liquity }
   } = useLiquity();
+  const canSetPrice = false;
 
   const price = useLiquitySelector(selectPrice);
   const [editedPrice, setEditedPrice] = useState(price.toString(2));
@@ -51,11 +49,11 @@ export const PriceManager: React.FC = () => {
                 id="set-price"
                 tooltip="Set"
                 tooltipPlacement="bottom"
-                send={overrides => {
+                send={() => {
                   if (!editedPrice) {
                     throw new Error("Invalid price");
                   }
-                  return liquity.setPrice(Decimal.from(editedPrice), overrides);
+                  return liquity.setPrice(Decimal.from(editedPrice));
                 }}
               >
                 <Button variant="icon">

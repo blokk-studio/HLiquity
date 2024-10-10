@@ -151,7 +151,7 @@ export const BondViewProvider: React.FC = props => {
       "tap" in contracts.lusdToken
     ) {
       await (
-        await ((contracts.lusdToken as unknown) as ERC20Faucet)
+        await (contracts.lusdToken as unknown as ERC20Faucet)
           .connect(liquity.connection.signer)
           .tap()
       ).wait();
@@ -591,10 +591,10 @@ export const BondViewProvider: React.FC = props => {
     [contracts.bLusdAmmZapper, contracts.bLusdAmm]
   );
 
-  const selectedBond = useMemo(() => bonds?.find(bond => bond.id === selectedBondId), [
-    bonds,
-    selectedBondId
-  ]);
+  const selectedBond = useMemo(
+    () => bonds?.find(bond => bond.id === selectedBondId),
+    [bonds, selectedBondId]
+  );
 
   const dispatchEvent = useCallback(
     async (event: BondEvent, payload?: Payload) => {

@@ -3,7 +3,7 @@ import { Button } from "theme-ui";
 // import { useBondView } from "../../../context/BondViewContext";
 
 type ApprovePropTypes = {
-  onApprove: Function;
+  onApprove: () => void;
 };
 
 export const Approve: React.FC<ApprovePropTypes> = ({ onApprove }) => {

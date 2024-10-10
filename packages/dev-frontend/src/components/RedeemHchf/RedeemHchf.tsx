@@ -4,7 +4,7 @@ import { Decimal } from "@liquity/lib-base";
 import { useLiquitySelector } from "@liquity/lib-react";
 
 import { Amount } from "../ActionDescription";
-import { useMyTransactionState, useTransactionFunction } from "../Transaction";
+import { useMyTransactionState, useTxFunction } from "../Transaction";
 import { COIN } from "../../strings";
 import { Icon } from "../Icon";
 
@@ -27,7 +27,7 @@ export const RedeemHchf: React.FC = () => {
   const isTransactionPending =
     transactionState.type === "waitingForApproval" ||
     transactionState.type === "waitingForConfirmation";
-  const [sendTransaction] = useTransactionFunction(TRANSACTION_ID, async () => {
+  const [sendTransaction] = useTxFunction(TRANSACTION_ID, async () => {
     const sentTransaction = await liquity.send.redeemHCHF(amountOfHchfToRedeem);
     setAmountOfHchfToRedeem(Decimal.ZERO);
 

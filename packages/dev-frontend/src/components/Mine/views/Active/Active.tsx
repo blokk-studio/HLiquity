@@ -4,39 +4,35 @@ import { LP, GT } from "../../../../strings";
 import { LiquityStoreState } from "@liquity/lib-base";
 import { useLiquitySelector } from "@liquity/lib-react";
 import { Icon } from "../../../Icon";
-import { useMyTransactionState } from "../../../Transaction";
 import { DisabledEditableRow, StaticRow } from "../../../Trove/Editor";
 import { useMineView } from "../../context/MineViewContext";
 import { ClaimReward } from "./ClaimReward";
 import { ActionDescription } from "../../../ActionDescription";
 
-const selector = ({ liquidityMiningStake, liquidityMiningHLQTReward, totalStakedUniTokens }: LiquityStoreState) => ({
+const selector = ({
+  liquidityMiningStake,
+  liquidityMiningHLQTReward,
+  totalStakedUniTokens
+}: LiquityStoreState) => ({
   liquidityMiningStake,
   liquidityMiningHLQTReward,
   totalStakedUniTokens
 });
-const transactionId = /mine-/i;
 
 export const Active: React.FC = () => {
   const { dispatchEvent } = useMineView();
-  const { liquidityMiningStake, liquidityMiningHLQTReward, totalStakedUniTokens } = useLiquitySelector(selector);
+  const { liquidityMiningStake, liquidityMiningHLQTReward, totalStakedUniTokens } =
+    useLiquitySelector(selector);
 
   const handleAdjustPressed = useCallback(() => {
     dispatchEvent("ADJUST_PRESSED");
   }, [dispatchEvent]);
 
-  const transactionState = useMyTransactionState(transactionId);
-  const isTransactionPending =
-    transactionState.type === "waitingForApproval" ||
-    transactionState.type === "waitingForConfirmation";
-
   const poolShare = liquidityMiningStake.mulDiv(100, totalStakedUniTokens);
 
   return (
     <Card>
-      <Heading>
-        SaucerSwap HBAR/HCHF-LP Staking
-      </Heading>
+      <Heading>SaucerSwap HBAR/HCHF-LP Staking</Heading>
       <Box sx={{ p: [2, 3] }}>
         <Box>
           <DisabledEditableRow
@@ -61,7 +57,16 @@ export const Active: React.FC = () => {
         </Box>
 
         <ActionDescription>
-          <Text>Deposit your tokens into the <Link sx={{ textDecoration: "underline" }} target="_blank" href="https://www.saucerswap.finance/liquidity/0.0.6070468">HBAR/HCHF liquidity pool</Link></Text>
+          <Text>
+            Deposit your tokens into the{" "}
+            <Link
+              sx={{ textDecoration: "underline" }}
+              target="_blank"
+              href="https://www.saucerswap.finance/liquidity/0.0.6070468"
+            >
+              HBAR/HCHF liquidity pool
+            </Link>
+          </Text>
         </ActionDescription>
 
         <Flex variant="layout.actions">

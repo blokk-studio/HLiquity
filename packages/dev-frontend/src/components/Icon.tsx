@@ -30,8 +30,7 @@ import {
   faBars,
   faArrowDown,
   faWindowClose,
-  faDoorClosed,
-  faChevronDown,
+  faChevronDown
 } from "@fortawesome/free-solid-svg-icons";
 import { faClipboard, faQuestionCircle } from "@fortawesome/free-regular-svg-icons";
 import { FontAwesomeIcon, FontAwesomeIconProps } from "@fortawesome/react-fontawesome";
@@ -68,7 +67,7 @@ library.add(
   faQuestionCircle,
   faArrowDown,
   faWindowClose,
-  faChevronDown,
+  faChevronDown
 );
 
 const getIcon = (name: IconName): IconProp => {

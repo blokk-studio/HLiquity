@@ -53,7 +53,7 @@ export const FrontendRegistration: React.FC = () => {
             <Input
               sx={{ maxWidth: "200px" }}
               type="number"
-              onWheel={(e) => e.target.blur()}
+              onWheel={e => e.currentTarget.blur()}
               step="any"
               value={kickbackRateString}
               onChange={e => {
@@ -64,7 +64,9 @@ export const FrontendRegistration: React.FC = () => {
 
                   setKickbackRate(newKickbackRate);
                   setCut(newCut);
-                } catch {}
+                } catch {
+                  // ignore errors
+                }
               }}
               onBlur={() => {
                 setKickbackRateString(kickbackRate.mul(100).toString());

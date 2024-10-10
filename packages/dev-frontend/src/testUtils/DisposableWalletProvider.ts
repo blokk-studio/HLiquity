@@ -6,7 +6,7 @@ import { Decimal, Decimalish } from "@liquity/lib-base";
 
 export class DisposableWalletProvider {
   private readonly url: string;
-  private id: number = 0;
+  private id = 0;
 
   private readonly wallet: Wallet;
   private readonly funderWallet: Wallet;
@@ -48,7 +48,7 @@ export class DisposableWalletProvider {
     // WONT-FIX maybe wait for tx to be mined (not a problem on devchains though)
   }
 
-  async send(method: string, params: any[]): Promise<any> {
+  async send(method: string, params: unknown[]): Promise<unknown> {
     if (!this.haveFunded) {
       this.haveFunded = true;
       await this.fund();
@@ -59,10 +59,12 @@ export class DisposableWalletProvider {
       case "eth_requestAccounts":
         return [this.wallet.address];
       case "eth_signTypedData_v4": {
+        // @ts-expect-error not fixing this dumbass any[] typing
         const privateKeyWithout0xPrefix = this.findWallet(params[0]).privateKey.slice(2);
         const privateKey = Buffer.from(privateKeyWithout0xPrefix, "hex");
         const signature = await signTypedData({
           privateKey,
+          // @ts-expect-error not fixing this dumbass any[] typing
           data: JSON.parse(params[1]),
           version: SignTypedDataVersion.V4
         });
@@ -73,6 +75,7 @@ export class DisposableWalletProvider {
         return this.send(
           "eth_sendRawTransaction",
           await Promise.all(
+            // @ts-expect-error not fixing this dumbass any[] typing
             params.map(async ({ from, nonce, gas, ...rest }) => {
               if (nonce === undefined) {
                 nonce = await this.send("eth_getTransactionCount", [from]);
@@ -117,7 +120,7 @@ export class DisposableWalletProvider {
     return json.result;
   }
 
-  request({ method, params }: { method: string; params: any[] }) {
+  request({ method, params }: { method: string; params: unknown[] }) {
     return this.send(method, params);
   }
 }

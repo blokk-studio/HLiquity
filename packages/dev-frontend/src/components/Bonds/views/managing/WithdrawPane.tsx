@@ -236,4 +236,4 @@ export const WithdrawPane: React.FC = () => {
       </Flex>
     </>
   );
-};;
+};

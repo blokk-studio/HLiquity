@@ -12,7 +12,7 @@ const hasProp = <T extends object, P extends string>(o: T, p: P): o is T & { [_ 
 const validateCoinGeckoSimplePriceResponse = <T extends string, U extends string>(
   expectedCoinIds: readonly T[],
   expectedCurrencies: readonly U[],
-  body: unknown
+  body: Record<T, Record<U, number | undefined>>
 ): CoinGeckoSimplePriceResponse<T, U> => {
   if (typeof body !== "object" || body === null) {
     throw new Error(`unexpected response from CoinGecko`);
