@@ -1,7 +1,7 @@
 import React from "react";
 import { Button } from "theme-ui";
 import { useLiquity } from "../../../hooks/LiquityContext";
-import { useTransactionFunction } from "../../Transaction";
+import { useTxFunction } from "../../Transaction";
 
 type ClaimAndMoveProps = {
   disabled?: boolean;
@@ -10,7 +10,7 @@ type ClaimAndMoveProps = {
 export const ClaimAndMove: React.FC<ClaimAndMoveProps> = ({ disabled, children }) => {
   const { liquity } = useLiquity();
 
-  const [sendTransaction] = useTransactionFunction(
+  const [sendTransaction] = useTxFunction(
     "stability-deposit",
     liquity.send.transferCollateralGainToTrove.bind(liquity.send)
   );

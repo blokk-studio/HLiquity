@@ -1,7 +1,7 @@
 import { Decimal, HLQTStakeChange } from "@liquity/lib-base";
 
 import { useLiquity } from "../../hooks/LiquityContext";
-import { useTransactionFunction } from "../Transaction";
+import { useTxFunction } from "../Transaction";
 import { LoadingButton, LoadingButtonProps } from "../LoadingButton";
 
 type StakingActionProps = {
@@ -15,7 +15,7 @@ export const StakingManagerAction: React.FC<StakingActionProps> = ({
 }) => {
   const { liquity } = useLiquity();
 
-  const [sendTransaction] = useTransactionFunction(
+  const [sendTransaction] = useTxFunction(
     "stake",
     change.stakeHLQT
       ? liquity.send.stakeHLQT.bind(liquity.send, change.stakeHLQT)

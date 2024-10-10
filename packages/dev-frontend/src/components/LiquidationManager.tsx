@@ -22,7 +22,7 @@ export const LiquidationManager: React.FC = () => {
 
           <Input
             type="number"
-            onWheel={(e) => e.target.blur()}
+            onWheel={e => e.currentTarget.blur()}
             min="1"
             step="1"
             value={numberOfTrovesToLiquidate}
@@ -36,11 +36,11 @@ export const LiquidationManager: React.FC = () => {
               id="batch-liquidate"
               tooltip="Liquidate"
               tooltipPlacement="bottom"
-              send={overrides => {
+              send={() => {
                 if (!numberOfTrovesToLiquidate) {
                   throw new Error("Invalid number");
                 }
-                return liquity.liquidateUpTo(parseInt(numberOfTrovesToLiquidate, 10), overrides);
+                return liquity.liquidateUpTo(parseInt(numberOfTrovesToLiquidate, 10));
               }}
             >
               <Button variant="dangerIcon">

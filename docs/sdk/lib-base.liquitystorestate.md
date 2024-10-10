@@ -9,7 +9,7 @@ Type of [HLiquityStore](./lib-base.hliquitystore.md)<!-- -->'s [state](./lib-bas
 **Signature:**
 
 ```typescript
-export declare type LiquityStoreState<T = unknown> = LiquityStoreBaseState & LiquityStoreDerivedState & T;
+export declare type LiquityStoreState<T extends Record<string, unknown> | unknown = unknown> = LiquityStoreBaseState & LiquityStoreDerivedState & T;
 ```
 **References:** [LiquityStoreBaseState](./lib-base.liquitystorebasestate.md)<!-- -->, [LiquityStoreDerivedState](./lib-base.liquitystorederivedstate.md)
 

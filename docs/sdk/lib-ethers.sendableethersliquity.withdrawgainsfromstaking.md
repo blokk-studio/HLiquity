@@ -14,9 +14,7 @@ withdrawGainsFromStaking(overrides?: EthersTransactionOverrides): Promise<SentEt
 
 ## Parameters
 
-|  Parameter | Type | Description |
-|  --- | --- | --- |
-|  overrides | [EthersTransactionOverrides](./lib-ethers.etherstransactionoverrides.md) |  |
+<table><thead><tr><th>
 
 Parameter
 

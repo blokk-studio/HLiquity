@@ -49,18 +49,21 @@ export const StabilityViewProvider: React.FC = props => {
   const [view, setView] = useState<StabilityView>(getInitialView(stabilityDeposit));
   const viewRef = useRef<StabilityView>(view);
 
-  const dispatchEvent = useCallback((event: StabilityEvent) => {
-    const nextView = transition(viewRef.current, event);
-    store.refresh();
+  const dispatchEvent = useCallback(
+    (event: StabilityEvent) => {
+      const nextView = transition(viewRef.current, event);
+      store.refresh();
 
-    console.log(
-      "dispatchEvent() [current-view, event, next-view]",
-      viewRef.current,
-      event,
-      nextView
-    );
-    setView(nextView);
-  }, []);
+      console.log(
+        "dispatchEvent() [current-view, event, next-view]",
+        viewRef.current,
+        event,
+        nextView
+      );
+      setView(nextView);
+    },
+    [store]
+  );
 
   useEffect(() => {
     viewRef.current = view;

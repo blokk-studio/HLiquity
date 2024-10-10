@@ -321,9 +321,6 @@ export interface EthersLiquityConnectionOptionalParams {
    * {@link @liquity/lib-base#LiquityStore.start | start()} function is called.
    */
   readonly useStore?: EthersLiquityStoreOption;
-
-  readonly mirrorNodeBaseUrl: string;
-  readonly fetch: Fetch;
 }
 
 /** @internal */

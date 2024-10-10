@@ -2,11 +2,7 @@ import assert from "assert";
 
 import { Decimal, Decimalish } from "./Decimal";
 
-import {
-  MAXIMUM_BORROWING_RATE,
-  MINIMUM_BORROWING_RATE,
-  MINIMUM_REDEMPTION_RATE
-} from "./constants";
+import { Constants } from "./constants";
 
 /**
  * Calculator for fees.
@@ -23,7 +19,9 @@ export class Fees {
   private readonly _lastFeeOperation: Date;
   private readonly _timeOfLatestBlock: Date;
   private readonly _recoveryMode: boolean;
+  protected readonly constants: Constants;
 
+  // TODO: optimise this to take the minute decay factor & beta from the constants object that was passed to it
   /** @internal */
   constructor(
     baseRateWithoutDecay: Decimalish,
@@ -31,7 +29,8 @@ export class Fees {
     beta: Decimalish,
     lastFeeOperation: Date,
     timeOfLatestBlock: Date,
-    recoveryMode: boolean
+    recoveryMode: boolean,
+    constants: Constants
   ) {
     this._baseRateWithoutDecay = Decimal.from(baseRateWithoutDecay);
     this._minuteDecayFactor = Decimal.from(minuteDecayFactor);
@@ -39,6 +38,7 @@ export class Fees {
     this._lastFeeOperation = lastFeeOperation;
     this._timeOfLatestBlock = timeOfLatestBlock;
     this._recoveryMode = recoveryMode;
+    this.constants = constants;
 
     assert(this._minuteDecayFactor.lt(1));
   }
@@ -51,7 +51,8 @@ export class Fees {
       this._beta,
       this._lastFeeOperation,
       this._timeOfLatestBlock,
-      recoveryMode
+      recoveryMode,
+      this.constants
     );
   }
 
@@ -115,7 +116,10 @@ export class Fees {
   borrowingRate(when?: Date): Decimal {
     return this._recoveryMode
       ? Decimal.ZERO
-      : Decimal.min(MINIMUM_BORROWING_RATE.add(this.baseRate(when)), MAXIMUM_BORROWING_RATE);
+      : Decimal.min(
+          this.constants.MINIMUM_BORROWING_RATE.add(this.baseRate(when)),
+          this.constants.MAXIMUM_BORROWING_RATE
+        );
   }
 
   /**
@@ -155,6 +159,6 @@ export class Fees {
       baseRate = redeemedFractionOfSupply.div(this._beta).add(baseRate);
     }
 
-    return Decimal.min(MINIMUM_REDEMPTION_RATE.add(baseRate), Decimal.ONE);
+    return Decimal.min(this.constants.MINIMUM_REDEMPTION_RATE.add(baseRate), Decimal.ONE);
   }
 }

@@ -41,11 +41,10 @@ export const CollateralSurplusAction: React.FC = () => {
   ) : myTransactionState.type !== "waitingForConfirmation" &&
     myTransactionState.type !== "confirmed" ? (
     <Flex variant="layout.actions">
-      <Transaction
-        id={myTransactionId}
-        send={liquity.claimCollateralSurplus.bind(liquity, undefined)}
-      >
-        <Button sx={{ mx: 2 }}>Claim {collateralSurplusBalance.prettify()} {COLLATERAL_COIN}</Button>
+      <Transaction id={myTransactionId} send={liquity.claimCollateralSurplus.bind(liquity)}>
+        <Button sx={{ mx: 2 }}>
+          Claim {collateralSurplusBalance.prettify()} {COLLATERAL_COIN}
+        </Button>
       </Transaction>
     </Flex>
   ) : null;

@@ -32,10 +32,7 @@ export const FilteredBondList = () => {
 
   return (
     <>
-      {
-        // @ts-ignore (TS doesn't realise optimisticBond can't be undefined here)
-        showOptimisticBond && <OptimisticBond bond={optimisticBond} style={{ mt: "16px" }} />
-      }
+      {showOptimisticBond && <OptimisticBond bond={optimisticBond} style={{ mt: "16px" }} />}
 
       {filteredBonds.map((bond: BondType, idx: number) => {
         const isFirst = idx === 0 && !showOptimisticBond;

@@ -1,13 +1,6 @@
 import React, { useCallback, useEffect, useState, useRef } from "react";
-import { Flex, Button, Box, Card, Heading, Switch, Label, Checkbox } from "theme-ui";
-import {
-  LiquityStoreState,
-  Decimal,
-  Trove,
-  HCHF_LIQUIDATION_RESERVE,
-  Percent,
-  Difference
-} from "@liquity/lib-base";
+import { Flex, Button, Box, Card, Heading, Label, Checkbox } from "theme-ui";
+import { LiquityStoreState, Decimal, Trove, Percent, Difference } from "@liquity/lib-base";
 import { useLiquitySelector } from "@liquity/lib-react";
 
 import { useStableTroveChange } from "../../hooks/useStableTroveChange";
@@ -29,6 +22,7 @@ import { Step, Steps, getCompletableStepStatus } from "../Steps";
 import { useLiquity } from "../../hooks/LiquityContext";
 import { useLoadingState } from "../../loading_state";
 import { LoadingButton } from "../LoadingButton";
+import { useConstants } from "../../hooks/constants";
 
 const selector = (state: LiquityStoreState) => {
   const { trove, fees, price, accountBalance } = state;
@@ -85,6 +79,7 @@ const applyUnsavedNetDebtChanges = (unsavedChanges: Difference, trove: Trove) =>
 };
 
 export const Adjusting: React.FC = () => {
+  const constants = useConstants();
   const { dispatchEvent } = useTroveView();
   const { trove, fees, price, accountBalance, validationContext } = useLiquitySelector(selector);
   const editingState = useState<string>();
@@ -130,11 +125,15 @@ export const Adjusting: React.FC = () => {
   const debtIncreaseAmount = isDebtIncrease ? netDebt.sub(trove.netDebt) : Decimal.ZERO;
 
   const fee = isDebtIncrease
-    ? feeFrom(trove, new Trove(trove.collateral, trove.debt.add(debtIncreaseAmount)), borrowingRate)
+    ? feeFrom(
+        trove,
+        new Trove(constants, trove.collateral, trove.debt.add(debtIncreaseAmount)),
+        borrowingRate
+      )
     : Decimal.ZERO;
-  const totalDebt = netDebt.add(HCHF_LIQUIDATION_RESERVE).add(fee);
+  const totalDebt = netDebt.add(constants.HCHF_LIQUIDATION_RESERVE).add(fee);
   const maxBorrowingRate = borrowingRate.add(0.005);
-  const updatedTrove = isDirty ? new Trove(collateral, totalDebt) : trove;
+  const updatedTrove = isDirty ? new Trove(constants, collateral, totalDebt) : trove;
   const feePct = new Percent(borrowingRate);
   const availableEth = trove.collateral.add(accountBalance);
   const maxCollateral = availableEth.gt(TX_MAX_COSTS)
@@ -149,7 +148,8 @@ export const Adjusting: React.FC = () => {
     trove,
     updatedTrove,
     borrowingRate,
-    validationContext
+    validationContext,
+    constants
   );
 
   const stableTroveChange = useStableTroveChange(troveChange);
@@ -223,27 +223,35 @@ export const Adjusting: React.FC = () => {
     const collRat = newCol.mul(price).div(totalDebt);
 
     if (auto && collRat.lt(Decimal.from(1.5))) {
-      const newNetDebt = newCol.mul(price).div(Decimal.from(1.5)).sub(HCHF_LIQUIDATION_RESERVE).sub(fee);
+      const newNetDebt = newCol
+        .mul(price)
+        .div(Decimal.from(1.5))
+        .sub(constants.HCHF_LIQUIDATION_RESERVE)
+        .sub(fee);
 
       setNetDebt(newNetDebt.isZero ? Decimal.ZERO : newNetDebt);
     }
 
-    setCollateral(newCol)
-  }
+    setCollateral(newCol);
+  };
 
   const netDebtHandler = (amount: string) => {
-    const newDebt = Decimal.from(amount)
-    const newTotalDebt = newDebt.add(HCHF_LIQUIDATION_RESERVE).add(fee)
-    const collRat = collateral.mul(price).div(newTotalDebt)
+    const newDebt = Decimal.from(amount);
+    const newTotalDebt = newDebt.add(constants.HCHF_LIQUIDATION_RESERVE).add(fee);
+    const collRat = collateral.mul(price).div(newTotalDebt);
 
     if (auto && collRat.lt(Decimal.from(1.5))) {
-      const newCol = newDebt.add(HCHF_LIQUIDATION_RESERVE).add(fee).mul(Decimal.from(1.5)).div(price)
+      const newCol = newDebt
+        .add(constants.HCHF_LIQUIDATION_RESERVE)
+        .add(fee)
+        .mul(Decimal.from(1.5))
+        .div(price);
 
-      setCollateral(newCol)
+      setCollateral(newCol);
     }
 
-    setNetDebt(newDebt)
-  }
+    setNetDebt(newDebt);
+  };
 
   return (
     <Card>
@@ -292,16 +300,24 @@ export const Adjusting: React.FC = () => {
 
         <Flex
           sx={{
-            alignItems: 'center',
+            alignItems: "center",
             py: 0,
             mb: 3,
             mt: "-10px",
             fontSize: 1
-          }}>
+          }}
+        >
           <Box>
-            <Checkbox id="switch-auto" checked={auto} onChange={(e) => setAuto(e.target.checked)}></Checkbox>
+            <Checkbox
+              id="switch-auto"
+              checked={auto}
+              onChange={e => setAuto(e.target.checked)}
+            ></Checkbox>
           </Box>
-          <Label htmlFor="switch-auto" sx={{ flex: "0 0 auto", px: 0, cursor: "pointer", fontSize: 1, ml: 1 }}>
+          <Label
+            htmlFor="switch-auto"
+            sx={{ flex: "0 0 auto", px: 0, cursor: "pointer", fontSize: 1, ml: 1 }}
+          >
             Adjust automatically
           </Label>
           <InfoIcon
@@ -316,7 +332,7 @@ export const Adjusting: React.FC = () => {
         <StaticRow
           label="Liquidation Reserve"
           inputId="trove-liquidation-reserve"
-          amount={`${HCHF_LIQUIDATION_RESERVE}`}
+          amount={`${constants.HCHF_LIQUIDATION_RESERVE}`}
           unit={COIN}
           infoIcon={
             <InfoIcon
@@ -361,8 +377,9 @@ export const Adjusting: React.FC = () => {
                   The total amount of HCHF your Trove will hold.{" "}
                   {isDirty && (
                     <>
-                      You will need to repay {totalDebt.sub(HCHF_LIQUIDATION_RESERVE).prettify(2)}{" "}
-                      HCHF to reclaim your collateral ({HCHF_LIQUIDATION_RESERVE.toString()} HCHF
+                      You will need to repay{" "}
+                      {totalDebt.sub(constants.HCHF_LIQUIDATION_RESERVE).prettify(2)} HCHF to reclaim
+                      your collateral ({constants.HCHF_LIQUIDATION_RESERVE.toString()} HCHF
                       Liquidation Reserve excluded).
                     </>
                   )}
@@ -420,12 +437,12 @@ export const Adjusting: React.FC = () => {
               {stableTroveChange?.params.borrowHCHF
                 ? `Borrow ${stableTroveChange?.params.borrowHCHF.toString(2)} HCHF`
                 : stableTroveChange?.params.repayHCHF
-                  ? `Repay ${stableTroveChange?.params.repayHCHF.toString(2)} HCHF`
-                  : stableTroveChange?.params.depositCollateral
-                    ? `Deposit ${stableTroveChange?.params.depositCollateral.toString(2)} HBAR`
-                    : stableTroveChange?.params.withdrawCollateral
-                      ? `Withdraw ${stableTroveChange?.params.withdrawCollateral.toString(2)} HBAR`
-                      : "Adjust trove"}
+                ? `Repay ${stableTroveChange?.params.repayHCHF.toString(2)} HCHF`
+                : stableTroveChange?.params.depositCollateral
+                ? `Deposit ${stableTroveChange?.params.depositCollateral.toString(2)} HBAR`
+                : stableTroveChange?.params.withdrawCollateral
+                ? `Withdraw ${stableTroveChange?.params.withdrawCollateral.toString(2)} HBAR`
+                : "Adjust trove"}
             </TroveAction>
           ) : (
             <Button disabled>Confirm</Button>

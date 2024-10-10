@@ -6,6 +6,7 @@ import { Trove, TroveWithPendingRedistribution, UserTrove } from "./Trove";
 import { Fees } from "./Fees";
 import { HLQTStake } from "./HLQTStake";
 import { FrontendStatus } from "./ReadableLiquity";
+import { Constants } from "./constants";
 
 /**
  * State variables read from the blockchain.
@@ -251,6 +252,12 @@ export abstract class HLiquityStore<T = unknown> {
   private _updateTimeoutId: ReturnType<typeof setTimeout> | undefined;
   private _listeners = new Set<(params: LiquityStoreListenerParams<T>) => void>();
 
+  protected readonly constants: Constants;
+
+  constructor(options: { constants: Constants }) {
+    this.constants = options.constants;
+  }
+
   /**
    * The current store state.
    *
@@ -262,12 +269,16 @@ export abstract class HLiquityStore<T = unknown> {
    */
   get state(): LiquityStoreState<T> {
     const defaultState: LiquityStoreState = {
-      _feesInNormalMode: new Fees(0, 0, 0, new Date(0), new Date(0), false),
-      _riskiestTroveBeforeRedistribution: new TroveWithPendingRedistribution("", "nonExistent"),
+      _feesInNormalMode: new Fees(0, 0, 0, new Date(0), new Date(0), false, this.constants),
+      _riskiestTroveBeforeRedistribution: new TroveWithPendingRedistribution(
+        this.constants,
+        "",
+        "nonExistent"
+      ),
       borrowingRate: Decimal.from(0),
       accountBalance: Decimal.from(0),
       collateralSurplusBalance: Decimal.from(0),
-      fees: new Fees(0, 0, 0, new Date(0), new Date(0), false),
+      fees: new Fees(0, 0, 0, new Date(0), new Date(0), false, this.constants),
       frontend: {
         status: "registered",
         kickbackRate: Decimal.from(0)
@@ -297,12 +308,16 @@ export abstract class HLiquityStore<T = unknown> {
         Decimal.from(0),
         ""
       ),
-      total: new Trove(),
-      totalRedistributed: new Trove(),
+      total: new Trove(this.constants),
+      totalRedistributed: new Trove(this.constants),
       totalStakedHLQT: Decimal.from(0),
       totalStakedUniTokens: Decimal.from(0),
-      trove: new UserTrove("", "nonExistent"),
-      troveBeforeRedistribution: new TroveWithPendingRedistribution("", "nonExistent"),
+      trove: new UserTrove(this.constants, "", "nonExistent"),
+      troveBeforeRedistribution: new TroveWithPendingRedistribution(
+        this.constants,
+        "",
+        "nonExistent"
+      ),
       uniTokenAllowance: Decimal.from(0),
       uniTokenBalance: Decimal.from(0),
       userHasAssociatedWithHchf: false,

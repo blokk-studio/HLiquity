@@ -2,13 +2,7 @@ import React, { useState, useEffect, useCallback } from "react";
 import CopyToClipboard from "react-copy-to-clipboard";
 import { Card, Button, Text, Box, Heading, Flex } from "theme-ui";
 
-import {
-  Percent,
-  MINIMUM_COLLATERAL_RATIO,
-  CRITICAL_COLLATERAL_RATIO,
-  UserTrove,
-  Decimal
-} from "@liquity/lib-base";
+import { Percent, UserTrove, Decimal, Constants } from "@liquity/lib-base";
 import { BlockPolledLiquityStoreState } from "@liquity/lib-ethers";
 import { useLiquitySelector } from "@liquity/lib-react";
 
@@ -21,9 +15,8 @@ import { LoadingOverlay } from "./LoadingOverlay";
 import { Transaction } from "./Transaction";
 import { Tooltip } from "./Tooltip";
 import { Abbreviation } from "./Abbreviation";
-import {
-  AccountId,
-} from '@hashgraph/sdk'
+import { AccountId } from "@hashgraph/sdk";
+import { useConstants } from "../hooks/constants";
 
 const rowHeight = "40px";
 
@@ -34,11 +27,15 @@ const liquidatableInRecoveryMode = (
   trove: UserTrove,
   price: Decimal,
   totalCollateralRatio: Decimal,
-  hchfInStabilityPool: Decimal
+  hchfInStabilityPool: Decimal,
+  constants: Constants
 ) => {
   const collateralRatio = trove.collateralRatio(price);
 
-  if (collateralRatio.gte(MINIMUM_COLLATERAL_RATIO) && collateralRatio.lt(totalCollateralRatio)) {
+  if (
+    collateralRatio.gte(constants.MINIMUM_COLLATERAL_RATIO) &&
+    collateralRatio.lt(totalCollateralRatio)
+  ) {
     return [
       trove.debt.lte(hchfInStabilityPool),
       "There's not enough HCHF in the Stability pool to cover the debt"
@@ -68,14 +65,8 @@ const select = ({
 });
 
 export const RiskyTroves: React.FC<RiskyTrovesProps> = ({ pageSize }) => {
-  const {
-    blockTag,
-    numberOfTroves,
-    recoveryMode,
-    totalCollateralRatio,
-    hchfInStabilityPool,
-    price
-  } = useLiquitySelector(select);
+  const { numberOfTroves, recoveryMode, totalCollateralRatio, hchfInStabilityPool, price } =
+    useLiquitySelector(select);
   const { liquity } = useLiquity();
 
   const [loading, setLoading] = useState(true);
@@ -112,14 +103,11 @@ export const RiskyTroves: React.FC<RiskyTrovesProps> = ({ pageSize }) => {
     setLoading(true);
 
     liquity
-      .getTroves(
-        {
-          first: pageSize,
-          sortedBy: "ascendingCollateralRatio",
-          startingAt: clampedPage * pageSize
-        },
-        { blockTag }
-      )
+      .getTroves({
+        first: pageSize,
+        sortedBy: "ascendingCollateralRatio",
+        startingAt: clampedPage * pageSize
+      })
       .then(troves => {
         if (mounted) {
           setTroves(troves);
@@ -130,8 +118,6 @@ export const RiskyTroves: React.FC<RiskyTrovesProps> = ({ pageSize }) => {
     return () => {
       mounted = false;
     };
-    // Omit blockTag from deps on purpose
-    // eslint-disable-next-line
   }, [liquity, clampedPage, pageSize, reload]);
 
   useEffect(() => {
@@ -156,16 +142,20 @@ export const RiskyTroves: React.FC<RiskyTrovesProps> = ({ pageSize }) => {
     }
   }, [copied]);
 
-  const getTroveAccountId = (troveOwnerAddress: string, shortened: boolean = false) => {
-    const accountId = AccountId.fromEvmAddress(0, 0, troveOwnerAddress)
-    const troveOwnerAddressDigits = troveOwnerAddress.substring(2) // remove `0x`
+  const getTroveAccountId = (troveOwnerAddress: string, shortened = false) => {
+    const accountId = AccountId.fromEvmAddress(0, 0, troveOwnerAddress);
+    const troveOwnerAddressDigits = troveOwnerAddress.substring(2); // remove `0x`
 
     if (accountId.toString().endsWith(troveOwnerAddressDigits.toLocaleLowerCase())) {
-      return shortened ? shortenAddress(troveOwnerAddress.toLowerCase()) : troveOwnerAddress.toLowerCase();
+      return shortened
+        ? shortenAddress(troveOwnerAddress.toLowerCase())
+        : troveOwnerAddress.toLowerCase();
     }
 
-    return accountId.toString()
-  }
+    return accountId.toString();
+  };
+
+  const constants = useConstants();
 
   return (
     <Card sx={{ width: "100%" }}>
@@ -239,7 +229,9 @@ export const RiskyTroves: React.FC<RiskyTrovesProps> = ({ pageSize }) => {
                 <th>Owner</th>
                 <th>
                   <Abbreviation short="Coll.">Collateral</Abbreviation>
-                  <Box sx={{ fontSize: [0, 1], fontWeight: "body", opacity: 0.5 }}>{COLLATERAL_COIN}</Box>
+                  <Box sx={{ fontSize: [0, 1], fontWeight: "body", opacity: 0.5 }}>
+                    {COLLATERAL_COIN}
+                  </Box>
                 </th>
                 <th>
                   Debt
@@ -298,7 +290,11 @@ export const RiskyTroves: React.FC<RiskyTrovesProps> = ({ pageSize }) => {
                         >
                           <Button variant="icon" sx={{ width: "24px", height: "24px" }}>
                             <Icon
-                              name={copied === getTroveAccountId(trove.ownerAddress) ? "clipboard-check" : "clipboard"}
+                              name={
+                                copied === getTroveAccountId(trove.ownerAddress)
+                                  ? "clipboard-check"
+                                  : "clipboard"
+                              }
                               size="sm"
                             />
                           </Button>
@@ -318,11 +314,11 @@ export const RiskyTroves: React.FC<RiskyTrovesProps> = ({ pageSize }) => {
                         {(collateralRatio => (
                           <Text
                             color={
-                              collateralRatio.gt(CRITICAL_COLLATERAL_RATIO)
+                              collateralRatio.gt(constants.CRITICAL_COLLATERAL_RATIO)
                                 ? "success"
                                 : collateralRatio.gt(1.2)
-                                  ? "warning"
-                                  : "danger"
+                                ? "warning"
+                                : "danger"
                             }
                           >
                             {new Percent(collateralRatio).prettify()}
@@ -336,11 +332,12 @@ export const RiskyTroves: React.FC<RiskyTrovesProps> = ({ pageSize }) => {
                           requires={[
                             recoveryMode
                               ? liquidatableInRecoveryMode(
-                                trove,
-                                price,
-                                totalCollateralRatio,
-                                hchfInStabilityPool
-                              )
+                                  trove,
+                                  price,
+                                  totalCollateralRatio,
+                                  hchfInStabilityPool,
+                                  constants
+                                )
                               : liquidatableInNormalMode(trove, price)
                           ]}
                           send={liquity.send.liquidate.bind(liquity.send, trove.ownerAddress)}

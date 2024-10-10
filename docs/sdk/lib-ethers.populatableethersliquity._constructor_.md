@@ -9,7 +9,10 @@ Constructs a new instance of the `PopulatableEthersLiquity` class
 **Signature:**
 
 ```typescript
-constructor(readable: ReadableEthersLiquity);
+constructor(options: {
+        readable: ReadableEthersLiquity;
+        constants: Constants;
+    });
 ```
 
 ## Parameters
@@ -32,12 +35,12 @@ Description
 </th></tr></thead>
 <tbody><tr><td>
 
-readable
+options
 
 
 </td><td>
 
-[ReadableEthersLiquity](./lib-ethers.readableethersliquity.md)
+{ readable: [ReadableEthersLiquity](./lib-ethers.readableethersliquity.md)<!-- -->; constants: [Constants](./lib-base.constants.md)<!-- -->; }
 
 
 </td><td>

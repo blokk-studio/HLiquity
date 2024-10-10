@@ -7,9 +7,9 @@
 **Signature:**
 
 ```typescript
-refresh(): Promise<void>;
+refresh(): Promise<LiquityStoreState<BlockPolledLiquityStoreExtraState>>;
 ```
 **Returns:**
 
-Promise&lt;void&gt;
+Promise&lt;[LiquityStoreState](./lib-base.liquitystorestate.md)<!-- -->&lt;[BlockPolledLiquityStoreExtraState](./lib-ethers.blockpolledliquitystoreextrastate.md)<!-- -->&gt;&gt;
 

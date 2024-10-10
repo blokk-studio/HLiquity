@@ -1,6 +1,6 @@
-import { createContext, useContext, useState } from "react";
+import { createContext, JSXElementConstructor, useContext, useState } from "react";
 
-type ReactComponent = Function & (React.FC<any> | React.ComponentClass);
+type ReactComponent = (() => void) | React.FC<unknown> | React.ComponentClass;
 
 export type WizardContextType = {
   next: (() => void) | null;
@@ -25,7 +25,7 @@ export const useWizard = (): WizardContextType => {
 };
 
 export type WizardProviderProps = {
-  children: React.ReactComponentElement<any>[];
+  children: React.ReactComponentElement<JSXElementConstructor<unknown>>[];
   onCancel?: () => void;
   onFinish?: () => void;
 };

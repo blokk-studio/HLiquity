@@ -1,7 +1,4 @@
 import React, { useState, useContext, useEffect, useCallback } from "react";
-import { Provider, TransactionResponse, TransactionReceipt } from "@ethersproject/abstract-provider";
-import { hexDataSlice, hexDataLength } from "@ethersproject/bytes";
-import { defaultAbiCoder } from "@ethersproject/abi";
 
 import "react-circular-progressbar/dist/styles.css";
 
@@ -9,7 +6,7 @@ import {
   EthersTransactionOverrides,
   EthersTransactionFailedError as EthersTransactionCancelledError
 } from "@liquity/lib-ethers";
-import { SentLiquityTransaction, LiquityReceipt } from "@liquity/lib-base";
+import { SentLiquityTransaction } from "@liquity/lib-base";
 
 import { useLiquity } from "../hooks/LiquityContext";
 
@@ -18,7 +15,7 @@ import type { TooltipProps } from "./Tooltip";
 
 import { TransactionStatus } from "./TransactionStatus";
 import { useSnackbar } from "./Snackbar";
-import { getNoMatchingKeyErrorSnack, isError, isNoMatchingKeyError } from "../errors";
+import { getNoMatchingKeyErrorSnack, isNoMatchingKeyError } from "../errors";
 
 type TransactionIdle = {
   type: "idle";
@@ -76,7 +73,8 @@ export const TransactionProvider: React.FC = ({ children }) => {
   );
 };
 
-const useTransactionState = () => {
+/** useTransactionState, but that name causes eslint to misunderstand this hooks as a different one */
+const useTxState = () => {
   const transactionState = useContext(TransactionContext);
 
   if (!transactionState) {
@@ -87,7 +85,7 @@ const useTransactionState = () => {
 };
 
 export const useMyTransactionState = (myId: string | RegExp): TransactionState => {
-  const [transactionState] = useTransactionState();
+  const [transactionState] = useTxState();
 
   return transactionState.type !== "idle" &&
     (typeof myId === "string" ? transactionState.id === myId : transactionState.id.match(myId))
@@ -107,11 +105,6 @@ type ButtonlikeProps = {
   onClick?: () => void;
 };
 
-type SentTransaction = SentLiquityTransaction<
-  TransactionResponse,
-  LiquityReceipt<TransactionReceipt>
->;
-
 export type TransactionFunction = (
   overrides?: EthersTransactionOverrides
 ) => Promise<SentLiquityTransaction>;
@@ -126,11 +119,12 @@ type TransactionProps<C> = {
   children: C;
 };
 
-export const useTransactionFunction = (
+/** useTransactionFunction, but that name causes eslint to misunderstand this hooks as a different one */
+export const useTxFunction = (
   id: string,
   send: TransactionFunction
 ): [sendTransaction: () => Promise<void>, transactionState: TransactionState] => {
-  const [transactionState, setTransactionState] = useTransactionState();
+  const [transactionState, setTransactionState] = useTxState();
   const { store } = useLiquity();
   const snackbar = useSnackbar();
 
@@ -176,7 +170,7 @@ export function Transaction<C extends React.ReactElement<ButtonlikeProps>>({
   send,
   children
 }: TransactionProps<C>) {
-  const [sendTransaction, transactionState] = useTransactionFunction(id, send);
+  const [sendTransaction, transactionState] = useTxFunction(id, send);
   const trigger = React.Children.only<C>(children);
 
   const failureReasons = (requires || [])
@@ -222,23 +216,9 @@ export function Transaction<C extends React.ReactElement<ButtonlikeProps>>({
   );
 }
 
-// Doesn't work on Kovan:
-// https://github.com/MetaMask/metamask-extension/issues/5579
-const tryToGetRevertReason = async (provider: Provider, tx: TransactionReceipt) => {
-  try {
-    const result = await provider.call(tx, tx.blockNumber);
-
-    if (hexDataLength(result) % 32 === 4 && hexDataSlice(result, 0, 4) === "0x08c379a0") {
-      return (defaultAbiCoder.decode(["string"], hexDataSlice(result, 4)) as [string])[0];
-    }
-  } catch {
-    return undefined;
-  }
-};
-
 export const TransactionMonitor: React.FC = () => {
   const { store } = useLiquity();
-  const [transactionState, setTransactionState] = useTransactionState();
+  const [transactionState, setTransactionState] = useTxState();
 
   const id = transactionState.type !== "idle" ? transactionState.id : undefined;
   const tx = transactionState.type === "waitingForConfirmation" ? transactionState.tx : undefined;

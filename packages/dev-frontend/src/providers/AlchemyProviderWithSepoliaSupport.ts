@@ -13,10 +13,11 @@ const defaultApiKey = "_gg7wSSi0KMBsdKnGVfHDueq6xMB9EkC";
 
 export class AlchemyWebSocketProviderWithSepoliaSupport
   extends WebSocketProvider
-  implements CommunityResourcable {
+  implements CommunityResourcable
+{
   readonly apiKey!: string;
 
-  constructor(network?: Networkish, apiKey?: any) {
+  constructor(network?: Networkish, apiKey?: unknown) {
     const provider = new AlchemyProvider(network, apiKey);
 
     const url = provider.connection.url

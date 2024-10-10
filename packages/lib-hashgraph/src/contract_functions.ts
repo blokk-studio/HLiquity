@@ -5,7 +5,6 @@ import {
   Hbar,
 } from '@hashgraph/sdk'
 import { Address } from '@liquity/lib-base'
-import BigNumber from 'bignumber.js'
 
 type FunctionNameFromAbi<Abi extends unknown[]> = Extract<
   {
@@ -63,9 +62,7 @@ type TypedContractParameters<
 > = Index extends keyof NextIndexMap
   ? FunctionInputs[Index]['type'] extends 'uint256'
     ? {
-        addUint256: (
-          uint256: string,
-        ) => TypedContractParameters<FunctionInputs, NextIndex<Index>>
+        addUint256: (uint256: string) => TypedContractParameters<FunctionInputs, NextIndex<Index>>
       } & { [key in `~ ${FunctionInputs[Index]['name']}`]: never }
     : FunctionInputs[Index]['type'] extends 'address'
       ? {

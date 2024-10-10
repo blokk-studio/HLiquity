@@ -5,7 +5,7 @@
 ```ts
 
 // @public (undocumented)
-export const BETA: Decimal;
+export type Address = `0x${string}`;
 
 // @internal (undocumented)
 export class _CachedReadableLiquity<T extends unknown[]> implements _ReadableLiquityWithExtraParams<T> {
@@ -23,11 +23,15 @@ export class _CachedReadableLiquity<T extends unknown[]> implements _ReadableLiq
     // (undocumented)
     getHCHFTokenAddress(...extraParams: T): Promise<string>;
     // (undocumented)
+    getHchfTokenAllowanceOfHchfContract(address?: string, ...extraParams: T): Promise<Decimal>;
+    // (undocumented)
     getHLQTBalance(address?: string, ...extraParams: T): Promise<Decimal>;
     // (undocumented)
     getHLQTStake(address?: string, ...extraParams: T): Promise<HLQTStake>;
     // (undocumented)
     getHLQTTokenAddress(...extraParams: T): Promise<string>;
+    // (undocumented)
+    getHlqtTokenAllowanceOfHlqtContract(address?: string, ...extraParams: T): Promise<Decimal>;
     // (undocumented)
     getLiquidityMiningHLQTReward(address?: string, ...extraParams: T): Promise<Decimal>;
     // (undocumented)
@@ -84,8 +88,51 @@ export type _CollateralWithdrawal<T> = {
     withdrawCollateral: T;
 };
 
-// @public
-export const CRITICAL_COLLATERAL_RATIO: Decimal;
+// @public (undocumented)
+export interface ConsentableLiquity {
+    // (undocumented)
+    approveHchfToSpendHchf(amount: Decimal): Promise<void>;
+    // (undocumented)
+    approveHlqtToSpendHlqt(amount: Decimal): Promise<void>;
+    // (undocumented)
+    approveSaucerSwapToSpendLpToken(amount: Decimal): Promise<void>;
+    // (undocumented)
+    associateWithHchf(): Promise<void>;
+    // (undocumented)
+    associateWithHlqt(): Promise<void>;
+    // (undocumented)
+    associateWithLpToken(): Promise<void>;
+    // (undocumented)
+    dissociateFromHchf(): Promise<void>;
+    // (undocumented)
+    dissociateFromHlqt(): Promise<void>;
+    // (undocumented)
+    dissociateFromLpToken(): Promise<void>;
+}
+
+// @public (undocumented)
+export interface Constants {
+    // (undocumented)
+    BETA: Decimal;
+    // (undocumented)
+    CRITICAL_COLLATERAL_RATIO: Decimal;
+    // (undocumented)
+    HCHF_LIQUIDATION_RESERVE: Decimal;
+    // (undocumented)
+    HCHF_MINIMUM_DEBT: Decimal;
+    // (undocumented)
+    HCHF_MINIMUM_NET_DEBT: Decimal;
+    // (undocumented)
+    MAXIMUM_BORROWING_RATE: Decimal;
+    // (undocumented)
+    MINIMUM_BORROWING_RATE: Decimal;
+    // (undocumented)
+    MINIMUM_COLLATERAL_RATIO: Decimal;
+    // (undocumented)
+    MINIMUM_REDEMPTION_RATE: Decimal;
+    // (undocumented)
+    MINUTE_DECAY_FACTOR: Decimal;
+}
 
 // @internal (undocumented)
 export type _DebtChange<T> = (_HCHFBorrowing<T> & _NoHCHFRepayment) | (_HCHFRepayment<T> & _NoHCHFBorrowing);
@@ -161,6 +208,72 @@ export class Decimal {
 // @public
 export type Decimalish = Decimal | number | string;
 
+// @public
+export const defaults: Constants;
+
+// @public (undocumented)
+export interface Deployment {
+    // (undocumented)
+    readonly addresses: Record<DeploymentAddressesKey, Address>;
+    // (undocumented)
+    readonly bootstrapPeriod: number;
+    // (undocumented)
+    readonly chainId: number;
+    // (undocumented)
+    readonly deploymentDate: Date;
+    // (undocumented)
+    readonly frontendTag: Address;
+    // @deprecated (undocumented)
+    readonly hchfTokenAddress: Address;
+    // @deprecated (undocumented)
+    readonly hlqtTokenAddress: Address;
+    // (undocumented)
+    readonly _isDev: boolean;
+    // (undocumented)
+    readonly liquidityMiningHLQTRewardRate: string;
+    // (undocumented)
+    readonly _priceFeedIsTestnet: boolean;
+    // (undocumented)
+    readonly totalStabilityPoolHLQTReward: string;
+    // (undocumented)
+    readonly _uniTokenIsMock: boolean;
+    // (undocumented)
+    readonly version: string;
+}
+
+// @public (undocumented)
+export type DeploymentAddressesKey = "activePool" | "borrowerOperations" | "troveManager" | "hchfToken" | "collSurplusPool" | "communityIssuance" | "defaultPool" | "hlqtToken" | "hintHelpers" | "lockupContractFactory" | "hlqtStaking" | "multiTroveGetter" | "priceFeed" | "sortedTroves" | "stabilityPool" | "gasPool" | "saucerSwapPool" | "pythCaller" | "supraCaller" | "uniToken";
+
+// @public (undocumented)
+export interface DeploymentDefinition {
+    // (undocumented)
+    readonly addresses: Record<DeploymentAddressesKey, Address>;
+    // (undocumented)
+    readonly bootstrapPeriod: number;
+    // (undocumented)
+    readonly chainId: number;
+    // (undocumented)
+    readonly deploymentDate: number;
+    // (undocumented)
+    readonly frontendTag: Address;
+    // (undocumented)
+    readonly hchfTokenAddress: Address;
+    // (undocumented)
+    readonly hlqtTokenAddress: Address;
+    // (undocumented)
+    readonly _isDev: boolean;
+    // (undocumented)
+    readonly liquidityMiningHLQTRewardRate: string;
+    // (undocumented)
+    readonly _priceFeedIsTestnet: boolean;
+    // (undocumented)
+    readonly totalStabilityPoolHLQTReward: string;
+    // (undocumented)
+    readonly _uniTokenIsMock: boolean;
+    // (undocumented)
+    readonly version: string;
+}
+
 // @alpha (undocumented)
 export class Difference {
     // (undocumented)
@@ -185,9 +298,6 @@ export class Difference {
     toString(precision?: number): string;
 }
 
-// @internal (undocumented)
-export const _emptyTrove: Trove;
-
 // @public
 export type FailedReceipt<R = unknown> = {
     status: "failed";
@@ -200,10 +310,12 @@ export const _failedReceipt: <R>(rawReceipt: R) => FailedReceipt<R>;
 // @public
 export class Fees {
     // @internal
-    constructor(baseRateWithoutDecay: Decimalish, minuteDecayFactor: Decimalish, beta: Decimalish, lastFeeOperation: Date, timeOfLatestBlock: Date, recoveryMode: boolean);
+    constructor(baseRateWithoutDecay: Decimalish, minuteDecayFactor: Decimalish, beta: Decimalish, lastFeeOperation: Date, timeOfLatestBlock: Date, recoveryMode: boolean, constants: Constants);
     // @internal (undocumented)
     baseRate(when?: Date): Decimal;
     borrowingRate(when?: Date): Decimal;
+    // (undocumented)
+    protected readonly constants: Constants;
     equals(that: Fees): boolean;
     redemptionRate(redeemedFractionOfSupply?: Decimalish, when?: Date): Decimal;
     // @internal (undocumented)
@@ -220,14 +332,14 @@ export type FrontendStatus = {
     kickbackRate: Decimal;
 };
 
-// @public
-export const HCHF_LIQUIDATION_RESERVE: Decimal;
+// @public (undocumented)
+export const getConstants: (configuration: Record<string, string | undefined>, defaultValues: Constants) => Constants;
 
-// @public
-export const HCHF_MINIMUM_DEBT: Decimal;
+// @public (undocumented)
+export const getConstantsFromJsonObjectString: (jsonObjectString?: string | undefined) => Constants;
 
-// @public
-export const HCHF_MINIMUM_NET_DEBT: Decimal;
+// @public (undocumented)
+export const getDeployment: (deploymentDefinition: DeploymentDefinition) => Deployment;
 
 // @internal (undocumented)
 export type _HCHFBorrowing<T> = {
@@ -241,6 +353,11 @@ export type _HCHFRepayment<T> = {
 
 // @public
 export abstract class HLiquityStore<T = unknown> {
+    constructor(options: {
+        constants: Constants;
+    });
+    // (undocumented)
+    protected readonly constants: Constants;
     // @internal (undocumented)
     protected abstract _doStart(): () => void;
     // @internal (undocumented)
@@ -252,7 +369,7 @@ export abstract class HLiquityStore<T = unknown> {
     // @internal (undocumented)
     protected abstract _reduceExtra(extraState: T, extraStateUpdate: Partial<T>): T;
     // (undocumented)
-    abstract refresh(): Promise<void>;
+    abstract refresh(): Promise<LiquityStoreState<T>>;
     start(): () => void;
     get state(): LiquityStoreState<T>;
     subscribe(listener: (params: LiquityStoreListenerParams<T>) => void): () => void;
@@ -322,9 +439,13 @@ export interface LiquityStoreBaseState {
     hchfBalance: Decimal;
     hchfInStabilityPool: Decimal;
     hchfTokenAddress: string;
+    // (undocumented)
+    hchfTokenAllowanceOfHchfContract: Decimal;
     hlqtBalance: Decimal;
     hlqtStake: HLQTStake;
     hlqtTokenAddress: string;
+    // (undocumented)
+    hlqtTokenAllowanceOfHlqtContract: Decimal;
     liquidityMiningHLQTReward: Decimal;
     liquidityMiningStake: Decimal;
     numberOfTroves: number;
@@ -342,6 +463,12 @@ export interface LiquityStoreBaseState {
     troveBeforeRedistribution: TroveWithPendingRedistribution;
     uniTokenAllowance: Decimal;
     uniTokenBalance: Decimal;
+    // (undocumented)
+    userHasAssociatedWithHchf: boolean;
+    // (undocumented)
+    userHasAssociatedWithHlqt: boolean;
+    // (undocumented)
+    userHasAssociatedWithLpToken: boolean;
 }
 
 // @public
@@ -361,25 +488,10 @@ export interface LiquityStoreListenerParams<T = unknown> {
 }
 
 // @public
-export type LiquityStoreState<T = unknown> = LiquityStoreBaseState & LiquityStoreDerivedState & T;
-
-// @public
-export const MAXIMUM_BORROWING_RATE: Decimal;
+export type LiquityStoreState<T extends Record<string, unknown> | unknown = unknown> = LiquityStoreBaseState & LiquityStoreDerivedState & T;
 
 // @public
 export type MinedReceipt<R = unknown, D = unknown> = FailedReceipt<R> | SuccessfulReceipt<R, D>;
-
-// @public
-export const MINIMUM_BORROWING_RATE: Decimal;
-
-// @public
-export const MINIMUM_COLLATERAL_RATIO: Decimal;
-
-// @public
-export const MINIMUM_REDEMPTION_RATE: Decimal;
-
-// @public (undocumented)
-export const MINUTE_DECAY_FACTOR: Decimal;
 
 // @internal (undocumented)
 export type _NoCollateralChange = _NoCollateralDeposit & _NoCollateralWithdrawal;
@@ -490,6 +602,10 @@ export interface PopulatableLiquity<R = unknown, S = unknown, P = unknown> exten
 
 // @public
 export interface PopulatedLiquityTransaction<P = unknown, T extends SentLiquityTransaction = SentLiquityTransaction> {
+    // (undocumented)
+    readonly gasHeadroom?: number;
+    // (undocumented)
+    readonly gasLimit?: number;
     readonly rawPopulatedTransaction: P;
     send(): Promise<T>;
 }
@@ -510,9 +626,13 @@ export interface ReadableLiquity {
     getHCHFBalance(address?: string): Promise<Decimal>;
     getHCHFInStabilityPool(): Promise<Decimal>;
     getHCHFTokenAddress(): Promise<string>;
+    // (undocumented)
+    getHchfTokenAllowanceOfHchfContract(address?: string): Promise<Decimal>;
     getHLQTBalance(address?: string): Promise<Decimal>;
     getHLQTStake(address?: string): Promise<HLQTStake>;
     getHLQTTokenAddress(): Promise<string>;
+    // (undocumented)
+    getHlqtTokenAllowanceOfHlqtContract(address?: string): Promise<Decimal>;
     getLiquidityMiningHLQTReward(address?: string): Promise<Decimal>;
     getLiquidityMiningStake(address?: string): Promise<Decimal>;
     getNumberOfTroves(): Promise<number>;
@@ -559,8 +679,8 @@ export interface RedemptionDetails {
 }
 
 // @internal (undocumented)
-export type _SendableFrom<T, R, S> = {
-    [M in keyof T]: T[M] extends (...args: infer A) => Promise<infer D> ? (...args: A) => Promise<SentLiquityTransaction<S, LiquityReceipt<R, D>>> : never;
+export type _SendableFrom<TransactableLiquity, Receipt, SentTransaction> = {
+    [MethodName in keyof TransactableLiquity]: TransactableLiquity[MethodName] extends (...args: infer Arguments) => Promise<infer Data> ? (...args: Arguments) => Promise<SentLiquityTransaction<SentTransaction, LiquityReceipt<Receipt, Data>>> : never;
 };
 
 // Warning: (ae-incompatible-release-tags) The symbol "SendableLiquity" is marked as @public, but its signature references "_SendableFrom" which is marked as @internal
@@ -694,7 +814,7 @@ export class TransactionFailedError<T extends FailedReceipt = FailedReceipt> ext
 // @public
 export class Trove {
     // @internal
-    constructor(collateral?: Decimal, debt?: Decimal);
+    constructor(constants: Constants, collateral?: Decimal, debt?: Decimal);
     // (undocumented)
     add(that: Trove): Trove;
     // (undocumented)
@@ -708,7 +828,9 @@ export class Trove {
     collateralRatio(price: Decimalish): Decimal;
     collateralRatioIsBelowCritical(price: Decimalish): boolean;
     collateralRatioIsBelowMinimum(price: Decimalish): boolean;
-    static create(params: TroveCreationParams<Decimalish>, borrowingRate?: Decimalish): Trove;
+    // (undocumented)
+    protected readonly constants: Constants;
+    static create(constants: Constants, params: TroveCreationParams<Decimalish>, borrowingRate?: Decimalish): Trove;
     readonly debt: Decimal;
     // (undocumented)
     equals(that: Trove): boolean;
@@ -810,7 +932,7 @@ export interface TroveListingParams {
 // @public
 export class TroveWithPendingRedistribution extends UserTrove {
     // @internal
-    constructor(ownerAddress: string, status: UserTroveStatus, collateral?: Decimal, debt?: Decimal, stake?: Decimal, snapshotOfTotalRedistributed?: Trove);
+    constructor(constants: Constants, ownerAddress: string, status: UserTroveStatus, collateral?: Decimal, debt?: Decimal, stake?: Decimal, snapshotOfTotalRedistributed?: Trove);
     // (undocumented)
     applyRedistribution(totalRedistributed: Trove): UserTrove;
     // (undocumented)
@@ -820,7 +942,7 @@ export class TroveWithPendingRedistribution extends UserTrove {
 // @public
 export class UserTrove extends Trove {
     // @internal
-    constructor(ownerAddress: string, status: UserTroveStatus, collateral?: Decimal, debt?: Decimal);
+    constructor(constants: Constants, ownerAddress: string, status: UserTroveStatus, collateral?: Decimal, debt?: Decimal);
     // (undocumented)
     equals(that: UserTrove): boolean;
     readonly ownerAddress: string;

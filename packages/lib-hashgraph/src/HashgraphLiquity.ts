@@ -1,21 +1,19 @@
 import {
   Address,
-  BETA,
   CollateralGainTransferDetails,
   ConsentableLiquity,
+  Constants,
   Decimal,
   Decimalish,
   Deployment,
   DeploymentAddressesKey,
   Fees,
   FrontendStatus,
-  HCHF_MINIMUM_NET_DEBT,
   HLQTStake,
   HLiquityStore,
   LiquidationDetails,
   LiquityStoreBaseState,
   LiquityStoreState,
-  MINUTE_DECAY_FACTOR,
   MinedReceipt,
   PopulatableLiquity,
   PopulatedRedemption,
@@ -55,7 +53,6 @@ import {
 } from '@hashgraph/sdk'
 import { Fetch, fetchTokens, waitForTokenState } from '@liquity/mirror-node'
 import { default as Emittery } from 'emittery'
-import { HashConnectSigner } from 'hashconnect/dist/signer'
 import { EventEmitter } from 'node:events'
 import { ActivePoolAbi, activePoolAbi } from '../abi/ActivePool'
 import { BorrowerOperationsAbi, borrowerOperationsAbi } from '../abi/BorrowerOperations'
@@ -173,13 +170,13 @@ export class HashgraphLiquity
   private readonly userAccountId: AccountId
   private readonly userAccountAddress: Address
   // don't use account ids from the hashconnect instance.
-  private readonly signer: HashConnectSigner
   private readonly hashConnect: Omit<HashConnect, 'connectedAccountIds'>
   private readonly web3: Web3
   private readonly totalStabilityPoolHlqtReward: Decimal
   private readonly frontendAddress: Address
   private readonly mirrorNodeBaseUrl: `https://${string}`
   private readonly fetch: Fetch
+  protected readonly constants: Constants
 
   // contracts
   private readonly activePool: Contract<ActivePoolAbi>
@@ -226,6 +223,7 @@ export class HashgraphLiquity
     frontendAddress: Address
     mirrorNodeBaseUrl: `https://${string}`
     fetch: Fetch
+    constants: Constants
 
     // contracts
     activePool: Contract<ActivePoolAbi>
@@ -266,24 +264,19 @@ export class HashgraphLiquity
     // lasagna
     connection: LasagnaConnection
   }) {
-    super()
+    super(options)
 
     this.eventEmitter = new Emittery()
 
     this.userAccountId = options.userAccountId
     this.userAccountAddress = options.userAccountAddress
     this.hashConnect = options.userHashConnect
-    try {
-      this.signer = this.hashConnect.getSigner(this.userAccountId)
-    } catch {
-      this.hashConnect.disconnect()
-      throw new Error("Disconnected HashConnect because the signer isn't available. Please retry.")
-    }
     this.web3 = options.web3
     this.totalStabilityPoolHlqtReward = options.totalStabilityPoolHlqtReward
     this.frontendAddress = options.frontendAddress
     this.mirrorNodeBaseUrl = options.mirrorNodeBaseUrl
     this.fetch = options.fetch
+    this.constants = options.constants
 
     this.activePool = options.activePool
     this.activePoolContractId = options.activePoolContractId
@@ -340,6 +333,21 @@ export class HashgraphLiquity
     this.populate = asPopulatable(this)
     this.send = asSendable(this)
     this.connection = options.connection
+
+    // reference unused properties so we can keep them in case we need them later
+    this.activePoolContractId
+    this.borrowerOperations
+    this.collSurplusPoolContractId
+    this.communityIssuanceContractId
+    this.defaultPoolContractId
+    this.gasPool
+    this.gasPoolContractId
+    this.hintHelpersContractId
+    this.lockupContractFactory
+    this.lockupContractFactoryContractId
+    this.multiTroveGetterContractId
+    this.priceFeedContractId
+    this.sortedTrovesContractId
   }
 
   private async getTokenIds() {
@@ -407,6 +415,7 @@ export class HashgraphLiquity
       hchfInStabilityPool: this.getHCHFInStabilityPool({ blockTag }),
       totalStakedHLQT: this.getTotalStakedHLQT({ blockTag }),
       _riskiestTroveBeforeRedistribution: new TroveWithPendingRedistribution(
+        this.constants,
         this.userAccountAddress,
         userTroveStatusFrom(BackendTroveStatus.nonExistent),
       ),
@@ -477,6 +486,7 @@ export class HashgraphLiquity
             liquidityMiningHLQTReward: Decimal.ZERO,
             collateralSurplusBalance: Decimal.ZERO,
             troveBeforeRedistribution: new TroveWithPendingRedistribution(
+              this.constants,
               AddressZero,
               'nonExistent',
             ),
@@ -501,11 +511,12 @@ export class HashgraphLiquity
 
     const _feesInNormalMode = new Fees(
       baseRateWithoutDecay,
-      MINUTE_DECAY_FACTOR,
-      BETA,
+      this.constants.MINUTE_DECAY_FACTOR,
+      this.constants.BETA,
       lastFeeOperationDate,
       timeOfLatestBlock,
       false,
+      this.constants,
     )
 
     return [
@@ -591,7 +602,7 @@ export class HashgraphLiquity
     const collateral = decimalify(collateralResult)
     const debt = decimalify(debtResult)
 
-    return new Trove(collateral, debt)
+    return new Trove(this.constants, collateral, debt)
   }
 
   async getTroveBeforeRedistribution(
@@ -611,9 +622,14 @@ export class HashgraphLiquity
     const userTroveStatus = userTroveStatusFrom(parseInt(troveResult.status.toString()))
 
     if (backendTroveStatus === BackendTroveStatus.active) {
-      const trove = new Trove(decimalify(snapshotResult.ETH), decimalify(snapshotResult.HCHFDebt))
+      const trove = new Trove(
+        this.constants,
+        decimalify(snapshotResult.ETH),
+        decimalify(snapshotResult.HCHFDebt),
+      )
 
       return new TroveWithPendingRedistribution(
+        this.constants,
         addressOrUserAddress,
         userTroveStatus,
         decimalify(troveResult.coll),
@@ -623,7 +639,7 @@ export class HashgraphLiquity
       )
     }
 
-    return new TroveWithPendingRedistribution(addressOrUserAddress, userTroveStatus)
+    return new TroveWithPendingRedistribution(this.constants, addressOrUserAddress, userTroveStatus)
   }
 
   async getTrove(address?: Address): Promise<UserTrove> {
@@ -660,8 +676,13 @@ export class HashgraphLiquity
         this.defaultPool.methods.getHCHFDebt().call(undefined, options?.blockTag),
       ])
 
-    const activePool = new Trove(decimalify(activeCollateralResult), decimalify(activeDebtResult))
+    const activePool = new Trove(
+      this.constants,
+      decimalify(activeCollateralResult),
+      decimalify(activeDebtResult),
+    )
     const defaultPool = new Trove(
+      this.constants,
       decimalify(liquidatedCollateralResult),
       decimalify(closedDebtResult),
     )
@@ -936,10 +957,12 @@ export class HashgraphLiquity
 
     const troves = backendTroves.map((backendTrove) => {
       const trove = new Trove(
+        this.constants,
         decimalify(backendTrove.snapshotETH),
         decimalify(backendTrove.snapshotHCHFDebt),
       )
       const troveWithPendingRedistribution = new TroveWithPendingRedistribution(
+        this.constants,
         backendTrove.owner,
         'open', // These Troves are coming from the SortedTroves list, so they must be open
         decimalify(backendTrove.coll),
@@ -976,11 +999,12 @@ export class HashgraphLiquity
 
     const fees = new Fees(
       baseRateWithoutDecay,
-      MINUTE_DECAY_FACTOR,
-      BETA,
+      this.constants.MINUTE_DECAY_FACTOR,
+      this.constants.BETA,
       lastFeeOperationDate,
       timeOfLatestBlock,
       total.collateralRatioIsBelowCritical(price),
+      this.constants,
     )
 
     return fees
@@ -1043,6 +1067,7 @@ export class HashgraphLiquity
     rpcUrl: `wss://${string}` | `https://${string}`
     mirrorNodeBaseUrl: `https://${string}`
     fetch: Fetch
+    constants: Constants
     // TODO: remove when lasagna is removed
     deployment: Deployment
   }) {
@@ -1211,6 +1236,7 @@ export class HashgraphLiquity
       frontendAddress,
       mirrorNodeBaseUrl,
       fetch,
+      constants,
     } = options
 
     const hashgraphLiquity = new HashgraphLiquity({
@@ -1222,6 +1248,7 @@ export class HashgraphLiquity
       frontendAddress,
       mirrorNodeBaseUrl,
       fetch,
+      constants,
       // contracts
       collSurplusPool,
       collSurplusPoolContractId,
@@ -1341,33 +1368,45 @@ export class HashgraphLiquity
     return eventNames
   }
 
-  /** @deprecated this is not implemented and will throw an error */
+  /** this is not implemented and will throw an error. but ideally, we'd get the transaction state changes from an event system like this. */
   setMaxListeners(n: number): this {
+    // reference unused variable to keep the interface typing
+    n
     throw new Error('not implemented as there is no usage of this')
   }
 
-  /** @deprecated this is not implemented and will throw an error */
+  /** this is not implemented and will throw an error. but ideally, we'd get the transaction state changes from an event system like this. */
   getMaxListeners(): number {
     throw new Error('not implemented as there is no usage of this')
   }
 
-  /** @deprecated this is not implemented and will throw an error */
+  /** this is not implemented and will throw an error. but ideally, we'd get the transaction state changes from an event system like this. */
   listeners(event: string | symbol): Function[] {
+    // reference unused variable to keep the interface typing
+    event
     throw new Error('not implemented as there is no usage of this')
   }
 
-  /** @deprecated this is not implemented and will throw an error */
+  /** this is not implemented and will throw an error. but ideally, we'd get the transaction state changes from an event system like this. */
   rawListeners(event: string | symbol): Function[] {
+    // reference unused variable to keep the interface typing
+    event
     throw new Error('not implemented as there is no usage of this')
   }
 
-  /** @deprecated this is not implemented and will throw an error */
+  /** this is not implemented and will throw an error. but ideally, we'd get the transaction state changes from an event system like this. */
   prependListener(event: string | symbol, listener: (...args: any[]) => void): this {
+    // reference unused variable to keep the interface typing
+    event
+    listener
     throw new Error('not implemented as there is no usage of this')
   }
 
-  /** @deprecated this is not implemented and will throw an error */
+  /** this is not implemented and will throw an error. but ideally, we'd get the transaction state changes from an event system like this. */
   prependOnceListener(event: string | symbol, listener: (...args: any[]) => void): this {
+    // reference unused variable to keep the interface typing
+    event
+    listener
     throw new Error('not implemented as there is no usage of this')
   }
 
@@ -1440,11 +1479,13 @@ export class HashgraphLiquity
   ): Promise<
     PopulatedHashgraphLiquityTransaction<TroveCreationDetails, ContractExecuteTransaction>
   > {
+    // reference unused parameters to preserve the interface typing
+    options
     const normalized = _normalizeTroveCreation(params)
     const { depositCollateral, borrowHCHF } = normalized
     const fees = await this.getFees()
     const borrowingRate = fees.borrowingRate()
-    const newTrove = Trove.create(normalized, borrowingRate)
+    const newTrove = Trove.create(this.constants, normalized, borrowingRate)
 
     const finalMaxBorrowingRate =
       maxBorrowingRate !== undefined
@@ -1497,6 +1538,8 @@ export class HashgraphLiquity
   ): Promise<
     PopulatedHashgraphLiquityTransaction<TroveClosureDetails, ContractExecuteTransaction>
   > {
+    // reference unused parameters to preserve the interface typing
+    options
     const gas = 3000000
     const rawPopulatedTransaction = TypedContractExecuteTransaction<BorrowerOperationsAbi>({
       contractId: this.borrowerOperationsContractId,
@@ -1599,6 +1642,8 @@ export class HashgraphLiquity
   ): Promise<
     PopulatedHashgraphLiquityTransaction<TroveAdjustmentDetails, ContractExecuteTransaction>
   > {
+    // reference unused parameters to preserve the interface typing
+    options
     const address = this.getAddressOrUserAddress(options?.from)
 
     const normalized = _normalizeTroveAdjustment(params)
@@ -1677,6 +1722,8 @@ export class HashgraphLiquity
   ): Promise<
     PopulatedHashgraphLiquityTransaction<TroveAdjustmentDetails, ContractExecuteTransaction>
   > {
+    // reference unused parameters to preserve the interface typing
+    options
     const PopulatedHashgraphLiquityTransaction = await this.populateAdjustTrove(
       { depositCollateral: amount },
       undefined,
@@ -1692,6 +1739,8 @@ export class HashgraphLiquity
   ): Promise<
     PopulatedHashgraphLiquityTransaction<TroveAdjustmentDetails, ContractExecuteTransaction>
   > {
+    // reference unused parameters to preserve the interface typing
+    options
     const PopulatedHashgraphLiquityTransaction = await this.populateAdjustTrove(
       { withdrawCollateral: amount },
       undefined,
@@ -1707,6 +1756,8 @@ export class HashgraphLiquity
   ): Promise<
     PopulatedHashgraphLiquityTransaction<TroveAdjustmentDetails, ContractExecuteTransaction>
   > {
+    // reference unused parameters to preserve the interface typing
+    options
     const PopulatedHashgraphLiquityTransaction = await this.populateAdjustTrove(
       { borrowHCHF: amount },
       undefined,
@@ -1722,6 +1773,8 @@ export class HashgraphLiquity
   ): Promise<
     PopulatedHashgraphLiquityTransaction<TroveAdjustmentDetails, ContractExecuteTransaction>
   > {
+    // reference unused parameters to preserve the interface typing
+    options
     const populateDepositCollateral = await this.populateAdjustTrove(
       { repayHCHF: amount },
       undefined,
@@ -1734,6 +1787,8 @@ export class HashgraphLiquity
   async populateClaimCollateralSurplus(
     options?: TransactionOptions,
   ): Promise<PopulatedHashgraphLiquityTransaction<void, ContractExecuteTransaction>> {
+    // reference unused parameters to preserve the interface typing
+    options
     const gas = 3000000
     const rawPopulatedTransaction = TypedContractExecuteTransaction<BorrowerOperationsAbi>({
       contractId: this.borrowerOperationsContractId,
@@ -1754,6 +1809,9 @@ export class HashgraphLiquity
     price: Decimalish,
     options?: TransactionOptions,
   ): Promise<PopulatedHashgraphLiquityTransaction<void, ContractExecuteTransaction>> {
+    // reference unused parameters to preserve the interface typing
+    price
+    options
     throw new Error(
       'setPrice() is not implemented. amend HashgraphLiquity::populateSetPrice to implement it.',
     )
@@ -1786,6 +1844,8 @@ export class HashgraphLiquity
     addressOrAddresses: Address | Address[],
     options?: TransactionOptions,
   ): Promise<PopulatedHashgraphLiquityTransaction<LiquidationDetails, ContractExecuteTransaction>> {
+    // reference unused parameters to preserve the interface typing
+    options
     let rawPopulatedTransaction: ContractExecuteTransaction
     const gas = 3000000 + gasForHLQTIssuance
     if (Array.isArray(addressOrAddresses)) {
@@ -1824,7 +1884,7 @@ export class HashgraphLiquity
         liquidatedAddresses: Array.isArray(addressOrAddresses)
           ? addressOrAddresses
           : [addressOrAddresses],
-        totalLiquidated: new Trove(),
+        totalLiquidated: new Trove(this.constants),
       }
 
       return details
@@ -1843,6 +1903,8 @@ export class HashgraphLiquity
     maximumNumberOfTrovesToLiquidate: number,
     options?: TransactionOptions,
   ): Promise<PopulatedHashgraphLiquityTransaction<LiquidationDetails, ContractExecuteTransaction>> {
+    // reference unused parameters to preserve the interface typing
+    options
     const functionParameters = TypedContractFunctionParameters<
       TroveManagerAbi,
       'liquidateTroves'
@@ -1862,7 +1924,7 @@ export class HashgraphLiquity
         collateralGasCompensation: Decimal.ZERO,
         hchfGasCompensation: Decimal.ZERO,
         liquidatedAddresses: [],
-        totalLiquidated: new Trove(),
+        totalLiquidated: new Trove(this.constants),
       }
 
       return details
@@ -1883,6 +1945,8 @@ export class HashgraphLiquity
   ): Promise<
     PopulatedHashgraphLiquityTransaction<StabilityDepositChangeDetails, ContractExecuteTransaction>
   > {
+    // reference unused parameters to preserve the interface typing
+    options
     const frontendAddress = frontendTag ?? this.frontendAddress
     const functionParameters = TypedContractFunctionParameters<StabilityPoolAbi, 'provideToSP'>()
       .addUint256(Decimal.from(amount).bigNumber)
@@ -1930,6 +1994,8 @@ export class HashgraphLiquity
       ContractExecuteTransaction
     >
   > {
+    // reference unused parameters to preserve the interface typing
+    options
     const functionParameters = TypedContractFunctionParameters<
       StabilityPoolAbi,
       'withdrawFromSP'
@@ -1971,6 +2037,8 @@ export class HashgraphLiquity
       ContractExecuteTransaction
     >
   > {
+    // reference unused parameters to preserve the interface typing
+    options
     const functionParameters = TypedContractFunctionParameters<
       StabilityPoolAbi,
       'withdrawFromSP'
@@ -2009,6 +2077,8 @@ export class HashgraphLiquity
   ): Promise<
     PopulatedHashgraphLiquityTransaction<CollateralGainTransferDetails, ContractExecuteTransaction>
   > {
+    // reference unused parameters to preserve the interface typing
+    options
     const address = this.getAddressOrUserAddress(options?.from)
 
     const [initialTrove, stabilityDeposit] = await Promise.all([
@@ -2068,6 +2138,8 @@ export class HashgraphLiquity
     PopulatedHashgraphLiquityTransaction<RedemptionDetails, ContractExecuteTransaction> &
       PopulatedRedemption<ContractExecuteTransaction, TransactionReceipt, TransactionReceipt>
   > {
+    // reference unused parameters to preserve the interface typing
+    options
     const attemptedHCHFAmount = Decimal.from(amount)
 
     const [
@@ -2113,7 +2185,7 @@ export class HashgraphLiquity
 
     if (truncatedAmount.isZero) {
       throw new Error(
-        `redeemHCHF: amount too low to redeem (try at least ${HCHF_MINIMUM_NET_DEBT})`,
+        `redeemHCHF: amount too low to redeem (try at least ${this.constants.HCHF_MINIMUM_NET_DEBT})`,
       )
     }
 
@@ -2183,7 +2255,7 @@ export class HashgraphLiquity
           : maxRedemptionRate
 
         return populateRedemption(
-          truncatedAmount.add(HCHF_MINIMUM_NET_DEBT),
+          truncatedAmount.add(this.constants.HCHF_MINIMUM_NET_DEBT),
           resolvedMaxRedemptionRate,
         )
       }
@@ -2225,6 +2297,8 @@ export class HashgraphLiquity
     amount: Decimalish,
     options?: TransactionOptions,
   ): Promise<PopulatedHashgraphLiquityTransaction<void, ContractExecuteTransaction>> {
+    // reference unused parameters to preserve the interface typing
+    options
     const functionParameters = TypedContractFunctionParameters<
       HLQTStakingAbi,
       'stake'
@@ -2252,6 +2326,8 @@ export class HashgraphLiquity
     amount: Decimalish,
     options?: TransactionOptions,
   ): Promise<PopulatedHashgraphLiquityTransaction<void, ContractExecuteTransaction>> {
+    // reference unused parameters to preserve the interface typing
+    options
     const functionParameters = TypedContractFunctionParameters<
       HLQTStakingAbi,
       'unstake'
@@ -2285,6 +2361,8 @@ export class HashgraphLiquity
     kickbackRate: Decimalish,
     options?: TransactionOptions,
   ): Promise<PopulatedHashgraphLiquityTransaction<void, ContractExecuteTransaction>> {
+    // reference unused parameters to preserve the interface typing
+    options
     const functionParameters = TypedContractFunctionParameters<
       StabilityPoolAbi,
       'registerFrontEnd'
@@ -2312,6 +2390,8 @@ export class HashgraphLiquity
     allowance?: Decimalish,
     options?: TransactionOptions,
   ): Promise<PopulatedHashgraphLiquityTransaction<void, ContractExecuteTransaction>> {
+    // reference unused parameters to preserve the interface typing
+    options
     if (!allowance) {
       throw new Error('infinite approvals are disallowed. pass an allowance value to approve.')
     }
@@ -2343,6 +2423,8 @@ export class HashgraphLiquity
     amount: Decimalish,
     options?: TransactionOptions,
   ): Promise<PopulatedHashgraphLiquityTransaction<void, ContractExecuteTransaction>> {
+    // reference unused parameters to preserve the interface typing
+    options
     const functionParameters = TypedContractFunctionParameters<UnipoolAbi, 'stake'>().addUint256(
       Decimal.from(amount).bigNumber,
     )
@@ -2369,6 +2451,8 @@ export class HashgraphLiquity
     amount: Decimalish,
     options?: TransactionOptions,
   ): Promise<PopulatedHashgraphLiquityTransaction<void, ContractExecuteTransaction>> {
+    // reference unused parameters to preserve the interface typing
+    options
     const functionParameters = TypedContractFunctionParameters<UnipoolAbi, 'withdraw'>().addUint256(
       Decimal.from(amount).bigNumber,
     )
@@ -2394,6 +2478,8 @@ export class HashgraphLiquity
   async populateWithdrawHLQTRewardFromLiquidityMining(
     options?: TransactionOptions,
   ): Promise<PopulatedHashgraphLiquityTransaction<void, ContractExecuteTransaction>> {
+    // reference unused parameters to preserve the interface typing
+    options
     const gas = 3000000 + gasForUnipoolRewardUpdate
     const rawPopulatedTransaction = TypedContractExecuteTransaction<UnipoolAbi>({
       contractId: this.saucerSwapPoolContractId,
@@ -2414,6 +2500,8 @@ export class HashgraphLiquity
   async populateExitLiquidityMining(
     options?: TransactionOptions,
   ): Promise<PopulatedHashgraphLiquityTransaction<void, ContractExecuteTransaction>> {
+    // reference unused parameters to preserve the interface typing
+    options
     const gas = 3000000 + gasForUnipoolRewardUpdate
     const rawPopulatedTransaction = TypedContractExecuteTransaction<UnipoolAbi>({
       contractId: this.saucerSwapPoolContractId,
@@ -2586,7 +2674,7 @@ export class HashgraphLiquity
       Long.fromString(amount.hex, true, 16),
     )
 
-    const receipt = await this.hashConnect.sendTransaction(this.userAccountId, unfrozenTransaction)
+    await this.hashConnect.sendTransaction(this.userAccountId, unfrozenTransaction)
 
     await this.refresh()
     // optimistic update
@@ -2609,7 +2697,7 @@ export class HashgraphLiquity
       Long.fromString(amount.hex, true, 16),
     )
 
-    const receipt = await this.hashConnect.sendTransaction(this.userAccountId, unfrozenTransaction)
+    await this.hashConnect.sendTransaction(this.userAccountId, unfrozenTransaction)
 
     await this.refresh()
     // optimistic update
@@ -2632,7 +2720,7 @@ export class HashgraphLiquity
       Long.fromString(amount.hex, true, 16),
     )
 
-    const receipt = await this.hashConnect.sendTransaction(this.userAccountId, unfrozenTransaction)
+    await this.hashConnect.sendTransaction(this.userAccountId, unfrozenTransaction)
 
     await this.refresh()
     // optimistic update

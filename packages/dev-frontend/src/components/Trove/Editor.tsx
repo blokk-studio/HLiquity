@@ -255,7 +255,7 @@ export const EditableRow: React.FC<EditableRowProps> = ({
       <Input
         autoFocus
         id={inputId}
-        onWheel={(e) => e.target.blur()}
+        onWheel={e => e.currentTarget.blur()}
         type="number"
         step="any"
         defaultValue={editedAmount}

@@ -9,7 +9,7 @@ Address that will receive HLQT rewards from newly created Stability Deposits by 
 **Signature:**
 
 ```typescript
-readonly frontendTag?: string;
+readonly frontendTag: Address;
 ```
 
 ## Remarks

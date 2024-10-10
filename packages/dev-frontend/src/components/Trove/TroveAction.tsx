@@ -1,7 +1,7 @@
 import { Decimal, TroveChange } from "@liquity/lib-base";
 
 import { useLiquity } from "../../hooks/LiquityContext";
-import { useTransactionFunction } from "../Transaction";
+import { useTxFunction } from "../Transaction";
 import { LoadingButton, LoadingButtonProps } from "../LoadingButton";
 
 type TroveActionProps = {
@@ -24,7 +24,7 @@ export const TroveAction: React.FC<TroveActionProps> = ({
   // TODO: fix?
   borrowingFeeDecayToleranceMinutes;
 
-  const [sendTransaction] = useTransactionFunction(
+  const [sendTransaction] = useTxFunction(
     transactionId,
     change.type === "creation"
       ? liquity.send.openTrove.bind(

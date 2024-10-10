@@ -1,25 +1,38 @@
 import { Decimal } from "./Decimal";
 
+export interface Constants {
+  CRITICAL_COLLATERAL_RATIO: Decimal;
+  MINIMUM_COLLATERAL_RATIO: Decimal;
+  HCHF_LIQUIDATION_RESERVE: Decimal;
+  HCHF_MINIMUM_NET_DEBT: Decimal;
+  HCHF_MINIMUM_DEBT: Decimal;
+  MINIMUM_BORROWING_RATE: Decimal;
+  MAXIMUM_BORROWING_RATE: Decimal;
+  MINIMUM_REDEMPTION_RATE: Decimal;
+  MINUTE_DECAY_FACTOR: Decimal;
+  BETA: Decimal;
+}
+
 /**
  * Total collateral ratio below which recovery mode is triggered.
  *
  * @public
  */
-export const CRITICAL_COLLATERAL_RATIO = Decimal.from(1.5);
+const CRITICAL_COLLATERAL_RATIO = Decimal.from(1.5);
 
 /**
  * Collateral ratio below which a Trove can be liquidated in normal mode.
  *
  * @public
  */
-export const MINIMUM_COLLATERAL_RATIO = Decimal.from(1.1);
+const MINIMUM_COLLATERAL_RATIO = Decimal.from(1.1);
 
 /**
  * Amount of HCHF that's reserved for compensating the liquidator of a Trove.
  *
  * @public
  */
-export const HCHF_LIQUIDATION_RESERVE = Decimal.from(20);
+const HCHF_LIQUIDATION_RESERVE = Decimal.from(20);
 
 /**
  * A Trove must always have at least this much debt on top of the
@@ -30,7 +43,7 @@ export const HCHF_LIQUIDATION_RESERVE = Decimal.from(20);
  *
  * @public
  */
-export const HCHF_MINIMUM_NET_DEBT = Decimal.from(1780);
+const HCHF_MINIMUM_NET_DEBT = Decimal.from(1780);
 
 /**
  * A Trove must always have at least this much debt.
@@ -40,7 +53,7 @@ export const HCHF_MINIMUM_NET_DEBT = Decimal.from(1780);
  *
  * @public
  */
-export const HCHF_MINIMUM_DEBT = HCHF_LIQUIDATION_RESERVE.add(HCHF_MINIMUM_NET_DEBT);
+const HCHF_MINIMUM_DEBT = HCHF_LIQUIDATION_RESERVE.add(HCHF_MINIMUM_NET_DEBT);
 
 /**
  * Value that the {@link Fees.borrowingRate | borrowing rate} will never decay below.
@@ -51,30 +64,80 @@ export const HCHF_MINIMUM_DEBT = HCHF_LIQUIDATION_RESERVE.add(HCHF_MINIMUM_NET_D
  *
  * @public
  */
-export const MINIMUM_BORROWING_RATE = Decimal.from(0.005);
+const MINIMUM_BORROWING_RATE = Decimal.from(0.005);
 
 /**
  * Value that the {@link Fees.borrowingRate | borrowing rate} will never exceed.
  *
  * @public
  */
-export const MAXIMUM_BORROWING_RATE = Decimal.from(0.05);
+const MAXIMUM_BORROWING_RATE = Decimal.from(0.05);
 
 /**
  * Value that the {@link Fees.redemptionRate | redemption rate} will never decay below.
  *
  * @public
  */
-export const MINIMUM_REDEMPTION_RATE = Decimal.from(0.005);
+const MINIMUM_REDEMPTION_RATE = Decimal.from(0.005);
 
-// TODO: deal with this shit: "TODO: these are constant in the contracts, so it doesn't make sense to make a call for them,
-// but to avoid having to update them here when we change them in the contracts, we could read
-// them once after deployment and save them to LiquityDeployment."
 /**
  * @public
  */
-export const MINUTE_DECAY_FACTOR = Decimal.from("0.999037758833783000");
+const MINUTE_DECAY_FACTOR = Decimal.from("0.999037758833783000");
 /**
  * @public
  */
-export const BETA = Decimal.from(2);
+const BETA = Decimal.from(2);
+
+export const getConstants = (
+  configuration: Record<string, string | undefined>,
+  defaultValues: Constants
+): Constants => {
+  const constants = Object.fromEntries(
+    Object.entries(defaultValues).map(([key, defaultValue]) => {
+      const configurationValue = configuration[key];
+      const constant = configurationValue ? Decimal.from(configurationValue) : defaultValue;
+
+      return [key, constant];
+    })
+  ) as Constants;
+
+  return constants;
+};
+
+/**
+ * default valies for constants
+ *
+ * only directly use this for tests. do not use this in application code.
+ */
+export const defaults: Constants = {
+  BETA,
+  CRITICAL_COLLATERAL_RATIO,
+  HCHF_LIQUIDATION_RESERVE,
+  HCHF_MINIMUM_DEBT,
+  HCHF_MINIMUM_NET_DEBT,
+  MAXIMUM_BORROWING_RATE,
+  MINIMUM_BORROWING_RATE,
+  MINIMUM_COLLATERAL_RATIO,
+  MINIMUM_REDEMPTION_RATE,
+  MINUTE_DECAY_FACTOR
+};
+
+export const getConstantsFromJsonObjectString = (jsonObjectString?: string): Constants => {
+  let configuration: Record<string, string | undefined> = {};
+  if (jsonObjectString) {
+    try {
+      configuration = JSON.parse(jsonObjectString);
+    } catch {
+      console.warn(
+        `json object string ${JSON.stringify(
+          jsonObjectString
+        )} is malfomed. default constants will be used.`
+      );
+    }
+  }
+
+  const constants = getConstants(configuration, defaults);
+
+  return constants;
+};

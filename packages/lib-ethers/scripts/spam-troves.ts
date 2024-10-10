@@ -1,9 +1,10 @@
 import WebSocket from "ws";
 import { TransactionResponse } from "@ethersproject/abstract-provider";
 import { JsonRpcProvider } from "@ethersproject/providers";
+import { AddressZero } from "@ethersproject/constants";
 import { Wallet } from "@ethersproject/wallet";
 
-import { Decimal, HCHF_MINIMUM_DEBT, Trove } from "@liquity/lib-base";
+import { Decimal, defaults as constants, Trove } from "@liquity/lib-base";
 import { EthersLiquity, EthersLiquityWithStore, BlockPolledLiquityStore } from "@liquity/lib-ethers";
 
 import {
@@ -37,7 +38,7 @@ const waitForSuccess = (tx: TransactionResponse) =>
 const createTrove = async (nominalCollateralRatio: Decimal) => {
   const randomWallet = Wallet.createRandom().connect(provider);
 
-  const debt = HCHF_MINIMUM_DEBT.mul(2);
+  const debt = constants.HCHF_MINIMUM_DEBT.mul(2);
   const collateral = debt.mul(nominalCollateralRatio);
 
   await funder
@@ -49,8 +50,8 @@ const createTrove = async (nominalCollateralRatio: Decimal) => {
 
   await liquity.populate
     .openTrove(
-      Trove.recreate(new Trove(collateral, debt), liquity.store.state.borrowingRate),
-      {},
+      Trove.recreate(new Trove(constants, collateral, debt), liquity.store.state.borrowingRate),
+      0,
       { from: randomWallet.address }
     )
     .then(tx => randomWallet.signTransaction(tx.rawPopulatedTransaction))
@@ -83,7 +84,14 @@ const main = async () => {
     network
   );
 
-  liquity = await EthersLiquity.connect(provider, { useStore: "blockPolled" });
+  liquity = await EthersLiquity.connect({
+    provider,
+    useStore: "blockPolled",
+    constants,
+    mirrorNodeBaseUrl: "",
+    frontendTag: AddressZero,
+    fetch
+  });
 
   let stopStore: () => void;
 
