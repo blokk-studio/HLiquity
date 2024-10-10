@@ -10,6 +10,7 @@ on:
   pull_request:
 
 jobs:
+  # frontend
   lint_frontend:
     name: lint frontend
     runs-on: ubuntu-latest
@@ -25,23 +26,6 @@ jobs:
       - run: yarn install --immutable
 
       - run: yarn workspace @liquity/dev-frontend lint
-
-  # doesn't work and the test is very basic anyway
-  # test_frontend:
-  #   name: test frontend
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - uses: actions/checkout@v3
-  #     - uses: actions/setup-node@v3
-  #       with:
-  #         node-version: 22
-  #         cache: yarn
-  #       env:
-  #         # Workaround for https://github.com/actions/setup-node/issues/317
-  #         FORCE_COLOR: 0
-  #     - run: yarn install --immutable
-
-  #     - run: yarn workspace @liquity/dev-frontend test
 
   build_frontend:
     name: build frontend
@@ -59,3 +43,102 @@ jobs:
 
       - run: yarn workspace @liquity/dev-frontend build:tsc
       - run: yarn workspace @liquity/dev-frontend build:vite
+
+  # lib-base
+  lint_lib-base:
+    name: lint lib-base
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 22
+          cache: yarn
+        env:
+          # Workaround for https://github.com/actions/setup-node/issues/317
+          FORCE_COLOR: 0
+      - run: yarn install --immutable
+
+      - run: yarn workspace @liquity/lib-base prepare:eslint
+
+  build_lib-base:
+    name: build lib-base
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 22
+          cache: yarn
+        env:
+          # Workaround for https://github.com/actions/setup-node/issues/317
+          FORCE_COLOR: 0
+      - run: yarn install --immutable
+
+      - run: yarn workspace @liquity/lib-base prepare:tsc
+
+  # lib-ethers
+  lint_lib-ethers:
+    name: lint lib-ethers
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 22
+          cache: yarn
+        env:
+          # Workaround for https://github.com/actions/setup-node/issues/317
+          FORCE_COLOR: 0
+      - run: yarn install --immutable
+
+      - run: yarn workspace @liquity/lib-ethers prepare:eslint
+
+  build_lib-ethers:
+    name: build lib-ethers
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 22
+          cache: yarn
+        env:
+          # Workaround for https://github.com/actions/setup-node/issues/317
+          FORCE_COLOR: 0
+      - run: yarn install --immutable
+
+      - run: yarn workspace @liquity/lib-ethers prepare:tsc
+
+  # lib-react
+  lint_lib-react:
+    name: lint lib-react
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 22
+          cache: yarn
+        env:
+          # Workaround for https://github.com/actions/setup-node/issues/317
+          FORCE_COLOR: 0
+      - run: yarn install --immutable
+
+      - run: yarn workspace @liquity/lib-react prepare:eslint
+
+  build_lib-react:
+    name: build lib-react
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 22
+          cache: yarn
+        env:
+          # Workaround for https://github.com/actions/setup-node/issues/317
+          FORCE_COLOR: 0
+      - run: yarn install --immutable
+
+      - run: yarn workspace @liquity/lib-react prepare:tsc
