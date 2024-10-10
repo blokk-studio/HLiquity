@@ -4,7 +4,7 @@
 
 ## Trove.collateralRatioIsBelowCritical() method
 
-Whether the collateralization ratio is less than the [CRITICAL\_COLLATERAL\_RATIO](./lib-base.critical_collateral_ratio.md) at a given price.
+Whether the collateralization ratio is less than the  at a given price.
 
 **Signature:**
 

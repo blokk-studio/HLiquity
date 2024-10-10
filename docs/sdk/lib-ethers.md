@@ -188,6 +188,33 @@ Optional parameters of [ReadableEthersLiquity.connect()](./lib-ethers.readableet
 </td></tr>
 <tr><td>
 
+[EthersLiquityConnectOptions](./lib-ethers.ethersliquityconnectoptions.md)
+
+
+</td><td>
+
+
+</td></tr>
+<tr><td>
+
+[EthersLiquityConnectWithProviderOptions](./lib-ethers.ethersliquityconnectwithprovideroptions.md)
+
+
+</td><td>
+
+
+</td></tr>
+<tr><td>
+
+[EthersLiquityConnectWithSignerOptions](./lib-ethers.ethersliquityconnectwithsigneroptions.md)
+
+
+</td><td>
+
+
+</td></tr>
+<tr><td>
+
 [EthersLiquityWithStore](./lib-ethers.ethersliquitywithstore.md)
 
 

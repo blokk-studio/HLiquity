@@ -151,6 +151,23 @@ HCHF HST Token address
 </td></tr>
 <tr><td>
 
+[hchfTokenAllowanceOfHchfContract](./lib-base.liquitystorebasestate.hchftokenallowanceofhchfcontract.md)
+
+
+</td><td>
+
+
+</td><td>
+
+[Decimal](./lib-base.decimal.md)
+
+
+</td><td>
+
+
+</td></tr>
+<tr><td>
+
 [hlqtBalance](./lib-base.liquitystorebasestate.hlqtbalance.md)
 
 
@@ -203,6 +220,23 @@ string
 </td><td>
 
 HLQT HST Token address
+
+
+</td></tr>
+<tr><td>
+
+[hlqtTokenAllowanceOfHlqtContract](./lib-base.liquitystorebasestate.hlqttokenallowanceofhlqtcontract.md)
+
+
+</td><td>
+
+
+</td><td>
+
+[Decimal](./lib-base.decimal.md)
+
+
+</td><td>
 
 
 </td></tr>
@@ -488,6 +522,57 @@ The liquidity mining contract's allowance of user's Uniswap ETH/HCHF LP tokens.
 </td><td>
 
 User's Uniswap ETH/HCHF LP token balance.
+
+
+</td></tr>
+<tr><td>
+
+[userHasAssociatedWithHchf](./lib-base.liquitystorebasestate.userhasassociatedwithhchf.md)
+
+
+</td><td>
+
+
+</td><td>
+
+boolean
+
+
+</td><td>
+
+
+</td></tr>
+<tr><td>
+
+[userHasAssociatedWithHlqt](./lib-base.liquitystorebasestate.userhasassociatedwithhlqt.md)
+
+
+</td><td>
+
+
+</td><td>
+
+boolean
+
+
+</td><td>
+
+
+</td></tr>
+<tr><td>
+
+[userHasAssociatedWithLpToken](./lib-base.liquitystorebasestate.userhasassociatedwithlptoken.md)
+
+
+</td><td>
+
+
+</td><td>
+
+boolean
+
+
+</td><td>
 
 
 </td></tr>

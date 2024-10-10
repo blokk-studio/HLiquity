@@ -97,6 +97,15 @@ Get the address of the HST Token of HCHF (HCHF)
 </td></tr>
 <tr><td>
 
+[getHchfTokenAllowanceOfHchfContract(address)](./lib-base.readableliquity.gethchftokenallowanceofhchfcontract.md)
+
+
+</td><td>
+
+
+</td></tr>
+<tr><td>
+
 [getHLQTBalance(address)](./lib-base.readableliquity.gethlqtbalance.md)
 
 
@@ -125,6 +134,15 @@ Get the current state of an HLQT Stake.
 </td><td>
 
 Get the address of the HST Token of HLQT
+
+
+</td></tr>
+<tr><td>
+
+[getHlqtTokenAllowanceOfHlqtContract(address)](./lib-base.readableliquity.gethlqttokenallowanceofhlqtcontract.md)
+
+
+</td><td>
 
 
 </td></tr>
@@ -289,7 +307,7 @@ Get a slice from the list of Troves.
 
 </td><td>
 
-Get the liquidity mining contract's allowance of a holder's Uniswap ETH/HCHF LP tokens.
+\_CachedReadableLiquity Get the liquidity mining contract's allowance of a holder's Uniswap ETH/HCHF LP tokens.
 
 
 </td></tr>

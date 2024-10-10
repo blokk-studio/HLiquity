@@ -9,7 +9,7 @@ Connect to the Liquity protocol and create an `EthersLiquity` object.
 **Signature:**
 
 ```typescript
-static connect(signerOrProvider: EthersSigner | EthersProvider, optionalParams?: EthersLiquityConnectionOptionalParams): Promise<EthersLiquity>;
+static connect(options: EthersLiquityConnectWithProviderOptions | EthersLiquityConnectWithSignerOptions): Promise<EthersLiquity>;
 ```
 
 ## Parameters
@@ -32,33 +32,15 @@ Description
 </th></tr></thead>
 <tbody><tr><td>
 
-signerOrProvider
+options
 
 
 </td><td>
 
-[EthersSigner](./lib-ethers.etherssigner.md) \| [EthersProvider](./lib-ethers.ethersprovider.md)
+[EthersLiquityConnectWithProviderOptions](./lib-ethers.ethersliquityconnectwithprovideroptions.md) \| [EthersLiquityConnectWithSignerOptions](./lib-ethers.ethersliquityconnectwithsigneroptions.md)
 
 
 </td><td>
-
-Ethers `Signer` or `Provider` to use for connecting to the Ethereum network.
-
-
-</td></tr>
-<tr><td>
-
-optionalParams
-
-
-</td><td>
-
-[EthersLiquityConnectionOptionalParams](./lib-ethers.ethersliquityconnectionoptionalparams.md)
-
-
-</td><td>
-
-Optional parameters that can be used to customize the connection.
 
 
 </td></tr>

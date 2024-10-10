@@ -208,6 +208,9 @@ export class Decimal {
 // @public
 export type Decimalish = Decimal | number | string;
 
+// @public
+export const defaults: Constants;
+
 // @public (undocumented)
 export interface Deployment {
     // (undocumented)
@@ -239,7 +242,7 @@ export interface Deployment {
 }
 
 // @public (undocumented)
-export type DeploymentAddressesKey = "activePool" | "borrowerOperations" | "troveManager" | "hchfToken" | "collSurplusPool" | "communityIssuance" | "defaultPool" | "hlqtToken" | "hintHelpers" | "lockupContractFactory" | "hlqtStaking" | "multiTroveGetter" | "priceFeed" | "sortedTroves" | "stabilityPool" | "gasPool" | "saucerSwapPool" | "pythCaller" | "supraCaller";
+export type DeploymentAddressesKey = "activePool" | "borrowerOperations" | "troveManager" | "hchfToken" | "collSurplusPool" | "communityIssuance" | "defaultPool" | "hlqtToken" | "hintHelpers" | "lockupContractFactory" | "hlqtStaking" | "multiTroveGetter" | "priceFeed" | "sortedTroves" | "stabilityPool" | "gasPool" | "saucerSwapPool" | "pythCaller" | "supraCaller" | "uniToken";
 
 // @public (undocumented)
 export interface DeploymentDefinition {
@@ -311,6 +314,8 @@ export class Fees {
     // @internal (undocumented)
     baseRate(when?: Date): Decimal;
     borrowingRate(when?: Date): Decimal;
+    // (undocumented)
+    protected readonly constants: Constants;
     equals(that: Fees): boolean;
     redemptionRate(redeemedFractionOfSupply?: Decimalish, when?: Date): Decimal;
     // @internal (undocumented)
@@ -331,7 +336,7 @@ export type FrontendStatus = {
 export const getConstants: (configuration: Record<string, string | undefined>, defaultValues: Constants) => Constants;
 
 // @public (undocumented)
-export const getConstantsFromEnvironment: (chainId: number) => Constants;
+export const getConstantsFromJsonObjectString: (jsonObjectString?: string | undefined) => Constants;
 
 // @public (undocumented)
 export const getDeployment: (deploymentDefinition: DeploymentDefinition) => Deployment;

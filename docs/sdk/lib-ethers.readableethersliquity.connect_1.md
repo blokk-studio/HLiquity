@@ -7,7 +7,7 @@
 **Signature:**
 
 ```typescript
-static connect(signerOrProvider: EthersSigner | EthersProvider, optionalParams?: EthersLiquityConnectionOptionalParams): Promise<ReadableEthersLiquity>;
+static connect(options: EthersLiquityConnectWithProviderOptions | EthersLiquityConnectWithSignerOptions): Promise<ReadableEthersLiquity>;
 ```
 
 ## Parameters
@@ -30,26 +30,12 @@ Description
 </th></tr></thead>
 <tbody><tr><td>
 
-signerOrProvider
+options
 
 
 </td><td>
 
-[EthersSigner](./lib-ethers.etherssigner.md) \| [EthersProvider](./lib-ethers.ethersprovider.md)
-
-
-</td><td>
-
-
-</td></tr>
-<tr><td>
-
-optionalParams
-
-
-</td><td>
-
-[EthersLiquityConnectionOptionalParams](./lib-ethers.ethersliquityconnectionoptionalparams.md)
+[EthersLiquityConnectWithProviderOptions](./lib-ethers.ethersliquityconnectwithprovideroptions.md) \| [EthersLiquityConnectWithSignerOptions](./lib-ethers.ethersliquityconnectwithsigneroptions.md)
 
 
 </td><td>

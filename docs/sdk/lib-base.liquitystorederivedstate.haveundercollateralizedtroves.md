@@ -4,7 +4,7 @@
 
 ## LiquityStoreDerivedState.haveUndercollateralizedTroves property
 
-Whether there are any Troves with collateral ratio below the [minimum](./lib-base.minimum_collateral_ratio.md)<!-- -->.
+Whether there are any Troves with collateral ratio below the .
 
 **Signature:**
 

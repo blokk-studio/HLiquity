@@ -4,11 +4,14 @@
 
 ```ts
 
+import { Address } from '@liquity/lib-base';
 import { BigNumber } from '@ethersproject/bignumber';
 import { BigNumberish } from '@ethersproject/bignumber';
 import { BlockTag } from '@ethersproject/abstract-provider';
 import { CallOverrides } from '@ethersproject/contracts';
 import { CollateralGainTransferDetails } from '@liquity/lib-base';
+import { ConsentableLiquity } from '@liquity/lib-base';
+import { Constants } from '@liquity/lib-base';
 import { Contract } from '@ethersproject/contracts';
 import { ContractInterface } from '@ethersproject/contracts';
 import { ContractTransaction } from '@ethersproject/contracts';
@@ -17,6 +20,7 @@ import { Decimalish } from '@liquity/lib-base';
 import { EventFilter } from '@ethersproject/contracts';
 import { FailedReceipt } from '@liquity/lib-base';
 import { Fees } from '@liquity/lib-base';
+import { Fetch } from '@liquity/mirror-node';
 import { FrontendStatus } from '@liquity/lib-base';
 import { HLiquityStore } from '@liquity/lib-base';
 import { HLQTStake } from '@liquity/lib-base';
@@ -58,7 +62,12 @@ import { UserTrove } from '@liquity/lib-base';
 
 // @public
 export class BlockPolledLiquityStore extends HLiquityStore<BlockPolledLiquityStoreExtraState> {
-    constructor(readable: ReadableEthersLiquity);
+    constructor(options: {
+        readable: ReadableEthersLiquity;
+        mirrorNodeBaseUrl: string;
+        fetch: Fetch;
+        constants: Constants;
+    });
     // (undocumented)
     readonly connection: EthersLiquityConnection;
     // @internal @override (undocumented)
@@ -66,7 +75,7 @@ export class BlockPolledLiquityStore extends HLiquityStore<BlockPolledLiquitySto
     // @internal @override (undocumented)
     protected _reduceExtra(oldState: BlockPolledLiquityStoreExtraState, stateUpdate: Partial<BlockPolledLiquityStoreExtraState>): BlockPolledLiquityStoreExtraState;
     // (undocumented)
-    refresh(): Promise<void>;
+    refresh(): Promise<LiquityStoreState<BlockPolledLiquityStoreExtraState>>;
 }
 
 // @public
@@ -86,7 +95,7 @@ export function _connectByChainId<T>(provider: EthersProvider, signer: EthersSig
 };
 
 // @internal (undocumented)
-export function _connectByChainId(provider: EthersProvider, signer: EthersSigner | undefined, chainId: number, optionalParams?: EthersLiquityConnectionOptionalParams): EthersLiquityConnection;
+export function _connectByChainId(provider: EthersProvider, signer: EthersSigner | undefined, chainId: number, optionalParams: EthersLiquityConnectionOptionalParams): EthersLiquityConnection;
 
 // @public
 export interface EthersCallOverrides {
@@ -95,13 +104,25 @@ export interface EthersCallOverrides {
 }
 
 // @public
-export class EthersLiquity implements ReadableEthersLiquity, TransactableLiquity {
+export class EthersLiquity implements ReadableEthersLiquity, TransactableLiquity, ConsentableLiquity {
     // @internal
-    constructor(readable: ReadableEthersLiquity);
+    constructor(options: EthersLiquityOptions);
     // (undocumented)
     adjustTrove(params: TroveAdjustmentParams<Decimalish>, maxBorrowingRate?: Decimalish, overrides?: EthersTransactionOverrides): Promise<TroveAdjustmentDetails>;
     // (undocumented)
+    approveHchfToSpendHchf(amount: Decimal): Promise<void>;
+    // (undocumented)
+    approveHlqtToSpendHlqt(amount: Decimal): Promise<void>;
+    // (undocumented)
+    approveSaucerSwapToSpendLpToken(amount: Decimal): Promise<void>;
+    // (undocumented)
     approveUniTokens(allowance?: Decimalish, overrides?: EthersTransactionOverrides): Promise<void>;
+    // (undocumented)
+    associateWithHchf(): Promise<void>;
+    // (undocumented)
+    associateWithHlqt(): Promise<void>;
+    // (undocumented)
+    associateWithLpToken(): Promise<void>;
     // (undocumented)
     borrowHCHF(amount: Decimalish, maxBorrowingRate?: Decimalish, overrides?: EthersTransactionOverrides): Promise<TroveAdjustmentDetails>;
     // (undocumented)
@@ -109,25 +130,39 @@ export class EthersLiquity implements ReadableEthersLiquity, TransactableLiquity
     // (undocumented)
     closeTrove(overrides?: EthersTransactionOverrides): Promise<TroveClosureDetails>;
     // @internal (undocumented)
-    static connect(signerOrProvider: EthersSigner | EthersProvider, optionalParams: EthersLiquityConnectionOptionalParams & {
+    static connect(options: (EthersLiquityConnectWithProviderOptions & {
         useStore: "blockPolled";
-    }): Promise<EthersLiquityWithStore<BlockPolledLiquityStore>>;
-    static connect(signerOrProvider: EthersSigner | EthersProvider, optionalParams?: EthersLiquityConnectionOptionalParams): Promise<EthersLiquity>;
+    }) | (EthersLiquityConnectWithSignerOptions & {
+        useStore: "blockPolled";
+    })): Promise<EthersLiquityWithStore<BlockPolledLiquityStore>>;
+    static connect(options: EthersLiquityConnectWithProviderOptions | EthersLiquityConnectWithSignerOptions): Promise<EthersLiquity>;
     readonly connection: EthersLiquityConnection;
+    // (undocumented)
+    protected readonly constants: Constants;
     // (undocumented)
     depositCollateral(amount: Decimalish, overrides?: EthersTransactionOverrides): Promise<TroveAdjustmentDetails>;
     // (undocumented)
     depositHCHFInStabilityPool(amount: Decimalish, frontendTag?: string, overrides?: EthersTransactionOverrides): Promise<StabilityDepositChangeDetails>;
     // (undocumented)
-    exitLiquidityMining(overrides?: EthersTransactionOverrides): Promise<void>;
-    // @internal (undocumented)
-    static _from(connection: EthersLiquityConnection & {
-        useStore: "blockPolled";
-    }): EthersLiquityWithStore<BlockPolledLiquityStore>;
-    // @internal (undocumented)
-    static _from(connection: EthersLiquityConnection): EthersLiquity;
+    dissociateFromHchf(): Promise<void>;
     // (undocumented)
-    static fromConnectionOptionsWithBlockPolledStore(options: Omit<EthersLiquityConnectionOptions, "useStore">): EthersLiquityWithStore<BlockPolledLiquityStore>;
+    dissociateFromHlqt(): Promise<void>;
+    // (undocumented)
+    dissociateFromLpToken(): Promise<void>;
+    // (undocumented)
+    exitLiquidityMining(overrides?: EthersTransactionOverrides): Promise<void>;
+    // (undocumented)
+    protected readonly fetch: Fetch;
+    // @internal (undocumented)
+    static _from(options: EthersLiquityWithStoreFromOptions): EthersLiquityWithStore<BlockPolledLiquityStore>;
+    // @internal (undocumented)
+    static _from(options: EthersLiquityFromOptions): EthersLiquity;
+    // (undocumented)
+    static fromConnectionOptionsWithBlockPolledStore(options: Omit<EthersLiquityConnectionOptions, "useStore"> & {
+        mirrorNodeBaseUrl: string;
+        fetch: Fetch;
+        constants: Constants;
+    }): EthersLiquityWithStore<BlockPolledLiquityStore>;
     // @internal (undocumented)
     _getActivePool(overrides?: EthersCallOverrides): Promise<Trove>;
     // (undocumented)
@@ -147,11 +182,15 @@ export class EthersLiquity implements ReadableEthersLiquity, TransactableLiquity
     // (undocumented)
     getHCHFTokenAddress(overrides?: EthersCallOverrides): Promise<string>;
     // (undocumented)
+    getHchfTokenAllowanceOfHchfContract(address?: string | undefined, overrides?: EthersCallOverrides | undefined): Promise<Decimal>;
+    // (undocumented)
     getHLQTBalance(address?: string, overrides?: EthersCallOverrides): Promise<Decimal>;
     // (undocumented)
     getHLQTStake(address?: string, overrides?: EthersCallOverrides): Promise<HLQTStake>;
     // (undocumented)
     getHLQTTokenAddress(overrides?: EthersCallOverrides): Promise<string>;
+    // (undocumented)
+    getHlqtTokenAllowanceOfHlqtContract(address?: string | undefined, overrides?: EthersCallOverrides | undefined): Promise<Decimal>;
     // (undocumented)
     getLiquidityMiningHLQTReward(address?: string, overrides?: EthersCallOverrides): Promise<Decimal>;
     // (undocumented)
@@ -199,6 +238,8 @@ export class EthersLiquity implements ReadableEthersLiquity, TransactableLiquity
     // @internal (undocumented)
     _mintUniToken(amount: Decimalish, address?: string, overrides?: EthersTransactionOverrides): Promise<void>;
     // (undocumented)
+    protected readonly mirrorNodeBaseUrl: string;
+    // (undocumented)
     openTrove(params: TroveCreationParams<Decimalish>, maxBorrowingRate?: Decimalish, overrides?: EthersTransactionOverrides): Promise<TroveCreationDetails>;
     readonly populate: PopulatableEthersLiquity;
     // (undocumented)
@@ -236,7 +277,7 @@ export class EthersLiquity implements ReadableEthersLiquity, TransactableLiquity
 export interface EthersLiquityConnection extends EthersLiquityConnectionOptionalParams {
     // @internal (undocumented)
     readonly [brand]: unique symbol;
-    readonly addresses: Record<string, string>;
+    readonly addresses: _LiquityContractAddresses;
     readonly bootstrapPeriod: number;
     readonly chainId: number;
     readonly deploymentDate: Date;
@@ -253,9 +294,31 @@ export interface EthersLiquityConnection extends EthersLiquityConnectionOptional
 
 // @public
 export interface EthersLiquityConnectionOptionalParams {
-    readonly frontendTag?: string;
+    readonly frontendTag: Address;
     readonly userAddress?: string;
     readonly useStore?: EthersLiquityStoreOption;
+}
+
+// @public (undocumented)
+export interface EthersLiquityConnectOptions extends EthersLiquityConnectionOptionalParams {
+    // (undocumented)
+    readonly constants: Constants;
+    // (undocumented)
+    readonly fetch: Fetch;
+    // (undocumented)
+    readonly mirrorNodeBaseUrl: string;
+}
+
+// @public (undocumented)
+export interface EthersLiquityConnectWithProviderOptions extends EthersLiquityConnectOptions {
+    // (undocumented)
+    provider: EthersProvider;
+}
+
+// @public (undocumented)
+export interface EthersLiquityConnectWithSignerOptions extends EthersLiquityConnectOptions {
+    // (undocumented)
+    signer: EthersSigner;
 }
 
 // @public
@@ -321,7 +384,10 @@ export class ObservableEthersLiquity implements ObservableLiquity {
 
 // @public
 export class PopulatableEthersLiquity implements PopulatableLiquity<EthersTransactionReceipt, EthersTransactionResponse, EthersPopulatedTransaction> {
-    constructor(readable: ReadableEthersLiquity);
+    constructor(options: {
+        readable: ReadableEthersLiquity;
+        constants: Constants;
+    });
     // (undocumented)
     adjustTrove(params: TroveAdjustmentParams<Decimalish>, maxBorrowingRate?: Decimalish, overrides?: EthersTransactionOverrides): Promise<PopulatedEthersLiquityTransaction<TroveAdjustmentDetails>>;
     // (undocumented)
@@ -332,6 +398,8 @@ export class PopulatableEthersLiquity implements PopulatableLiquity<EthersTransa
     claimCollateralSurplus(overrides?: EthersTransactionOverrides): Promise<PopulatedEthersLiquityTransaction<void>>;
     // (undocumented)
     closeTrove(overrides?: EthersTransactionOverrides): Promise<PopulatedEthersLiquityTransaction<TroveClosureDetails>>;
+    // (undocumented)
+    protected readonly constants: Constants;
     // (undocumented)
     depositCollateral(amount: Decimalish, overrides?: EthersTransactionOverrides): Promise<PopulatedEthersLiquityTransaction<TroveAdjustmentDetails>>;
     // (undocumented)
@@ -402,21 +470,26 @@ export class PopulatedEthersRedemption extends PopulatedEthersLiquityTransaction
 // @public
 export class ReadableEthersLiquity implements ReadableLiquity {
     // @internal
-    constructor(connection: EthersLiquityConnection);
+    constructor(options: {
+        connection: EthersLiquityConnection;
+        constants: Constants;
+    });
     // @internal (undocumented)
-    static connect(signerOrProvider: EthersSigner | EthersProvider, optionalParams: EthersLiquityConnectionOptionalParams & {
+    static connect(options: (EthersLiquityConnectWithProviderOptions & {
         useStore: "blockPolled";
-    }): Promise<ReadableEthersLiquityWithStore<BlockPolledLiquityStore>>;
+    }) | (EthersLiquityConnectWithSignerOptions & {
+        useStore: "blockPolled";
+    })): Promise<ReadableEthersLiquityWithStore<BlockPolledLiquityStore>>;
     // (undocumented)
-    static connect(signerOrProvider: EthersSigner | EthersProvider, optionalParams?: EthersLiquityConnectionOptionalParams): Promise<ReadableEthersLiquity>;
+    static connect(options: EthersLiquityConnectWithProviderOptions | EthersLiquityConnectWithSignerOptions): Promise<ReadableEthersLiquity>;
     // (undocumented)
     readonly connection: EthersLiquityConnection;
+    // (undocumented)
+    protected readonly constants: Constants;
     // @internal (undocumented)
-    static _from(connection: EthersLiquityConnection & {
-        useStore: "blockPolled";
-    }): ReadableEthersLiquityWithStore<BlockPolledLiquityStore>;
+    static _from(options: ReadableEthersLiquityWithStoreFromOptions): ReadableEthersLiquityWithStore<BlockPolledLiquityStore>;
     // @internal (undocumented)
-    static _from(connection: EthersLiquityConnection): ReadableEthersLiquity;
+    static _from(options: ReadableEthersLiquityFromOptions): ReadableEthersLiquity;
     // @internal (undocumented)
     _getActivePool(overrides?: EthersCallOverrides): Promise<Trove>;
     // (undocumented)
@@ -436,11 +509,15 @@ export class ReadableEthersLiquity implements ReadableLiquity {
     // (undocumented)
     getHCHFTokenAddress(overrides?: EthersCallOverrides): Promise<string>;
     // (undocumented)
+    getHchfTokenAllowanceOfHchfContract(address?: string, overrides?: EthersCallOverrides): Promise<Decimal>;
+    // (undocumented)
     getHLQTBalance(address?: string, overrides?: EthersCallOverrides): Promise<Decimal>;
     // (undocumented)
     getHLQTStake(address?: string, overrides?: EthersCallOverrides): Promise<HLQTStake>;
     // (undocumented)
     getHLQTTokenAddress(overrides?: EthersCallOverrides): Promise<string>;
+    // (undocumented)
+    getHlqtTokenAllowanceOfHlqtContract(address?: string, overrides?: EthersCallOverrides): Promise<Decimal>;
     // (undocumented)
     getLiquidityMiningHLQTReward(address?: string, overrides?: EthersCallOverrides): Promise<Decimal>;
     // (undocumented)
