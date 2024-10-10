@@ -1,0 +1,50 @@
+env:
+  CI: true
+  FORCE_COLOR: true
+
+jobs:
+  lint frontend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 22
+          cache: yarn
+        env:
+          # Workaround for https://github.com/actions/setup-node/issues/317
+          FORCE_COLOR: 0
+      - run: yarn install --immutable
+
+      - run: yarn workspace @liquity/dev-frontend lint
+
+  test frontend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 22
+          cache: yarn
+        env:
+          # Workaround for https://github.com/actions/setup-node/issues/317
+          FORCE_COLOR: 0
+      - run: yarn install --immutable
+
+      - run: yarn workspace @liquity/dev-frontend test
+
+  build frontend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 22
+          cache: yarn
+        env:
+          # Workaround for https://github.com/actions/setup-node/issues/317
+          FORCE_COLOR: 0
+      - run: yarn install --immutable
+
+      - run: yarn workspace @liquity/dev-frontend build:tsc
+      - run: yarn workspace @liquity/dev-frontend build:vite
