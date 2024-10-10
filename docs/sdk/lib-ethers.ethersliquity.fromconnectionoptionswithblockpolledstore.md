@@ -7,7 +7,11 @@
 **Signature:**
 
 ```typescript
-static fromConnectionOptionsWithBlockPolledStore(options: Omit<EthersLiquityConnectionOptions, "useStore">): EthersLiquityWithStore<BlockPolledLiquityStore>;
+static fromConnectionOptionsWithBlockPolledStore(options: Omit<EthersLiquityConnectionOptions, "useStore"> & {
+        mirrorNodeBaseUrl: string;
+        fetch: Fetch;
+        constants: Constants;
+    }): EthersLiquityWithStore<BlockPolledLiquityStore>;
 ```
 
 ## Parameters
@@ -35,7 +39,7 @@ options
 
 </td><td>
 
-Omit&lt;EthersLiquityConnectionOptions, "useStore"&gt;
+Omit&lt;EthersLiquityConnectionOptions, "useStore"&gt; &amp; { mirrorNodeBaseUrl: string; fetch: Fetch; constants: [Constants](./lib-base.constants.md)<!-- -->; }
 
 
 </td><td>

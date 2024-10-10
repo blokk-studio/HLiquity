@@ -83,7 +83,7 @@ Promise&lt;[SentEthersLiquityTransaction](./lib-ethers.sentethersliquitytransact
 
 ## Remarks
 
-The transaction will fail if the Trove's debt would fall below [HCHF\_MINIMUM\_DEBT](./lib-base.hchf_minimum_debt.md)<!-- -->.
+The transaction will fail if the Trove's debt would fall below .
 
 If `maxBorrowingRate` is omitted, the current borrowing rate plus 0.5% is used as maximum acceptable rate.
 

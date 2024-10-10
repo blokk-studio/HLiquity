@@ -9,7 +9,7 @@ Calculate the result of an [openTrove()](./lib-base.transactableliquity.opentrov
 **Signature:**
 
 ```typescript
-static create(params: TroveCreationParams<Decimalish>, borrowingRate?: Decimalish): Trove;
+static create(constants: Constants, params: TroveCreationParams<Decimalish>, borrowingRate?: Decimalish): Trove;
 ```
 
 ## Parameters
@@ -31,6 +31,20 @@ Description
 
 </th></tr></thead>
 <tbody><tr><td>
+
+constants
+
+
+</td><td>
+
+[Constants](./lib-base.constants.md)
+
+
+</td><td>
+
+
+</td></tr>
+<tr><td>
 
 params
 

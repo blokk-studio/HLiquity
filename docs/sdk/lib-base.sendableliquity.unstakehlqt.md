@@ -14,9 +14,7 @@ unstakeHLQT(amount: Decimalish): Promise<SentLiquityTransaction<S, LiquityReceip
 
 ## Parameters
 
-|  Parameter | Type | Description |
-|  --- | --- | --- |
-|  amount | [Decimalish](./lib-base.decimalish.md) | Amount of HLQT to withdraw. |
+<table><thead><tr><th>
 
 Parameter
 

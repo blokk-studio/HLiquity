@@ -52,7 +52,7 @@ Description
 
 </td><td>
 
-Record&lt;string, string&gt;
+\_LiquityContractAddresses
 
 
 </td><td>

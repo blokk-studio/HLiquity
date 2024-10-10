@@ -9,5 +9,5 @@ A mapping of Liquity contracts' names to their addresses.
 **Signature:**
 
 ```typescript
-readonly addresses: Record<string, string>;
+readonly addresses: _LiquityContractAddresses;
 ```

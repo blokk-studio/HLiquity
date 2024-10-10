@@ -33,7 +33,7 @@ Description
 </th></tr></thead>
 <tbody><tr><td>
 
-[(constructor)(readable)](./lib-ethers.blockpolledliquitystore._constructor_.md)
+[(constructor)(options)](./lib-ethers.blockpolledliquitystore._constructor_.md)
 
 
 </td><td>

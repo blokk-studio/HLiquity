@@ -18,6 +18,40 @@ The type parameter `T` may be used to type extra state added to [LiquityStoreSta
 
 Implemented by [BlockPolledLiquityStore](./lib-ethers.blockpolledliquitystore.md)<!-- -->.
 
+## Constructors
+
+<table><thead><tr><th>
+
+Constructor
+
+
+</th><th>
+
+Modifiers
+
+
+</th><th>
+
+Description
+
+
+</th></tr></thead>
+<tbody><tr><td>
+
+[(constructor)(options)](./lib-base.hliquitystore._constructor_.md)
+
+
+</td><td>
+
+
+</td><td>
+
+Constructs a new instance of the `HLiquityStore` class
+
+
+</td></tr>
+</tbody></table>
+
 ## Properties
 
 <table><thead><tr><th>
@@ -42,6 +76,23 @@ Description
 
 </th></tr></thead>
 <tbody><tr><td>
+
+[constants](./lib-base.hliquitystore.constants.md)
+
+
+</td><td>
+
+
+</td><td>
+
+[Constants](./lib-base.constants.md)
+
+
+</td><td>
+
+
+</td></tr>
+<tr><td>
 
 [logging](./lib-base.hliquitystore.logging.md)
 

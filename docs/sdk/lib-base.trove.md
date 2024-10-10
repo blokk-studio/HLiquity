@@ -60,6 +60,23 @@ Amount of native currency (e.g. Ether) collateralized.
 </td></tr>
 <tr><td>
 
+[constants](./lib-base.trove.constants.md)
+
+
+</td><td>
+
+
+</td><td>
+
+[Constants](./lib-base.constants.md)
+
+
+</td><td>
+
+
+</td></tr>
+<tr><td>
+
 [debt](./lib-base.trove.debt.md)
 
 
@@ -235,7 +252,7 @@ Calculate the Trove's collateralization ratio at a given price.
 
 </td><td>
 
-Whether the collateralization ratio is less than the [CRITICAL\_COLLATERAL\_RATIO](./lib-base.critical_collateral_ratio.md) at a given price.
+Whether the collateralization ratio is less than the  at a given price.
 
 
 </td></tr>
@@ -255,7 +272,7 @@ Whether the Trove is undercollateralized at a given price.
 </td></tr>
 <tr><td>
 
-[create(params, borrowingRate)](./lib-base.trove.create.md)
+[create(constants, params, borrowingRate)](./lib-base.trove.create.md)
 
 
 </td><td>

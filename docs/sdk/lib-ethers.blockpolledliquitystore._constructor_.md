@@ -9,7 +9,12 @@ Constructs a new instance of the `BlockPolledLiquityStore` class
 **Signature:**
 
 ```typescript
-constructor(readable: ReadableEthersLiquity);
+constructor(options: {
+        readable: ReadableEthersLiquity;
+        mirrorNodeBaseUrl: string;
+        fetch: Fetch;
+        constants: Constants;
+    });
 ```
 
 ## Parameters
@@ -32,12 +37,12 @@ Description
 </th></tr></thead>
 <tbody><tr><td>
 
-readable
+options
 
 
 </td><td>
 
-[ReadableEthersLiquity](./lib-ethers.readableethersliquity.md)
+{ readable: [ReadableEthersLiquity](./lib-ethers.readableethersliquity.md)<!-- -->; mirrorNodeBaseUrl: string; fetch: Fetch; constants: [Constants](./lib-base.constants.md)<!-- -->; }
 
 
 </td><td>

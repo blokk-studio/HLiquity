@@ -11,7 +11,7 @@ Withdraw [collateral gain](./lib-base.hlqtstake.collateralgain.md) and [HCHF gai
 ```typescript
 withdrawGainsFromStaking(): Promise<void>;
 ```
-<b>Returns:</b>
+**Returns:**
 
 Promise&lt;void&gt;
 

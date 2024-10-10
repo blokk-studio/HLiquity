@@ -41,6 +41,44 @@ Description
 </th></tr></thead>
 <tbody><tr><td>
 
+[gasHeadroom?](./lib-base.populatedliquitytransaction.gasheadroom.md)
+
+
+</td><td>
+
+
+</td><td>
+
+number
+
+
+</td><td>
+
+_(Optional)_
+
+
+</td></tr>
+<tr><td>
+
+[gasLimit?](./lib-base.populatedliquitytransaction.gaslimit.md)
+
+
+</td><td>
+
+
+</td><td>
+
+number
+
+
+</td><td>
+
+_(Optional)_
+
+
+</td></tr>
+<tr><td>
+
 [rawPopulatedTransaction](./lib-base.populatedliquitytransaction.rawpopulatedtransaction.md)
 
 

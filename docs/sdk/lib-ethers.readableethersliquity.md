@@ -57,6 +57,23 @@ Description
 
 
 </td></tr>
+<tr><td>
+
+[constants](./lib-ethers.readableethersliquity.constants.md)
+
+
+</td><td>
+
+
+</td><td>
+
+[Constants](./lib-base.constants.md)
+
+
+</td><td>
+
+
+</td></tr>
 </tbody></table>
 
 ## Methods
@@ -79,7 +96,7 @@ Description
 </th></tr></thead>
 <tbody><tr><td>
 
-[connect(signerOrProvider, optionalParams)](./lib-ethers.readableethersliquity.connect_1.md)
+[connect(options)](./lib-ethers.readableethersliquity.connect_1.md)
 
 
 </td><td>
@@ -175,6 +192,18 @@ Get the total amount of HCHF currently deposited in the Stability Pool.
 </td></tr>
 <tr><td>
 
+[getHchfTokenAllowanceOfHchfContract(address, overrides)](./lib-ethers.readableethersliquity.gethchftokenallowanceofhchfcontract.md)
+
+
+</td><td>
+
+
+</td><td>
+
+
+</td></tr>
+<tr><td>
+
 [getHLQTBalance(address, overrides)](./lib-ethers.readableethersliquity.gethlqtbalance.md)
 
 
@@ -204,6 +233,18 @@ Get the current state of an HLQT Stake.
 <tr><td>
 
 [getHLQTTokenAddress(overrides)](./lib-ethers.readableethersliquity.gethlqttokenaddress.md)
+
+
+</td><td>
+
+
+</td><td>
+
+
+</td></tr>
+<tr><td>
+
+[getHlqtTokenAllowanceOfHlqtContract(address, overrides)](./lib-ethers.readableethersliquity.gethlqttokenallowanceofhlqtcontract.md)
 
 
 </td><td>
@@ -419,7 +460,7 @@ Get a slice from the list of Troves.
 
 </td><td>
 
-Get the liquidity mining contract's allowance of a holder's Uniswap ETH/HCHF LP tokens.
+\_CachedReadableLiquity Get the liquidity mining contract's allowance of a holder's Uniswap ETH/HCHF LP tokens.
 
 
 </td></tr>

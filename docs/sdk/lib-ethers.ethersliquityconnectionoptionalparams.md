@@ -37,7 +37,7 @@ Description
 </th></tr></thead>
 <tbody><tr><td>
 
-[frontendTag?](./lib-ethers.ethersliquityconnectionoptionalparams.frontendtag.md)
+[frontendTag](./lib-ethers.ethersliquityconnectionoptionalparams.frontendtag.md)
 
 
 </td><td>
@@ -45,12 +45,12 @@ Description
 
 </td><td>
 
-string
+[Address](./lib-base.address.md)
 
 
 </td><td>
 
-_(Optional)_ Address that will receive HLQT rewards from newly created Stability Deposits by default.
+Address that will receive HLQT rewards from newly created Stability Deposits by default.
 
 
 </td></tr>

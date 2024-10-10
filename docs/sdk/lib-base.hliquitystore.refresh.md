@@ -7,9 +7,9 @@
 **Signature:**
 
 ```typescript
-abstract refresh(): Promise<void>;
+abstract refresh(): Promise<LiquityStoreState<T>>;
 ```
 **Returns:**
 
-Promise&lt;void&gt;
+Promise&lt;[LiquityStoreState](./lib-base.liquitystorestate.md)<!-- -->&lt;T&gt;&gt;
 

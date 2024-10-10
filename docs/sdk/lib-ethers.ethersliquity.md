@@ -9,9 +9,9 @@ Convenience class that combines multiple interfaces of the library in one object
 **Signature:**
 
 ```typescript
-export declare class EthersLiquity implements ReadableEthersLiquity, TransactableLiquity 
+export declare class EthersLiquity implements ReadableEthersLiquity, TransactableLiquity, ConsentableLiquity 
 ```
-**Implements:** [ReadableEthersLiquity](./lib-ethers.readableethersliquity.md)<!-- -->, [TransactableLiquity](./lib-base.transactableliquity.md)
+**Implements:** [ReadableEthersLiquity](./lib-ethers.readableethersliquity.md)<!-- -->, [TransactableLiquity](./lib-base.transactableliquity.md)<!-- -->, [ConsentableLiquity](./lib-base.consentableliquity.md)
 
 ## Remarks
 
@@ -61,6 +61,57 @@ Information about the connection to the Liquity protocol.
 </td></tr>
 <tr><td>
 
+[constants](./lib-ethers.ethersliquity.constants.md)
+
+
+</td><td>
+
+
+</td><td>
+
+[Constants](./lib-base.constants.md)
+
+
+</td><td>
+
+
+</td></tr>
+<tr><td>
+
+[fetch](./lib-ethers.ethersliquity.fetch.md)
+
+
+</td><td>
+
+
+</td><td>
+
+Fetch
+
+
+</td><td>
+
+
+</td></tr>
+<tr><td>
+
+[mirrorNodeBaseUrl](./lib-ethers.ethersliquity.mirrornodebaseurl.md)
+
+
+</td><td>
+
+
+</td><td>
+
+string
+
+
+</td><td>
+
+
+</td></tr>
+<tr><td>
+
 [populate](./lib-ethers.ethersliquity.populate.md)
 
 
@@ -101,61 +152,7 @@ Can be used to send transactions without waiting for them to be mined.
 
 ## Methods
 
-|  Method | Modifiers | Description |
-|  --- | --- | --- |
-|  [adjustTrove(params, maxBorrowingRate, overrides)](./lib-ethers.ethersliquity.adjusttrove.md) |  | Adjust existing Trove by changing its collateral, debt, or both. |
-|  [approveUniTokens(allowance, overrides)](./lib-ethers.ethersliquity.approveunitokens.md) |  | Allow the liquidity mining contract to use Uniswap ETH/HCHF LP tokens for [staking](./lib-base.transactableliquity.stakeunitokens.md)<!-- -->. |
-|  [borrowHCHF(amount, maxBorrowingRate, overrides)](./lib-ethers.ethersliquity.borrowhchf.md) |  | Adjust existing Trove by borrowing more HCHF. |
-|  [claimCollateralSurplus(overrides)](./lib-ethers.ethersliquity.claimcollateralsurplus.md) |  | Claim leftover collateral after a liquidation or redemption. |
-|  [closeTrove(overrides)](./lib-ethers.ethersliquity.closetrove.md) |  | Close existing Trove by repaying all debt and withdrawing all collateral. |
-|  [connect(signerOrProvider, optionalParams)](./lib-ethers.ethersliquity.connect_1.md) | <code>static</code> | Connect to the Liquity protocol and create an <code>EthersLiquity</code> object. |
-|  [depositCollateral(amount, overrides)](./lib-ethers.ethersliquity.depositcollateral.md) |  | Adjust existing Trove by depositing more collateral. |
-|  [depositHCHFInStabilityPool(amount, frontendTag, overrides)](./lib-ethers.ethersliquity.deposithchfinstabilitypool.md) |  | Make a new Stability Deposit, or top up existing one. |
-|  [exitLiquidityMining(overrides)](./lib-ethers.ethersliquity.exitliquiditymining.md) |  | Withdraw all staked LP tokens from liquidity mining and claim reward. |
-|  [fromConnectionOptionsWithBlockPolledStore(options)](./lib-ethers.ethersliquity.fromconnectionoptionswithblockpolledstore.md) | <code>static</code> |  |
-|  [getCollateralSurplusBalance(address, overrides)](./lib-ethers.ethersliquity.getcollateralsurplusbalance.md) |  | Get the amount of leftover collateral available for withdrawal by an address. |
-|  [getFees(overrides)](./lib-ethers.ethersliquity.getfees.md) |  | Get a calculator for current fees. |
-|  [getFrontendStatus(address, overrides)](./lib-ethers.ethersliquity.getfrontendstatus.md) |  | Check whether an address is registered as a Liquity frontend, and what its kickback rate is. |
-|  [getHCHFBalance(address, overrides)](./lib-ethers.ethersliquity.gethchfbalance.md) |  | Get the amount of HCHF held by an address. |
-|  [getHCHFInStabilityPool(overrides)](./lib-ethers.ethersliquity.gethchfinstabilitypool.md) |  | Get the total amount of HCHF currently deposited in the Stability Pool. |
-|  [getHCHFTokenAddress(overrides)](./lib-ethers.ethersliquity.gethchftokenaddress.md) |  |  |
-|  [getHLQTBalance(address, overrides)](./lib-ethers.ethersliquity.gethlqtbalance.md) |  | Get the amount of HLQT held by an address. |
-|  [getHLQTStake(address, overrides)](./lib-ethers.ethersliquity.gethlqtstake.md) |  | Get the current state of an HLQT Stake. |
-|  [getHLQTTokenAddress(overrides)](./lib-ethers.ethersliquity.gethlqttokenaddress.md) |  |  |
-|  [getLiquidityMiningHLQTReward(address, overrides)](./lib-ethers.ethersliquity.getliquiditymininghlqtreward.md) |  | Get the amount of HLQT earned by an address through mining liquidity. |
-|  [getLiquidityMiningStake(address, overrides)](./lib-ethers.ethersliquity.getliquidityminingstake.md) |  | Get the amount of Uniswap ETH/HCHF LP tokens currently staked by an address in liquidity mining. |
-|  [getNumberOfTroves(overrides)](./lib-ethers.ethersliquity.getnumberoftroves.md) |  | Get number of Troves that are currently open. |
-|  [getPrice(overrides)](./lib-ethers.ethersliquity.getprice.md) |  | Get the current price of the native currency (e.g. Ether) in USD. |
-|  [getRemainingLiquidityMiningHLQTReward(overrides)](./lib-ethers.ethersliquity.getremainingliquiditymininghlqtreward.md) |  | Get the remaining HLQT that will be collectively rewarded to liquidity miners. |
-|  [getRemainingStabilityPoolHLQTReward(overrides)](./lib-ethers.ethersliquity.getremainingstabilitypoolhlqtreward.md) |  | Get the remaining HLQT that will be collectively rewarded to stability depositors. |
-|  [getStabilityDeposit(address, overrides)](./lib-ethers.ethersliquity.getstabilitydeposit.md) |  | Get the current state of a Stability Deposit. |
-|  [getTotal(overrides)](./lib-ethers.ethersliquity.gettotal.md) |  | Get the total amount of collateral and debt in the Liquity system. |
-|  [getTotalRedistributed(overrides)](./lib-ethers.ethersliquity.gettotalredistributed.md) |  | Get the total collateral and debt per stake that has been liquidated through redistribution. |
-|  [getTotalStakedHLQT(overrides)](./lib-ethers.ethersliquity.gettotalstakedhlqt.md) |  | Get the total amount of HLQT currently staked. |
-|  [getTotalStakedUniTokens(overrides)](./lib-ethers.ethersliquity.gettotalstakedunitokens.md) |  | Get the total amount of Uniswap ETH/HCHF LP tokens currently staked in liquidity mining. |
-|  [getTrove(address, overrides)](./lib-ethers.ethersliquity.gettrove.md) |  | Get the current state of a Trove. |
-|  [getTroveBeforeRedistribution(address, overrides)](./lib-ethers.ethersliquity.gettrovebeforeredistribution.md) |  | Get a Trove in its state after the last direct modification. |
-|  [getTroves(params, overrides)](./lib-ethers.ethersliquity.gettroves_1.md) |  | Get a slice from the list of Troves. |
-|  [getUniTokenAllowance(address, overrides)](./lib-ethers.ethersliquity.getunitokenallowance.md) |  | Get the liquidity mining contract's allowance of a holder's Uniswap ETH/HCHF LP tokens. |
-|  [getUniTokenBalance(address, overrides)](./lib-ethers.ethersliquity.getunitokenbalance.md) |  | Get the amount of Uniswap ETH/HCHF LP tokens held by an address. |
-|  [hasStore()](./lib-ethers.ethersliquity.hasstore.md) |  | Check whether this <code>EthersLiquity</code> is an [EthersLiquityWithStore](./lib-ethers.ethersliquitywithstore.md)<!-- -->. |
-|  [hasStore(store)](./lib-ethers.ethersliquity.hasstore_1.md) |  | Check whether this <code>EthersLiquity</code> is an [EthersLiquityWithStore](./lib-ethers.ethersliquitywithstore.md)<!-- -->&lt;[BlockPolledLiquityStore](./lib-ethers.blockpolledliquitystore.md)<!-- -->&gt;<!-- -->. |
-|  [liquidate(address, overrides)](./lib-ethers.ethersliquity.liquidate.md) |  | Liquidate one or more undercollateralized Troves. |
-|  [liquidateUpTo(maximumNumberOfTrovesToLiquidate, overrides)](./lib-ethers.ethersliquity.liquidateupto.md) |  | Liquidate the least collateralized Troves up to a maximum number. |
-|  [openTrove(params, maxBorrowingRate, overrides)](./lib-ethers.ethersliquity.opentrove.md) |  | Open a new Trove by depositing collateral and borrowing HCHF. |
-|  [redeemHCHF(amount, maxRedemptionRate, overrides)](./lib-ethers.ethersliquity.redeemhchf.md) |  | Redeem HCHF to native currency (e.g. Ether) at face value. |
-|  [registerFrontend(kickbackRate, overrides)](./lib-ethers.ethersliquity.registerfrontend.md) |  | Register current wallet address as a Liquity frontend. |
-|  [repayHCHF(amount, overrides)](./lib-ethers.ethersliquity.repayhchf.md) |  | Adjust existing Trove by repaying some of its debt. |
-|  [stakeHLQT(amount, overrides)](./lib-ethers.ethersliquity.stakehlqt.md) |  | Stake HLQT to start earning fee revenue or increase existing stake. |
-|  [stakeUniTokens(amount, overrides)](./lib-ethers.ethersliquity.stakeunitokens.md) |  | Stake Uniswap ETH/HCHF LP tokens to participate in liquidity mining and earn HLQT. |
-|  [transferCollateralGainToTrove(overrides)](./lib-ethers.ethersliquity.transfercollateralgaintotrove.md) |  | Transfer [collateral gain](./lib-base.stabilitydeposit.collateralgain.md) from Stability Deposit to Trove. |
-|  [unstakeHLQT(amount, overrides)](./lib-ethers.ethersliquity.unstakehlqt.md) |  | Withdraw HLQT from staking. |
-|  [unstakeUniTokens(amount, overrides)](./lib-ethers.ethersliquity.unstakeunitokens.md) |  | Withdraw Uniswap ETH/HCHF LP tokens from liquidity mining. |
-|  [withdrawCollateral(amount, overrides)](./lib-ethers.ethersliquity.withdrawcollateral.md) |  | Adjust existing Trove by withdrawing some of its collateral. |
-|  [withdrawGainsFromStabilityPool(overrides)](./lib-ethers.ethersliquity.withdrawgainsfromstabilitypool.md) |  | Withdraw [collateral gain](./lib-base.stabilitydeposit.collateralgain.md) and [HLQT reward](./lib-base.stabilitydeposit.hlqtreward.md) from Stability Deposit. |
-|  [withdrawGainsFromStaking(overrides)](./lib-ethers.ethersliquity.withdrawgainsfromstaking.md) |  | Withdraw [collateral gain](./lib-base.hlqtstake.collateralgain.md) and [HCHF gain](./lib-base.hlqtstake.hchfgain.md) from HLQT stake. |
-|  [withdrawHCHFFromStabilityPool(amount, overrides)](./lib-ethers.ethersliquity.withdrawhchffromstabilitypool.md) |  | Withdraw HCHF from Stability Deposit. |
-|  [withdrawHLQTRewardFromLiquidityMining(overrides)](./lib-ethers.ethersliquity.withdrawhlqtrewardfromliquiditymining.md) |  | Withdraw HLQT that has been earned by mining liquidity. |
+<table><thead><tr><th>
 
 Method
 
@@ -187,6 +184,42 @@ Adjust existing Trove by changing its collateral, debt, or both.
 </td></tr>
 <tr><td>
 
+[approveHchfToSpendHchf(amount)](./lib-ethers.ethersliquity.approvehchftospendhchf.md)
+
+
+</td><td>
+
+
+</td><td>
+
+
+</td></tr>
+<tr><td>
+
+[approveHlqtToSpendHlqt(amount)](./lib-ethers.ethersliquity.approvehlqttospendhlqt.md)
+
+
+</td><td>
+
+
+</td><td>
+
+
+</td></tr>
+<tr><td>
+
+[approveSaucerSwapToSpendLpToken(amount)](./lib-ethers.ethersliquity.approvesaucerswaptospendlptoken.md)
+
+
+</td><td>
+
+
+</td><td>
+
+
+</td></tr>
+<tr><td>
+
 [approveUniTokens(allowance, overrides)](./lib-ethers.ethersliquity.approveunitokens.md)
 
 
@@ -196,6 +229,42 @@ Adjust existing Trove by changing its collateral, debt, or both.
 </td><td>
 
 Allow the liquidity mining contract to use Uniswap ETH/HCHF LP tokens for [staking](./lib-base.transactableliquity.stakeunitokens.md)<!-- -->.
+
+
+</td></tr>
+<tr><td>
+
+[associateWithHchf()](./lib-ethers.ethersliquity.associatewithhchf.md)
+
+
+</td><td>
+
+
+</td><td>
+
+
+</td></tr>
+<tr><td>
+
+[associateWithHlqt()](./lib-ethers.ethersliquity.associatewithhlqt.md)
+
+
+</td><td>
+
+
+</td><td>
+
+
+</td></tr>
+<tr><td>
+
+[associateWithLpToken()](./lib-ethers.ethersliquity.associatewithlptoken.md)
+
+
+</td><td>
+
+
+</td><td>
 
 
 </td></tr>
@@ -243,7 +312,7 @@ Close existing Trove by repaying all debt and withdrawing all collateral.
 </td></tr>
 <tr><td>
 
-[connect(signerOrProvider, optionalParams)](./lib-ethers.ethersliquity.connect_1.md)
+[connect(options)](./lib-ethers.ethersliquity.connect_1.md)
 
 
 </td><td>
@@ -282,6 +351,42 @@ Adjust existing Trove by depositing more collateral.
 </td><td>
 
 Make a new Stability Deposit, or top up existing one.
+
+
+</td></tr>
+<tr><td>
+
+[dissociateFromHchf()](./lib-ethers.ethersliquity.dissociatefromhchf.md)
+
+
+</td><td>
+
+
+</td><td>
+
+
+</td></tr>
+<tr><td>
+
+[dissociateFromHlqt()](./lib-ethers.ethersliquity.dissociatefromhlqt.md)
+
+
+</td><td>
+
+
+</td><td>
+
+
+</td></tr>
+<tr><td>
+
+[dissociateFromLpToken()](./lib-ethers.ethersliquity.dissociatefromlptoken.md)
+
+
+</td><td>
+
+
+</td><td>
 
 
 </td></tr>
@@ -397,6 +502,18 @@ Get the total amount of HCHF currently deposited in the Stability Pool.
 </td></tr>
 <tr><td>
 
+[getHchfTokenAllowanceOfHchfContract(address, overrides)](./lib-ethers.ethersliquity.gethchftokenallowanceofhchfcontract.md)
+
+
+</td><td>
+
+
+</td><td>
+
+
+</td></tr>
+<tr><td>
+
 [getHLQTBalance(address, overrides)](./lib-ethers.ethersliquity.gethlqtbalance.md)
 
 
@@ -426,6 +543,18 @@ Get the current state of an HLQT Stake.
 <tr><td>
 
 [getHLQTTokenAddress(overrides)](./lib-ethers.ethersliquity.gethlqttokenaddress.md)
+
+
+</td><td>
+
+
+</td><td>
+
+
+</td></tr>
+<tr><td>
+
+[getHlqtTokenAllowanceOfHlqtContract(address, overrides)](./lib-ethers.ethersliquity.gethlqttokenallowanceofhlqtcontract.md)
 
 
 </td><td>
@@ -641,7 +770,7 @@ Get a slice from the list of Troves.
 
 </td><td>
 
-Get the liquidity mining contract's allowance of a holder's Uniswap ETH/HCHF LP tokens.
+\_CachedReadableLiquity Get the liquidity mining contract's allowance of a holder's Uniswap ETH/HCHF LP tokens.
 
 
 </td></tr>

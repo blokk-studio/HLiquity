@@ -33,7 +33,7 @@ Description
 </th></tr></thead>
 <tbody><tr><td>
 
-[(constructor)(readable)](./lib-ethers.populatableethersliquity._constructor_.md)
+[(constructor)(options)](./lib-ethers.populatableethersliquity._constructor_.md)
 
 
 </td><td>
@@ -42,6 +42,48 @@ Description
 </td><td>
 
 Constructs a new instance of the `PopulatableEthersLiquity` class
+
+
+</td></tr>
+</tbody></table>
+
+## Properties
+
+<table><thead><tr><th>
+
+Property
+
+
+</th><th>
+
+Modifiers
+
+
+</th><th>
+
+Type
+
+
+</th><th>
+
+Description
+
+
+</th></tr></thead>
+<tbody><tr><td>
+
+[constants](./lib-ethers.populatableethersliquity.constants.md)
+
+
+</td><td>
+
+
+</td><td>
+
+[Constants](./lib-base.constants.md)
+
+
+</td><td>
 
 
 </td></tr>

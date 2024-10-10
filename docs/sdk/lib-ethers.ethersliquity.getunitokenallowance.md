@@ -4,7 +4,7 @@
 
 ## EthersLiquity.getUniTokenAllowance() method
 
-Get the liquidity mining contract's allowance of a holder's Uniswap ETH/HCHF LP tokens.
+\_CachedReadableLiquity Get the liquidity mining contract's allowance of a holder's Uniswap ETH/HCHF LP tokens.
 
 **Signature:**
 

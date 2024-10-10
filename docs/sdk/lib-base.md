@@ -144,6 +144,42 @@ Details of a [transferCollateralGainToTrove()](./lib-base.transactableliquity.tr
 </td></tr>
 <tr><td>
 
+[ConsentableLiquity](./lib-base.consentableliquity.md)
+
+
+</td><td>
+
+
+</td></tr>
+<tr><td>
+
+[Constants](./lib-base.constants.md)
+
+
+</td><td>
+
+
+</td></tr>
+<tr><td>
+
+[Deployment](./lib-base.deployment.md)
+
+
+</td><td>
+
+
+</td></tr>
+<tr><td>
+
+[DeploymentDefinition](./lib-base.deploymentdefinition.md)
+
+
+</td><td>
+
+
+</td></tr>
+<tr><td>
+
 [LiquidationDetails](./lib-base.liquidationdetails.md)
 
 
@@ -357,7 +393,20 @@ Description
 </th></tr></thead>
 <tbody><tr><td>
 
-[BETA](./lib-base.beta.md)
+[defaults](./lib-base.defaults.md)
+
+
+</td><td>
+
+default valies for constants
+
+only directly use this for tests. do not use this in application code.
+
+
+</td></tr>
+<tr><td>
+
+[getConstants](./lib-base.getconstants.md)
 
 
 </td><td>
@@ -366,95 +415,16 @@ Description
 </td></tr>
 <tr><td>
 
-[CRITICAL\_COLLATERAL\_RATIO](./lib-base.critical_collateral_ratio.md)
+[getConstantsFromJsonObjectString](./lib-base.getconstantsfromjsonobjectstring.md)
 
 
 </td><td>
-
-Total collateral ratio below which recovery mode is triggered.
 
 
 </td></tr>
 <tr><td>
 
-[HCHF\_LIQUIDATION\_RESERVE](./lib-base.hchf_liquidation_reserve.md)
-
-
-</td><td>
-
-Amount of HCHF that's reserved for compensating the liquidator of a Trove.
-
-
-</td></tr>
-<tr><td>
-
-[HCHF\_MINIMUM\_DEBT](./lib-base.hchf_minimum_debt.md)
-
-
-</td><td>
-
-A Trove must always have at least this much debt.
-
-
-</td></tr>
-<tr><td>
-
-[HCHF\_MINIMUM\_NET\_DEBT](./lib-base.hchf_minimum_net_debt.md)
-
-
-</td><td>
-
-A Trove must always have at least this much debt on top of the [liquidation reserve](./lib-base.hchf_liquidation_reserve.md)<!-- -->.
-
-
-</td></tr>
-<tr><td>
-
-[MAXIMUM\_BORROWING\_RATE](./lib-base.maximum_borrowing_rate.md)
-
-
-</td><td>
-
-Value that the [borrowing rate](./lib-base.fees.borrowingrate.md) will never exceed.
-
-
-</td></tr>
-<tr><td>
-
-[MINIMUM\_BORROWING\_RATE](./lib-base.minimum_borrowing_rate.md)
-
-
-</td><td>
-
-Value that the [borrowing rate](./lib-base.fees.borrowingrate.md) will never decay below.
-
-
-</td></tr>
-<tr><td>
-
-[MINIMUM\_COLLATERAL\_RATIO](./lib-base.minimum_collateral_ratio.md)
-
-
-</td><td>
-
-Collateral ratio below which a Trove can be liquidated in normal mode.
-
-
-</td></tr>
-<tr><td>
-
-[MINIMUM\_REDEMPTION\_RATE](./lib-base.minimum_redemption_rate.md)
-
-
-</td><td>
-
-Value that the [redemption rate](./lib-base.fees.redemptionrate.md) will never decay below.
-
-
-</td></tr>
-<tr><td>
-
-[MINUTE\_DECAY\_FACTOR](./lib-base.minute_decay_factor.md)
+[getDeployment](./lib-base.getdeployment.md)
 
 
 </td><td>
@@ -478,12 +448,30 @@ Description
 </th></tr></thead>
 <tbody><tr><td>
 
+[Address](./lib-base.address.md)
+
+
+</td><td>
+
+
+</td></tr>
+<tr><td>
+
 [Decimalish](./lib-base.decimalish.md)
 
 
 </td><td>
 
 Types that can be converted into a Decimal.
+
+
+</td></tr>
+<tr><td>
+
+[DeploymentAddressesKey](./lib-base.deploymentaddresseskey.md)
+
+
+</td><td>
 
 
 </td></tr>
