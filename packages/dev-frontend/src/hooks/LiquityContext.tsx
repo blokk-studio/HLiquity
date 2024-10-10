@@ -41,6 +41,7 @@ export type LiquityContextValue = {
         version: string;
         deploymentDate: Date;
         frontendTag: `0x${string}`;
+        signer?: Signer;
       };
     };
   store: HLiquityStore;

@@ -283,7 +283,7 @@ export const SwapPane: React.FC = () => {
                   : {})
               }}
               type="number"
-              onWheel={(e) => e.target.blur()}
+              onWheel={e => e.currentTarget.blur()}
               min={0}
               max={100}
               step={0.1}

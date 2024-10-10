@@ -18,7 +18,7 @@ i18n.use(initReactI18next).init({
 
 export const t = i18n.t;
 
-export const replace = (key: string, options: Record<string, any>) => {
+export const replace = (key: string, options: Record<string, unknown>) => {
   const translationString = t(key);
   const splitTranslationString = translationString.split(/{{([^}]+)}}/);
   const replaced = splitTranslationString.map((stringOrPlaceholder, index) => {

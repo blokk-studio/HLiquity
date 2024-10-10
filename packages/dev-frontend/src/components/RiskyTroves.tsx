@@ -118,8 +118,6 @@ export const RiskyTroves: React.FC<RiskyTrovesProps> = ({ pageSize }) => {
     return () => {
       mounted = false;
     };
-    // Omit blockTag from deps on purpose
-    // eslint-disable-next-line
   }, [liquity, clampedPage, pageSize, reload]);
 
   useEffect(() => {

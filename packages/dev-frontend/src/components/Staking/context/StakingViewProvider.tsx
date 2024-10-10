@@ -5,7 +5,7 @@ import { LiquityStoreUpdate, useLiquityReducer } from "@liquity/lib-react";
 
 import { useMyTransactionState } from "../../Transaction";
 
-import { StakingViewAction, StakingViewContext, StakingView} from "./StakingViewContext";
+import { StakingViewAction, StakingViewContext, StakingView } from "./StakingViewContext";
 
 import { useLiquity } from "../../../hooks/LiquityContext";
 
@@ -74,7 +74,7 @@ const reduce = (
 export const StakingViewProvider: React.FC = ({ children }) => {
   const stakingTransactionState = useMyTransactionState("stake");
   const [{ adjusting, changePending, hlqtStake }, dispatch] = useLiquityReducer(reduce, init);
-  const [ viewState, setViewState ] = useState<StakingView>("NONE");
+  const [viewState, setViewState] = useState<StakingView>("NONE");
   const { store } = useLiquity();
 
   useEffect(() => {
@@ -93,11 +93,11 @@ export const StakingViewProvider: React.FC = ({ children }) => {
 
   useEffect(() => {
     setViewState(adjusting ? "ADJUSTING" : !hlqtStake || hlqtStake.isEmpty ? "NONE" : "ACTIVE");
-  }, [adjusting, hlqtStake])
+  }, [adjusting, hlqtStake]);
 
   useEffect(() => {
     store.refresh();
-  }, [viewState])
+  }, [store, viewState]);
 
   return (
     <StakingViewContext.Provider

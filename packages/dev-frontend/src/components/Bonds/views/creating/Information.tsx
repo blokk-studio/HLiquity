@@ -81,7 +81,7 @@ export const Information: React.FC = () => {
             </Flex>
           </Label>
         </Flex>
-        <Button variant="cancel" onClick={back ? back : () => {}}>
+        <Button variant="cancel" onClick={back ?? undefined}>
           Back
         </Button>
         <Button onClick={handleUnderstandPressed}>Continue</Button>
