@@ -44,13 +44,13 @@ export const useLoadingState = <Type>(
     return null;
   };
 
+  // reset the state if dependencies change
   useEffect(() => {
     setState("idle");
     setResult(null);
     setError(null);
-    // man, react sucks bad
-    // I think it's nice xD ^^
-  }, [resetDependencies]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, resetDependencies);
 
   return {
     state,
