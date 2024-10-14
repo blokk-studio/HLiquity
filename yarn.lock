@@ -1630,9 +1630,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@graphprotocol/graph-cli@npm:^0.64.1":
-  version: 0.64.1
-  resolution: "@graphprotocol/graph-cli@npm:0.64.1"
+"@graphprotocol/graph-cli@npm:^0.86.0":
+  version: 0.86.0
+  resolution: "@graphprotocol/graph-cli@npm:0.86.0"
   dependencies:
     "@float-capital/float-subgraph-uncrashable": ^0.0.0-alpha.4
     "@oclif/core": 2.8.6
@@ -1648,14 +1648,14 @@ __metadata:
     dockerode: 2.5.8
     fs-extra: 9.1.0
     glob: 9.3.5
-    gluegun: 5.1.2
+    gluegun: 5.1.6
     graphql: 15.5.0
     immutable: 4.2.1
     ipfs-http-client: 55.0.0
     jayson: 4.0.0
     js-yaml: 3.14.1
+    open: 8.4.2
     prettier: 3.0.3
-    request: 2.88.2
     semver: 7.4.0
     sync-request: 6.1.0
     tmp-promise: 3.0.3
@@ -1664,7 +1664,7 @@ __metadata:
     yaml: 1.10.2
   bin:
     graph: bin/run
-  checksum: cb390037538cf79576a13673b6848930fd01bd0c5ac521092f7425caafb37b051cf86e6bb3b92457b632c5933aa19b27eb93740fe3fd895b8050c9b575329600
+  checksum: 68455b2c6826ba30fc9e8c07ecd61ca8f5aa4ac483241e3a7667a40b0f5677010f6c62c381aedaa58c38096ccb6a8f31bb5ca78fc5191494954060a66eabebf2
   languageName: node
   linkType: hard
 
@@ -2323,7 +2323,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@liquity/subgraph@workspace:packages/subgraph"
   dependencies:
-    "@graphprotocol/graph-cli": ^0.64.1
+    "@graphprotocol/graph-cli": ^0.86.0
     "@graphprotocol/graph-ts": ^0.32.0
     npm-run-all: ^4.1.5
   languageName: unknown
@@ -10922,6 +10922,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"define-lazy-prop@npm:^2.0.0":
+  version: 2.0.0
+  resolution: "define-lazy-prop@npm:2.0.0"
+  checksum: 0115fdb065e0490918ba271d7339c42453d209d4cb619dfe635870d906731eff3e1ade8028bb461ea27ce8264ec5e22c6980612d332895977e89c1bbc80fcee2
+  languageName: node
+  linkType: hard
+
 "define-properties@npm:^1.1.2, define-properties@npm:^1.1.3":
   version: 1.1.3
   resolution: "define-properties@npm:1.1.3"
@@ -11418,7 +11425,18 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ejs@npm:3.1.6, ejs@npm:^3.1.5":
+"ejs@npm:3.1.8":
+  version: 3.1.8
+  resolution: "ejs@npm:3.1.8"
+  dependencies:
+    jake: ^10.8.5
+  bin:
+    ejs: bin/cli.js
+  checksum: 1d40d198ad52e315ccf37e577bdec06e24eefdc4e3c27aafa47751a03a0c7f0ec4310254c9277a5f14763c3cd4bbacce27497332b2d87c74232b9b1defef8efc
+  languageName: node
+  linkType: hard
+
+"ejs@npm:^3.1.5":
   version: 3.1.6
   resolution: "ejs@npm:3.1.6"
   dependencies:
@@ -14140,9 +14158,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"gluegun@npm:5.1.2":
-  version: 5.1.2
-  resolution: "gluegun@npm:5.1.2"
+"gluegun@npm:5.1.6":
+  version: 5.1.6
+  resolution: "gluegun@npm:5.1.6"
   dependencies:
     apisauce: ^2.1.5
     app-module-path: ^2.2.0
@@ -14150,7 +14168,7 @@ __metadata:
     colors: 1.4.0
     cosmiconfig: 7.0.1
     cross-spawn: 7.0.3
-    ejs: 3.1.6
+    ejs: 3.1.8
     enquirer: 2.3.6
     execa: 5.1.1
     fs-jetpack: 4.3.1
@@ -14176,7 +14194,7 @@ __metadata:
     yargs-parser: ^21.0.0
   bin:
     gluegun: bin/gluegun
-  checksum: 2c91934b98022018a524a3be32efb3e4567905a618ccb4aca4f19207ff4b37262bc18264b306f1c82757eaab634bac6c06aacff16059b11a38deefd07b6293b6
+  checksum: 58e6d402030fec40068aea40f1fec08838fab3fbd5f811570b832e8da8028e100620cbb5c5444830dfa97a691849509bc6e64618ee74b454ba4073dc674c4042
   languageName: node
   linkType: hard
 
@@ -15542,6 +15560,15 @@ __metadata:
   bin:
     is-docker: cli.js
   checksum: dfa7338b446c13807590f9bd7408a09fd9ef49bc977b94408723c0857b3ba0d49f20b48e23f0d426d6914b52c38066672105f19eb3c970c5f2a25a39275afb64
+  languageName: node
+  linkType: hard
+
+"is-docker@npm:^2.1.1":
+  version: 2.2.1
+  resolution: "is-docker@npm:2.2.1"
+  bin:
+    is-docker: cli.js
+  checksum: 3fef7ddbf0be25958e8991ad941901bf5922ab2753c46980b60b05c1bf9c9c2402d35e6dc32e4380b980ef5e1970a5d9d5e5aa2e02d77727c3b6b5e918474c56
   languageName: node
   linkType: hard
 
@@ -19494,6 +19521,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"open@npm:8.4.2":
+  version: 8.4.2
+  resolution: "open@npm:8.4.2"
+  dependencies:
+    define-lazy-prop: ^2.0.0
+    is-docker: ^2.1.1
+    is-wsl: ^2.2.0
+  checksum: 6388bfff21b40cb9bd8f913f9130d107f2ed4724ea81a8fd29798ee322b361ca31fa2cdfb491a5c31e43a3996cfe9566741238c7a741ada8d7af1cb78d85cf26
+  languageName: node
+  linkType: hard
+
 "open@npm:^7.3.1":
   version: 7.4.2
   resolution: "open@npm:7.4.2"
@@ -21687,7 +21725,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"request@npm:2.88.2, request@npm:^2.79.0, request@npm:^2.88.0":
+"request@npm:^2.79.0, request@npm:^2.88.0":
   version: 2.88.2
   resolution: "request@npm:2.88.2"
   dependencies:
