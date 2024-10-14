@@ -27,7 +27,7 @@ export const Disabled: React.FC = () => {
   const poolShare = liquidityMiningStake.mulDiv(100, totalStakedUniTokens);
   const liquityContext = useLiquity();
   const loadableUnstakeUniTokens = useLoadingState(async () => {
-    const result = await liquityContext.liquity.send.unstakeUniTokens(liquidityMiningStake);
+    const result = await liquityContext.liquity.send.exitLiquidityMining();
     await result.waitForReceipt();
   }, [hasStake]);
 
