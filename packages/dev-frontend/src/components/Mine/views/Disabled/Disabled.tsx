@@ -24,9 +24,10 @@ export const Disabled: React.FC = () => {
   const { liquidityMiningStake, liquidityMiningHLQTReward, totalStakedUniTokens } =
     useLiquitySelector(selector);
   const hasStake = !liquidityMiningStake.isZero;
+  const hasRewards = !liquidityMiningHLQTReward.isZero;
   const poolShare = liquidityMiningStake.mulDiv(100, totalStakedUniTokens);
   const liquityContext = useLiquity();
-  const loadableUnstakeUniTokens = useLoadingState(async () => {
+  const loadableExit = useLoadingState(async () => {
     const result = await liquityContext.liquity.send.exitLiquidityMining();
     await result.waitForReceipt();
   }, [hasStake]);
@@ -48,7 +49,13 @@ export const Disabled: React.FC = () => {
           </Link>
         </ActionDescription>
 
-        {hasStake && (
+        {!hasStake && !liquidityMiningHLQTReward.isZero && (
+          <Flex variant="layout.actions">
+            <ClaimReward />
+          </Flex>
+        )}
+
+        {(hasStake || hasRewards) && (
           <>
             <Box sx={{ border: 1, pt: 3, borderRadius: 3 }}>
               <StaticRow
@@ -73,14 +80,16 @@ export const Disabled: React.FC = () => {
             </Box>
 
             <Flex variant="layout.actions">
-              <ClaimReward />
+              {hasRewards && <ClaimReward />}
 
-              <LoadingButton
-                loading={loadableUnstakeUniTokens.state === "pending"}
-                onClick={loadableUnstakeUniTokens.call}
-              >
-                Unstake all LP ({liquidityMiningStake.prettify(2)})
-              </LoadingButton>
+              {hasStake && (
+                <LoadingButton
+                  loading={loadableExit.state === "pending"}
+                  onClick={loadableExit.call}
+                >
+                  Claim rewards & Withdraw all LP
+                </LoadingButton>
+              )}
             </Flex>
           </>
         )}
