@@ -65,7 +65,7 @@
     "npm-run-all2": "5.0.0",
     "ts-node": "9.1.1",
     "typescript": "^5.4.2",
-    "ws": "7.5.10"
+    "ws": "8.17.1"
   },
   "dependencies": {
     "axios": "^1.6.7"
