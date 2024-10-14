@@ -1668,12 +1668,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@graphprotocol/graph-ts@npm:^0.32.0":
-  version: 0.32.0
-  resolution: "@graphprotocol/graph-ts@npm:0.32.0"
+"@graphprotocol/graph-ts@npm:^0.35.0":
+  version: 0.35.1
+  resolution: "@graphprotocol/graph-ts@npm:0.35.1"
   dependencies:
     assemblyscript: 0.19.10
-  checksum: 9376ad625d3e439c9026c6aac15c82b43bb704c99469649e758bd27e68c3de3dcf36381a01ca76fea073f9e4ec507bccfa9ee4bb2b82bf67404419855efc735f
+  checksum: 3f6aa6aa2edde80cea4f73b560367d440c206325d161e8c9fa35f18f4cd52db1ffd1f02410890e435122bcb2683cac719c928836d9f9a27e85f6fb65d98e8efd
   languageName: node
   linkType: hard
 
@@ -2324,7 +2324,7 @@ __metadata:
   resolution: "@liquity/subgraph@workspace:packages/subgraph"
   dependencies:
     "@graphprotocol/graph-cli": ^0.86.0
-    "@graphprotocol/graph-ts": ^0.32.0
+    "@graphprotocol/graph-ts": ^0.35.0
     npm-run-all2: ^5.0.0
   languageName: unknown
   linkType: soft
