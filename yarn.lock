@@ -2118,7 +2118,7 @@ __metadata:
     "@types/react-dom": 17.0.25
     "@types/react-modal": ^3.16.3
     "@types/react-router-dom": 5.1.7
-    "@types/testing-library__jest-dom": 5.9.5
+    "@types/testing-library__jest-dom": 5.14.9
     "@types/testing-library__react": 10.2.0
     "@types/testing-library__user-event": 4.2.0
     "@typescript-eslint/eslint-plugin": ^5.57.1
@@ -5626,7 +5626,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/testing-library__jest-dom@npm:5.9.5, @types/testing-library__jest-dom@npm:^5.9.1":
+"@types/testing-library__jest-dom@npm:5.14.9":
+  version: 5.14.9
+  resolution: "@types/testing-library__jest-dom@npm:5.14.9"
+  dependencies:
+    "@types/jest": "*"
+  checksum: d364494fc2545316292e88861146146af1e3818792ca63b62a63758b2f737669b687f4aaddfcfbcb7d0e1ed7890a9bd05de23ff97f277d5e68de574497a9ee72
+  languageName: node
+  linkType: hard
+
+"@types/testing-library__jest-dom@npm:^5.9.1":
   version: 5.9.5
   resolution: "@types/testing-library__jest-dom@npm:5.9.5"
   dependencies:
