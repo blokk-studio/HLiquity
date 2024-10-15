@@ -2220,7 +2220,7 @@ __metadata:
     chai-as-promised: 7.1.2
     chai-spies: 1.1.0
     cross-env: 7.0.3
-    dotenv: 8.2.0
+    dotenv: 8.6.0
     eslint: 7.22.0
     eslint-plugin-tsdoc: 0.3.0
     ethers: 5.7.2
@@ -11393,7 +11393,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"dotenv@npm:8.2.0, dotenv@npm:^8.0.0, dotenv@npm:^8.2.0":
+"dotenv@npm:8.6.0":
+  version: 8.6.0
+  resolution: "dotenv@npm:8.6.0"
+  checksum: 38e902c80b0666ab59e9310a3d24ed237029a7ce34d976796349765ac96b8d769f6df19090f1f471b77a25ca391971efde8a1ea63bb83111bd8bec8e5cc9b2cd
+  languageName: node
+  linkType: hard
+
+"dotenv@npm:^8.0.0, dotenv@npm:^8.2.0":
   version: 8.2.0
   resolution: "dotenv@npm:8.2.0"
   checksum: ad4c8e0df3e24b4811c8e93377d048a10a9b213dcd9f062483b4a2d3168f08f10ec9c618c23f5639060d230ccdb174c08761479e9baa29610aa978e1ee66df76
