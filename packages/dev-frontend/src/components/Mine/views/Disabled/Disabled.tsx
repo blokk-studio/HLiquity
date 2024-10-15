@@ -31,6 +31,10 @@ export const Disabled: React.FC = () => {
     const result = await liquityContext.liquity.send.exitLiquidityMining();
     await result.waitForReceipt();
   }, [hasStake]);
+  const loadableWithdraw = useLoadingState(async () => {
+    const result = await liquityContext.liquity.send.unstakeUniTokens(liquidityMiningHLQTReward);
+    await result.waitForReceipt();
+  }, [hasStake]);
 
   return (
     <Card>
@@ -80,14 +84,23 @@ export const Disabled: React.FC = () => {
             </Box>
 
             <Flex variant="layout.actions">
-              {hasRewards && <ClaimReward />}
-
-              {hasStake && (
+              {hasStake && hasRewards && (
                 <LoadingButton
                   loading={loadableExit.state === "pending"}
                   onClick={loadableExit.call}
                 >
-                  Claim rewards & Withdraw all LP
+                  Claim reward & Withdraw all LP
+                </LoadingButton>
+              )}
+
+              {hasRewards && <ClaimReward />}
+
+              {hasStake && (
+                <LoadingButton
+                  loading={loadableWithdraw.state === "pending"}
+                  onClick={loadableWithdraw.call}
+                >
+                  Withdraw all LP
                 </LoadingButton>
               )}
             </Flex>
