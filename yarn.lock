@@ -2207,7 +2207,7 @@ __metadata:
     "@nomiclabs/hardhat-ethers": ^2.0.2
     "@types/chai": 4.2.15
     "@types/chai-as-promised": 7.1.8
-    "@types/chai-spies": 1.0.3
+    "@types/chai-spies": 1.0.6
     "@types/fs-extra": 9.0.13
     "@types/mocha": 8.2.1
     "@types/node": 14.14.34
@@ -2218,7 +2218,7 @@ __metadata:
     axios: ^1.6.7
     chai: 4.3.4
     chai-as-promised: 7.1.2
-    chai-spies: 1.0.0
+    chai-spies: 1.1.0
     cross-env: 7.0.3
     dotenv: 8.2.0
     eslint: 7.22.0
@@ -5133,12 +5133,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/chai-spies@npm:1.0.3":
-  version: 1.0.3
-  resolution: "@types/chai-spies@npm:1.0.3"
+"@types/chai-spies@npm:1.0.6":
+  version: 1.0.6
+  resolution: "@types/chai-spies@npm:1.0.6"
   dependencies:
     "@types/chai": "*"
-  checksum: f88b1a021c1f6c37259adf4268b00401431633027995725a49c44658b0fedf7ec09aa4e26e59fdf6564df0767a0b105b26a4a9c8a7c6acaf9ba417b06a4c9c70
+  checksum: 2f4e1fd3ed4f317b6f445a4516612b2a40e25c86cf60ba093ce3569012d612d0fc05c96d69223221c26fad60d0f3af75f7c2bb1858e48b209e8da8f0a1d5fccd
   languageName: node
   linkType: hard
 
@@ -9212,12 +9212,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"chai-spies@npm:1.0.0":
-  version: 1.0.0
-  resolution: "chai-spies@npm:1.0.0"
+"chai-spies@npm:1.1.0":
+  version: 1.1.0
+  resolution: "chai-spies@npm:1.1.0"
   peerDependencies:
     chai: "*"
-  checksum: c3a319d5671cf381029f2745e6330f897de4486e574b0d4fb92e6835268b0139f107295c8abf083949659a6a35dc6c8aa4ac0dc78db0aa16602a4987282b646a
+  checksum: 260b31db29216df6ee3ec01ffec93e03377b6a1bbef75f5ff4733e826c74a5fa5419c18dabac8f98817dac3a6ada0044078dd0812ab83768a72d90c99c2ceebe
   languageName: node
   linkType: hard
 
