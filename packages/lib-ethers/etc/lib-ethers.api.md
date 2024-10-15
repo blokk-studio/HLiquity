@@ -107,7 +107,6 @@ export interface EthersCallOverrides {
 export class EthersLiquity implements ReadableEthersLiquity, TransactableLiquity, ConsentableLiquity {
     // @internal
     constructor(options: EthersLiquityOptions);
-    // (undocumented)
     adjustTrove(params: TroveAdjustmentParams<Decimalish>, maxBorrowingRate?: Decimalish, overrides?: EthersTransactionOverrides): Promise<TroveAdjustmentDetails>;
     // (undocumented)
     approveHchfToSpendHchf(amount: Decimal): Promise<void>;
@@ -115,7 +114,6 @@ export class EthersLiquity implements ReadableEthersLiquity, TransactableLiquity
     approveHlqtToSpendHlqt(amount: Decimal): Promise<void>;
     // (undocumented)
     approveSaucerSwapToSpendLpToken(amount: Decimal): Promise<void>;
-    // (undocumented)
     approveUniTokens(allowance?: Decimalish, overrides?: EthersTransactionOverrides): Promise<void>;
     // (undocumented)
     associateWithHchf(): Promise<void>;
@@ -123,11 +121,8 @@ export class EthersLiquity implements ReadableEthersLiquity, TransactableLiquity
     associateWithHlqt(): Promise<void>;
     // (undocumented)
     associateWithLpToken(): Promise<void>;
-    // (undocumented)
     borrowHCHF(amount: Decimalish, maxBorrowingRate?: Decimalish, overrides?: EthersTransactionOverrides): Promise<TroveAdjustmentDetails>;
-    // (undocumented)
     claimCollateralSurplus(overrides?: EthersTransactionOverrides): Promise<void>;
-    // (undocumented)
     closeTrove(overrides?: EthersTransactionOverrides): Promise<TroveClosureDetails>;
     // @internal (undocumented)
     static connect(options: (EthersLiquityConnectWithProviderOptions & {
@@ -139,9 +134,7 @@ export class EthersLiquity implements ReadableEthersLiquity, TransactableLiquity
     readonly connection: EthersLiquityConnection;
     // (undocumented)
     protected readonly constants: Constants;
-    // (undocumented)
     depositCollateral(amount: Decimalish, overrides?: EthersTransactionOverrides): Promise<TroveAdjustmentDetails>;
-    // (undocumented)
     depositHCHFInStabilityPool(amount: Decimalish, frontendTag?: string, overrides?: EthersTransactionOverrides): Promise<StabilityDepositChangeDetails>;
     // (undocumented)
     dissociateFromHchf(): Promise<void>;
@@ -149,7 +142,6 @@ export class EthersLiquity implements ReadableEthersLiquity, TransactableLiquity
     dissociateFromHlqt(): Promise<void>;
     // (undocumented)
     dissociateFromLpToken(): Promise<void>;
-    // (undocumented)
     exitLiquidityMining(overrides?: EthersTransactionOverrides): Promise<void>;
     // (undocumented)
     protected readonly fetch: Fetch;
@@ -165,111 +157,72 @@ export class EthersLiquity implements ReadableEthersLiquity, TransactableLiquity
     }): EthersLiquityWithStore<BlockPolledLiquityStore>;
     // @internal (undocumented)
     _getActivePool(overrides?: EthersCallOverrides): Promise<Trove>;
-    // (undocumented)
     getCollateralSurplusBalance(address?: string, overrides?: EthersCallOverrides): Promise<Decimal>;
     // @internal (undocumented)
     _getDefaultPool(overrides?: EthersCallOverrides): Promise<Trove>;
-    // (undocumented)
     getFees(overrides?: EthersCallOverrides): Promise<Fees>;
     // @internal (undocumented)
     _getFeesFactory(overrides?: EthersCallOverrides): Promise<(blockTimestamp: number, recoveryMode: boolean) => Fees>;
-    // (undocumented)
     getFrontendStatus(address?: string, overrides?: EthersCallOverrides): Promise<FrontendStatus>;
-    // (undocumented)
     getHCHFBalance(address?: string, overrides?: EthersCallOverrides): Promise<Decimal>;
-    // (undocumented)
     getHCHFInStabilityPool(overrides?: EthersCallOverrides): Promise<Decimal>;
     // (undocumented)
     getHCHFTokenAddress(overrides?: EthersCallOverrides): Promise<string>;
     // (undocumented)
     getHchfTokenAllowanceOfHchfContract(address?: string | undefined, overrides?: EthersCallOverrides | undefined): Promise<Decimal>;
-    // (undocumented)
     getHLQTBalance(address?: string, overrides?: EthersCallOverrides): Promise<Decimal>;
-    // (undocumented)
     getHLQTStake(address?: string, overrides?: EthersCallOverrides): Promise<HLQTStake>;
     // (undocumented)
     getHLQTTokenAddress(overrides?: EthersCallOverrides): Promise<string>;
     // (undocumented)
     getHlqtTokenAllowanceOfHlqtContract(address?: string | undefined, overrides?: EthersCallOverrides | undefined): Promise<Decimal>;
-    // (undocumented)
     getLiquidityMiningHLQTReward(address?: string, overrides?: EthersCallOverrides): Promise<Decimal>;
-    // (undocumented)
     getLiquidityMiningStake(address?: string, overrides?: EthersCallOverrides): Promise<Decimal>;
-    // (undocumented)
     getNumberOfTroves(overrides?: EthersCallOverrides): Promise<number>;
-    // (undocumented)
     getPrice(overrides?: EthersCallOverrides): Promise<Decimal>;
-    // (undocumented)
     getRemainingLiquidityMiningHLQTReward(overrides?: EthersCallOverrides): Promise<Decimal>;
     // @internal (undocumented)
     _getRemainingLiquidityMiningHLQTRewardCalculator(overrides?: EthersCallOverrides): Promise<(blockTimestamp: number) => Decimal>;
-    // (undocumented)
     getRemainingStabilityPoolHLQTReward(overrides?: EthersCallOverrides): Promise<Decimal>;
-    // (undocumented)
     getStabilityDeposit(address?: string, overrides?: EthersCallOverrides): Promise<StabilityDeposit>;
-    // (undocumented)
     getTotal(overrides?: EthersCallOverrides): Promise<Trove>;
-    // (undocumented)
     getTotalRedistributed(overrides?: EthersCallOverrides): Promise<Trove>;
-    // (undocumented)
     getTotalStakedHLQT(overrides?: EthersCallOverrides): Promise<Decimal>;
-    // (undocumented)
     getTotalStakedUniTokens(overrides?: EthersCallOverrides): Promise<Decimal>;
-    // (undocumented)
     getTrove(address?: string, overrides?: EthersCallOverrides): Promise<UserTrove>;
-    // (undocumented)
     getTroveBeforeRedistribution(address?: string, overrides?: EthersCallOverrides): Promise<TroveWithPendingRedistribution>;
     // @internal (undocumented)
     getTroves(params: TroveListingParams & {
         beforeRedistribution: true;
     }, overrides?: EthersCallOverrides): Promise<TroveWithPendingRedistribution[]>;
-    // (undocumented)
     getTroves(params: TroveListingParams, overrides?: EthersCallOverrides): Promise<UserTrove[]>;
-    // (undocumented)
     getUniTokenAllowance(address?: string, overrides?: EthersCallOverrides): Promise<Decimal>;
-    // (undocumented)
     getUniTokenBalance(address?: string, overrides?: EthersCallOverrides): Promise<Decimal>;
     hasStore(): this is EthersLiquityWithStore;
     hasStore(store: "blockPolled"): this is EthersLiquityWithStore<BlockPolledLiquityStore>;
-    // (undocumented)
     liquidate(address: string | string[], overrides?: EthersTransactionOverrides): Promise<LiquidationDetails>;
-    // (undocumented)
     liquidateUpTo(maximumNumberOfTrovesToLiquidate: number, overrides?: EthersTransactionOverrides): Promise<LiquidationDetails>;
     // @internal (undocumented)
     _mintUniToken(amount: Decimalish, address?: string, overrides?: EthersTransactionOverrides): Promise<void>;
     // (undocumented)
     protected readonly mirrorNodeBaseUrl: string;
-    // (undocumented)
     openTrove(params: TroveCreationParams<Decimalish>, maxBorrowingRate?: Decimalish, overrides?: EthersTransactionOverrides): Promise<TroveCreationDetails>;
     readonly populate: PopulatableEthersLiquity;
-    // (undocumented)
     redeemHCHF(amount: Decimalish, maxRedemptionRate?: Decimalish, overrides?: EthersTransactionOverrides): Promise<RedemptionDetails>;
-    // (undocumented)
     registerFrontend(kickbackRate: Decimalish, overrides?: EthersTransactionOverrides): Promise<void>;
-    // (undocumented)
     repayHCHF(amount: Decimalish, overrides?: EthersTransactionOverrides): Promise<TroveAdjustmentDetails>;
     readonly send: SendableEthersLiquity;
     // @internal (undocumented)
     setPrice(price: Decimalish, overrides?: EthersTransactionOverrides): Promise<void>;
-    // (undocumented)
     stakeHLQT(amount: Decimalish, overrides?: EthersTransactionOverrides): Promise<void>;
-    // (undocumented)
     stakeUniTokens(amount: Decimalish, overrides?: EthersTransactionOverrides): Promise<void>;
-    // (undocumented)
     transferCollateralGainToTrove(overrides?: EthersTransactionOverrides): Promise<CollateralGainTransferDetails>;
-    // (undocumented)
     unstakeHLQT(amount: Decimalish, overrides?: EthersTransactionOverrides): Promise<void>;
-    // (undocumented)
     unstakeUniTokens(amount: Decimalish, overrides?: EthersTransactionOverrides): Promise<void>;
-    // (undocumented)
     withdrawCollateral(amount: Decimalish, overrides?: EthersTransactionOverrides): Promise<TroveAdjustmentDetails>;
-    // (undocumented)
     withdrawGainsFromStabilityPool(overrides?: EthersTransactionOverrides): Promise<StabilityPoolGainsWithdrawalDetails>;
-    // (undocumented)
     withdrawGainsFromStaking(overrides?: EthersTransactionOverrides): Promise<void>;
-    // (undocumented)
     withdrawHCHFFromStabilityPool(amount: Decimalish, overrides?: EthersTransactionOverrides): Promise<StabilityDepositChangeDetails>;
-    // (undocumented)
     withdrawHLQTRewardFromLiquidityMining(overrides?: EthersTransactionOverrides): Promise<void>;
 }
 
@@ -388,82 +341,53 @@ export class PopulatableEthersLiquity implements PopulatableLiquity<EthersTransa
         readable: ReadableEthersLiquity;
         constants: Constants;
     });
-    // (undocumented)
     adjustTrove(params: TroveAdjustmentParams<Decimalish>, maxBorrowingRate?: Decimalish, overrides?: EthersTransactionOverrides): Promise<PopulatedEthersLiquityTransaction<TroveAdjustmentDetails>>;
-    // (undocumented)
     approveUniTokens(allowance?: Decimalish, overrides?: EthersTransactionOverrides): Promise<PopulatedEthersLiquityTransaction<void>>;
-    // (undocumented)
     borrowHCHF(amount: Decimalish, maxBorrowingRate?: Decimalish, overrides?: EthersTransactionOverrides): Promise<PopulatedEthersLiquityTransaction<TroveAdjustmentDetails>>;
-    // (undocumented)
     claimCollateralSurplus(overrides?: EthersTransactionOverrides): Promise<PopulatedEthersLiquityTransaction<void>>;
-    // (undocumented)
     closeTrove(overrides?: EthersTransactionOverrides): Promise<PopulatedEthersLiquityTransaction<TroveClosureDetails>>;
     // (undocumented)
     protected readonly constants: Constants;
-    // (undocumented)
     depositCollateral(amount: Decimalish, overrides?: EthersTransactionOverrides): Promise<PopulatedEthersLiquityTransaction<TroveAdjustmentDetails>>;
-    // (undocumented)
     depositHCHFInStabilityPool(amount: Decimalish, frontendTag?: string, overrides?: EthersTransactionOverrides): Promise<PopulatedEthersLiquityTransaction<StabilityDepositChangeDetails>>;
-    // (undocumented)
     exitLiquidityMining(overrides?: EthersTransactionOverrides): Promise<PopulatedEthersLiquityTransaction<void>>;
-    // (undocumented)
     liquidate(address: string | string[], overrides?: EthersTransactionOverrides): Promise<PopulatedEthersLiquityTransaction<LiquidationDetails>>;
-    // (undocumented)
     liquidateUpTo(maximumNumberOfTrovesToLiquidate: number, overrides?: EthersTransactionOverrides): Promise<PopulatedEthersLiquityTransaction<LiquidationDetails>>;
     // @internal (undocumented)
     _mintUniToken(amount: Decimalish, address?: string, overrides?: EthersTransactionOverrides): Promise<PopulatedEthersLiquityTransaction<void>>;
-    // (undocumented)
     openTrove(params: TroveCreationParams<Decimalish>, maxBorrowingRate?: Decimalish, overrides?: EthersTransactionOverrides): Promise<PopulatedEthersLiquityTransaction<TroveCreationDetails>>;
-    // (undocumented)
     redeemHCHF(amount: Decimalish, maxRedemptionRate?: Decimalish, overrides?: EthersTransactionOverrides): Promise<PopulatedEthersRedemption>;
-    // (undocumented)
     registerFrontend(kickbackRate: Decimalish, overrides?: EthersTransactionOverrides): Promise<PopulatedEthersLiquityTransaction<void>>;
-    // (undocumented)
     repayHCHF(amount: Decimalish, overrides?: EthersTransactionOverrides): Promise<PopulatedEthersLiquityTransaction<TroveAdjustmentDetails>>;
     // @internal (undocumented)
     setPrice(price: Decimalish, overrides?: EthersTransactionOverrides): Promise<PopulatedEthersLiquityTransaction<void>>;
-    // (undocumented)
     stakeHLQT(amount: Decimalish, overrides?: EthersTransactionOverrides): Promise<PopulatedEthersLiquityTransaction<void>>;
-    // (undocumented)
     stakeUniTokens(amount: Decimalish, overrides?: EthersTransactionOverrides): Promise<PopulatedEthersLiquityTransaction<void>>;
-    // (undocumented)
     transferCollateralGainToTrove(overrides?: EthersTransactionOverrides): Promise<PopulatedEthersLiquityTransaction<CollateralGainTransferDetails>>;
-    // (undocumented)
     unstakeHLQT(amount: Decimalish, overrides?: EthersTransactionOverrides): Promise<PopulatedEthersLiquityTransaction<void>>;
-    // (undocumented)
     unstakeUniTokens(amount: Decimalish, overrides?: EthersTransactionOverrides): Promise<PopulatedEthersLiquityTransaction<void>>;
-    // (undocumented)
     withdrawCollateral(amount: Decimalish, overrides?: EthersTransactionOverrides): Promise<PopulatedEthersLiquityTransaction<TroveAdjustmentDetails>>;
-    // (undocumented)
     withdrawGainsFromStabilityPool(overrides?: EthersTransactionOverrides): Promise<PopulatedEthersLiquityTransaction<StabilityPoolGainsWithdrawalDetails>>;
-    // (undocumented)
     withdrawGainsFromStaking(overrides?: EthersTransactionOverrides): Promise<PopulatedEthersLiquityTransaction<void>>;
-    // (undocumented)
     withdrawHCHFFromStabilityPool(amount: Decimalish, overrides?: EthersTransactionOverrides): Promise<PopulatedEthersLiquityTransaction<StabilityDepositChangeDetails>>;
-    // (undocumented)
     withdrawHLQTRewardFromLiquidityMining(overrides?: EthersTransactionOverrides): Promise<PopulatedEthersLiquityTransaction<void>>;
-    }
+}
 
 // @public
 export class PopulatedEthersLiquityTransaction<T = unknown> implements PopulatedLiquityTransaction<EthersPopulatedTransaction, SentEthersLiquityTransaction<T>> {
     // @internal
     constructor(rawPopulatedTransaction: EthersPopulatedTransaction, connection: EthersLiquityConnection, parse: (rawReceipt: EthersTransactionReceipt) => T);
     readonly rawPopulatedTransaction: EthersPopulatedTransaction;
-    // (undocumented)
     send(): Promise<SentEthersLiquityTransaction<T>>;
 }
 
-// @public (undocumented)
+// @public
 export class PopulatedEthersRedemption extends PopulatedEthersLiquityTransaction<RedemptionDetails> implements PopulatedRedemption<EthersPopulatedTransaction, EthersTransactionResponse, EthersTransactionReceipt> {
     // @internal
     constructor(rawPopulatedTransaction: EthersPopulatedTransaction, connection: EthersLiquityConnection, attemptedHCHFAmount: Decimal, redeemableHCHFAmount: Decimal, increaseAmountByMinimumNetDebt?: (maxRedemptionRate?: Decimalish) => Promise<PopulatedEthersRedemption>);
-    // (undocumented)
     readonly attemptedHCHFAmount: Decimal;
-    // (undocumented)
     increaseAmountByMinimumNetDebt(maxRedemptionRate?: Decimalish): Promise<PopulatedEthersRedemption>;
-    // (undocumented)
     readonly isTruncated: boolean;
-    // (undocumented)
     readonly redeemableHCHFAmount: Decimal;
 }
 
@@ -492,69 +416,46 @@ export class ReadableEthersLiquity implements ReadableLiquity {
     static _from(options: ReadableEthersLiquityFromOptions): ReadableEthersLiquity;
     // @internal (undocumented)
     _getActivePool(overrides?: EthersCallOverrides): Promise<Trove>;
-    // (undocumented)
     getCollateralSurplusBalance(address?: string, overrides?: EthersCallOverrides): Promise<Decimal>;
     // @internal (undocumented)
     _getDefaultPool(overrides?: EthersCallOverrides): Promise<Trove>;
-    // (undocumented)
     getFees(overrides?: EthersCallOverrides): Promise<Fees>;
     // @internal (undocumented)
     _getFeesFactory(overrides?: EthersCallOverrides): Promise<(blockTimestamp: number, recoveryMode: boolean) => Fees>;
-    // (undocumented)
     getFrontendStatus(address?: string, overrides?: EthersCallOverrides): Promise<FrontendStatus>;
-    // (undocumented)
     getHCHFBalance(address?: string, overrides?: EthersCallOverrides): Promise<Decimal>;
-    // (undocumented)
     getHCHFInStabilityPool(overrides?: EthersCallOverrides): Promise<Decimal>;
     // (undocumented)
     getHCHFTokenAddress(overrides?: EthersCallOverrides): Promise<string>;
     // (undocumented)
     getHchfTokenAllowanceOfHchfContract(address?: string, overrides?: EthersCallOverrides): Promise<Decimal>;
-    // (undocumented)
     getHLQTBalance(address?: string, overrides?: EthersCallOverrides): Promise<Decimal>;
-    // (undocumented)
     getHLQTStake(address?: string, overrides?: EthersCallOverrides): Promise<HLQTStake>;
     // (undocumented)
     getHLQTTokenAddress(overrides?: EthersCallOverrides): Promise<string>;
     // (undocumented)
     getHlqtTokenAllowanceOfHlqtContract(address?: string, overrides?: EthersCallOverrides): Promise<Decimal>;
-    // (undocumented)
     getLiquidityMiningHLQTReward(address?: string, overrides?: EthersCallOverrides): Promise<Decimal>;
-    // (undocumented)
     getLiquidityMiningStake(address?: string, overrides?: EthersCallOverrides): Promise<Decimal>;
-    // (undocumented)
     getNumberOfTroves(overrides?: EthersCallOverrides): Promise<number>;
-    // (undocumented)
     getPrice(overrides?: EthersCallOverrides): Promise<Decimal>;
-    // (undocumented)
     getRemainingLiquidityMiningHLQTReward(overrides?: EthersCallOverrides): Promise<Decimal>;
     // @internal (undocumented)
     _getRemainingLiquidityMiningHLQTRewardCalculator(overrides?: EthersCallOverrides): Promise<(blockTimestamp: number) => Decimal>;
-    // (undocumented)
     getRemainingStabilityPoolHLQTReward(overrides?: EthersCallOverrides): Promise<Decimal>;
-    // (undocumented)
     getStabilityDeposit(address?: string, overrides?: EthersCallOverrides): Promise<StabilityDeposit>;
-    // (undocumented)
     getTotal(overrides?: EthersCallOverrides): Promise<Trove>;
-    // (undocumented)
     getTotalRedistributed(overrides?: EthersCallOverrides): Promise<Trove>;
-    // (undocumented)
     getTotalStakedHLQT(overrides?: EthersCallOverrides): Promise<Decimal>;
-    // (undocumented)
     getTotalStakedUniTokens(overrides?: EthersCallOverrides): Promise<Decimal>;
-    // (undocumented)
     getTrove(address?: string, overrides?: EthersCallOverrides): Promise<UserTrove>;
-    // (undocumented)
     getTroveBeforeRedistribution(address?: string, overrides?: EthersCallOverrides): Promise<TroveWithPendingRedistribution>;
     // @internal (undocumented)
     getTroves(params: TroveListingParams & {
         beforeRedistribution: true;
     }, overrides?: EthersCallOverrides): Promise<TroveWithPendingRedistribution[]>;
-    // (undocumented)
     getTroves(params: TroveListingParams, overrides?: EthersCallOverrides): Promise<UserTrove[]>;
-    // (undocumented)
     getUniTokenAllowance(address?: string, overrides?: EthersCallOverrides): Promise<Decimal>;
-    // (undocumented)
     getUniTokenBalance(address?: string, overrides?: EthersCallOverrides): Promise<Decimal>;
     hasStore(): this is ReadableEthersLiquityWithStore;
     hasStore(store: "blockPolled"): this is ReadableEthersLiquityWithStore<BlockPolledLiquityStore>;
@@ -571,59 +472,35 @@ export const _redeemMaxIterations = 70;
 // @public
 export class SendableEthersLiquity implements SendableLiquity<EthersTransactionReceipt, EthersTransactionResponse> {
     constructor(populatable: PopulatableEthersLiquity, store?: HLiquityStore);
-    // (undocumented)
     adjustTrove(params: TroveAdjustmentParams<Decimalish>, maxBorrowingRate?: Decimalish, overrides?: EthersTransactionOverrides): Promise<SentEthersLiquityTransaction<TroveAdjustmentDetails>>;
-    // (undocumented)
     approveUniTokens(allowance?: Decimalish, overrides?: EthersTransactionOverrides): Promise<SentEthersLiquityTransaction<void>>;
-    // (undocumented)
     borrowHCHF(amount: Decimalish, maxBorrowingRate?: Decimalish, overrides?: EthersTransactionOverrides): Promise<SentEthersLiquityTransaction<TroveAdjustmentDetails>>;
-    // (undocumented)
     claimCollateralSurplus(overrides?: EthersTransactionOverrides): Promise<SentEthersLiquityTransaction<void>>;
-    // (undocumented)
     closeTrove(overrides?: EthersTransactionOverrides): Promise<SentEthersLiquityTransaction<TroveClosureDetails>>;
-    // (undocumented)
     depositCollateral(amount: Decimalish, overrides?: EthersTransactionOverrides): Promise<SentEthersLiquityTransaction<TroveAdjustmentDetails>>;
-    // (undocumented)
     depositHCHFInStabilityPool(amount: Decimalish, frontendTag?: string, overrides?: EthersTransactionOverrides): Promise<SentEthersLiquityTransaction<StabilityDepositChangeDetails>>;
-    // (undocumented)
     exitLiquidityMining(overrides?: EthersTransactionOverrides): Promise<SentEthersLiquityTransaction<void>>;
-    // (undocumented)
     liquidate(address: string | string[], overrides?: EthersTransactionOverrides): Promise<SentEthersLiquityTransaction<LiquidationDetails>>;
-    // (undocumented)
     liquidateUpTo(maximumNumberOfTrovesToLiquidate: number, overrides?: EthersTransactionOverrides): Promise<SentEthersLiquityTransaction<LiquidationDetails>>;
     // @internal (undocumented)
     _mintUniToken(amount: Decimalish, address?: string, overrides?: EthersTransactionOverrides): Promise<SentEthersLiquityTransaction<void>>;
-    // (undocumented)
     openTrove(params: TroveCreationParams<Decimalish>, maxBorrowingRate?: Decimalish, overrides?: EthersTransactionOverrides): Promise<SentEthersLiquityTransaction<TroveCreationDetails>>;
-    // (undocumented)
     redeemHCHF(amount: Decimalish, maxRedemptionRate?: Decimalish, overrides?: EthersTransactionOverrides): Promise<SentEthersLiquityTransaction<RedemptionDetails>>;
-    // (undocumented)
     registerFrontend(kickbackRate: Decimalish, overrides?: EthersTransactionOverrides): Promise<SentEthersLiquityTransaction<void>>;
-    // (undocumented)
     repayHCHF(amount: Decimalish, overrides?: EthersTransactionOverrides): Promise<SentEthersLiquityTransaction<TroveAdjustmentDetails>>;
     // (undocumented)
     sendTransaction: <T>(tx: PopulatedEthersLiquityTransaction<T>) => Promise<SentEthersLiquityTransaction<T>>;
     // @internal (undocumented)
     setPrice(price: Decimalish, overrides?: EthersTransactionOverrides): Promise<SentEthersLiquityTransaction<void>>;
-    // (undocumented)
     stakeHLQT(amount: Decimalish, overrides?: EthersTransactionOverrides): Promise<SentEthersLiquityTransaction<void>>;
-    // (undocumented)
     stakeUniTokens(amount: Decimalish, overrides?: EthersTransactionOverrides): Promise<SentEthersLiquityTransaction<void>>;
-    // (undocumented)
     transferCollateralGainToTrove(overrides?: EthersTransactionOverrides): Promise<SentEthersLiquityTransaction<CollateralGainTransferDetails>>;
-    // (undocumented)
     unstakeHLQT(amount: Decimalish, overrides?: EthersTransactionOverrides): Promise<SentEthersLiquityTransaction<void>>;
-    // (undocumented)
     unstakeUniTokens(amount: Decimalish, overrides?: EthersTransactionOverrides): Promise<SentEthersLiquityTransaction<void>>;
-    // (undocumented)
     withdrawCollateral(amount: Decimalish, overrides?: EthersTransactionOverrides): Promise<SentEthersLiquityTransaction<TroveAdjustmentDetails>>;
-    // (undocumented)
     withdrawGainsFromStabilityPool(overrides?: EthersTransactionOverrides): Promise<SentEthersLiquityTransaction<StabilityPoolGainsWithdrawalDetails>>;
-    // (undocumented)
     withdrawGainsFromStaking(overrides?: EthersTransactionOverrides): Promise<SentEthersLiquityTransaction<void>>;
-    // (undocumented)
     withdrawHCHFFromStabilityPool(amount: Decimalish, overrides?: EthersTransactionOverrides): Promise<SentEthersLiquityTransaction<StabilityDepositChangeDetails>>;
-    // (undocumented)
     withdrawHLQTRewardFromLiquidityMining(overrides?: EthersTransactionOverrides): Promise<SentEthersLiquityTransaction<void>>;
 }
 
@@ -631,10 +508,8 @@ export class SendableEthersLiquity implements SendableLiquity<EthersTransactionR
 export class SentEthersLiquityTransaction<T = unknown> implements SentLiquityTransaction<EthersTransactionResponse, LiquityReceipt<EthersTransactionReceipt, T>> {
     // @internal
     constructor(rawSentTransaction: EthersTransactionResponse, connection: EthersLiquityConnection, parse: (rawReceipt: EthersTransactionReceipt) => T);
-    // (undocumented)
     getReceipt(): Promise<LiquityReceipt<EthersTransactionReceipt, T>>;
     readonly rawSentTransaction: EthersTransactionResponse;
-    // (undocumented)
     waitForReceipt(): Promise<MinedReceipt<EthersTransactionReceipt, T>>;
 }
 
@@ -654,7 +529,6 @@ export class UnsupportedNetworkError extends Error {
     constructor(chainId: number);
     readonly chainId: number;
 }
-
 
 // (No @packageDocumentation comment for this package)
 

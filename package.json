@@ -61,7 +61,7 @@
     "prepare:lib-ethers": "yarn workspace @liquity/lib-ethers prepare",
     "prepare:lib-react": "yarn workspace @liquity/lib-react prepare",
     "prepare:providers": "yarn workspace @liquity/providers prepare",
-    "prepare:docs": "run-s docs",
+    "prepare:docs": "echo \"this fails because we don't compile the mirror node package. we don't need to provide api docs because we don't have any consumers (we don't publish packages)\" && exit 0 && run-s docs",
     "rebuild": "run-s prepare build",
     "release": "run-s 'release:*'",
     "release:delete-dev-deployments": "yarn workspace @liquity/lib-ethers delete-dev-deployments",

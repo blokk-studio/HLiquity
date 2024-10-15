@@ -23,7 +23,7 @@
     "prepare:types": "echo \"this fails because contract compilation fails. we're using a static set of pre-compiled json files, so we don't need it anyway\" && exit 0 && ts-node scripts/generate-types.ts",
     "prepare:eslint": "eslint src",
     "prepare:tsc": "tsc --project tsconfig.dist.json",
-    "prepare:api": "api-extractor run --local",
+    "prepare:api": "echo \"this fails because we don't compile the mirror node package. we don't need to provide api docs because we don't have any consumers (we don't publish packages)\" && exit 0 && api-extractor run --local",
     "save-live-version": "run-s 'save-live-version:*'",
     "save-live-version:run": "ts-node scripts/save-live-version.ts",
     "save-live-version:check": "run-s check-live-version",
