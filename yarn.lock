@@ -2373,13 +2373,13 @@ __metadata:
   dependencies:
     "@ethersproject/bignumber": 5.7.0
     "@microsoft/api-extractor": 7.47.10
-    "@types/mocha": 8.2.1
+    "@types/mocha": 8.2.3
     "@typescript-eslint/eslint-plugin": 4.17.0
     "@typescript-eslint/parser": 4.18.0
     eslint: 7.32.0
     eslint-plugin-tsdoc: 0.3.0
     fast-check: 2.25.0
-    mocha: 8.3.2
+    mocha: 8.4.0
     npm-run-all2: 5.0.2
     ts-node: 9.1.1
     typescript: 4.1.5
@@ -2397,7 +2397,7 @@ __metadata:
     "@types/chai-as-promised": 7.1.8
     "@types/chai-spies": 1.0.6
     "@types/fs-extra": 9.0.13
-    "@types/mocha": 8.2.1
+    "@types/mocha": 8.2.3
     "@types/node": 14.18.63
     "@types/sinon-chai": 3.2.12
     "@types/ws": 7.4.7
@@ -5780,10 +5780,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/mocha@npm:8.2.1":
-  version: 8.2.1
-  resolution: "@types/mocha@npm:8.2.1"
-  checksum: 068e0bf1c62d0f157f2f8e297eebcc9eb590c27176438d172b7590252a58822105675440b46326d2d97d8e1692a5ce9d3435cb3877c8928e1e4650bce8335375
+"@types/mocha@npm:8.2.3":
+  version: 8.2.3
+  resolution: "@types/mocha@npm:8.2.3"
+  checksum: b43ed1b642a2ee62bf10792a07d5d21d66ab8b4d2cf5d822c8a7643e77b90009aecc000eefab5f6ddc9eb69004192f84119a6f97a8499e1a13ea082e7a5e71bf
   languageName: node
   linkType: hard
 
@@ -18965,9 +18965,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"mocha@npm:8.3.2":
-  version: 8.3.2
-  resolution: "mocha@npm:8.3.2"
+"mocha@npm:8.4.0":
+  version: 8.4.0
+  resolution: "mocha@npm:8.4.0"
   dependencies:
     "@ungap/promise-all-settled": 1.1.2
     ansi-colors: 4.1.1
@@ -18997,7 +18997,7 @@ __metadata:
   bin:
     _mocha: bin/_mocha
     mocha: bin/mocha
-  checksum: 4c071723f611cdc1a84d6db4ad2f73a9862af80939c050923d6f27270943117e5ff9dee137205f5ec591c9ccd0db9543b1719d5acf378c740d22359aeb165360
+  checksum: 4bcf00670580f009f9e20cc596cce5e2434d3562c468da783a8f935e38c4476435f12ecade43341cb8730b9d4987358038e76a075201d4bc51010927d3f8cd7c
   languageName: node
   linkType: hard
 
