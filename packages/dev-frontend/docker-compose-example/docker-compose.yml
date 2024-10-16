@@ -2,7 +2,7 @@ version: "2.1"
 
 services:
   swag:
-    image: linuxserver/swag
+    image: linuxserver/swag@sha256:00af3c476205cf093df46769e7ebcca1b96e0c235b806d5fa4a7c11f893d12fa
     container_name: swag
     cap_add:
       - NET_ADMIN
@@ -22,7 +22,7 @@ services:
     restart: unless-stopped
 
   watchtower:
-    image: containrrr/watchtower
+    image: containrrr/watchtower@sha256:6dd50763bbd632a83cb154d5451700530d1e44200b268a4e9488fefdfcf2b038
     container_name: watchtower
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
@@ -30,7 +30,7 @@ services:
     restart: unless-stopped
 
   dev-frontend:
-    image: liquity/dev-frontend:latest
+    image: liquity/dev-frontend:latest@sha256:b0392bd36ef1066db227a9220d18896777b3a8499a46b1a343bd9bf1e3e91fcc
     container_name: liquity-dev-frontend
     environment:
       - FRONTEND_TAG= # customize this
