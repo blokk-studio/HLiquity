@@ -1,7 +1,0 @@
-{
-  packageRules: [
-    {
-      automerge: true
-    }
-  ]
-}
