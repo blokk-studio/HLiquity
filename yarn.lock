@@ -2283,7 +2283,7 @@ __metadata:
     ethereumjs-util: ^7.0.9
     ethers: ^5.4.3
     hardhat: 2.9.6
-    hardhat-gas-reporter: 1.0.4
+    hardhat-gas-reporter: 1.0.10
     npm-run-all2: 5.0.2
     solc: ^0.6.11
     solidity-coverage: 0.8.13
@@ -8638,7 +8638,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"array-uniq@npm:^1.0.1, array-uniq@npm:^1.0.3":
+"array-uniq@npm:1.0.3, array-uniq@npm:^1.0.1, array-uniq@npm:^1.0.3":
   version: 1.0.3
   resolution: "array-uniq@npm:1.0.3"
   checksum: 1625f06b093d8bf279b81adfec6e72951c0857d65b5e3f65f053fffe9f9dd61c2fc52cff57e38a4700817e7e3f01a4faa433d505ea9e33cdae4514c334e0bf9e
@@ -13117,7 +13117,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eth-gas-reporter@npm:0.2.27, eth-gas-reporter@npm:^0.2.20":
+"eth-gas-reporter@npm:0.2.27, eth-gas-reporter@npm:^0.2.25":
   version: 0.2.27
   resolution: "eth-gas-reporter@npm:0.2.27"
   dependencies:
@@ -15253,15 +15253,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"hardhat-gas-reporter@npm:1.0.4":
-  version: 1.0.4
-  resolution: "hardhat-gas-reporter@npm:1.0.4"
+"hardhat-gas-reporter@npm:1.0.10":
+  version: 1.0.10
+  resolution: "hardhat-gas-reporter@npm:1.0.10"
   dependencies:
-    eth-gas-reporter: ^0.2.20
+    array-uniq: 1.0.3
+    eth-gas-reporter: ^0.2.25
     sha1: ^1.1.1
   peerDependencies:
     hardhat: ^2.0.2
-  checksum: c8c1d79bfbb6956cabbe5563e0f40c3bb7f2227a3c278f9afe73bc8f44125440e1b1f7ab60f5280b93ed8ae8f748dad73d7bbca892074f5f1edf026394c8ee09
+  checksum: caaec13ab3fcda47b8768257e4416b5fd0e8ef3aca5369aa8195419d3d4a948cc182075333651df44215cfc629d088f5ed9f762c8c14ae5a4b4a4f2613e583d0
   languageName: node
   linkType: hard
 
