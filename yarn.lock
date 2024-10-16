@@ -2459,7 +2459,7 @@ __metadata:
   dependencies:
     "@apollo/client": ^3.11.8
     "@ethersproject/address": ^5.4.0
-    apollo: ^2.30.3
+    apollo: 2.32.5
     cross-fetch: ~3.1.0
     graphql: ^15.3.0
     npm-run-all2: ^5.0.0
@@ -8368,7 +8368,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"apollo@npm:^2.30.3":
+"apollo@npm:2.32.5":
   version: 2.32.5
   resolution: "apollo@npm:2.32.5"
   dependencies:
