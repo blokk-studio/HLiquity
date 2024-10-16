@@ -2368,7 +2368,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@liquity/fuzzer@workspace:packages/fuzzer"
   dependencies:
-    "@types/yargs": 16.0.0
+    "@types/yargs": 16.0.9
     colors: 1.4.0
     dotenv: 8.2.0
     ethers: 5.7.2
@@ -6162,12 +6162,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/yargs@npm:16.0.0":
-  version: 16.0.0
-  resolution: "@types/yargs@npm:16.0.0"
+"@types/yargs@npm:16.0.9":
+  version: 16.0.9
+  resolution: "@types/yargs@npm:16.0.9"
   dependencies:
     "@types/yargs-parser": "*"
-  checksum: 84f6c50364d28a565a470cbea6f014eddd8e3add452c95b45b5c67436151d32b6cc8286a1876ec0ce503f4d2633fd508996e572349a5c358301cb4a71bead285
+  checksum: 00d9276ed4e0f17a78c1ed57f644a8c14061959bd5bfab113d57f082ea4b663ba97f71b89371304a34a2dba5061e9ae4523e357e577ba61834d661f82c223bf8
   languageName: node
   linkType: hard
 
