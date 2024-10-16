@@ -16,7 +16,7 @@
     "bignumber.js": "9.1.2",
     "emittery": "^1.0.3",
     "hashconnect": "^3.0.13",
-    "web3": "^4.8.0"
+    "web3": "^1.5.3"
   },
   "exports": {
     "./package.json": "./package.json",
