@@ -2265,7 +2265,7 @@ __metadata:
     "@nomiclabs/hardhat-truffle5": 2.0.0
     "@nomiclabs/hardhat-web3": 2.0.0
     "@openzeppelin/contracts": 4.9.6
-    "@openzeppelin/test-helpers": 0.5.10
+    "@openzeppelin/test-helpers": 0.5.16
     decimal.js: ^10.2.0
     eth-gas-reporter: 0.2.22
     eth-mutants: ^0.1.1
@@ -3673,9 +3673,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@openzeppelin/test-helpers@npm:0.5.10":
-  version: 0.5.10
-  resolution: "@openzeppelin/test-helpers@npm:0.5.10"
+"@openzeppelin/test-helpers@npm:0.5.16":
+  version: 0.5.16
+  resolution: "@openzeppelin/test-helpers@npm:0.5.16"
   dependencies:
     "@openzeppelin/contract-loader": ^0.6.2
     "@truffle/contract": ^4.0.35
@@ -3687,7 +3687,7 @@ __metadata:
     semver: ^5.6.0
     web3: ^1.2.5
     web3-utils: ^1.2.5
-  checksum: c647e1a1024dbd1dc3809c2807e5b0495750cfb9eb1cd1dd04cec631752a53585f4e8bd583742593c2bc7b2a3a710ff275b7347482074b92b780faa5fa9581e8
+  checksum: 9a69ea5e5a486a773f944724161114b90f768d8a067a52305f2a16e615ed56652baf40798f0101432c78d10971ab55e7bc74c9b59394822b7ea843d49e9488eb
   languageName: node
   linkType: hard
 
