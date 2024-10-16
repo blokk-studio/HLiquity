@@ -2262,7 +2262,7 @@ __metadata:
   dependencies:
     "@nomiclabs/hardhat-ethers": 2.0.2
     "@nomiclabs/hardhat-etherscan": 2.1.8
-    "@nomiclabs/hardhat-truffle5": 2.0.0
+    "@nomiclabs/hardhat-truffle5": 2.0.7
     "@nomiclabs/hardhat-web3": 2.0.0
     "@openzeppelin/contracts": 4.9.6
     "@openzeppelin/test-helpers": 0.5.16
@@ -2991,20 +2991,20 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@nomiclabs/hardhat-truffle5@npm:2.0.0":
-  version: 2.0.0
-  resolution: "@nomiclabs/hardhat-truffle5@npm:2.0.0"
+"@nomiclabs/hardhat-truffle5@npm:2.0.7":
+  version: 2.0.7
+  resolution: "@nomiclabs/hardhat-truffle5@npm:2.0.7"
   dependencies:
     "@nomiclabs/truffle-contract": ^4.2.23
     "@types/chai": ^4.2.0
     chai: ^4.2.0
-    ethereumjs-util: ^6.1.0
+    ethereumjs-util: ^7.1.4
     fs-extra: ^7.0.1
   peerDependencies:
     "@nomiclabs/hardhat-web3": ^2.0.0
-    hardhat: ^2.0.0
+    hardhat: ^2.6.4
     web3: ^1.0.0-beta.36
-  checksum: 04f57e7286afe4eaf55a933aee56da3d0f4307e6cf0c332ae3f675844bd3f910b700767b8c8d383b8b696ddc7066b9d5cca5064cb9bb88296402e47dad5ac6f4
+  checksum: fe10f6f8431ef7326815dc5fae545d45eef91fff1b35e0a3e657c73caf27aa27950f63be5e996212c15233869d1106af99a1443252813d8d845ddf919b5b2c2f
   languageName: node
   linkType: hard
 
@@ -13204,7 +13204,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ethereumjs-util@npm:6.2.1, ethereumjs-util@npm:^6.0.0, ethereumjs-util@npm:^6.1.0, ethereumjs-util@npm:^6.2.1":
+"ethereumjs-util@npm:6.2.1, ethereumjs-util@npm:^6.0.0, ethereumjs-util@npm:^6.2.1":
   version: 6.2.1
   resolution: "ethereumjs-util@npm:6.2.1"
   dependencies:
