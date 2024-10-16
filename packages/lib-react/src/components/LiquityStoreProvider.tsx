@@ -75,7 +75,7 @@ const AppError: React.FC<
         </Button>
 
         {"error" in props && (
-          <details sx={{ marginTop: "3rem", width: "100%" }}>
+          <details style={{ marginTop: "3rem", width: "100%" }}>
             <summary>Error details</summary>
 
             <p>{props.error.message}</p>
