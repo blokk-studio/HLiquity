@@ -2261,7 +2261,7 @@ __metadata:
   resolution: "@liquity/contracts@workspace:packages/contracts"
   dependencies:
     "@nomiclabs/hardhat-ethers": 2.0.2
-    "@nomiclabs/hardhat-etherscan": 2.1.4
+    "@nomiclabs/hardhat-etherscan": 2.1.8
     "@nomiclabs/hardhat-truffle5": 2.0.0
     "@nomiclabs/hardhat-web3": 2.0.0
     "@openzeppelin/contracts": 4.9.6
@@ -2974,9 +2974,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@nomiclabs/hardhat-etherscan@npm:2.1.4":
-  version: 2.1.4
-  resolution: "@nomiclabs/hardhat-etherscan@npm:2.1.4"
+"@nomiclabs/hardhat-etherscan@npm:2.1.8":
+  version: 2.1.8
+  resolution: "@nomiclabs/hardhat-etherscan@npm:2.1.8"
   dependencies:
     "@ethersproject/abi": ^5.1.2
     "@ethersproject/address": ^5.0.2
@@ -2987,7 +2987,7 @@ __metadata:
     semver: ^6.3.0
   peerDependencies:
     hardhat: ^2.0.4
-  checksum: fd938a9e40b272917cf1a55479fa6cbdb1caa831edf234f5de97ab28f887d2d6641164f01380c8be0dc39d22615b2dce470bc5e1978a43c0076980ac71bfe4c6
+  checksum: 99a4c97908198a63b3cf68c330599e117a41ffe7e1aa5314eb6e915dd95a5fa677581c79a8b59c088b2d2e090465c95857f24cec9a9e47f0fc20c43119107cdd
   languageName: node
   linkType: hard
 
