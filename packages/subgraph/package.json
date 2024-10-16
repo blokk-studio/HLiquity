@@ -16,8 +16,8 @@
     "graph": "graph"
   },
   "devDependencies": {
-    "@graphprotocol/graph-cli": "^0.86.0",
-    "@graphprotocol/graph-ts": "^0.35.0",
-    "npm-run-all2": "^5.0.0"
+    "@graphprotocol/graph-cli": "0.86.0",
+    "@graphprotocol/graph-ts": "0.35.1",
+    "npm-run-all2": "5.0.2"
   }
 }

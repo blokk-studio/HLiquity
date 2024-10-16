@@ -389,7 +389,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@commitlint/cli@npm:^12.0.1":
+"@commitlint/cli@npm:12.0.1":
   version: 12.0.1
   resolution: "@commitlint/cli@npm:12.0.1"
   dependencies:
@@ -409,7 +409,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@commitlint/config-conventional@npm:^12.0.1":
+"@commitlint/config-conventional@npm:12.0.1":
   version: 12.0.1
   resolution: "@commitlint/config-conventional@npm:12.0.1"
   dependencies:
@@ -751,7 +751,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@esbuild-plugins/node-modules-polyfill@npm:^0.2.2":
+"@esbuild-plugins/node-modules-polyfill@npm:0.2.2":
   version: 0.2.2
   resolution: "@esbuild-plugins/node-modules-polyfill@npm:0.2.2"
   dependencies:
@@ -1791,7 +1791,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@graphprotocol/graph-cli@npm:^0.86.0":
+"@graphprotocol/graph-cli@npm:0.86.0":
   version: 0.86.0
   resolution: "@graphprotocol/graph-cli@npm:0.86.0"
   dependencies:
@@ -1829,7 +1829,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@graphprotocol/graph-ts@npm:^0.35.0":
+"@graphprotocol/graph-ts@npm:0.35.1":
   version: 0.35.1
   resolution: "@graphprotocol/graph-ts@npm:0.35.1"
   dependencies:
@@ -2260,23 +2260,23 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@liquity/contracts@workspace:packages/contracts"
   dependencies:
-    "@nomiclabs/hardhat-ethers": ^2.0.2
-    "@nomiclabs/hardhat-etherscan": ^2.1.4
-    "@nomiclabs/hardhat-truffle5": ^2.0.0
-    "@nomiclabs/hardhat-web3": ^2.0.0
-    "@openzeppelin/contracts": ^4.0.0
-    "@openzeppelin/test-helpers": ^0.5.10
+    "@nomiclabs/hardhat-ethers": 2.0.2
+    "@nomiclabs/hardhat-etherscan": 2.1.4
+    "@nomiclabs/hardhat-truffle5": 2.0.0
+    "@nomiclabs/hardhat-web3": 2.0.0
+    "@openzeppelin/contracts": 4.9.6
+    "@openzeppelin/test-helpers": 0.5.10
     decimal.js: ^10.2.0
-    eth-gas-reporter: ^0.2.22
+    eth-gas-reporter: 0.2.22
     eth-mutants: ^0.1.1
     ethereumjs-util: ^7.0.9
     ethers: ^5.4.3
-    hardhat: ^2.6.1
-    hardhat-gas-reporter: ^1.0.4
-    npm-run-all2: ^5.0.0
+    hardhat: 2.9.6
+    hardhat-gas-reporter: 1.0.4
+    npm-run-all2: 5.0.2
     solc: ^0.6.11
-    solidity-coverage: ^0.7.16
-    web3: ^1.3.4
+    solidity-coverage: 0.7.16
+    web3: 1.3.4
     xmlhttprequest: ^1.8.0
   languageName: unknown
   linkType: soft
@@ -2285,7 +2285,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@liquity/dev-frontend@workspace:packages/dev-frontend"
   dependencies:
-    "@esbuild-plugins/node-modules-polyfill": ^0.2.2
+    "@esbuild-plugins/node-modules-polyfill": 0.2.2
     "@ethersproject/abi": 5.7.0
     "@ethersproject/experimental": 5.7.0
     "@fortawesome/fontawesome-svg-core": 1.2.36
@@ -2304,25 +2304,25 @@ __metadata:
     "@types/react": 17.0.83
     "@types/react-copy-to-clipboard": 5.0.7
     "@types/react-dom": 17.0.25
-    "@types/react-modal": ^3.16.3
+    "@types/react-modal": 3.16.3
     "@types/react-router-dom": 5.3.3
     "@types/testing-library__jest-dom": 5.14.9
     "@types/testing-library__react": 10.2.0
     "@types/testing-library__user-event": 4.2.0
-    "@typescript-eslint/eslint-plugin": ^5.57.1
-    "@typescript-eslint/parser": ^5.57.1
-    "@vitejs/plugin-react-swc": ^3.0.0
+    "@typescript-eslint/eslint-plugin": 5.59.5
+    "@typescript-eslint/parser": 5.59.5
+    "@vitejs/plugin-react-swc": 3.3.1
     connectkit: ^1.3.0
     cross-env: 7.0.3
-    eslint: ^8.40.0
-    eslint-plugin-react-hooks: ^4.6.0
-    eslint-plugin-react-refresh: ^0.3.4
+    eslint: 8.57.1
+    eslint-plugin-react-hooks: 4.6.0
+    eslint-plugin-react-refresh: 0.3.5
     ethers: 5.7.2
     hashconnect: ^3.0.13
     i18next: ^23.11.2
-    jsdom: 21
+    jsdom: 21.1.2
     lambert-w-function: 3.0.0
-    node-fetch: ^3.3.1
+    node-fetch: 3.3.1
     npm-run-all2: 5.0.2
     react: 17.0.2
     react-circular-progressbar: 2.0.3
@@ -2332,13 +2332,13 @@ __metadata:
     react-modal: ^3.16.1
     react-router-dom: 5.2.0
     recharts: 2.1.10
-    rollup-plugin-polyfill-node: ^0.12.0
+    rollup-plugin-polyfill-node: 0.12.0
     source-map-explorer: 2.5.3
     theme-ui: 0.6.0-canary.1544.5359f8a1e408a4dfeb74a9ae39688270286e534a.0
-    typescript: ^5.0.4
+    typescript: 5.4.2
     vite: ^4.3.2
-    vite-plugin-node-polyfills: ^0.22.0
-    vitest: ^0.34.0
+    vite-plugin-node-polyfills: 0.22.0
+    vitest: 0.34.6
     wagmi: ^0.12.0
     yalc: 1.0.0-pre.53
   languageName: unknown
@@ -2357,13 +2357,13 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@liquity/fuzzer@workspace:packages/fuzzer"
   dependencies:
-    "@types/yargs": ^16.0.0
-    colors: ^1.4.0
-    dotenv: ^8.2.0
-    ethers: ^5.4.3
-    ts-node: ^9.0.0
-    typescript: ~4.1.0
-    yargs: ^16.0.3
+    "@types/yargs": 16.0.0
+    colors: 1.4.0
+    dotenv: 8.2.0
+    ethers: 5.7.2
+    ts-node: 9.1.1
+    typescript: 4.1.5
+    yargs: 16.2.0
   languageName: unknown
   linkType: soft
 
@@ -2391,8 +2391,8 @@ __metadata:
   resolution: "@liquity/lib-ethers@workspace:packages/lib-ethers"
   dependencies:
     "@microsoft/api-extractor": 7.47.10
-    "@nomicfoundation/hardhat-network-helpers": ^1.0.10
-    "@nomiclabs/hardhat-ethers": ^2.0.2
+    "@nomicfoundation/hardhat-network-helpers": 1.0.10
+    "@nomiclabs/hardhat-ethers": 2.0.2
     "@types/chai": 4.3.20
     "@types/chai-as-promised": 7.1.8
     "@types/chai-spies": 1.0.6
@@ -2401,8 +2401,8 @@ __metadata:
     "@types/node": 14.18.63
     "@types/sinon-chai": 3.2.12
     "@types/ws": 7.4.7
-    "@typescript-eslint/eslint-plugin": ^5.62.0
-    "@typescript-eslint/parser": ^5.62.0
+    "@typescript-eslint/eslint-plugin": 5.62.0
+    "@typescript-eslint/parser": 5.62.0
     axios: ^1.6.7
     chai: 4.5.0
     chai-as-promised: 7.1.2
@@ -2413,10 +2413,10 @@ __metadata:
     eslint-plugin-tsdoc: 0.3.0
     ethers: 5.7.2
     fs-extra: 9.1.0
-    hardhat: ^2.6.1
+    hardhat: 2.9.6
     npm-run-all2: 5.0.2
     ts-node: 9.1.1
-    typescript: ^5.4.2
+    typescript: 5.4.2
     ws: 8.17.1
   peerDependencies:
     "@liquity/lib-base": ^3.0.0
@@ -2431,15 +2431,15 @@ __metadata:
     "@hashgraph/sdk": 2.41.0
     "@liquity/lib-base": "workspace:^"
     "@liquity/mirror-node": "workspace:^"
-    "@typescript-eslint/eslint-plugin": ^7.6.0
-    "@typescript-eslint/parser": ^7.6.0
+    "@typescript-eslint/eslint-plugin": 7.6.0
+    "@typescript-eslint/parser": 7.6.0
     bignumber.js: 9.1.2
     emittery: ^1.0.3
-    eslint: ^9.0.0
+    eslint: 9.0.0
     hashconnect: ^3.0.13
-    prettier: ^3.2.5
-    prettier-plugin-organize-imports: ^3.2.4
-    typescript: ^5.4.5
+    prettier: 3.2.5
+    prettier-plugin-organize-imports: 3.2.4
+    typescript: 5.4.5
     web3: ^4.8.0
   languageName: unknown
   linkType: soft
@@ -2473,9 +2473,9 @@ __metadata:
     apollo: 2.32.5
     cross-fetch: ~3.1.0
     graphql: ^15.3.0
-    npm-run-all2: ^5.0.0
-    rimraf: ^3.0.2
-    typescript: ~4.1.0
+    npm-run-all2: 5.0.2
+    rimraf: 3.0.2
+    typescript: 4.1.5
   peerDependencies:
     "@liquity/lib-base": ^3.0.0
   languageName: unknown
@@ -2486,12 +2486,12 @@ __metadata:
   resolution: "@liquity/mirror-node@workspace:packages/mirror-node"
   dependencies:
     "@hashgraph/sdk": 2.41.0
-    "@typescript-eslint/eslint-plugin": ^7.6.0
-    "@typescript-eslint/parser": ^7.6.0
-    eslint: ^9.0.0
-    prettier: ^3.2.5
-    prettier-plugin-organize-imports: ^3.2.4
-    typescript: ^5.4.5
+    "@typescript-eslint/eslint-plugin": 7.6.0
+    "@typescript-eslint/parser": 7.6.0
+    eslint: 9.0.0
+    prettier: 3.2.5
+    prettier-plugin-organize-imports: 3.2.4
+    typescript: 5.4.5
   languageName: unknown
   linkType: soft
 
@@ -2499,9 +2499,9 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@liquity/providers@workspace:packages/providers"
   dependencies:
-    ethers: ^5.4.3
-    ts-node: ^9.1.1
-    typescript: ~4.1.0
+    ethers: 5.7.2
+    ts-node: 9.1.1
+    typescript: 4.1.5
   peerDependencies:
     ethers: ^5.3.0
   languageName: unknown
@@ -2511,9 +2511,9 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@liquity/subgraph@workspace:packages/subgraph"
   dependencies:
-    "@graphprotocol/graph-cli": ^0.86.0
-    "@graphprotocol/graph-ts": ^0.35.0
-    npm-run-all2: ^5.0.0
+    "@graphprotocol/graph-cli": 0.86.0
+    "@graphprotocol/graph-ts": 0.35.1
+    npm-run-all2: 5.0.2
   languageName: unknown
   linkType: soft
 
@@ -2588,7 +2588,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@microsoft/api-documenter@npm:^7.12.6":
+"@microsoft/api-documenter@npm:7.12.12":
   version: 7.12.12
   resolution: "@microsoft/api-documenter@npm:7.12.12"
   dependencies:
@@ -2953,7 +2953,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@nomicfoundation/hardhat-network-helpers@npm:^1.0.10":
+"@nomicfoundation/hardhat-network-helpers@npm:1.0.10":
   version: 1.0.10
   resolution: "@nomicfoundation/hardhat-network-helpers@npm:1.0.10"
   dependencies:
@@ -2964,7 +2964,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@nomiclabs/hardhat-ethers@npm:^2.0.2":
+"@nomiclabs/hardhat-ethers@npm:2.0.2":
   version: 2.0.2
   resolution: "@nomiclabs/hardhat-ethers@npm:2.0.2"
   peerDependencies:
@@ -2974,9 +2974,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@nomiclabs/hardhat-etherscan@npm:^2.1.4":
-  version: 2.1.8
-  resolution: "@nomiclabs/hardhat-etherscan@npm:2.1.8"
+"@nomiclabs/hardhat-etherscan@npm:2.1.4":
+  version: 2.1.4
+  resolution: "@nomiclabs/hardhat-etherscan@npm:2.1.4"
   dependencies:
     "@ethersproject/abi": ^5.1.2
     "@ethersproject/address": ^5.0.2
@@ -2987,11 +2987,11 @@ __metadata:
     semver: ^6.3.0
   peerDependencies:
     hardhat: ^2.0.4
-  checksum: 99a4c97908198a63b3cf68c330599e117a41ffe7e1aa5314eb6e915dd95a5fa677581c79a8b59c088b2d2e090465c95857f24cec9a9e47f0fc20c43119107cdd
+  checksum: fd938a9e40b272917cf1a55479fa6cbdb1caa831edf234f5de97ab28f887d2d6641164f01380c8be0dc39d22615b2dce470bc5e1978a43c0076980ac71bfe4c6
   languageName: node
   linkType: hard
 
-"@nomiclabs/hardhat-truffle5@npm:^2.0.0":
+"@nomiclabs/hardhat-truffle5@npm:2.0.0":
   version: 2.0.0
   resolution: "@nomiclabs/hardhat-truffle5@npm:2.0.0"
   dependencies:
@@ -3008,7 +3008,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@nomiclabs/hardhat-web3@npm:^2.0.0":
+"@nomiclabs/hardhat-web3@npm:2.0.0":
   version: 2.0.0
   resolution: "@nomiclabs/hardhat-web3@npm:2.0.0"
   dependencies:
@@ -3666,14 +3666,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@openzeppelin/contracts@npm:^4.0.0":
+"@openzeppelin/contracts@npm:4.9.6":
   version: 4.9.6
   resolution: "@openzeppelin/contracts@npm:4.9.6"
   checksum: 274b6e968268294f12d5ca4f0278f6e6357792c8bb4d76664f83dbdc325f780541538a127e6a6e97e4f018088b42f65952014dec9c745c0fa25081f43ef9c4bf
   languageName: node
   linkType: hard
 
-"@openzeppelin/test-helpers@npm:^0.5.10":
+"@openzeppelin/test-helpers@npm:0.5.10":
   version: 0.5.10
   resolution: "@openzeppelin/test-helpers@npm:0.5.10"
   dependencies:
@@ -5919,7 +5919,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react-modal@npm:^3.16.3":
+"@types/react-modal@npm:3.16.3":
   version: 3.16.3
   resolution: "@types/react-modal@npm:3.16.3"
   dependencies:
@@ -6127,21 +6127,21 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/yargs@npm:16.0.0":
+  version: 16.0.0
+  resolution: "@types/yargs@npm:16.0.0"
+  dependencies:
+    "@types/yargs-parser": "*"
+  checksum: 84f6c50364d28a565a470cbea6f014eddd8e3add452c95b45b5c67436151d32b6cc8286a1876ec0ce503f4d2633fd508996e572349a5c358301cb4a71bead285
+  languageName: node
+  linkType: hard
+
 "@types/yargs@npm:^15.0.0":
   version: 15.0.13
   resolution: "@types/yargs@npm:15.0.13"
   dependencies:
     "@types/yargs-parser": "*"
   checksum: a6ebb0ec63f168280e02370fcf24ff29c3eb0335e1c46e3b34e04d32eb7c818446e0b7de8badb339b07c0ddba322827ce13ccb604d14a0de422335ae56b2120d
-  languageName: node
-  linkType: hard
-
-"@types/yargs@npm:^16.0.0":
-  version: 16.0.0
-  resolution: "@types/yargs@npm:16.0.0"
-  dependencies:
-    "@types/yargs-parser": "*"
-  checksum: 84f6c50364d28a565a470cbea6f014eddd8e3add452c95b45b5c67436151d32b6cc8286a1876ec0ce503f4d2633fd508996e572349a5c358301cb4a71bead285
   languageName: node
   linkType: hard
 
@@ -6167,7 +6167,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@typescript-eslint/eslint-plugin@npm:^5.57.1":
+"@typescript-eslint/eslint-plugin@npm:5.59.5":
   version: 5.59.5
   resolution: "@typescript-eslint/eslint-plugin@npm:5.59.5"
   dependencies:
@@ -6191,7 +6191,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@typescript-eslint/eslint-plugin@npm:^5.62.0":
+"@typescript-eslint/eslint-plugin@npm:5.62.0":
   version: 5.62.0
   resolution: "@typescript-eslint/eslint-plugin@npm:5.62.0"
   dependencies:
@@ -6215,7 +6215,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@typescript-eslint/eslint-plugin@npm:^7.6.0":
+"@typescript-eslint/eslint-plugin@npm:7.6.0":
   version: 7.6.0
   resolution: "@typescript-eslint/eslint-plugin@npm:7.6.0"
   dependencies:
@@ -6273,7 +6273,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@typescript-eslint/parser@npm:^5.57.1":
+"@typescript-eslint/parser@npm:5.59.5":
   version: 5.59.5
   resolution: "@typescript-eslint/parser@npm:5.59.5"
   dependencies:
@@ -6290,7 +6290,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@typescript-eslint/parser@npm:^5.62.0":
+"@typescript-eslint/parser@npm:5.62.0":
   version: 5.62.0
   resolution: "@typescript-eslint/parser@npm:5.62.0"
   dependencies:
@@ -6307,7 +6307,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@typescript-eslint/parser@npm:^7.6.0":
+"@typescript-eslint/parser@npm:7.6.0":
   version: 7.6.0
   resolution: "@typescript-eslint/parser@npm:7.6.0"
   dependencies:
@@ -6669,7 +6669,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@vitejs/plugin-react-swc@npm:^3.0.0":
+"@vitejs/plugin-react-swc@npm:3.3.1":
   version: 3.3.1
   resolution: "@vitejs/plugin-react-swc@npm:3.3.1"
   dependencies:
@@ -8600,7 +8600,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"array-uniq@npm:1.0.3, array-uniq@npm:^1.0.1, array-uniq@npm:^1.0.3":
+"array-uniq@npm:^1.0.1, array-uniq@npm:^1.0.3":
   version: 1.0.3
   resolution: "array-uniq@npm:1.0.3"
   checksum: 1625f06b093d8bf279b81adfec6e72951c0857d65b5e3f65f053fffe9f9dd61c2fc52cff57e38a4700817e7e3f01a4faa433d505ea9e33cdae4514c334e0bf9e
@@ -10378,7 +10378,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"colors@npm:1.4.0, colors@npm:^1.1.2, colors@npm:^1.4.0":
+"colors@npm:1.4.0, colors@npm:^1.1.2":
   version: 1.4.0
   resolution: "colors@npm:1.4.0"
   checksum: 98aa2c2418ad87dedf25d781be69dc5fc5908e279d9d30c34d8b702e586a0474605b3a189511482b9d5ed0d20c867515d22749537f7bc546256c6014f3ebdcec
@@ -11884,17 +11884,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"dotenv@npm:8.2.0, dotenv@npm:^8.0.0":
+  version: 8.2.0
+  resolution: "dotenv@npm:8.2.0"
+  checksum: ad4c8e0df3e24b4811c8e93377d048a10a9b213dcd9f062483b4a2d3168f08f10ec9c618c23f5639060d230ccdb174c08761479e9baa29610aa978e1ee66df76
+  languageName: node
+  linkType: hard
+
 "dotenv@npm:8.6.0":
   version: 8.6.0
   resolution: "dotenv@npm:8.6.0"
   checksum: 38e902c80b0666ab59e9310a3d24ed237029a7ce34d976796349765ac96b8d769f6df19090f1f471b77a25ca391971efde8a1ea63bb83111bd8bec8e5cc9b2cd
-  languageName: node
-  linkType: hard
-
-"dotenv@npm:^8.0.0, dotenv@npm:^8.2.0":
-  version: 8.2.0
-  resolution: "dotenv@npm:8.2.0"
-  checksum: ad4c8e0df3e24b4811c8e93377d048a10a9b213dcd9f062483b4a2d3168f08f10ec9c618c23f5639060d230ccdb174c08761479e9baa29610aa978e1ee66df76
   languageName: node
   linkType: hard
 
@@ -12531,6 +12531,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"eslint-plugin-react-hooks@npm:4.6.0":
+  version: 4.6.0
+  resolution: "eslint-plugin-react-hooks@npm:4.6.0"
+  peerDependencies:
+    eslint: ^3.0.0 || ^4.0.0 || ^5.0.0 || ^6.0.0 || ^7.0.0 || ^8.0.0-0
+  checksum: 23001801f14c1d16bf0a837ca7970d9dd94e7b560384b41db378b49b6e32dc43d6e2790de1bd737a652a86f81a08d6a91f402525061b47719328f586a57e86c3
+  languageName: node
+  linkType: hard
+
 "eslint-plugin-react-hooks@npm:4.6.2":
   version: 4.6.2
   resolution: "eslint-plugin-react-hooks@npm:4.6.2"
@@ -12540,16 +12549,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-plugin-react-hooks@npm:^4.6.0":
-  version: 4.6.0
-  resolution: "eslint-plugin-react-hooks@npm:4.6.0"
-  peerDependencies:
-    eslint: ^3.0.0 || ^4.0.0 || ^5.0.0 || ^6.0.0 || ^7.0.0 || ^8.0.0-0
-  checksum: 23001801f14c1d16bf0a837ca7970d9dd94e7b560384b41db378b49b6e32dc43d6e2790de1bd737a652a86f81a08d6a91f402525061b47719328f586a57e86c3
-  languageName: node
-  linkType: hard
-
-"eslint-plugin-react-refresh@npm:^0.3.4":
+"eslint-plugin-react-refresh@npm:0.3.5":
   version: 0.3.5
   resolution: "eslint-plugin-react-refresh@npm:0.3.5"
   peerDependencies:
@@ -12713,7 +12713,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint@npm:^8.40.0":
+"eslint@npm:8.57.1":
   version: 8.57.1
   resolution: "eslint@npm:8.57.1"
   dependencies:
@@ -12761,7 +12761,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint@npm:^9.0.0":
+"eslint@npm:9.0.0":
   version: 9.0.0
   resolution: "eslint@npm:9.0.0"
   dependencies:
@@ -12947,7 +12947,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eth-gas-reporter@npm:^0.2.22":
+"eth-gas-reporter@npm:0.2.22":
   version: 0.2.22
   resolution: "eth-gas-reporter@npm:0.2.22"
   dependencies:
@@ -12972,7 +12972,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eth-gas-reporter@npm:^0.2.25":
+"eth-gas-reporter@npm:^0.2.20":
   version: 0.2.27
   resolution: "eth-gas-reporter@npm:0.2.27"
   dependencies:
@@ -15138,20 +15138,19 @@ __metadata:
   languageName: node
   linkType: hard
 
-"hardhat-gas-reporter@npm:^1.0.4":
-  version: 1.0.10
-  resolution: "hardhat-gas-reporter@npm:1.0.10"
+"hardhat-gas-reporter@npm:1.0.4":
+  version: 1.0.4
+  resolution: "hardhat-gas-reporter@npm:1.0.4"
   dependencies:
-    array-uniq: 1.0.3
-    eth-gas-reporter: ^0.2.25
+    eth-gas-reporter: ^0.2.20
     sha1: ^1.1.1
   peerDependencies:
     hardhat: ^2.0.2
-  checksum: caaec13ab3fcda47b8768257e4416b5fd0e8ef3aca5369aa8195419d3d4a948cc182075333651df44215cfc629d088f5ed9f762c8c14ae5a4b4a4f2613e583d0
+  checksum: c8c1d79bfbb6956cabbe5563e0f40c3bb7f2227a3c278f9afe73bc8f44125440e1b1f7ab60f5280b93ed8ae8f748dad73d7bbca892074f5f1edf026394c8ee09
   languageName: node
   linkType: hard
 
-"hardhat@npm:^2.6.1":
+"hardhat@npm:2.9.6":
   version: 2.9.6
   resolution: "hardhat@npm:2.9.6"
   dependencies:
@@ -17020,7 +17019,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"jsdom@npm:21":
+"jsdom@npm:21.1.2":
   version: 21.1.2
   resolution: "jsdom@npm:21.1.2"
   dependencies:
@@ -17605,15 +17604,15 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "liquity@workspace:."
   dependencies:
-    "@commitlint/cli": ^12.0.1
-    "@commitlint/config-conventional": ^12.0.1
-    "@microsoft/api-documenter": ^7.12.6
-    fs-extra: ^9.1.0
-    npm-run-all2: ^5.0.0
-    prettier: ^2.1.2
-    sass: ^1.77.1
-    semantic-release: ^19.0.0
-    semantic-release-monorepo: ^7.0.4
+    "@commitlint/cli": 12.0.1
+    "@commitlint/config-conventional": 12.0.1
+    "@microsoft/api-documenter": 7.12.12
+    fs-extra: 9.1.0
+    npm-run-all2: 5.0.2
+    prettier: 2.2.1
+    sass: 1.77.1
+    semantic-release: 19.0.5
+    semantic-release-monorepo: 7.0.4
   languageName: unknown
   linkType: soft
 
@@ -19484,6 +19483,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"node-fetch@npm:3.3.1":
+  version: 3.3.1
+  resolution: "node-fetch@npm:3.3.1"
+  dependencies:
+    data-uri-to-buffer: ^4.0.0
+    fetch-blob: ^3.1.4
+    formdata-polyfill: ^4.0.10
+  checksum: 62145fd3ba4770a76110bc31fdc0054ab2f5442b5ce96e9c4b39fc9e94a3d305560eec76e1165d9259eab866e02a8eecf9301062bb5dfc9f08a4d08b69d223dd
+  languageName: node
+  linkType: hard
+
 "node-fetch@npm:^2.1.2, node-fetch@npm:^2.2.0, node-fetch@npm:^2.6.0, node-fetch@npm:^2.6.1, node-fetch@npm:^2.6.11, node-fetch@npm:^2.6.7":
   version: 2.6.11
   resolution: "node-fetch@npm:2.6.11"
@@ -19509,17 +19519,6 @@ __metadata:
     encoding:
       optional: true
   checksum: d76d2f5edb451a3f05b15115ec89fc6be39de37c6089f1b6368df03b91e1633fd379a7e01b7ab05089a25034b2023d959b47e59759cb38d88341b2459e89d6e5
-  languageName: node
-  linkType: hard
-
-"node-fetch@npm:^3.3.1":
-  version: 3.3.1
-  resolution: "node-fetch@npm:3.3.1"
-  dependencies:
-    data-uri-to-buffer: ^4.0.0
-    fetch-blob: ^3.1.4
-    formdata-polyfill: ^4.0.10
-  checksum: 62145fd3ba4770a76110bc31fdc0054ab2f5442b5ce96e9c4b39fc9e94a3d305560eec76e1165d9259eab866e02a8eecf9301062bb5dfc9f08a4d08b69d223dd
   languageName: node
   linkType: hard
 
@@ -19837,7 +19836,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"npm-run-all2@npm:5.0.2, npm-run-all2@npm:^5.0.0":
+"npm-run-all2@npm:5.0.2":
   version: 5.0.2
   resolution: "npm-run-all2@npm:5.0.2"
   dependencies:
@@ -21281,7 +21280,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"prettier-plugin-organize-imports@npm:^3.2.4":
+"prettier-plugin-organize-imports@npm:3.2.4":
   version: 3.2.4
   resolution: "prettier-plugin-organize-imports@npm:3.2.4"
   peerDependencies:
@@ -21298,6 +21297,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"prettier@npm:2.2.1":
+  version: 2.2.1
+  resolution: "prettier@npm:2.2.1"
+  bin:
+    prettier: bin-prettier.js
+  checksum: 800de2df3d37067ab24478c7f32c60ca0c57b01742133287829feeb4a70d239a7bf6bccb56196784777af591ad80fb9ba70c1a49b0fcecf9f5622a764d513edb
+  languageName: node
+  linkType: hard
+
 "prettier@npm:3.0.3":
   version: 3.0.3
   resolution: "prettier@npm:3.0.3"
@@ -21307,16 +21315,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"prettier@npm:^2.1.2":
-  version: 2.2.1
-  resolution: "prettier@npm:2.2.1"
-  bin:
-    prettier: bin-prettier.js
-  checksum: 800de2df3d37067ab24478c7f32c60ca0c57b01742133287829feeb4a70d239a7bf6bccb56196784777af591ad80fb9ba70c1a49b0fcecf9f5622a764d513edb
-  languageName: node
-  linkType: hard
-
-"prettier@npm:^3.2.5":
+"prettier@npm:3.2.5":
   version: 3.2.5
   resolution: "prettier@npm:3.2.5"
   bin:
@@ -22752,6 +22751,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"rimraf@npm:3.0.2, rimraf@npm:^3.0.0, rimraf@npm:^3.0.2":
+  version: 3.0.2
+  resolution: "rimraf@npm:3.0.2"
+  dependencies:
+    glob: ^7.1.3
+  bin:
+    rimraf: bin.js
+  checksum: 87f4164e396f0171b0a3386cc1877a817f572148ee13a7e113b238e48e8a9f2f31d009a92ec38a591ff1567d9662c6b67fd8818a2dbbaed74bc26a87a2a4a9a0
+  languageName: node
+  linkType: hard
+
 "rimraf@npm:^2.2.8, rimraf@npm:^2.6.3":
   version: 2.7.1
   resolution: "rimraf@npm:2.7.1"
@@ -22760,17 +22770,6 @@ __metadata:
   bin:
     rimraf: ./bin.js
   checksum: cdc7f6eacb17927f2a075117a823e1c5951792c6498ebcce81ca8203454a811d4cf8900314154d3259bb8f0b42ab17f67396a8694a54cae3283326e57ad250cd
-  languageName: node
-  linkType: hard
-
-"rimraf@npm:^3.0.0, rimraf@npm:^3.0.2":
-  version: 3.0.2
-  resolution: "rimraf@npm:3.0.2"
-  dependencies:
-    glob: ^7.1.3
-  bin:
-    rimraf: bin.js
-  checksum: 87f4164e396f0171b0a3386cc1877a817f572148ee13a7e113b238e48e8a9f2f31d009a92ec38a591ff1567d9662c6b67fd8818a2dbbaed74bc26a87a2a4a9a0
   languageName: node
   linkType: hard
 
@@ -22840,7 +22839,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"rollup-plugin-polyfill-node@npm:^0.12.0":
+"rollup-plugin-polyfill-node@npm:0.12.0":
   version: 0.12.0
   resolution: "rollup-plugin-polyfill-node@npm:0.12.0"
   dependencies:
@@ -23023,7 +23022,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"sass@npm:^1.77.1":
+"sass@npm:1.77.1":
   version: 1.77.1
   resolution: "sass@npm:1.77.1"
   dependencies:
@@ -23129,7 +23128,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"semantic-release-monorepo@npm:^7.0.4":
+"semantic-release-monorepo@npm:7.0.4":
   version: 7.0.4
   resolution: "semantic-release-monorepo@npm:7.0.4"
   dependencies:
@@ -23155,7 +23154,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"semantic-release@npm:^19.0.0":
+"semantic-release@npm:19.0.5":
   version: 19.0.5
   resolution: "semantic-release@npm:19.0.5"
   dependencies:
@@ -23730,7 +23729,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"solidity-coverage@npm:^0.7.16":
+"solidity-coverage@npm:0.7.16":
   version: 0.7.16
   resolution: "solidity-coverage@npm:0.7.16"
   dependencies:
@@ -25099,7 +25098,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ts-node@npm:9.1.1, ts-node@npm:^9.0.0, ts-node@npm:^9.1.1":
+"ts-node@npm:9.1.1":
   version: 9.1.1
   resolution: "ts-node@npm:9.1.1"
   dependencies:
@@ -25417,7 +25416,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typescript@npm:4.1.5, typescript@npm:~4.1.0":
+"typescript@npm:4.1.5":
   version: 4.1.5
   resolution: "typescript@npm:4.1.5"
   bin:
@@ -25427,7 +25426,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typescript@npm:5.4.2, typescript@npm:^5.0.4, typescript@npm:^5.4.2":
+"typescript@npm:5.4.2":
   version: 5.4.2
   resolution: "typescript@npm:5.4.2"
   bin:
@@ -25437,7 +25436,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typescript@npm:^5.4.5":
+"typescript@npm:5.4.5":
   version: 5.4.5
   resolution: "typescript@npm:5.4.5"
   bin:
@@ -25447,7 +25446,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typescript@patch:typescript@4.1.5#~builtin<compat/typescript>, typescript@patch:typescript@~4.1.0#~builtin<compat/typescript>":
+"typescript@patch:typescript@4.1.5#~builtin<compat/typescript>":
   version: 4.1.5
   resolution: "typescript@patch:typescript@npm%3A4.1.5#~builtin<compat/typescript>::version=4.1.5&hash=4a8eb8"
   bin:
@@ -25457,7 +25456,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typescript@patch:typescript@5.4.2#~builtin<compat/typescript>, typescript@patch:typescript@^5.0.4#~builtin<compat/typescript>, typescript@patch:typescript@^5.4.2#~builtin<compat/typescript>":
+"typescript@patch:typescript@5.4.2#~builtin<compat/typescript>":
   version: 5.4.2
   resolution: "typescript@patch:typescript@npm%3A5.4.2#~builtin<compat/typescript>::version=5.4.2&hash=77c9e2"
   bin:
@@ -25467,7 +25466,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typescript@patch:typescript@^5.4.5#~builtin<compat/typescript>":
+"typescript@patch:typescript@5.4.5#~builtin<compat/typescript>":
   version: 5.4.5
   resolution: "typescript@patch:typescript@npm%3A5.4.5#~builtin<compat/typescript>::version=5.4.5&hash=77c9e2"
   bin:
@@ -26064,7 +26063,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"vite-plugin-node-polyfills@npm:^0.22.0":
+"vite-plugin-node-polyfills@npm:0.22.0":
   version: 0.22.0
   resolution: "vite-plugin-node-polyfills@npm:0.22.0"
   dependencies:
@@ -26156,7 +26155,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"vitest@npm:^0.34.0":
+"vitest@npm:0.34.6":
   version: 0.34.6
   resolution: "vitest@npm:0.34.6"
   dependencies:
@@ -27142,7 +27141,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"web3@npm:^1.0.0-beta.34, web3@npm:^1.2.5, web3@npm:^1.3.4":
+"web3@npm:1.3.4, web3@npm:^1.0.0-beta.34, web3@npm:^1.2.5":
   version: 1.3.4
   resolution: "web3@npm:1.3.4"
   dependencies:
@@ -27830,7 +27829,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"yargs@npm:16.2.0, yargs@npm:^16.0.3, yargs@npm:^16.1.1, yargs@npm:^16.2.0":
+"yargs@npm:16.2.0, yargs@npm:^16.1.1, yargs@npm:^16.2.0":
   version: 16.2.0
   resolution: "yargs@npm:16.2.0"
   dependencies:
