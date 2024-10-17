@@ -105,7 +105,7 @@
     "prettier": "2.2.1",
     "sass": "1.77.1",
     "semantic-release": "19.0.5",
-    "semantic-release-monorepo": "7.0.4"
+    "semantic-release-monorepo": "7.0.8"
   },
   "packageManager": "yarn@3.8.5"
 }
