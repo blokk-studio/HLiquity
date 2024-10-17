@@ -7815,7 +7815,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"chokidar@npm:>=3.0.0 <4.0.0, chokidar@npm:^3.5.3, chokidar@npm:^3.6.0":
+"chokidar@npm:^3.5.3, chokidar@npm:^3.6.0":
   version: 3.6.0
   resolution: "chokidar@npm:3.6.0"
   dependencies:
@@ -13064,7 +13064,7 @@ __metadata:
     fs-extra: 9.1.0
     npm-run-all2: 6.2.3
     prettier: 2.8.8
-    sass: 1.77.1
+    sass: 1.80.2
     semantic-release: 19.0.5
     semantic-release-monorepo: 7.0.8
   languageName: unknown
@@ -16844,16 +16844,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"sass@npm:1.77.1":
-  version: 1.77.1
-  resolution: "sass@npm:1.77.1"
+"sass@npm:1.80.2":
+  version: 1.80.2
+  resolution: "sass@npm:1.80.2"
   dependencies:
-    chokidar: ">=3.0.0 <4.0.0"
+    "@parcel/watcher": ^2.4.1
+    chokidar: ^4.0.0
     immutable: ^4.0.0
     source-map-js: ">=0.6.2 <2.0.0"
   bin:
     sass: sass.js
-  checksum: 97976bcb781bf1784662a4a690352dc6d87529fea9de0c9c6ce21994765067da801ffd54fa5c3891735e8ef9c30065eb61a02ca2eb27ed878e9606542e827d9a
+  checksum: a2dfb2ce4ff961470ff015c1a0b01b961665f33883cd83b9b27c18031d74c8ecbc8ae602a0a517439effbc8a284d95c5be5b20c14f435946a09d7a30e32292c4
   languageName: node
   linkType: hard
 
