@@ -1998,7 +1998,7 @@ __metadata:
     jsdom: 21.1.2
     lambert-w-function: 3.0.0
     node-fetch: 3.3.2
-    npm-run-all2: 5.0.2
+    npm-run-all2: 6.2.3
     react: 17.0.2
     react-circular-progressbar: 2.0.3
     react-copy-to-clipboard: 5.1.0
@@ -2031,7 +2031,7 @@ __metadata:
     eslint-plugin-tsdoc: 0.3.0
     fast-check: 2.25.0
     mocha: 8.4.0
-    npm-run-all2: 5.0.2
+    npm-run-all2: 6.2.3
     ts-node: 9.1.1
     typescript: 4.1.5
   languageName: unknown
@@ -2065,7 +2065,7 @@ __metadata:
     ethers: 5.7.2
     fs-extra: 9.1.0
     hardhat: 2.9.6
-    npm-run-all2: 5.0.2
+    npm-run-all2: 6.2.3
     ts-node: 9.1.1
     typescript: 5.4.2
     ws: 8.17.1
@@ -2106,7 +2106,7 @@ __metadata:
     eslint: 7.32.0
     eslint-plugin-react: 7.37.1
     eslint-plugin-react-hooks: 4.6.2
-    npm-run-all2: 5.0.2
+    npm-run-all2: 6.2.3
     react: 17.0.2
     typescript: 4.1.5
   peerDependencies:
@@ -6636,6 +6636,13 @@ __metadata:
   version: 5.2.0
   resolution: "ansi-styles@npm:5.2.0"
   checksum: d7f4e97ce0623aea6bc0d90dcd28881ee04cba06c570b97fd3391bd7a268eedfd9d5e2dd4fdcbdd82b8105df5faf6f24aaedc08eaf3da898e702db5948f63469
+  languageName: node
+  linkType: hard
+
+"ansi-styles@npm:^6.2.1":
+  version: 6.2.1
+  resolution: "ansi-styles@npm:6.2.1"
+  checksum: ef940f2f0ced1a6347398da88a91da7930c33ecac3c77b72c5905f8b8fe402c52e6fde304ff5347f616e27a742da3f1dc76de98f6866c69251ad0b07a66776d9
   languageName: node
   linkType: hard
 
@@ -12584,6 +12591,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"json-parse-even-better-errors@npm:^3.0.0":
+  version: 3.0.2
+  resolution: "json-parse-even-better-errors@npm:3.0.2"
+  checksum: 6f04ea6c9ccb783630a59297959247e921cc90b917b8351197ca7fd058fccc7079268fd9362be21ba876fc26aa5039369dd0a2280aae49aae425784794a94927
+  languageName: node
+  linkType: hard
+
 "json-rpc-engine@npm:6.1.0, json-rpc-engine@npm:^6.1.0":
   version: 6.1.0
   resolution: "json-rpc-engine@npm:6.1.0"
@@ -13024,7 +13038,7 @@ __metadata:
     "@commitlint/config-conventional": 12.1.4
     "@microsoft/api-documenter": 7.25.18
     fs-extra: 9.1.0
-    npm-run-all2: 5.0.2
+    npm-run-all2: 6.2.3
     prettier: 2.2.1
     sass: 1.77.1
     semantic-release: 19.0.5
@@ -13675,6 +13689,15 @@ __metadata:
   dependencies:
     brace-expansion: ^2.0.1
   checksum: 7564208ef81d7065a370f788d337cd80a689e981042cb9a1d0e6580b6c6a8c9279eba80010516e258835a988363f99f54a6f711a315089b8b42694f5da9d0d77
+  languageName: node
+  linkType: hard
+
+"minimatch@npm:^9.0.0":
+  version: 9.0.5
+  resolution: "minimatch@npm:9.0.5"
+  dependencies:
+    brace-expansion: ^2.0.1
+  checksum: 2c035575eda1e50623c731ec6c14f65a85296268f749b9337005210bb2b34e2705f8ef1a358b188f69892286ab99dc42c8fb98a57bde55c8d81b3023c19cea28
   languageName: node
   linkType: hard
 
@@ -14368,6 +14391,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"npm-normalize-package-bin@npm:^3.0.0":
+  version: 3.0.1
+  resolution: "npm-normalize-package-bin@npm:3.0.1"
+  checksum: de416d720ab22137a36292ff8a333af499ea0933ef2320a8c6f56a73b0f0448227fec4db5c890d702e26d21d04f271415eab6580b5546456861cc0c19498a4bf
+  languageName: node
+  linkType: hard
+
 "npm-package-arg@npm:^9.0.0, npm-package-arg@npm:^9.0.1, npm-package-arg@npm:^9.1.0":
   version: 9.1.2
   resolution: "npm-package-arg@npm:9.1.2"
@@ -14445,22 +14475,23 @@ __metadata:
   languageName: node
   linkType: hard
 
-"npm-run-all2@npm:5.0.2":
-  version: 5.0.2
-  resolution: "npm-run-all2@npm:5.0.2"
+"npm-run-all2@npm:6.2.3":
+  version: 6.2.3
+  resolution: "npm-run-all2@npm:6.2.3"
   dependencies:
-    ansi-styles: ^5.0.0
+    ansi-styles: ^6.2.1
     cross-spawn: ^7.0.3
     memorystream: ^0.3.1
-    minimatch: ^3.0.4
-    pidtree: ^0.5.0
-    read-pkg: ^5.2.0
-    shell-quote: ^1.6.1
+    minimatch: ^9.0.0
+    pidtree: ^0.6.0
+    read-package-json-fast: ^3.0.2
+    shell-quote: ^1.7.3
   bin:
     npm-run-all: bin/npm-run-all/index.js
+    npm-run-all2: bin/npm-run-all/index.js
     run-p: bin/run-p/index.js
     run-s: bin/run-s/index.js
-  checksum: c52091478d5873a9f65132983459cc7f0869bbef0fd015e72f1ee1a78d50570e80c2239a8ba9a6c68c0c4898d749e3e8478df51abd9807b01c4ba461ee90aa2f
+  checksum: f4dc367cb43b1a1b8aa074687e598b11c3ffb5a59f50d06e8a8a84b86fc150a6ad080240585fb1a9b0d1517a78a1f791e63b7b9ace9185a26566d1730ef3770e
   languageName: node
   linkType: hard
 
@@ -15210,12 +15241,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"pidtree@npm:^0.5.0":
-  version: 0.5.0
-  resolution: "pidtree@npm:0.5.0"
+"pidtree@npm:^0.6.0":
+  version: 0.6.0
+  resolution: "pidtree@npm:0.6.0"
   bin:
     pidtree: bin/pidtree.js
-  checksum: 371cd14bbc9bdee2a6a44596dd521dd3565e223481e0b1afffdca3f1c29831850bfa7784114dc30d245d37e7d186cec035e036256b39f75d878d19498fe0df6a
+  checksum: 8fbc073ede9209dd15e80d616e65eb674986c93be49f42d9ddde8dbbd141bb53d628a7ca4e58ab5c370bb00383f67d75df59a9a226dede8fa801267a7030c27a
   languageName: node
   linkType: hard
 
@@ -16187,6 +16218,16 @@ __metadata:
     json-parse-even-better-errors: ^2.3.0
     npm-normalize-package-bin: ^1.0.1
   checksum: fca37b3b2160b9dda7c5588b767f6a2b8ce68d03a044000e568208e20bea0cf6dd2de17b90740ce8da8b42ea79c0b3859649dadf29510bbe77224ea65326a903
+  languageName: node
+  linkType: hard
+
+"read-package-json-fast@npm:^3.0.2":
+  version: 3.0.2
+  resolution: "read-package-json-fast@npm:3.0.2"
+  dependencies:
+    json-parse-even-better-errors: ^3.0.0
+    npm-normalize-package-bin: ^3.0.0
+  checksum: 8d406869f045f1d76e2a99865a8fd1c1af9c1dc06200b94d2b07eef87ed734b22703a8d72e1cd36ea36cc48e22020bdd187f88243c7dd0563f72114d38c17072
   languageName: node
   linkType: hard
 
@@ -17226,10 +17267,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"shell-quote@npm:^1.6.1":
-  version: 1.7.2
-  resolution: "shell-quote@npm:1.7.2"
-  checksum: efad426fb25d8a54d06363f1f45774aa9e195f62f14fa696d542b44bfe418ab41206448b63af18d726c62e099e66d9a3f4f44858b9ea2ce4b794b41b802672d1
+"shell-quote@npm:^1.7.3":
+  version: 1.8.1
+  resolution: "shell-quote@npm:1.8.1"
+  checksum: 5f01201f4ef504d4c6a9d0d283fa17075f6770bfbe4c5850b074974c68062f37929ca61700d95ad2ac8822e14e8c4b990ca0e6e9272e64befd74ce5e19f0736b
   languageName: node
   linkType: hard
 
