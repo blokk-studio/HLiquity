@@ -53,10 +53,8 @@
     "docs": "run-s 'docs:*'",
     "docs:collect-sdk-apis": "node scripts/collect-sdk-apis.js",
     "docs:api-documenter": "api-documenter generate -i temp/sdk-apis -o docs/sdk",
-    "fuzzer": "yarn workspace @liquity/fuzzer fuzzer",
     "postinstall": "run-s prepare",
     "prepare": "run-s 'prepare:*'",
-    "prepare:contracts": "yarn workspace @liquity/contracts prepare",
     "prepare:lib-base": "yarn workspace @liquity/lib-base prepare",
     "prepare:lib-ethers": "yarn workspace @liquity/lib-ethers prepare",
     "prepare:lib-react": "yarn workspace @liquity/lib-react prepare",
@@ -90,11 +88,9 @@
     "test:dev-frontend:start-dev-chain": "yarn start-dev-chain",
     "test:dev-frontend:run": "yarn workspace @liquity/dev-frontend test run",
     "test:dev-frontend:stop-dev-chain": "yarn stop-dev-chain",
-    "test-contracts": "yarn workspace @liquity/contracts test",
     "test-live": "run-s 'test-live:*'",
     "test-live:lib-ethers": "yarn workspace @liquity/lib-ethers test-live",
-    "coverage": "run-s 'coverage:*'",
-    "coverage:contracts": "yarn workspace @liquity/contracts coverage"
+    "coverage": "run-s 'coverage:*'"
   },
   "devDependencies": {
     "@commitlint/cli": "12.1.4",
