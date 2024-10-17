@@ -98,7 +98,7 @@
     "@microsoft/api-documenter": "7.25.19",
     "fs-extra": "9.1.0",
     "npm-run-all2": "6.2.3",
-    "prettier": "2.2.1",
+    "prettier": "2.8.8",
     "sass": "1.77.1",
     "semantic-release": "19.0.5",
     "semantic-release-monorepo": "7.0.8"
