@@ -2270,7 +2270,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@liquity/contracts@workspace:packages/contracts"
   dependencies:
-    "@nomiclabs/hardhat-ethers": 2.0.2
+    "@nomiclabs/hardhat-ethers": 2.2.3
     "@nomiclabs/hardhat-etherscan": 2.1.8
     "@nomiclabs/hardhat-truffle5": 2.0.7
     "@nomiclabs/hardhat-web3": 2.0.0
@@ -2402,7 +2402,7 @@ __metadata:
   dependencies:
     "@microsoft/api-extractor": 7.47.10
     "@nomicfoundation/hardhat-network-helpers": 1.0.12
-    "@nomiclabs/hardhat-ethers": 2.0.2
+    "@nomiclabs/hardhat-ethers": 2.2.3
     "@types/chai": 4.3.20
     "@types/chai-as-promised": 7.1.8
     "@types/chai-spies": 1.0.6
@@ -2973,13 +2973,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@nomiclabs/hardhat-ethers@npm:2.0.2":
-  version: 2.0.2
-  resolution: "@nomiclabs/hardhat-ethers@npm:2.0.2"
+"@nomiclabs/hardhat-ethers@npm:2.2.3":
+  version: 2.2.3
+  resolution: "@nomiclabs/hardhat-ethers@npm:2.2.3"
   peerDependencies:
     ethers: ^5.0.0
     hardhat: ^2.0.0
-  checksum: b9a4b4e011aa64a6a79ffa402d8e022c0ff8c74ddc30ef8887c72ecc75fb66d02d8d6991151ec659f147753b41ad4f58d823f73c4c4415726388bd58b0367b93
+  checksum: 72321317e55eb510306e04c42353c5f7ceb42d086fc76cc740120da6e1635b7ad5bbf23a8d6b02bd590754adcf646618933111624085ab249b1ff3482e773226
   languageName: node
   linkType: hard
 
