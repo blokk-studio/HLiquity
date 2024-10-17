@@ -56,7 +56,6 @@
     "node-fetch": "3.3.2",
     "npm-run-all2": "5.0.2",
     "rollup-plugin-polyfill-node": "0.13.0",
-    "source-map-explorer": "2.5.3",
     "typescript": "5.4.2",
     "vite": "4.5.5",
     "vite-plugin-node-polyfills": "0.22.0",
@@ -64,7 +63,6 @@
     "yalc": "1.0.0-pre.53"
   },
   "scripts": {
-    "analyze": "source-map-explorer 'build/static/js/*.js'",
     "start": "vite",
     "start-demo": "cross-env VITE_APP_DEMO_MODE=true vite --force",
     "build": "run-s 'build:*'",
