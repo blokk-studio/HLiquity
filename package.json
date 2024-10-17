@@ -99,7 +99,7 @@
   "devDependencies": {
     "@commitlint/cli": "12.1.4",
     "@commitlint/config-conventional": "12.1.4",
-    "@microsoft/api-documenter": "7.12.12",
+    "@microsoft/api-documenter": "7.25.18",
     "fs-extra": "9.1.0",
     "npm-run-all2": "5.0.2",
     "prettier": "2.2.1",
