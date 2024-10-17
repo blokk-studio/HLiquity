@@ -2077,7 +2077,7 @@ __metadata:
   resolution: "@liquity/lib-base@workspace:packages/lib-base"
   dependencies:
     "@ethersproject/bignumber": 5.7.0
-    "@microsoft/api-extractor": 7.47.10
+    "@microsoft/api-extractor": 7.47.11
     "@types/mocha": 8.2.3
     "@typescript-eslint/eslint-plugin": 4.17.0
     "@typescript-eslint/parser": 4.18.0
@@ -2095,7 +2095,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@liquity/lib-ethers@workspace:packages/lib-ethers"
   dependencies:
-    "@microsoft/api-extractor": 7.47.10
+    "@microsoft/api-extractor": 7.47.11
     "@nomicfoundation/hardhat-network-helpers": 1.0.12
     "@nomiclabs/hardhat-ethers": 2.2.3
     "@types/chai": 4.3.20
@@ -2294,9 +2294,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@microsoft/api-extractor@npm:7.47.10":
-  version: 7.47.10
-  resolution: "@microsoft/api-extractor@npm:7.47.10"
+"@microsoft/api-extractor@npm:7.47.11":
+  version: 7.47.11
+  resolution: "@microsoft/api-extractor@npm:7.47.11"
   dependencies:
     "@microsoft/api-extractor-model": 7.29.8
     "@microsoft/tsdoc": ~0.15.0
@@ -2304,7 +2304,7 @@ __metadata:
     "@rushstack/node-core-library": 5.9.0
     "@rushstack/rig-package": 0.5.3
     "@rushstack/terminal": 0.14.2
-    "@rushstack/ts-command-line": 4.22.8
+    "@rushstack/ts-command-line": 4.23.0
     lodash: ~4.17.15
     minimatch: ~3.0.3
     resolve: ~1.22.1
@@ -2313,7 +2313,7 @@ __metadata:
     typescript: 5.4.2
   bin:
     api-extractor: bin/api-extractor
-  checksum: 4cec2f7d9bd9e627a206de54006fce65a6eeac172643715feee5b477e19a5f4b90b0c296de9ad3bb2767ffb723bd9c1550f94175d8030d95b4aa775ed96e2d61
+  checksum: 1ae7634c21e20fe191b5297a03b87547b03e9db4ee3439809363e554bcc7610ebd43dd71d30db5fbee573b7f84a2e1fa6ab3bdf320500a266b7c7c1ccc6049b2
   languageName: node
   linkType: hard
 
@@ -3403,18 +3403,6 @@ __metadata:
     "@types/node":
       optional: true
   checksum: 90d38e6979737dcd97fdfdcebcc378194eed32a994341846235769273b6446b702e53e51e18fc8a373e8ed989c5622216aa6804198b8c7ae0e65cd6b103b90a1
-  languageName: node
-  linkType: hard
-
-"@rushstack/ts-command-line@npm:4.22.8":
-  version: 4.22.8
-  resolution: "@rushstack/ts-command-line@npm:4.22.8"
-  dependencies:
-    "@rushstack/terminal": 0.14.2
-    "@types/argparse": 1.0.38
-    argparse: ~1.0.9
-    string-argv: ~0.3.1
-  checksum: b0108e4b567c364a7c62b30dc3e4d17130b6f8ba16a0457c56b8c898ba84316e72726a4e043ca5183da7bf5d0189aed585ab3ac8bce5991b8e80ac94d333cd6c
   languageName: node
   linkType: hard
 
