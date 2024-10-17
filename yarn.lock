@@ -2266,20 +2266,20 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@microsoft/api-documenter@npm:7.25.18":
-  version: 7.25.18
-  resolution: "@microsoft/api-documenter@npm:7.25.18"
+"@microsoft/api-documenter@npm:7.25.19":
+  version: 7.25.19
+  resolution: "@microsoft/api-documenter@npm:7.25.19"
   dependencies:
     "@microsoft/api-extractor-model": 7.29.8
     "@microsoft/tsdoc": ~0.15.0
     "@rushstack/node-core-library": 5.9.0
     "@rushstack/terminal": 0.14.2
-    "@rushstack/ts-command-line": 4.22.8
+    "@rushstack/ts-command-line": 4.23.0
     js-yaml: ~3.13.1
     resolve: ~1.22.1
   bin:
     api-documenter: bin/api-documenter
-  checksum: d0afa99b5fea1cb014a57d496936514b92e5341e3a6cae311111e169a336031b36c2decd75ffd9fa0d49ac19454b0fa1fb0df0cd995741bbe885c45cc50d0474
+  checksum: 3d53ecae2787a0d5e07cade6d1a36b3ca29853d78410b2a4342c1b357e68bc7ea931cc1f588a72fe09b1c035d06d0610ccc31b88d54d86a6e1f55562974d9e7b
   languageName: node
   linkType: hard
 
@@ -3415,6 +3415,18 @@ __metadata:
     argparse: ~1.0.9
     string-argv: ~0.3.1
   checksum: b0108e4b567c364a7c62b30dc3e4d17130b6f8ba16a0457c56b8c898ba84316e72726a4e043ca5183da7bf5d0189aed585ab3ac8bce5991b8e80ac94d333cd6c
+  languageName: node
+  linkType: hard
+
+"@rushstack/ts-command-line@npm:4.23.0":
+  version: 4.23.0
+  resolution: "@rushstack/ts-command-line@npm:4.23.0"
+  dependencies:
+    "@rushstack/terminal": 0.14.2
+    "@types/argparse": 1.0.38
+    argparse: ~1.0.9
+    string-argv: ~0.3.1
+  checksum: 4f3d77c5b2998bbc551d02e882f0c7b8e7aed0d97ad6e4ee45b2d6281a209087f738fc1a021397088ffbe666c4eae462c1d8c4a14dc031dddee2af055b12f794
   languageName: node
   linkType: hard
 
@@ -13123,7 +13135,7 @@ __metadata:
   dependencies:
     "@commitlint/cli": 12.1.4
     "@commitlint/config-conventional": 12.1.4
-    "@microsoft/api-documenter": 7.25.18
+    "@microsoft/api-documenter": 7.25.19
     fs-extra: 9.1.0
     npm-run-all2: 6.2.3
     prettier: 2.2.1
