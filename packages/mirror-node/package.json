@@ -2,8 +2,8 @@
   "name": "@liquity/mirror-node",
   "type": "module",
   "devDependencies": {
-    "@typescript-eslint/eslint-plugin": "7.6.0",
-    "@typescript-eslint/parser": "7.6.0",
+    "@typescript-eslint/eslint-plugin": "7.18.0",
+    "@typescript-eslint/parser": "7.18.0",
     "eslint": "9.12.0",
     "prettier": "3.2.5",
     "prettier-plugin-organize-imports": "3.2.4",
