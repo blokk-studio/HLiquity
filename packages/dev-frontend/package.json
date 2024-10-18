@@ -13,7 +13,7 @@
     "@hashgraph/sdk": "2.41.0",
     "@liquity/chicken-bonds": "file:.yalc/@liquity/chicken-bonds",
     "@liquity/lib-hashgraph": "workspace:^",
-    "@metamask/eth-sig-util": "5.0.1",
+    "@metamask/eth-sig-util": "5.1.0",
     "@tippyjs/react": "4.2.6",
     "connectkit": "^1.3.0",
     "ethers": "5.7.2",
