@@ -1985,7 +1985,7 @@ __metadata:
     jsdom: 21.1.2
     lambert-w-function: 3.0.0
     node-fetch: 3.3.2
-    npm-run-all2: 6.2.3
+    npm-run-all2: 6.2.4
     react: 17.0.2
     react-circular-progressbar: 2.0.3
     react-copy-to-clipboard: 5.1.0
@@ -2018,7 +2018,7 @@ __metadata:
     eslint-plugin-tsdoc: 0.3.0
     fast-check: 2.25.0
     mocha: 8.4.0
-    npm-run-all2: 6.2.3
+    npm-run-all2: 6.2.4
     ts-node: 9.1.1
     typescript: 4.1.5
   languageName: unknown
@@ -2052,7 +2052,7 @@ __metadata:
     ethers: 5.7.2
     fs-extra: 9.1.0
     hardhat: 2.22.13
-    npm-run-all2: 6.2.3
+    npm-run-all2: 6.2.4
     ts-node: 9.1.1
     typescript: 5.4.2
     ws: 8.17.1
@@ -2093,7 +2093,7 @@ __metadata:
     eslint: 7.32.0
     eslint-plugin-react: 7.37.1
     eslint-plugin-react-hooks: 4.6.2
-    npm-run-all2: 6.2.3
+    npm-run-all2: 6.2.4
     react: 17.0.2
     typescript: 4.1.5
   peerDependencies:
@@ -12913,7 +12913,7 @@ __metadata:
     "@commitlint/config-conventional": 12.1.4
     "@microsoft/api-documenter": 7.25.19
     fs-extra: 9.1.0
-    npm-run-all2: 6.2.3
+    npm-run-all2: 6.2.4
     prettier: 2.8.8
     sass: 1.80.2
     semantic-release: 19.0.5
@@ -14277,9 +14277,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"npm-run-all2@npm:6.2.3":
-  version: 6.2.3
-  resolution: "npm-run-all2@npm:6.2.3"
+"npm-run-all2@npm:6.2.4":
+  version: 6.2.4
+  resolution: "npm-run-all2@npm:6.2.4"
   dependencies:
     ansi-styles: ^6.2.1
     cross-spawn: ^7.0.3
@@ -14288,12 +14288,13 @@ __metadata:
     pidtree: ^0.6.0
     read-package-json-fast: ^3.0.2
     shell-quote: ^1.7.3
+    which: ^3.0.1
   bin:
     npm-run-all: bin/npm-run-all/index.js
     npm-run-all2: bin/npm-run-all/index.js
     run-p: bin/run-p/index.js
     run-s: bin/run-s/index.js
-  checksum: f4dc367cb43b1a1b8aa074687e598b11c3ffb5a59f50d06e8a8a84b86fc150a6ad080240585fb1a9b0d1517a78a1f791e63b7b9ace9185a26566d1730ef3770e
+  checksum: 30e3bb2bb325e76f4d8a8d8973ab3bb26318dd5c820d2aa45889e4546edf65c0950d68fa40d37cde97ecd8ecc8ea5d15e343c69cded6eccd63fb5edb450083ae
   languageName: node
   linkType: hard
 
@@ -19452,6 +19453,17 @@ __metadata:
   bin:
     which: ./bin/which
   checksum: f2e185c6242244b8426c9df1510e86629192d93c1a986a7d2a591f2c24869e7ffd03d6dac07ca863b2e4c06f59a4cc9916c585b72ee9fa1aa609d0124df15e04
+  languageName: node
+  linkType: hard
+
+"which@npm:^3.0.1":
+  version: 3.0.1
+  resolution: "which@npm:3.0.1"
+  dependencies:
+    isexe: ^2.0.0
+  bin:
+    node-which: bin/which.js
+  checksum: adf720fe9d84be2d9190458194f814b5e9015ae4b88711b150f30d0f4d0b646544794b86f02c7ebeec1db2029bc3e83a7ff156f542d7521447e5496543e26890
   languageName: node
   linkType: hard
 
