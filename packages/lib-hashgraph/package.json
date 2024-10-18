@@ -10,7 +10,7 @@
     "typescript": "5.4.5"
   },
   "dependencies": {
-    "@hashgraph/sdk": "2.41.0",
+    "@hashgraph/sdk": "2.52.0",
     "@liquity/lib-base": "workspace:^",
     "@liquity/mirror-node": "workspace:^",
     "bignumber.js": "9.1.2",
