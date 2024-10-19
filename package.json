@@ -99,7 +99,7 @@
     "fs-extra": "9.1.0",
     "npm-run-all2": "6.2.4",
     "prettier": "2.8.8",
-    "sass": "1.80.2",
+    "sass": "1.80.3",
     "semantic-release": "19.0.5",
     "semantic-release-monorepo": "7.0.8"
   },
