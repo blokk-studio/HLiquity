@@ -63,7 +63,7 @@
     "fs-extra": "11.2.0",
     "hardhat": "2.22.13",
     "npm-run-all2": "6.2.4",
-    "ts-node": "9.1.1",
+    "ts-node": "10.9.2",
     "typescript": "5.4.2",
     "ws": "8.17.1"
   },
