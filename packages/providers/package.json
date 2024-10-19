@@ -19,7 +19,7 @@
   },
   "devDependencies": {
     "ethers": "5.7.2",
-    "ts-node": "9.1.1",
+    "ts-node": "10.9.2",
     "typescript": "4.1.5"
   },
   "peerDependencies": {
