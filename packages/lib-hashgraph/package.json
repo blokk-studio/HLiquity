@@ -6,7 +6,7 @@
     "@typescript-eslint/parser": "7.18.0",
     "eslint": "9.13.0",
     "prettier": "3.3.3",
-    "prettier-plugin-organize-imports": "3.2.4",
+    "prettier-plugin-organize-imports": "4.1.0",
     "typescript": "5.4.5"
   },
   "dependencies": {
