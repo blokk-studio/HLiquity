@@ -33,10 +33,10 @@
   },
   "devDependencies": {
     "@esbuild-plugins/node-modules-polyfill": "0.2.2",
-    "@testing-library/dom": "7.31.2",
-    "@testing-library/jest-dom": "5.17.0",
+    "@testing-library/dom": "10.4.0",
+    "@testing-library/jest-dom": "6.6.2",
     "@testing-library/react": "16.0.1",
-    "@testing-library/user-event": "12.8.3",
+    "@testing-library/user-event": "14.5.2",
     "@types/react": "17.0.83",
     "@types/react-copy-to-clipboard": "5.0.7",
     "@types/react-dom": "17.0.25",
