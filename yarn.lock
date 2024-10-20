@@ -1556,6 +1556,36 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@hashgraph/cryptography@npm:1.4.8-beta.9":
+  version: 1.4.8-beta.9
+  resolution: "@hashgraph/cryptography@npm:1.4.8-beta.9"
+  dependencies:
+    asn1js: ^3.0.5
+    bignumber.js: ^9.1.1
+    bn.js: ^5.2.1
+    buffer: ^6.0.3
+    crypto-js: ^4.2.0
+    elliptic: ^6.5.4
+    js-base64: ^3.7.4
+    node-forge: ^1.3.1
+    spark-md5: ^3.0.2
+    tweetnacl: ^1.0.3
+    utf8: ^3.0.0
+  peerDependencies:
+    expo: ^49.0.16
+    expo-crypto: ^10.1.2
+    expo-random: ^12.1.2
+  peerDependenciesMeta:
+    expo:
+      optional: true
+    expo-crypto:
+      optional: true
+    expo-random:
+      optional: true
+  checksum: cb916c50aca8699cad5fce5a428e05e240c9d8fdc77bd6faea3f6de653158ffec0d28d77e4cce51f7c53583017945956bc51e6493bfbe400647840fa42b221dc
+  languageName: node
+  linkType: hard
+
 "@hashgraph/hedera-wallet-connect@npm:1.0.6":
   version: 1.0.6
   resolution: "@hashgraph/hedera-wallet-connect@npm:1.0.6"
@@ -1589,6 +1619,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@hashgraph/proto@npm:2.15.0-beta.4":
+  version: 2.15.0-beta.4
+  resolution: "@hashgraph/proto@npm:2.15.0-beta.4"
+  dependencies:
+    long: ^4.0.0
+    protobufjs: ^7.2.5
+  checksum: 9470832e5de409a2d80706ff46d208465207cadd81cbd60bae366e269ac3054c71133a89e8bab4a4504012944bb15aea54c37d630860c7965c014229bba184b1
+  languageName: node
+  linkType: hard
+
 "@hashgraph/sdk@npm:2.41.0":
   version: 2.41.0
   resolution: "@hashgraph/sdk@npm:2.41.0"
@@ -1617,6 +1657,37 @@ __metadata:
     expo:
       optional: true
   checksum: f96b4ce63c881b7589df6ab5d65c4f421f598c4546c4a41a9628beea6c8bffa0f3b5ac1c9ab96388fac85993530ca007e8d41cc7bf0d5651d0cd0fe9c08dfee3
+  languageName: node
+  linkType: hard
+
+"@hashgraph/sdk@npm:2.52.0":
+  version: 2.52.0
+  resolution: "@hashgraph/sdk@npm:2.52.0"
+  dependencies:
+    "@ethersproject/abi": ^5.7.0
+    "@ethersproject/bignumber": ^5.7.0
+    "@ethersproject/bytes": ^5.7.0
+    "@ethersproject/rlp": ^5.7.0
+    "@grpc/grpc-js": 1.8.2
+    "@hashgraph/cryptography": 1.4.8-beta.9
+    "@hashgraph/proto": 2.15.0-beta.4
+    axios: ^1.6.4
+    bignumber.js: ^9.1.1
+    bn.js: ^5.1.1
+    crypto-js: ^4.2.0
+    js-base64: ^3.7.4
+    long: ^4.0.0
+    pino: ^8.14.1
+    pino-pretty: ^10.0.0
+    protobufjs: 7.2.5
+    rfc4648: ^1.5.3
+    utf8: ^3.0.0
+  peerDependencies:
+    expo: ^49.0.16
+  peerDependenciesMeta:
+    expo:
+      optional: true
+  checksum: f2ddb0725526f35b311fd8e2502067bc447b70f54a57db5a1fe38707121de2cec81dd64bb662bcfd8a6e44561261c75c5aa4e7ae0f6d6ef49ef937450a3a1600
   languageName: node
   linkType: hard
 
@@ -1890,7 +1961,7 @@ __metadata:
     "@fortawesome/free-regular-svg-icons": 5.15.4
     "@fortawesome/free-solid-svg-icons": 5.15.4
     "@fortawesome/react-fontawesome": 0.2.2
-    "@hashgraph/sdk": 2.41.0
+    "@hashgraph/sdk": 2.52.0
     "@liquity/chicken-bonds": "file:.yalc/@liquity/chicken-bonds"
     "@liquity/lib-hashgraph": "workspace:^"
     "@metamask/eth-sig-util": 5.1.0
@@ -2002,7 +2073,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@liquity/lib-hashgraph@workspace:packages/lib-hashgraph"
   dependencies:
-    "@hashgraph/sdk": 2.41.0
+    "@hashgraph/sdk": 2.52.0
     "@liquity/lib-base": "workspace:^"
     "@liquity/mirror-node": "workspace:^"
     "@typescript-eslint/eslint-plugin": 7.18.0
@@ -2042,7 +2113,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@liquity/mirror-node@workspace:packages/mirror-node"
   dependencies:
-    "@hashgraph/sdk": 2.41.0
+    "@hashgraph/sdk": 2.52.0
     "@typescript-eslint/eslint-plugin": 7.18.0
     "@typescript-eslint/parser": 7.18.0
     eslint: 9.13.0
@@ -15735,6 +15806,26 @@ __metadata:
   version: 1.2.4
   resolution: "proto-list@npm:1.2.4"
   checksum: 4d4826e1713cbfa0f15124ab0ae494c91b597a3c458670c9714c36e8baddf5a6aad22842776f2f5b137f259c8533e741771445eb8df82e861eea37a6eaba03f7
+  languageName: node
+  linkType: hard
+
+"protobufjs@npm:7.2.5":
+  version: 7.2.5
+  resolution: "protobufjs@npm:7.2.5"
+  dependencies:
+    "@protobufjs/aspromise": ^1.1.2
+    "@protobufjs/base64": ^1.1.2
+    "@protobufjs/codegen": ^2.0.4
+    "@protobufjs/eventemitter": ^1.1.0
+    "@protobufjs/fetch": ^1.1.0
+    "@protobufjs/float": ^1.0.2
+    "@protobufjs/inquire": ^1.1.0
+    "@protobufjs/path": ^1.1.2
+    "@protobufjs/pool": ^1.1.0
+    "@protobufjs/utf8": ^1.1.0
+    "@types/node": ">=13.7.0"
+    long: ^5.0.0
+  checksum: 3770a072114061faebbb17cfd135bc4e187b66bc6f40cd8bac624368b0270871ec0cfb43a02b9fb4f029c8335808a840f1afba3c2e7ede7063b98ae6b98a703f
   languageName: node
   linkType: hard
 
