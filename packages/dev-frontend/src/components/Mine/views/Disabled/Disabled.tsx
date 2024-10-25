@@ -32,7 +32,7 @@ export const Disabled: React.FC = () => {
     await result.waitForReceipt();
   }, [hasStake]);
   const loadableWithdraw = useLoadingState(async () => {
-    const result = await liquityContext.liquity.send.unstakeUniTokens(liquidityMiningHLQTReward);
+    const result = await liquityContext.liquity.send.unstakeUniTokens(liquidityMiningStake);
     await result.waitForReceipt();
   }, [hasStake]);
 
