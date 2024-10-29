@@ -1914,7 +1914,7 @@ __metadata:
     cross-env: 7.0.3
     eslint: 8.57.1
     eslint-plugin-react-hooks: 4.6.2
-    eslint-plugin-react-refresh: 0.4.13
+    eslint-plugin-react-refresh: 0.4.14
     ethers: 5.7.2
     hashconnect: ^3.0.13
     i18next: ^23.11.2
@@ -9597,12 +9597,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-plugin-react-refresh@npm:0.4.13":
-  version: 0.4.13
-  resolution: "eslint-plugin-react-refresh@npm:0.4.13"
+"eslint-plugin-react-refresh@npm:0.4.14":
+  version: 0.4.14
+  resolution: "eslint-plugin-react-refresh@npm:0.4.14"
   peerDependencies:
     eslint: ">=7"
-  checksum: c57fecb87043cbf1a7a1cc3c7e6a66c78d0e4ad58632a97fe0e5d3305c95806b785bdb0606fc54403f693e1b98b1a4a07fc36bdc71f373ecac32ea0470c94fd1
+  checksum: 55a7fea190454f33edff6a86739767af21bee8797cd6132466cf2b69a9c75aefd76b03c29b39d0e8ea826af314bde1583d7046f21088afa7fac511f8af4eb714
   languageName: node
   linkType: hard
 
