@@ -2135,9 +2135,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@microsoft/api-documenter@npm:7.25.19":
-  version: 7.25.19
-  resolution: "@microsoft/api-documenter@npm:7.25.19"
+"@microsoft/api-documenter@npm:7.25.21":
+  version: 7.25.21
+  resolution: "@microsoft/api-documenter@npm:7.25.21"
   dependencies:
     "@microsoft/api-extractor-model": 7.29.8
     "@microsoft/tsdoc": ~0.15.0
@@ -2148,7 +2148,7 @@ __metadata:
     resolve: ~1.22.1
   bin:
     api-documenter: bin/api-documenter
-  checksum: 3d53ecae2787a0d5e07cade6d1a36b3ca29853d78410b2a4342c1b357e68bc7ea931cc1f588a72fe09b1c035d06d0610ccc31b88d54d86a6e1f55562974d9e7b
+  checksum: a45c33f2b2f3425b8bfaea6fd6ca985c9df21b85b46531c1e028153d9553629e33f5c3b04c6dfd63873aaae4285dacfc541d10b9aa4a0756b3c440ebf70179cc
   languageName: node
   linkType: hard
 
@@ -13069,7 +13069,7 @@ __metadata:
   dependencies:
     "@commitlint/cli": 19.5.0
     "@commitlint/config-conventional": 19.5.0
-    "@microsoft/api-documenter": 7.25.19
+    "@microsoft/api-documenter": 7.25.21
     fs-extra: 11.2.0
     npm-run-all2: 6.2.4
     prettier: 3.3.3
