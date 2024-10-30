@@ -1929,7 +1929,7 @@ __metadata:
     react-i18next: ^15.0.2
     react-modal: ^3.16.1
     react-router-dom: 5.3.4
-    recharts: 2.13.0
+    recharts: 2.13.2
     rollup-plugin-polyfill-node: 0.13.0
     theme-ui: 0.6.0-canary.1544.5359f8a1e408a4dfeb74a9ae39688270286e534a.0
     typescript: 5.4.2
@@ -16359,9 +16359,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"recharts@npm:2.13.0":
-  version: 2.13.0
-  resolution: "recharts@npm:2.13.0"
+"recharts@npm:2.13.2":
+  version: 2.13.2
+  resolution: "recharts@npm:2.13.2"
   dependencies:
     clsx: ^2.0.0
     eventemitter3: ^4.0.1
@@ -16374,7 +16374,7 @@ __metadata:
   peerDependencies:
     react: ^16.0.0 || ^17.0.0 || ^18.0.0
     react-dom: ^16.0.0 || ^17.0.0 || ^18.0.0
-  checksum: b4a53895fba5cf152dd9147030c227183eee2b67d0e21ba738ae3782e625d1ebdebe5ced57a6f00d4ef51e418fc50e1c816a0801648039166f3929b412d22847
+  checksum: 2161d7b232ba7b2195871cb246889a676d25d77760bf03be20999dd08cc6052d6451a1d635770cbd3c44ec5cab1cf89d1c1e4b2a94cd33f48715094fd50099b4
   languageName: node
   linkType: hard
 
