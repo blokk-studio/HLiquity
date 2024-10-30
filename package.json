@@ -97,7 +97,7 @@
     "@commitlint/config-conventional": "19.5.0",
     "@microsoft/api-documenter": "7.25.21",
     "fs-extra": "11.2.0",
-    "npm-run-all2": "6.2.4",
+    "npm-run-all2": "6.2.6",
     "prettier": "3.3.3",
     "sass": "1.80.3",
     "semantic-release": "24.1.3",
