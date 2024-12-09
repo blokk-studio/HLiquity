@@ -1916,7 +1916,7 @@ __metadata:
   dependencies:
     "@ethersproject/bignumber": 5.7.0
     "@microsoft/api-extractor": 7.47.11
-    "@types/mocha": 10.0.9
+    "@types/mocha": 10.0.10
     "@typescript-eslint/eslint-plugin": 4.33.0
     "@typescript-eslint/parser": 4.33.0
     eslint: 7.32.0
@@ -1940,7 +1940,7 @@ __metadata:
     "@types/chai-as-promised": 8.0.1
     "@types/chai-spies": 1.0.6
     "@types/fs-extra": 11.0.4
-    "@types/mocha": 10.0.9
+    "@types/mocha": 10.0.10
     "@types/node": 14.18.63
     "@types/sinon-chai": 4.0.0
     "@types/ws": 8.5.12
@@ -4923,10 +4923,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/mocha@npm:10.0.9":
-  version: 10.0.9
-  resolution: "@types/mocha@npm:10.0.9"
-  checksum: cd15e7df49338466e75c580991d8fb3f86dad567f3abd6ca6489c0875b8af44f57a95167552fab7bbc950f53f97596be30b3507a9c16e0dc8d41a2d1e23b169d
+"@types/mocha@npm:10.0.10":
+  version: 10.0.10
+  resolution: "@types/mocha@npm:10.0.10"
+  checksum: 17a56add60a8cc8362d3c62cb6798be3f89f4b6ccd5b9abd12b46e31ff299be21ff2faebf5993de7e0099559f58ca5a3b49a505d302dfa5d65c5a4edfc089195
   languageName: node
   linkType: hard
 
