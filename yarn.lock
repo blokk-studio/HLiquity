@@ -8187,8 +8187,8 @@ __metadata:
   linkType: hard
 
 "connectkit@npm:^1.3.0":
-  version: 1.3.0
-  resolution: "connectkit@npm:1.3.0"
+  version: 1.8.2
+  resolution: "connectkit@npm:1.8.2"
   dependencies:
     buffer: ^6.0.3
     detect-browser: ^5.3.0
@@ -8199,11 +8199,12 @@ __metadata:
     resize-observer-polyfill: ^1.5.1
     styled-components: ^5.3.5
   peerDependencies:
-    ethers: ">=5.5.0 <6"
+    "@tanstack/react-query": ">=5.0.0"
     react: 17.x || 18.x
     react-dom: 17.x || 18.x
-    wagmi: 0.12.x
-  checksum: b54fc6b7267be17d3fff69cb51f38d8537ca40d4611fb2685bb41501cac05b77e91cc35c1b5542958aae2d6d0bc1f987210ca3951b7e55e88da7b417f90195a0
+    viem: 2.x
+    wagmi: 2.x
+  checksum: 8c8e6715797429188a978d91b6624a2a44558a5b85227d79b71196ade4eb3444a68e1c95d10117fdf2657cf0c5cadabeb60bf4156c1c8d2daceabb8d748af4d7
   languageName: node
   linkType: hard
 
