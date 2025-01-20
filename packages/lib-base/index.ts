@@ -8,6 +8,7 @@ export * from "./src/ReadableLiquity";
 export * from "./src/ObservableLiquity";
 export * from "./src/TransactableLiquity";
 export * from "./src/SendableLiquity";
+export * from "./src/slippage";
 export * from "./src/PopulatableLiquity";
 export * from "./src/HLiquityStore";
 export * from "./src/_CachedReadableLiquity";
