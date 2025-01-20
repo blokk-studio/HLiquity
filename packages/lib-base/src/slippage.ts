@@ -12,7 +12,7 @@ export const getSlippage = (options: {
   redeemedHchf: Decimal;
   /** the current redemption fee */
   redemptionFee: Decimal;
-}): Decimal => {
+}): Decimal | null => {
   let remainingHchf = Decimal.from(options.redeemedHchf);
   let affectedHbar = Decimal.ZERO;
   let affectedHchf = Decimal.ZERO;
@@ -39,7 +39,12 @@ export const getSlippage = (options: {
     .div(affectedHchf)
     .mul(Decimal.ONE.sub(options.redemptionFee));
   const targetHbarPerHchf = options.totalHbar.div(options.totalHchf);
-  const slippage = Decimal.ONE.sub(receivedHbarPerHchf.div(targetHbarPerHchf)).mul(100);
+  const recievedToTargetHbarPerHchfRatio = receivedHbarPerHchf.div(targetHbarPerHchf);
+  if (Decimal.ONE.lt(recievedToTargetHbarPerHchfRatio)) {
+    return null;
+  }
+
+  const slippage = Decimal.ONE.sub(recievedToTargetHbarPerHchfRatio).mul(100);
 
   return slippage;
 };
