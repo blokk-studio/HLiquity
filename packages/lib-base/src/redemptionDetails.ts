@@ -30,11 +30,12 @@ export const getRedemptionDetails = (options: {
     if (trove.debt.lte(remainingHchf)) {
       // entire trove will be consumed
       affectedHbar = affectedHbar.add(trove.collateral);
-      affectedHchf = affectedHbar.add(trove.debt);
+      affectedHchf = affectedHchf.add(trove.debt);
       remainingHchf = remainingHchf.sub(trove.debt);
     } else {
       // trove will be partially consumed
-      affectedHbar = trove.collateral.mulDiv(remainingHchf, trove.debt);
+      const amountOfTroveCollateral = trove.collateral.mulDiv(remainingHchf, trove.debt);
+      affectedHbar = affectedHbar.add(amountOfTroveCollateral);
       affectedHchf = affectedHchf.add(remainingHchf);
       remainingHchf = Decimal.ZERO;
     }
