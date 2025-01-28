@@ -1,7 +1,7 @@
-import { Decimal } from "./Decimal";
+import { Decimal, Percent } from "./Decimal";
 import { Trove } from "./Trove";
 
-export const getSlippage = (options: {
+export const getRedemptionDetails = (options: {
   /** troves sorted by their ascending collateral ratio (lowest first) */
   sortedTroves: Trove[];
   /** the total amount of hbar (collateral) that is locked in the protocol */
@@ -10,9 +10,14 @@ export const getSlippage = (options: {
   totalHbar: Decimal;
   /** the amoubt of hchf a user wants to redeem */
   redeemedHchf: Decimal;
-  /** the current redemption fee */
+  /** the current redemption fee as a decimal percentage (0-1 ^= 0%-100%) */
   redemptionFee: Decimal;
-}): Decimal | null => {
+}): {
+  redeemedHchf: Decimal;
+  receivedHbar: Decimal;
+  redemptionFeeInHbar: Decimal;
+  slippage: Percent<Decimal, Decimal>;
+} | null => {
   let remainingHchf = Decimal.from(options.redeemedHchf);
   let affectedHbar = Decimal.ZERO;
   let affectedHchf = Decimal.ZERO;
@@ -35,16 +40,20 @@ export const getSlippage = (options: {
     }
   }
 
-  const receivedHbarPerHchf = affectedHbar
-    .div(affectedHchf)
-    .mul(Decimal.ONE.sub(options.redemptionFee));
+  const receivedHbar = affectedHbar.mul(Decimal.ONE.sub(options.redemptionFee));
+  const redemptionFeeInHbar = affectedHbar.mul(options.redemptionFee);
+  const receivedHbarPerHchf = receivedHbar.div(affectedHchf);
   const targetHbarPerHchf = options.totalHbar.div(options.totalHchf);
   const recievedToTargetHbarPerHchfRatio = receivedHbarPerHchf.div(targetHbarPerHchf);
   if (Decimal.ONE.lt(recievedToTargetHbarPerHchfRatio)) {
     return null;
   }
+  const slippage = new Percent(Decimal.ONE.sub(recievedToTargetHbarPerHchfRatio));
 
-  const slippage = Decimal.ONE.sub(recievedToTargetHbarPerHchfRatio).mul(100);
-
-  return slippage;
+  return {
+    redeemedHchf: affectedHchf,
+    receivedHbar,
+    redemptionFeeInHbar,
+    slippage
+  };
 };
