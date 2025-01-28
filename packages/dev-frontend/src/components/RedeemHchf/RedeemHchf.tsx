@@ -1,9 +1,9 @@
-import React, { useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { Flex, Button, Box, Card, Heading } from "theme-ui";
-import { Decimal } from "@liquity/lib-base";
+import { Decimal, getRedemptionDetails, Percent, Trove } from "@liquity/lib-base";
 import { useLiquitySelector } from "@liquity/lib-react";
 
-import { Amount } from "../ActionDescription";
+import { ActionDescription, Amount } from "../ActionDescription";
 import { useMyTransactionState, useTxFunction } from "../Transaction";
 import { COIN } from "../../strings";
 import { Icon } from "../Icon";
@@ -15,8 +15,20 @@ import { LoadingButton } from "../LoadingButton";
 import { EditableRow } from "../Trove/Editor";
 import { ErrorDescription } from "../ErrorDescription";
 import { useConstants } from "../../hooks/constants";
+import { InfoIcon } from "../InfoIcon";
 
 const TRANSACTION_ID = "trove-adjustment";
+
+const redemptionInformation = (
+  <>
+    You will receive HBAR at face value (based on current price feed) for the redeemed HCHF, minus a
+    dynamic redemption fee. The system selects Troves with the lowest collateral ratio to fulfill the
+    redemption.
+    <br />
+    Redemption fees usually range from 0.5% to 5%, but in extreme cases of sustained redemptions,
+    fees can increase beyond this range.
+  </>
+);
 
 export const RedeemHchf: React.FC = () => {
   const constants = useConstants();
@@ -47,7 +59,7 @@ export const RedeemHchf: React.FC = () => {
   // consent & approval
   // hchf token association
   const { liquity } = useLiquity();
-  const { hchfTokenAllowanceOfHchfContract } = useLiquitySelector(state => state);
+  const { hchfTokenAllowanceOfHchfContract, fees, total } = useLiquitySelector(state => state);
   // hchf spender approval
   const needsSpenderApproval = true;
   const hchfContractHasHchfTokenAllowance =
@@ -79,6 +91,32 @@ export const RedeemHchf: React.FC = () => {
   ];
 
   const editingState = useState<string>();
+
+  const [troves, setTroves] = useState<Trove[]>([]);
+  useEffect(() => {
+    liquity.getTroves({ sortedBy: "ascendingCollateralRatio", first: 1000 }).then(setTroves);
+  }, [liquity]);
+  const redemptionDetails = useMemo(() => {
+    const redeemedFractionOfSupply = amountOfHchfToRedeem.div(total.debt);
+    const redemptionFee = fees.redemptionRate(redeemedFractionOfSupply);
+    const redemptionDetails = getRedemptionDetails({
+      redeemedHchf: amountOfHchfToRedeem,
+      redemptionFee,
+      totalHbar: total.collateral,
+      totalHchf: total.debt,
+      sortedTroves: troves
+    });
+    const redemptionFeePercent = new Percent(redemptionFee);
+
+    if (!redemptionDetails) {
+      return null;
+    }
+
+    return {
+      ...redemptionDetails,
+      redemptionFeePercent
+    };
+  }, [amountOfHchfToRedeem, fees, total, troves]);
 
   return (
     <Card>
@@ -126,7 +164,6 @@ export const RedeemHchf: React.FC = () => {
             .
           </ErrorDescription>
         )}
-
         {!isRedemptionAmountWithinBalance && (
           <ErrorDescription>
             The amount you're trying to deposit exceeds your balance by{" "}
@@ -135,6 +172,26 @@ export const RedeemHchf: React.FC = () => {
             </Amount>
             .
           </ErrorDescription>
+        )}
+
+        {redemptionDetails ? (
+          <ActionDescription>
+            You will redeem {redemptionDetails.redeemedHchf.prettify(2)} HCHF for{" "}
+            {redemptionDetails.receivedHbar.prettify(2)} HBAR for a fee of{" "}
+            {redemptionDetails.redemptionFeeInHbar.prettify(2)} HBAR (
+            {redemptionDetails.redemptionFeePercent.prettify()}).
+            <InfoIcon
+              tooltip={
+                <>
+                  These numbers are an approximation.
+                  <br />
+                  {redemptionInformation}
+                </>
+              }
+            />
+          </ActionDescription>
+        ) : (
+          <ActionDescription>{redemptionInformation}</ActionDescription>
         )}
 
         <Flex variant="layout.actions">
