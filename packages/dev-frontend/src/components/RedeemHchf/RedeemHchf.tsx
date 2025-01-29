@@ -94,7 +94,16 @@ export const RedeemHchf: React.FC = () => {
 
   const [troves, setTroves] = useState<Trove[]>([]);
   useEffect(() => {
-    liquity.getTroves({ sortedBy: "ascendingCollateralRatio", first: 1000 }).then(setTroves);
+    let mounted = true;
+    liquity.getTroves({ sortedBy: "ascendingCollateralRatio", first: 1000 }).then(troves => {
+      if (mounted) {
+        setTroves(troves);
+      }
+    });
+
+    return () => {
+      mounted = false;
+    };
   }, [liquity]);
   const redemptionDetails = useMemo(() => {
     const redeemedFractionOfSupply = amountOfHchfToRedeem.div(total.debt);
