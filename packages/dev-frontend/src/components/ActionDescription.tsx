@@ -1,8 +1,9 @@
 import { Box, Flex, Text } from "theme-ui";
 
 import { Icon } from "./Icon";
+import { ReactNode } from "react";
 
-export const ActionDescription: React.FC = ({ children }) => (
+export const ActionDescription: React.FC<{ icon?: ReactNode }> = ({ children, icon }) => (
   <Box
     sx={{
       display: "flex",
@@ -20,7 +21,7 @@ export const ActionDescription: React.FC = ({ children }) => (
     }}
   >
     <Flex sx={{ alignItems: "center" }}>
-      <Icon name="info-circle" size="lg" />
+      {icon ?? <Icon name="info-circle" size="lg" />}
       <Text sx={{ ml: 2 }}>{children}</Text>
     </Flex>
   </Box>
