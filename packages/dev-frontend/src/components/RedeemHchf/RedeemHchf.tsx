@@ -1,6 +1,6 @@
-import React, { useEffect, useMemo, useState } from "react";
-import { Flex, Button, Box, Card, Heading } from "theme-ui";
-import { Decimal, getRedemptionDetails, Percent, Trove } from "@liquity/lib-base";
+import React, { useEffect, useState } from "react";
+import { Flex, Button, Box, Card, Heading, Spinner } from "theme-ui";
+import { Decimal, getRedemptionDetails, Percent } from "@liquity/lib-base";
 import { useLiquitySelector } from "@liquity/lib-react";
 
 import { ActionDescription, Amount } from "../ActionDescription";
@@ -71,7 +71,7 @@ export const RedeemHchf: React.FC = () => {
     }
 
     await liquity.approveHchfToSpendHchf(amountOfHchfToRedeem);
-  });
+  }, [amountOfHchfToRedeem, hchfTokenAllowanceOfHchfContract, fees, total]);
 
   const transactionSteps: Step[] = [
     {
@@ -92,40 +92,63 @@ export const RedeemHchf: React.FC = () => {
 
   const editingState = useState<string>();
 
-  const [troves, setTroves] = useState<Trove[]>([]);
+  const [areRedemptionDetailsLoading, setAreRedemptionDetailsLoading] = useState(false);
+  const [redemptionDetails, setRedemptionDetails] = useState<
+    | (ReturnType<typeof getRedemptionDetails> & { redemptionFeePercent: Percent<Decimal, Decimal> })
+    | null
+  >();
   useEffect(() => {
     let mounted = true;
-    liquity.getTroves({ sortedBy: "ascendingCollateralRatio", first: 1000 }).then(troves => {
-      if (mounted) {
-        setTroves(troves);
-      }
-    });
+    setRedemptionDetails(null);
+    setAreRedemptionDetailsLoading(true);
+
+    if (amountOfHchfToRedeem.isZero) {
+      setRedemptionDetails(null);
+      setAreRedemptionDetailsLoading(false);
+      return;
+    }
+
+    Promise.all([
+      liquity.getFees(),
+      liquity.getTotal(),
+      liquity.getTroves({ sortedBy: "ascendingCollateralRatio", first: 1000, startingAt: 0 })
+    ])
+
+      .then(([fees, total, troves]) => {
+        if (!mounted) {
+          return;
+        }
+
+        const redeemedFractionOfSupply = amountOfHchfToRedeem.div(total.debt);
+        const redemptionFee = fees.redemptionRate(redeemedFractionOfSupply);
+        const redemptionDetails = getRedemptionDetails({
+          redeemedHchf: amountOfHchfToRedeem,
+          redemptionFee,
+          totalHbar: total.collateral,
+          totalHchf: total.debt,
+          sortedTroves: troves
+        });
+
+        if (!redemptionDetails) {
+          setRedemptionDetails(null);
+          setAreRedemptionDetailsLoading(false);
+          return;
+        }
+
+        const redemptionFeePercent = new Percent<Decimal, Decimal>(redemptionFee);
+        const extendedRedemptionDetails = {
+          ...redemptionDetails,
+          redemptionFeePercent
+        };
+
+        setRedemptionDetails(extendedRedemptionDetails);
+        setAreRedemptionDetailsLoading(false);
+      });
 
     return () => {
       mounted = false;
     };
-  }, [liquity]);
-  const redemptionDetails = useMemo(() => {
-    const redeemedFractionOfSupply = amountOfHchfToRedeem.div(total.debt);
-    const redemptionFee = fees.redemptionRate(redeemedFractionOfSupply);
-    const redemptionDetails = getRedemptionDetails({
-      redeemedHchf: amountOfHchfToRedeem,
-      redemptionFee,
-      totalHbar: total.collateral,
-      totalHchf: total.debt,
-      sortedTroves: troves
-    });
-    const redemptionFeePercent = new Percent(redemptionFee);
-
-    if (!redemptionDetails) {
-      return null;
-    }
-
-    return {
-      ...redemptionDetails,
-      redemptionFeePercent
-    };
-  }, [amountOfHchfToRedeem, fees, total, troves]);
+  }, [liquity, amountOfHchfToRedeem]);
 
   return (
     <Card>
@@ -183,25 +206,29 @@ export const RedeemHchf: React.FC = () => {
           </ErrorDescription>
         )}
 
-        {redemptionDetails ? (
-          <ActionDescription>
-            You will redeem {redemptionDetails.redeemedHchf.prettify(2)} HCHF for{" "}
-            {redemptionDetails.receivedHbar.prettify(2)} HBAR for a fee of{" "}
-            {redemptionDetails.redemptionFeeInHbar.prettify(2)} HBAR (
-            {redemptionDetails.redemptionFeePercent.prettify()}).
-            <InfoIcon
-              tooltip={
-                <>
-                  These numbers are an approximation.
-                  <br />
-                  {redemptionInformation}
-                </>
-              }
-            />
-          </ActionDescription>
-        ) : (
-          <ActionDescription>{redemptionInformation}</ActionDescription>
-        )}
+        <ActionDescription
+          icon={areRedemptionDetailsLoading && <Spinner sx={{ flex: "1.3333rem 0 0" }} />}
+        >
+          {redemptionDetails ? (
+            <>
+              You will redeem {redemptionDetails.redeemedHchf.prettify(2)} HCHF for{" "}
+              {redemptionDetails.receivedHbar.prettify(2)} HBAR for a fee of{" "}
+              {redemptionDetails.redemptionFeeInHbar.prettify(2)} HBAR (
+              {redemptionDetails.redemptionFeePercent.prettify()}).
+              <InfoIcon
+                tooltip={
+                  <>
+                    These numbers are an approximation.
+                    <br />
+                    {redemptionInformation}
+                  </>
+                }
+              />
+            </>
+          ) : (
+            redemptionInformation
+          )}
+        </ActionDescription>
 
         <Flex variant="layout.actions">
           {needsSpenderApproval && !hchfContractHasHchfTokenAllowance ? (
