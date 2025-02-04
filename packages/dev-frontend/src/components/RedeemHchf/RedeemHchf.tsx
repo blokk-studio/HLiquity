@@ -111,10 +111,11 @@ export const RedeemHchf: React.FC = () => {
     Promise.all([
       liquity.getFees(),
       liquity.getTotal(),
-      liquity.getTroves({ sortedBy: "ascendingCollateralRatio", first: 1000, startingAt: 0 })
+      liquity.getTroves({ sortedBy: "ascendingCollateralRatio", first: 1000, startingAt: 0 }),
+      liquity.getPrice()
     ])
 
-      .then(([fees, total, troves]) => {
+      .then(([fees, total, troves, price]) => {
         if (!mounted) {
           return;
         }
@@ -126,7 +127,9 @@ export const RedeemHchf: React.FC = () => {
           redemptionFee,
           totalHbar: total.collateral,
           totalHchf: total.debt,
-          sortedTroves: troves
+          sortedTroves: troves,
+          constants,
+          price
         });
 
         if (!redemptionDetails) {
@@ -148,7 +151,7 @@ export const RedeemHchf: React.FC = () => {
     return () => {
       mounted = false;
     };
-  }, [liquity, amountOfHchfToRedeem]);
+  }, [liquity, amountOfHchfToRedeem, constants]);
 
   return (
     <Card>
