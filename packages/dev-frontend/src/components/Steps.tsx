@@ -93,6 +93,7 @@ export const Steps: React.FunctionComponent<{ steps: Step[]; sx?: ThemeUIStyleOb
   return (
     <ul
       sx={{
+        isolation: "isolate",
         listStyle: "none",
         paddingLeft: "0",
         display: "flex",
