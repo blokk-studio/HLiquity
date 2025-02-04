@@ -558,15 +558,19 @@ export class HashgraphLiquity
   }
 
   async refresh(): Promise<LiquityStoreState<HashgraphLiquityStoreState>> {
-    const stateUpdates = await this.fetchStoreValues()
+    try {
+      const stateUpdates = await this.fetchStoreValues()
 
-    if (this._loaded) {
-      this._update(...stateUpdates)
+      if (this._loaded) {
+        this._update(...stateUpdates)
 
-      return this.state
+        return this.state
+      }
+
+      this._load(...stateUpdates)
+    } catch (throwable) {
+      console.warn(`unable to update the store`, throwable)
     }
-
-    this._load(...stateUpdates)
 
     return this.state
   }
