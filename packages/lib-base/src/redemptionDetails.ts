@@ -1,3 +1,4 @@
+import { Constants } from "./constants";
 import { Decimal, Percent } from "./Decimal";
 import { Trove } from "./Trove";
 
@@ -12,38 +13,59 @@ export const getRedemptionDetails = (options: {
   redeemedHchf: Decimal;
   /** the current redemption fee as a decimal percentage (0-1 ^= 0%-100%) */
   redemptionFee: Decimal;
+  /**
+   * the constants for the deployment
+   *
+   * the liquidation reserve has to be subtracted from the trove debt to get the amount of trove debt that can be redeemed.
+   */
+  constants: Pick<Constants, "HCHF_LIQUIDATION_RESERVE">;
+  /**
+   * the price of the collateral currency in chf (=hchf)
+   *
+   * 1 hbar = <price> chf
+   */
+  price: Decimal;
 }): {
   redeemedHchf: Decimal;
   receivedHbar: Decimal;
   redemptionFeeInHbar: Decimal;
   slippage: Percent<Decimal, Decimal>;
 } | null => {
-  let remainingHchf = Decimal.from(options.redeemedHchf);
-  let affectedHbar = Decimal.ZERO;
-  let affectedHchf = Decimal.ZERO;
+  let remainingHchfWithWhichToPayOffTroveDebt = Decimal.from(options.redeemedHchf);
+  let receivedHbarBeforeFee = Decimal.ZERO;
+  let redeemedHchf = Decimal.ZERO;
   for (const trove of options.sortedTroves) {
     // stop if all hchf is redeemed
-    if (remainingHchf.isZero) {
+    if (remainingHchfWithWhichToPayOffTroveDebt.isZero) {
       break;
     }
 
-    if (trove.debt.lte(remainingHchf)) {
+    const usableTroveDebt = trove.debt.sub(options.constants.HCHF_LIQUIDATION_RESERVE);
+    // calculate the value of the debt in the collateral currency. this (minus fee) is what the redeemer will get for paying the trove debt.
+    const usableTroveCollateral = usableTroveDebt.div(options.price);
+
+    if (usableTroveDebt.lte(remainingHchfWithWhichToPayOffTroveDebt)) {
       // entire trove will be consumed
-      affectedHbar = affectedHbar.add(trove.collateral);
-      affectedHchf = affectedHchf.add(trove.debt);
-      remainingHchf = remainingHchf.sub(trove.debt);
+      receivedHbarBeforeFee = receivedHbarBeforeFee.add(usableTroveCollateral);
+      redeemedHchf = redeemedHchf.add(usableTroveDebt);
+      remainingHchfWithWhichToPayOffTroveDebt =
+        remainingHchfWithWhichToPayOffTroveDebt.sub(usableTroveDebt);
     } else {
       // trove will be partially consumed
-      const amountOfTroveCollateral = trove.collateral.mulDiv(remainingHchf, trove.debt);
-      affectedHbar = affectedHbar.add(amountOfTroveCollateral);
-      affectedHchf = affectedHchf.add(remainingHchf);
-      remainingHchf = Decimal.ZERO;
+      const paidOfDebtInCollateralCurrency = remainingHchfWithWhichToPayOffTroveDebt.div(
+        options.price
+      );
+      receivedHbarBeforeFee = receivedHbarBeforeFee.add(paidOfDebtInCollateralCurrency);
+      redeemedHchf = redeemedHchf.add(remainingHchfWithWhichToPayOffTroveDebt);
+      remainingHchfWithWhichToPayOffTroveDebt = Decimal.ZERO;
     }
   }
 
-  const receivedHbar = affectedHbar.mul(Decimal.ONE.sub(options.redemptionFee));
-  const redemptionFeeInHbar = affectedHbar.mul(options.redemptionFee);
-  const receivedHbarPerHchf = receivedHbar.div(affectedHchf);
+  // HBAR the user gets
+  const redemptionFeeInHbar = receivedHbarBeforeFee.mul(options.redemptionFee);
+  const receivedHbarAfterFee = receivedHbarBeforeFee.sub(redemptionFeeInHbar);
+  // slippage
+  const receivedHbarPerHchf = receivedHbarAfterFee.div(redeemedHchf);
   const targetHbarPerHchf = options.totalHbar.div(options.totalHchf);
   const recievedToTargetHbarPerHchfRatio = receivedHbarPerHchf.div(targetHbarPerHchf);
   if (Decimal.ONE.lt(recievedToTargetHbarPerHchfRatio)) {
@@ -52,8 +74,8 @@ export const getRedemptionDetails = (options: {
   const slippage = new Percent(Decimal.ONE.sub(recievedToTargetHbarPerHchfRatio));
 
   return {
-    redeemedHchf: affectedHchf,
-    receivedHbar,
+    redeemedHchf,
+    receivedHbar: receivedHbarAfterFee,
     redemptionFeeInHbar,
     slippage
   };
