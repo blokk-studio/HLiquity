@@ -296,16 +296,20 @@ export class BlockPolledLiquityStore extends HLiquityStore<BlockPolledLiquitySto
   }
 
   public async refresh(): Promise<LiquityStoreState<BlockPolledLiquityStoreExtraState>> {
-    const state = await this._get();
+    try {
+      const state = await this._get();
 
-    if (this._loaded) {
-      this._update(...state);
+      if (this._loaded) {
+        this._update(...state);
 
-      return this.state;
-    } else {
+        return this.state;
+      }
       this._load(...state);
-      return this.state;
+    } catch (throwable) {
+      console.warn(`unable to update the store`, throwable);
     }
+
+    return this.state;
   }
 
   /** @internal @override */
