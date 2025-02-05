@@ -2,10 +2,7 @@
 import { Icon } from "./Icon";
 import { Tooltip } from "./Tooltip";
 import { Text } from "theme-ui";
-import { keyframes } from "@emotion/react";
-
-const spin = keyframes({ from: { rotate: "0deg" }, to: { rotate: "360deg" } });
-const scale = keyframes({ "0%": { scale: "1" }, "50%": { scale: "1.1" }, "100%": { scale: "1" } });
+import styles from "./NewFeatureDisclaimer.module.css";
 
 export const NewFeatureDisclaimer: React.FC = () => {
   return (
@@ -22,17 +19,17 @@ export const NewFeatureDisclaimer: React.FC = () => {
           role="presentation"
           sx={{
             display: "grid",
-            placeContent: "center",
-            animation: `${spin} 2s infinite linear`
+            placeContent: "center"
           }}
+          className={styles.spinAnimation}
         >
           <span
             role="presentation"
             sx={{
               display: "grid",
-              placeContent: "center",
-              animation: `${scale} 1s infinite ease`
+              placeContent: "center"
             }}
+            className={styles.scaleAnimation}
           >
             <Icon name="certificate" size="lg" color="#ff755f" />
           </span>
