@@ -4,6 +4,7 @@
   "private": true,
   "type": "module",
   "dependencies": {
+    "@emotion/react": "^11.14.0",
     "@ethersproject/abi": "5.7.0",
     "@ethersproject/experimental": "5.7.0",
     "@fortawesome/fontawesome-svg-core": "1.2.36",
