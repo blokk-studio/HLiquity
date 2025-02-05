@@ -1,3 +1,4 @@
+/** @jsxImportSource theme-ui */
 import React, { useEffect, useState } from "react";
 import { Flex, Button, Box, Card, Heading, Spinner } from "theme-ui";
 import { Decimal, getRedemptionDetails, Percent } from "@liquity/lib-base";
@@ -16,6 +17,7 @@ import { EditableRow } from "../Trove/Editor";
 import { ErrorDescription } from "../ErrorDescription";
 import { useConstants } from "../../hooks/constants";
 import { InfoIcon } from "../InfoIcon";
+import { NewFeatureDisclaimer } from "../NewFeatureDisclaimer";
 
 const TRANSACTION_ID = "trove-adjustment";
 
@@ -209,29 +211,46 @@ export const RedeemHchf: React.FC = () => {
           </ErrorDescription>
         )}
 
-        <ActionDescription
-          icon={areRedemptionDetailsLoading && <Spinner sx={{ flex: "1.3333rem 0 0" }} />}
-        >
-          {redemptionDetails ? (
-            <>
-              You will redeem {redemptionDetails.redeemedHchf.prettify(2)} HCHF for{" "}
-              {redemptionDetails.receivedHbar.prettify(2)} HBAR for a fee of{" "}
-              {redemptionDetails.redemptionFeeInHbar.prettify(2)} HBAR (
-              {redemptionDetails.redemptionFeePercent.prettify()}).
-              <InfoIcon
-                tooltip={
-                  <>
-                    These numbers are an approximation.
-                    <br />
-                    {redemptionInformation}
-                  </>
-                }
-              />
-            </>
-          ) : (
-            redemptionInformation
-          )}
-        </ActionDescription>
+        <div role="presentation" sx={{ position: "relative", isolation: "isolate" }}>
+          <ActionDescription
+            icon={areRedemptionDetailsLoading && <Spinner sx={{ flex: "1.3333rem 0 0" }} />}
+          >
+            {redemptionDetails ? (
+              <>
+                You will redeem {redemptionDetails.redeemedHchf.prettify(2)} HCHF for{" "}
+                {redemptionDetails.receivedHbar.prettify(2)} HBAR for a fee of{" "}
+                {redemptionDetails.redemptionFeeInHbar.prettify(2)} HBAR (
+                {redemptionDetails.redemptionFeePercent.prettify()}).
+                <InfoIcon
+                  tooltip={
+                    <>
+                      These numbers are an approximation.
+                      <br />
+                      {redemptionInformation}
+                    </>
+                  }
+                />
+              </>
+            ) : (
+              redemptionInformation
+            )}
+          </ActionDescription>
+          <div
+            role="presentation"
+            sx={{
+              position: "absolute",
+              top: 0,
+              right: 0,
+              width: "100%",
+              pointerEvents: "none",
+              display: "grid",
+              justifyContent: "end",
+              translate: "0.5rem -0.5rem"
+            }}
+          >
+            <NewFeatureDisclaimer />
+          </div>
+        </div>
 
         <Flex variant="layout.actions">
           {needsSpenderApproval && !hchfContractHasHchfTokenAllowance ? (
