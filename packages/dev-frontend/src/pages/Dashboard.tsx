@@ -18,11 +18,10 @@ export const Dashboard: React.FC = () => {
         <Trove />
         <Stability />
         <Staking />
+        {canRedeemHchf && <RedeemHchf />}
         <MineViewProvider>
           <Mine />
         </MineViewProvider>
-
-        {canRedeemHchf && <RedeemHchf />}
       </Container>
 
       <Container variant="right">
