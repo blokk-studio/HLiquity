@@ -159,7 +159,7 @@ export const HederaDappConnectorProvider: React.FC<{ walletConnectProjectId: str
   const [dappConnectorError, setDappConnectorError] = useState<Error | null>(null);
   const selectedChain = useSelectedChain();
 
-  const setUpDappConnector = async (options: {
+  const initializeDappConnector = async (options: {
     walletConnectProjectId: string;
     ledgerId: LedgerId;
     enabledChainIds: HederaChainId[];
@@ -177,8 +177,38 @@ export const HederaDappConnectorProvider: React.FC<{ walletConnectProjectId: str
       setSession(extendedSession);
     };
 
+    const logger = import.meta.env.DEV ? "debug" : "error";
+    await dappConnector.init({ logger });
+
+    // check existing connections
+    if (dappConnector.signers.length) {
+      const signer = dappConnector.signers[0];
+      const userAccountId = signer.getAccountId();
+      const ledgerId = signer.getLedgerId();
+      const chain = getChainFromLedgerId(ledgerId);
+      const userAccountEvmAddress = await getAccountEvmAddress({
+        accountIdString: userAccountId.toString(),
+        chain
+      });
+      if (userAccountEvmAddress) {
+        const session: HederaDappConnectorSession = {
+          userAccountId,
+          userAccountEvmAddress,
+          ledgerId
+        };
+        setSession(session);
+      }
+    }
+
+    const walletConnectClient = dappConnector.walletConnectClient;
+    const onSessionDelete = () => {
+      setSession(null);
+    };
+    walletConnectClient?.on("session_delete", onSessionDelete);
+
     const destroy = () => {
       dappConnector.onSessionIframeCreated = null;
+      walletConnectClient?.off("session_delete", onSessionDelete);
 
       setHederaDappConnector(null);
       setSession(null);
@@ -206,34 +236,11 @@ export const HederaDappConnectorProvider: React.FC<{ walletConnectProjectId: str
         const enabledHederaChainIds = enabledChainIds.map(chainId => {
           return getHederaChainId(chainId);
         });
-        const { dappConnector, destroy } = await setUpDappConnector({
+        const { dappConnector, destroy } = await initializeDappConnector({
           walletConnectProjectId: props.walletConnectProjectId,
           ledgerId: selectedChain.ledgerId,
           enabledChainIds: enabledHederaChainIds
         });
-
-        const logger = import.meta.env.DEV ? "debug" : "error";
-        await dappConnector.init({ logger });
-
-        // check existing connections
-        if (dappConnector.signers.length) {
-          const signer = dappConnector.signers[0];
-          const userAccountId = signer.getAccountId();
-          const ledgerId = signer.getLedgerId();
-          const chain = getChainFromLedgerId(ledgerId);
-          const userAccountEvmAddress = await getAccountEvmAddress({
-            accountIdString: userAccountId.toString(),
-            chain
-          });
-          if (userAccountEvmAddress) {
-            const session: HederaDappConnectorSession = {
-              userAccountId,
-              userAccountEvmAddress,
-              ledgerId
-            };
-            setSession(session);
-          }
-        }
 
         setHederaDappConnector(dappConnector);
       } catch (error: unknown) {
