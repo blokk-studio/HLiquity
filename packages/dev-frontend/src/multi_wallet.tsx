@@ -74,14 +74,12 @@ export const MultiWalletProvider: React.FC = ({ children }) => {
     if (hasWagmi) {
       await wagmiDisconnect.disconnectAsync();
 
-      window.location.reload();
       return;
     }
 
     if (hasHederaDappConnector) {
       await hederaDappConnectorContext.disconnect();
 
-      window.location.reload();
       return;
     }
 
