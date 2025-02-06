@@ -123,29 +123,6 @@ const getDefaultConnectors = ({ chains, app, walletConnectProjectId }: DefaultCo
         headlessMode: true
       }
     }),
-    walletConnectProjectId
-      ? new WalletConnectConnector({
-          chains,
-          options: {
-            showQrModal: false,
-            projectId: walletConnectProjectId,
-            metadata:
-              app.name && app.icon && app.description && app.url
-                ? {
-                    name: app.name,
-                    description: app.description,
-                    url: app.url,
-                    icons: [app.icon]
-                  }
-                : undefined
-          }
-        })
-      : new WalletConnectLegacyConnector({
-          chains,
-          options: {
-            qrcode: false
-          }
-        }),
     new InjectedConnector({
       chains,
       options: {
@@ -211,7 +188,7 @@ const defaultClient = ({
       }),
     provider: provider ?? configuredProvider,
     webSocketProvider: enableWebSocketProvider // Removed by default, breaks if used in Next.js – "unhandledRejection: Error: could not detect network"
-      ? webSocketProvider ?? configuredWebSocketProvider
+      ? (webSocketProvider ?? configuredWebSocketProvider)
       : undefined
   };
 

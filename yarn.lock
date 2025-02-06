@@ -1571,6 +1571,19 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@hashgraph/hedera-wallet-connect@npm:^1.4.2":
+  version: 1.4.2
+  resolution: "@hashgraph/hedera-wallet-connect@npm:1.4.2"
+  peerDependencies:
+    "@hashgraph/sdk": ^2.40.0
+    "@walletconnect/qrcode-modal": ^1.8.0
+    "@walletconnect/types": ^2.17.0
+    "@walletconnect/utils": ^2.17.0
+    "@walletconnect/web3wallet": ^1.16.0
+  checksum: 958abf968597e0f7d3f3a830632e570308d1dd1c8688137c980198b0da1e5405163fa0f4d44416f74aeb8bef09a5bfabc436a6a049fd5f457ee958200876abdb
+  languageName: node
+  linkType: hard
+
 "@hashgraph/proto@npm:2.14.0-beta.3":
   version: 2.14.0-beta.3
   resolution: "@hashgraph/proto@npm:2.14.0-beta.3"
@@ -1868,6 +1881,7 @@ __metadata:
     "@fortawesome/free-regular-svg-icons": 5.15.4
     "@fortawesome/free-solid-svg-icons": 5.15.4
     "@fortawesome/react-fontawesome": 0.2.2
+    "@hashgraph/hedera-wallet-connect": ^1.4.2
     "@hashgraph/sdk": 2.41.0
     "@liquity/chicken-bonds": "file:.yalc/@liquity/chicken-bonds"
     "@liquity/lib-hashgraph": "workspace:^"
@@ -1980,6 +1994,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@liquity/lib-hashgraph@workspace:packages/lib-hashgraph"
   dependencies:
+    "@hashgraph/hedera-wallet-connect": ^1.4.2
     "@hashgraph/sdk": 2.41.0
     "@liquity/lib-base": "workspace:^"
     "@liquity/mirror-node": "workspace:^"

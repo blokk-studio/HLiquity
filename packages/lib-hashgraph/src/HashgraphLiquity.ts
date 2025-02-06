@@ -39,6 +39,7 @@ import { HashConnect } from 'hashconnect'
 import Web3, { Contract, MatchPrimitiveType } from 'web3'
 
 // contracts
+import { DAppConnector } from '@hashgraph/hedera-wallet-connect'
 import {
   AccountAllowanceApproveTransaction,
   AccountId,
@@ -98,8 +99,6 @@ import {
 import { BackendTroveStatus, userTroveStatusFrom } from './trove_status'
 import { getBlockTimestamp } from './web3'
 
-export const getHashgraphLiquity = () => {}
-
 interface HashgraphLiquityStoreState {}
 
 const decimalify = (matchPrimitiveType: MatchPrimitiveType<'uint256', unknown>) => {
@@ -148,6 +147,199 @@ interface LasagnaConnection {
   frontendTag: Address
 }
 
+type SendTransaction = (transaction: Transaction) => Promise<TransactionReceipt>
+
+const getWeb3Contracts = (options: {
+  rpcUrl: string
+  deploymentAddresses: Record<DeploymentAddressesKey, Address>
+}) => {
+  const web3 = new Web3(options.rpcUrl)
+
+  const activePool = new web3.eth.Contract(activePoolAbi, options.deploymentAddresses.activePool)
+  const activePoolContractId = getTypedContractId<ActivePoolAbi>(
+    0,
+    0,
+    options.deploymentAddresses.activePool,
+  )
+
+  const borrowerOperations = new web3.eth.Contract(
+    borrowerOperationsAbi,
+    options.deploymentAddresses.borrowerOperations,
+  )
+  const borrowerOperationsContractId = getTypedContractId<BorrowerOperationsAbi>(
+    0,
+    0,
+    options.deploymentAddresses.borrowerOperations,
+  )
+
+  const collSurplusPool = new web3.eth.Contract(
+    collSurplusPoolAbi,
+    options.deploymentAddresses.collSurplusPool,
+  )
+  const collSurplusPoolContractId = getTypedContractId<CollSurplusPoolAbi>(
+    0,
+    0,
+    options.deploymentAddresses.collSurplusPool,
+  )
+
+  const communityIssuance = new web3.eth.Contract(
+    communityIssuanceAbi,
+    options.deploymentAddresses.communityIssuance,
+  )
+  const communityIssuanceContractId = getTypedContractId<CommunityIssuanceAbi>(
+    0,
+    0,
+    options.deploymentAddresses.communityIssuance,
+  )
+
+  const defaultPool = new web3.eth.Contract(defaultPoolAbi, options.deploymentAddresses.defaultPool)
+  const defaultPoolContractId = getTypedContractId<DefaultPoolAbi>(
+    0,
+    0,
+    options.deploymentAddresses.defaultPool,
+  )
+
+  const gasPool = new web3.eth.Contract(gasPoolAbi, options.deploymentAddresses.gasPool)
+  const gasPoolContractId = getTypedContractId<GasPoolAbi>(
+    0,
+    0,
+    options.deploymentAddresses.gasPool,
+  )
+
+  const hchfToken = new web3.eth.Contract(hCHFTokenAbi, options.deploymentAddresses.hchfToken)
+  const hchfTokenContractId = getTypedContractId<HCHFTokenAbi>(
+    0,
+    0,
+    options.deploymentAddresses.hchfToken,
+  )
+
+  const hintHelpers = new web3.eth.Contract(hintHelpersAbi, options.deploymentAddresses.hintHelpers)
+  const hintHelpersContractId = getTypedContractId<HintHelpersAbi>(
+    0,
+    0,
+    options.deploymentAddresses.hintHelpers,
+  )
+
+  const hlqtStaking = new web3.eth.Contract(hLQTStakingAbi, options.deploymentAddresses.hlqtStaking)
+  const hlqtStakingContractId = getTypedContractId<HLQTStakingAbi>(
+    0,
+    0,
+    options.deploymentAddresses.hlqtStaking,
+  )
+
+  const hlqtToken = new web3.eth.Contract(hLQTTokenAbi, options.deploymentAddresses.hlqtToken)
+  const hlqtTokenContractId = getTypedContractId<HLQTTokenAbi>(
+    0,
+    0,
+    options.deploymentAddresses.hlqtToken,
+  )
+
+  const lockupContractFactory = new web3.eth.Contract(
+    lockupContractFactoryAbi,
+    options.deploymentAddresses.lockupContractFactory,
+  )
+  const lockupContractFactoryContractId = getTypedContractId<LockupContractFactoryAbi>(
+    0,
+    0,
+    options.deploymentAddresses.lockupContractFactory,
+  )
+
+  const multiTroveGetter = new web3.eth.Contract(
+    multiTroveGetterAbi,
+    options.deploymentAddresses.multiTroveGetter,
+  )
+  const multiTroveGetterContractId = getTypedContractId<MultiTroveGetterAbi>(
+    0,
+    0,
+    options.deploymentAddresses.multiTroveGetter,
+  )
+
+  const priceFeed = new web3.eth.Contract(priceFeedAbi, options.deploymentAddresses.priceFeed)
+  const priceFeedContractId = getTypedContractId<PriceFeedAbi>(
+    0,
+    0,
+    options.deploymentAddresses.priceFeed,
+  )
+
+  const sortedTroves = new web3.eth.Contract(
+    sortedTrovesAbi,
+    options.deploymentAddresses.sortedTroves,
+  )
+  const sortedTrovesContractId = getTypedContractId<SortedTrovesAbi>(
+    0,
+    0,
+    options.deploymentAddresses.sortedTroves,
+  )
+
+  const stabilityPool = new web3.eth.Contract(
+    stabilityPoolAbi,
+    options.deploymentAddresses.stabilityPool,
+  )
+  const stabilityPoolContractId = getTypedContractId<StabilityPoolAbi>(
+    0,
+    0,
+    options.deploymentAddresses.stabilityPool,
+  )
+
+  const troveManager = new web3.eth.Contract(
+    troveManagerAbi,
+    options.deploymentAddresses.troveManager,
+  )
+  const troveManagerContractId = getTypedContractId<TroveManagerAbi>(
+    0,
+    0,
+    options.deploymentAddresses.troveManager,
+  )
+
+  const saucerSwapPool = new web3.eth.Contract(
+    unipoolAbi,
+    options.deploymentAddresses.saucerSwapPool,
+  )
+  const saucerSwapPoolContractId = getTypedContractId<UnipoolAbi>(
+    0,
+    0,
+    options.deploymentAddresses.saucerSwapPool,
+  )
+
+  return {
+    web3,
+    collSurplusPool,
+    collSurplusPoolContractId,
+    communityIssuance,
+    communityIssuanceContractId,
+    defaultPool,
+    defaultPoolContractId,
+    gasPool,
+    gasPoolContractId,
+    hchfToken,
+    hchfTokenContractId,
+    hintHelpers,
+    hintHelpersContractId,
+    hlqtStaking,
+    hlqtStakingContractId,
+    hlqtToken,
+    hlqtTokenContractId,
+    lockupContractFactory,
+    lockupContractFactoryContractId,
+    multiTroveGetter,
+    multiTroveGetterContractId,
+    priceFeed,
+    priceFeedContractId,
+    sortedTroves,
+    sortedTrovesContractId,
+    stabilityPool,
+    stabilityPoolContractId,
+    activePool,
+    activePoolContractId,
+    borrowerOperations,
+    borrowerOperationsContractId,
+    troveManager,
+    troveManagerContractId,
+    saucerSwapPool,
+    saucerSwapPoolContractId,
+  }
+}
+
 export class HashgraphLiquity
   extends HLiquityStore<HashgraphLiquityStoreState>
   implements
@@ -169,8 +361,7 @@ export class HashgraphLiquity
 
   private readonly userAccountId: AccountId
   private readonly userAccountAddress: Address
-  // don't use account ids from the hashconnect instance.
-  private readonly hashConnect: Omit<HashConnect, 'connectedAccountIds'>
+  private readonly sendTransaction: SendTransaction
   private readonly web3: Web3
   private readonly totalStabilityPoolHlqtReward: Decimal
   private readonly frontendAddress: Address
@@ -217,7 +408,7 @@ export class HashgraphLiquity
   private constructor(options: {
     userAccountId: AccountId
     userAccountAddress: Address
-    userHashConnect: HashConnect
+    sendTransaction: SendTransaction
     web3: Web3
     totalStabilityPoolHlqtReward: Decimal
     frontendAddress: Address
@@ -270,7 +461,7 @@ export class HashgraphLiquity
 
     this.userAccountId = options.userAccountId
     this.userAccountAddress = options.userAccountAddress
-    this.hashConnect = options.userHashConnect
+    this.sendTransaction = options.sendTransaction
     this.web3 = options.web3
     this.totalStabilityPoolHlqtReward = options.totalStabilityPoolHlqtReward
     this.frontendAddress = options.frontendAddress
@@ -952,7 +1143,7 @@ export class HashgraphLiquity
       this.multiTroveGetter.methods
         .getMultipleSortedTroves(
           params.sortedBy === 'descendingCollateralRatio'
-            ? params.startingAt ?? 0
+            ? (params.startingAt ?? 0)
             : -((params.startingAt ?? 0) + 1),
           params.first,
         )
@@ -1061,7 +1252,7 @@ export class HashgraphLiquity
     return { status: 'unregistered' }
   }
 
-  public static fromEvmAddresses(options: {
+  public static fromEvmAddressesAndHashConnect(options: {
     deploymentAddresses: Record<DeploymentAddressesKey, Address>
     totalStabilityPoolHlqtReward: number
     frontendAddress: Address
@@ -1075,166 +1266,9 @@ export class HashgraphLiquity
     // TODO: remove when lasagna is removed
     deployment: Deployment
   }) {
-    const web3 = new Web3(options.rpcUrl)
     const totalStabilityPoolHlqtReward = Decimal.from(options.totalStabilityPoolHlqtReward)
 
-    const activePool = new web3.eth.Contract(activePoolAbi, options.deploymentAddresses.activePool)
-    const activePoolContractId = getTypedContractId<ActivePoolAbi>(
-      0,
-      0,
-      options.deploymentAddresses.activePool,
-    )
-
-    const borrowerOperations = new web3.eth.Contract(
-      borrowerOperationsAbi,
-      options.deploymentAddresses.borrowerOperations,
-    )
-    const borrowerOperationsContractId = getTypedContractId<BorrowerOperationsAbi>(
-      0,
-      0,
-      options.deploymentAddresses.borrowerOperations,
-    )
-
-    const collSurplusPool = new web3.eth.Contract(
-      collSurplusPoolAbi,
-      options.deploymentAddresses.collSurplusPool,
-    )
-    const collSurplusPoolContractId = getTypedContractId<CollSurplusPoolAbi>(
-      0,
-      0,
-      options.deploymentAddresses.collSurplusPool,
-    )
-
-    const communityIssuance = new web3.eth.Contract(
-      communityIssuanceAbi,
-      options.deploymentAddresses.communityIssuance,
-    )
-    const communityIssuanceContractId = getTypedContractId<CommunityIssuanceAbi>(
-      0,
-      0,
-      options.deploymentAddresses.communityIssuance,
-    )
-
-    const defaultPool = new web3.eth.Contract(
-      defaultPoolAbi,
-      options.deploymentAddresses.defaultPool,
-    )
-    const defaultPoolContractId = getTypedContractId<DefaultPoolAbi>(
-      0,
-      0,
-      options.deploymentAddresses.defaultPool,
-    )
-
-    const gasPool = new web3.eth.Contract(gasPoolAbi, options.deploymentAddresses.gasPool)
-    const gasPoolContractId = getTypedContractId<GasPoolAbi>(
-      0,
-      0,
-      options.deploymentAddresses.gasPool,
-    )
-
-    const hchfToken = new web3.eth.Contract(hCHFTokenAbi, options.deploymentAddresses.hchfToken)
-    const hchfTokenContractId = getTypedContractId<HCHFTokenAbi>(
-      0,
-      0,
-      options.deploymentAddresses.hchfToken,
-    )
-
-    const hintHelpers = new web3.eth.Contract(
-      hintHelpersAbi,
-      options.deploymentAddresses.hintHelpers,
-    )
-    const hintHelpersContractId = getTypedContractId<HintHelpersAbi>(
-      0,
-      0,
-      options.deploymentAddresses.hintHelpers,
-    )
-
-    const hlqtStaking = new web3.eth.Contract(
-      hLQTStakingAbi,
-      options.deploymentAddresses.hlqtStaking,
-    )
-    const hlqtStakingContractId = getTypedContractId<HLQTStakingAbi>(
-      0,
-      0,
-      options.deploymentAddresses.hlqtStaking,
-    )
-
-    const hlqtToken = new web3.eth.Contract(hLQTTokenAbi, options.deploymentAddresses.hlqtToken)
-    const hlqtTokenContractId = getTypedContractId<HLQTTokenAbi>(
-      0,
-      0,
-      options.deploymentAddresses.hlqtToken,
-    )
-
-    const lockupContractFactory = new web3.eth.Contract(
-      lockupContractFactoryAbi,
-      options.deploymentAddresses.lockupContractFactory,
-    )
-    const lockupContractFactoryContractId = getTypedContractId<LockupContractFactoryAbi>(
-      0,
-      0,
-      options.deploymentAddresses.lockupContractFactory,
-    )
-
-    const multiTroveGetter = new web3.eth.Contract(
-      multiTroveGetterAbi,
-      options.deploymentAddresses.multiTroveGetter,
-    )
-    const multiTroveGetterContractId = getTypedContractId<MultiTroveGetterAbi>(
-      0,
-      0,
-      options.deploymentAddresses.multiTroveGetter,
-    )
-
-    const priceFeed = new web3.eth.Contract(priceFeedAbi, options.deploymentAddresses.priceFeed)
-    const priceFeedContractId = getTypedContractId<PriceFeedAbi>(
-      0,
-      0,
-      options.deploymentAddresses.priceFeed,
-    )
-
-    const sortedTroves = new web3.eth.Contract(
-      sortedTrovesAbi,
-      options.deploymentAddresses.sortedTroves,
-    )
-    const sortedTrovesContractId = getTypedContractId<SortedTrovesAbi>(
-      0,
-      0,
-      options.deploymentAddresses.sortedTroves,
-    )
-
-    const stabilityPool = new web3.eth.Contract(
-      stabilityPoolAbi,
-      options.deploymentAddresses.stabilityPool,
-    )
-    const stabilityPoolContractId = getTypedContractId<StabilityPoolAbi>(
-      0,
-      0,
-      options.deploymentAddresses.stabilityPool,
-    )
-
-    const troveManager = new web3.eth.Contract(
-      troveManagerAbi,
-      options.deploymentAddresses.troveManager,
-    )
-    const troveManagerContractId = getTypedContractId<TroveManagerAbi>(
-      0,
-      0,
-      options.deploymentAddresses.troveManager,
-    )
-
-    const saucerSwapPool = new web3.eth.Contract(
-      unipoolAbi,
-      options.deploymentAddresses.saucerSwapPool,
-    )
-    const saucerSwapPoolContractId = getTypedContractId<UnipoolAbi>(
-      0,
-      0,
-      options.deploymentAddresses.saucerSwapPool,
-    )
-
     const {
-      userHashConnect,
       userAccountId,
       userAccountAddress,
       frontendAddress,
@@ -1242,52 +1276,80 @@ export class HashgraphLiquity
       fetch,
       constants,
     } = options
+    const sendTransaction: SendTransaction = (transaction) => {
+      return options.userHashConnect.sendTransaction(userAccountId, transaction)
+    }
+
+    const web3Contracts = getWeb3Contracts(options)
 
     const hashgraphLiquity = new HashgraphLiquity({
+      // contracts
+      ...web3Contracts,
+      // utilities
       userAccountId,
       userAccountAddress,
-      userHashConnect,
-      web3,
+      sendTransaction,
       totalStabilityPoolHlqtReward,
       frontendAddress,
       mirrorNodeBaseUrl,
       fetch,
       constants,
+
+      // lasagna
+      connection: options.deployment,
+    })
+
+    return hashgraphLiquity
+  }
+
+  public static fromEvmAddressesAndDappConnector(options: {
+    deploymentAddresses: Record<DeploymentAddressesKey, Address>
+    totalStabilityPoolHlqtReward: number
+    frontendAddress: Address
+    userAccountId: AccountId
+    userAccountAddress: Address
+    dappConnector: Pick<DAppConnector, 'getSigner'>
+    rpcUrl: `wss://${string}` | `https://${string}`
+    mirrorNodeBaseUrl: `https://${string}`
+    fetch: Fetch
+    constants: Constants
+    // TODO: remove when lasagna is removed
+    deployment: Deployment
+  }) {
+    const totalStabilityPoolHlqtReward = Decimal.from(options.totalStabilityPoolHlqtReward)
+
+    const {
+      userAccountId,
+      userAccountAddress,
+      frontendAddress,
+      mirrorNodeBaseUrl,
+      fetch,
+      constants,
+    } = options
+    const signer = options.dappConnector.getSigner(userAccountId)
+    const sendTransaction: SendTransaction = async (transaction) => {
+      const frozenTransaction = await transaction.freezeWithSigner(signer)
+      const transactionResponse = await frozenTransaction.executeWithSigner(signer)
+      const transactionReceipt = await transactionResponse.getReceiptWithSigner(signer)
+
+      return transactionReceipt
+    }
+
+    const web3Contracts = getWeb3Contracts(options)
+
+    const hashgraphLiquity = new HashgraphLiquity({
       // contracts
-      collSurplusPool,
-      collSurplusPoolContractId,
-      communityIssuance,
-      communityIssuanceContractId,
-      defaultPool,
-      defaultPoolContractId,
-      gasPool,
-      gasPoolContractId,
-      hchfToken,
-      hchfTokenContractId,
-      hintHelpers,
-      hintHelpersContractId,
-      hlqtStaking,
-      hlqtStakingContractId,
-      hlqtToken,
-      hlqtTokenContractId,
-      lockupContractFactory,
-      lockupContractFactoryContractId,
-      multiTroveGetter,
-      multiTroveGetterContractId,
-      priceFeed,
-      priceFeedContractId,
-      sortedTroves,
-      sortedTrovesContractId,
-      stabilityPool,
-      stabilityPoolContractId,
-      activePool,
-      activePoolContractId,
-      borrowerOperations,
-      borrowerOperationsContractId,
-      troveManager,
-      troveManagerContractId,
-      saucerSwapPool,
-      saucerSwapPoolContractId,
+      ...web3Contracts,
+      // utilities
+      userAccountId,
+      userAccountAddress,
+      sendTransaction,
+      totalStabilityPoolHlqtReward,
+      frontendAddress,
+      mirrorNodeBaseUrl,
+      fetch,
+      constants,
+
       // lasagna
       connection: options.deployment,
     })
@@ -1589,10 +1651,7 @@ export class HashgraphLiquity
       | ((options: GetDetailsOptions<RawPopulatedTransaction>) => Details)
   }) {
     const send = async (): Promise<SentHashgraphLiquityTransaction<Details>> => {
-      const rawReceipt = await this.hashConnect.sendTransaction(
-        this.userAccountId,
-        options.rawPopulatedTransaction,
-      )
+      const rawReceipt = await this.sendTransaction(options.rawPopulatedTransaction)
 
       const waitForReceipt = async (): Promise<MinedReceipt<TransactionReceipt, Details>> => {
         // wait for the receipt before querying
@@ -2533,7 +2592,7 @@ export class HashgraphLiquity
     })
 
     const [, tokenIds] = await Promise.all([
-      this.hashConnect.sendTransaction(this.userAccountId, unfrozenTransaction),
+      this.sendTransaction(unfrozenTransaction),
       this.getTokenIds(),
     ])
 
@@ -2556,7 +2615,7 @@ export class HashgraphLiquity
     })
 
     const [, tokenIds] = await Promise.all([
-      this.hashConnect.sendTransaction(this.userAccountId, unfrozenTransaction),
+      this.sendTransaction(unfrozenTransaction),
       this.getTokenIds(),
     ])
 
@@ -2579,7 +2638,7 @@ export class HashgraphLiquity
     })
 
     const [, tokenIds] = await Promise.all([
-      this.hashConnect.sendTransaction(this.userAccountId, unfrozenTransaction),
+      this.sendTransaction(unfrozenTransaction),
       this.getTokenIds(),
     ])
 
@@ -2602,7 +2661,7 @@ export class HashgraphLiquity
     })
 
     const [, tokenIds] = await Promise.all([
-      this.hashConnect.sendTransaction(this.userAccountId, unfrozenTransaction),
+      this.sendTransaction(unfrozenTransaction),
       this.getTokenIds(),
     ])
 
@@ -2625,7 +2684,7 @@ export class HashgraphLiquity
     })
 
     const [, tokenIds] = await Promise.all([
-      this.hashConnect.sendTransaction(this.userAccountId, unfrozenTransaction),
+      this.sendTransaction(unfrozenTransaction),
       this.getTokenIds(),
     ])
 
@@ -2648,7 +2707,7 @@ export class HashgraphLiquity
     })
 
     const [, tokenIds] = await Promise.all([
-      this.hashConnect.sendTransaction(this.userAccountId, unfrozenTransaction),
+      this.sendTransaction(unfrozenTransaction),
       this.getTokenIds(),
     ])
 
@@ -2678,7 +2737,7 @@ export class HashgraphLiquity
       Long.fromString(amount.hex, true, 16),
     )
 
-    await this.hashConnect.sendTransaction(this.userAccountId, unfrozenTransaction)
+    await this.sendTransaction(unfrozenTransaction)
 
     await this.refresh()
     // optimistic update
@@ -2701,7 +2760,7 @@ export class HashgraphLiquity
       Long.fromString(amount.hex, true, 16),
     )
 
-    await this.hashConnect.sendTransaction(this.userAccountId, unfrozenTransaction)
+    await this.sendTransaction(unfrozenTransaction)
 
     await this.refresh()
     // optimistic update
@@ -2724,7 +2783,7 @@ export class HashgraphLiquity
       Long.fromString(amount.hex, true, 16),
     )
 
-    await this.hashConnect.sendTransaction(this.userAccountId, unfrozenTransaction)
+    await this.sendTransaction(unfrozenTransaction)
 
     await this.refresh()
     // optimistic update

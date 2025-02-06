@@ -63,10 +63,7 @@ export const HashConnectProvider: React.FC<{ walletConnectProjectId: string }> =
   const [hashConnectError, setHashConnectError] = useState<Error | null>(null);
   const selectedChain = useSelectedChain();
 
-  const setUpHashConnect = async (options: {
-    walletConnectProjectId: string;
-    ledgerId: LedgerId;
-  }) => {
+  const setUpHashConnect = (options: { walletConnectProjectId: string; ledgerId: LedgerId }) => {
     const verifyApiIframes = [...document.querySelectorAll("iframe")].filter(
       iframeElement => iframeElement.id === "verify-api"
     );

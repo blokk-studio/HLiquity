@@ -10,6 +10,7 @@
     "@fortawesome/free-regular-svg-icons": "5.15.4",
     "@fortawesome/free-solid-svg-icons": "5.15.4",
     "@fortawesome/react-fontawesome": "0.2.2",
+    "@hashgraph/hedera-wallet-connect": "^1.4.2",
     "@hashgraph/sdk": "2.41.0",
     "@liquity/chicken-bonds": "file:.yalc/@liquity/chicken-bonds",
     "@liquity/lib-hashgraph": "workspace:^",
