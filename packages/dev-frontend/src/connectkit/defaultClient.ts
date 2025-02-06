@@ -29,8 +29,6 @@ import { Chain, mainnet, polygon, optimism, arbitrum } from "wagmi/chains";
 import { Provider, WebSocketProvider } from "@wagmi/core";
 
 import { MetaMaskConnector } from "wagmi/connectors/metaMask";
-import { WalletConnectConnector } from "wagmi/connectors/walletConnect";
-import { WalletConnectLegacyConnector } from "wagmi/connectors/walletConnectLegacy";
 import { CoinbaseWalletConnector } from "wagmi/connectors/coinbaseWallet";
 import { SafeConnector } from "wagmi/connectors/safe";
 import { InjectedConnector } from "wagmi/connectors/injected";
@@ -55,7 +53,6 @@ type DefaultConnectorsProps = {
     description?: string;
     url?: string;
   };
-  walletConnectProjectId?: string;
 };
 
 type ProviderOrProviderGetter<ProviderInstance extends Provider | undefined = Provider> =
@@ -87,7 +84,7 @@ type ConnectKitClientProps = {
   webSocketProvider?: ProviderOrProviderGetter<WebSocketProvider | undefined>;
 };
 
-const getDefaultConnectors = ({ chains, app, walletConnectProjectId }: DefaultConnectorsProps) => {
+const getDefaultConnectors = ({ chains, app }: DefaultConnectorsProps) => {
   const shouldUseSafeConnector = !(typeof window === "undefined") && window?.parent !== window;
 
   let connectors: Connector[] = [];
@@ -147,8 +144,7 @@ const defaultClient = ({
   provider,
   stallTimeout,
   webSocketProvider,
-  enableWebSocketProvider,
-  walletConnectProjectId
+  enableWebSocketProvider
 }: DefaultClientProps) => {
   globalAppName = appName;
   if (appIcon) globalAppIcon = appIcon;
@@ -183,8 +179,7 @@ const defaultClient = ({
           icon: appIcon,
           description: appDescription,
           url: appUrl
-        },
-        walletConnectProjectId
+        }
       }),
     provider: provider ?? configuredProvider,
     webSocketProvider: enableWebSocketProvider // Removed by default, breaks if used in Next.js – "unhandledRejection: Error: could not detect network"
