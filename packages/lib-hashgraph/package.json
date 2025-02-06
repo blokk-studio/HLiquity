@@ -10,6 +10,7 @@
     "typescript": "5.4.5"
   },
   "dependencies": {
+    "@hashgraph/hedera-wallet-connect": "^1.4.2",
     "@hashgraph/sdk": "2.41.0",
     "@liquity/lib-base": "workspace:^",
     "@liquity/mirror-node": "workspace:^",
