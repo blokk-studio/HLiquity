@@ -131,3 +131,14 @@ export const getChainFromId = (chainId: number) => {
 
   return chain;
 };
+
+export const getChainFromLedgerId = (ledgerId: LedgerId) => {
+  switch (ledgerId) {
+    case LedgerId.TESTNET:
+      return testnet;
+    case LedgerId.PREVIEWNET:
+      return previewnet;
+  }
+
+  return mainnet;
+};

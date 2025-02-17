@@ -75,9 +75,6 @@ export const SelectedChainProvider: React.FC = ({ children }) => {
 
   const setChain = (chain: HederaChain) => {
     document.cookie = `hliquity_selected_chain_id=${chain.id}; max-age=31536000; SameSite=Strict; Secure`;
-    // hashconnect reloads with the correct chain, but the extension doesn't register the new hashconnect instance.
-    // unsure if this is our fault, but a reload fixes it.
-    window.location.reload();
 
     setChainState(chain);
 

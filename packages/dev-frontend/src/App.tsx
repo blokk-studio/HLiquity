@@ -25,6 +25,10 @@ import { MultiWalletProvider } from "./multi_wallet";
 import { AppErrorBoundary } from "./components/AppErrorBoundary";
 import { ComponentTree } from "./components/ComponentTree";
 import { SnackbarProvider } from "./components/Snackbar";
+import {
+  HederaDappConnectorContextLoader,
+  HederaDappConnectorProvider
+} from "./components/HederaDappConnectorProvider";
 
 const isDemoMode = import.meta.env.VITE_APP_DEMO_MODE === "true";
 
@@ -178,6 +182,11 @@ const App = () => {
               {children}
             </HashConnectProvider>
           ),
+          children => (
+            <HederaDappConnectorProvider walletConnectProjectId={walletConnectProjectId}>
+              {children}
+            </HederaDappConnectorProvider>
+          ),
           children => <TransactionProvider>{children}</TransactionProvider>,
           children => (
             <HashConnectLoader
@@ -185,6 +194,13 @@ const App = () => {
             >
               {children}
             </HashConnectLoader>
+          ),
+          children => (
+            <HederaDappConnectorContextLoader
+              loader={<AppLoader content={<Heading>Setting up Hedera wallets</Heading>} />}
+            >
+              {children}
+            </HederaDappConnectorContextLoader>
           ),
           children => <MultiWalletProvider>{children}</MultiWalletProvider>,
           children => <MultiWalletGatekeeper>{children}</MultiWalletGatekeeper>,

@@ -30,6 +30,11 @@ import { AppLoader } from "../components/AppLoader";
 import { Heading } from "theme-ui";
 import { AppError } from "../components/AppError";
 import { useConstants } from "./constants";
+import {
+  HederaDappConnectorSessionLoader,
+  useHederaDappConnectorContext,
+  useHederaDappConnectorSession
+} from "../components/HederaDappConnectorProvider";
 
 export type LiquityContextValue = {
   liquity: ReadableLiquity &
@@ -74,7 +79,7 @@ const HashgraphLiquityProvider: React.FC<HashgraphLiquityProviderProps> = ({
     const rpcUrl = chain.rpcUrls.default.http[0] as `https://${string}`;
     const mirrorNodeBaseUrl = chain.apiBaseUrl;
 
-    const hashgraphLiquity = HashgraphLiquity.fromEvmAddresses({
+    const hashgraphLiquity = HashgraphLiquity.fromEvmAddressesAndHashConnect({
       userAccountId: hashConnectSessionData.userAccountId,
       userAccountAddress: hashConnectSessionData.userAccountEvmAddress,
       deploymentAddresses: deployment.addresses as Record<string, `0x${string}`>,
@@ -95,6 +100,54 @@ const HashgraphLiquityProvider: React.FC<HashgraphLiquityProviderProps> = ({
     <LiquityContext.Provider
       value={{
         account: hashConnectSessionData.userAccountEvmAddress,
+        liquity,
+        store: liquity
+      }}
+    >
+      {children}
+    </LiquityContext.Provider>
+  );
+};
+
+interface HederaDappConnectorLiquityProviderProps {
+  deployment: Deployment;
+  chain: HederaChain;
+  constants: Constants;
+}
+const HederaDappConnectorLiquityProvider: React.FC<HederaDappConnectorLiquityProviderProps> = ({
+  children,
+  deployment,
+  chain,
+  constants
+}) => {
+  const hederaDappConnectorSession = useHederaDappConnectorSession();
+  const hederaDappConnectorContext = useHederaDappConnectorContext();
+
+  const liquity = useMemo(() => {
+    const rpcUrl = chain.rpcUrls.default.http[0] as `https://${string}`;
+    const mirrorNodeBaseUrl = chain.apiBaseUrl;
+
+    const hashgraphLiquity = HashgraphLiquity.fromEvmAddressesAndDappConnector({
+      userAccountId: hederaDappConnectorSession.userAccountId,
+      userAccountAddress: hederaDappConnectorSession.userAccountEvmAddress,
+      deploymentAddresses: deployment.addresses as Record<string, `0x${string}`>,
+      totalStabilityPoolHlqtReward: parseInt(deployment.totalStabilityPoolHLQTReward),
+      frontendAddress: deployment.frontendTag,
+      dappConnector: hederaDappConnectorContext.dappConnector,
+      rpcUrl,
+      mirrorNodeBaseUrl,
+      fetch: window.fetch.bind(window),
+      constants,
+      deployment: deployment
+    });
+
+    return hashgraphLiquity;
+  }, [deployment, chain, hederaDappConnectorSession, hederaDappConnectorContext, constants]);
+
+  return (
+    <LiquityContext.Provider
+      value={{
+        account: hederaDappConnectorSession.userAccountEvmAddress,
         liquity,
         store: liquity
       }}
@@ -174,7 +227,7 @@ export const LiquityProvider: React.FC<LiquityProviderProps> = ({
   children,
   unsupportedNetworkFallback
 }) => {
-  const { hasHashConnect, hasWagmi } = useMultiWallet();
+  const { hasHashConnect, hasWagmi, hasHederaDappConnector } = useMultiWallet();
   const deployment = useDeployment();
   // wagmi
   const ethersProvider = useProvider<FallbackProvider>();
@@ -207,6 +260,26 @@ export const LiquityProvider: React.FC<LiquityProviderProps> = ({
           {children}
         </HashgraphLiquityProvider>
       </HashConnectSessionDataLoader>
+    );
+  }
+
+  if (hasHederaDappConnector) {
+    if (!hashgraphChain) {
+      return <>{unsupportedNetworkFallback}</>;
+    }
+
+    return (
+      <HederaDappConnectorSessionLoader
+        loader={<AppLoader content={<Heading>Setting up Hedera wallets</Heading>} />}
+      >
+        <HederaDappConnectorLiquityProvider
+          deployment={deployment}
+          chain={hashgraphChain}
+          constants={constants}
+        >
+          {children}
+        </HederaDappConnectorLiquityProvider>
+      </HederaDappConnectorSessionLoader>
     );
   }
 
