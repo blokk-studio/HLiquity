@@ -85,8 +85,12 @@ const appMetadata: DappMetadata = {
 };
 
 interface HederaDappConnectorContext {
-  dappConnector: Omit<DAppConnector, "openModal">;
-  connect: () => Promise<void>;
+  // exclude the properties that we need to wrap with our own abstraction
+  dappConnector: Omit<
+    DAppConnector,
+    "openModal" | "connectExtension" | "connect" | "disconnect" | "disconnectAll"
+  >;
+  connect: (extensionId?: string) => Promise<void>;
   disconnect: () => Promise<void>;
 }
 
@@ -259,7 +263,14 @@ export const HederaDappConnectorProvider: React.FC<{ walletConnectProjectId: str
       return null;
     }
 
-    const connect = async () => {
+    const connect = async (extensionId?: string) => {
+      if (extensionId) {
+        const sessionStruct = await dappConnector.connectExtension(extensionId);
+        const extendedSession = await getSessionFromStruct(sessionStruct);
+        setSession(extendedSession);
+        return;
+      }
+
       const sessionStruct = await dappConnector.openModal();
       const extendedSession = await getSessionFromStruct(sessionStruct);
       setSession(extendedSession);
