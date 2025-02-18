@@ -5,6 +5,7 @@ import React from "react";
 import { ChainSelector } from "./chain_context";
 import { ConnectKitButton } from "connectkit";
 import { useHederaDappConnectorContext } from "./HederaDappConnectorProvider";
+import { Hedera } from "./icons/Hedera";
 
 type WalletConnectorProps = {
   loader?: React.ReactNode;
@@ -44,21 +45,33 @@ export const WalletConnector: React.FC<WalletConnectorProps> = () => {
 
         <Flex sx={{ flexDirection: "column", alignSelf: "center", marginTop: "2rem" }}>
           <ChainSelector />
-          {hederaDappConnectorContext.dappConnector.extensions.map(extension => {
-            return (
-              <Button
-                sx={{ justifyContent: "start", marginTop: "0.5rem", gap: "1rem" }}
-                onClick={() => {
-                  hederaDappConnectorContext.connect(extension.id);
-                }}
-              >
-                {extension.icon && (
-                  <img src={extension.icon} aria-hidden="true" sx={{ height: "1.5rem" }} />
-                )}
-                {extension.name}
-              </Button>
-            );
-          })}
+          {hederaDappConnectorContext.dappConnector.extensions.length ? (
+            hederaDappConnectorContext.dappConnector.extensions.map(extension => {
+              return (
+                <Button
+                  sx={{ justifyContent: "start", marginTop: "0.5rem", gap: "1rem" }}
+                  onClick={() => {
+                    hederaDappConnectorContext.connect(extension.id);
+                  }}
+                >
+                  {extension.icon && (
+                    <img src={extension.icon} aria-hidden="true" sx={{ height: "1.5rem" }} />
+                  )}
+                  {extension.name}
+                </Button>
+              );
+            })
+          ) : (
+            <Button
+              sx={{ justifyContent: "start", marginTop: "0.5rem", gap: "1rem" }}
+              onClick={() => {
+                hederaDappConnectorContext.connect();
+              }}
+            >
+              <Hedera />
+              Hedera Wallet
+            </Button>
+          )}
 
           <span sx={{ justifySelf: "center", marginTop: "1rem", textAlign: "center" }}>or</span>
 
