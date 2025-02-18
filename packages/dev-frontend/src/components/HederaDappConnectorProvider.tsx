@@ -265,6 +265,7 @@ export const HederaDappConnectorProvider: React.FC<{ walletConnectProjectId: str
 
     const connect = async (extensionId?: string) => {
       if (extensionId) {
+        localStorage.clear();
         const sessionStruct = await dappConnector.connectExtension(extensionId);
         const extendedSession = await getSessionFromStruct(sessionStruct);
         setSession(extendedSession);
