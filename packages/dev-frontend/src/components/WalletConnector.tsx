@@ -49,6 +49,7 @@ export const WalletConnector: React.FC<WalletConnectorProps> = () => {
             hederaDappConnectorContext.dappConnector.extensions.map(extension => {
               return (
                 <Button
+                  key={extension.id}
                   sx={{ justifyContent: "start", marginTop: "0.5rem", gap: "1rem" }}
                   onClick={() => {
                     hederaDappConnectorContext.connect(extension.id);
