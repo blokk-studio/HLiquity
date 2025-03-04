@@ -19,7 +19,6 @@ import { useConfiguration } from "./configuration";
 import "./App.scss";
 import { HashConnectProvider, HashConnectLoader } from "./components/HashConnectProvider";
 import { LiquityStoreProvider } from "./components/LiquityStoreProvider";
-import { MultiWalletGatekeeper } from "./components/MultiWalletGatekeeper";
 import { SelectedChainProvider, useSelectedChain } from "./components/chain_context";
 import { MultiWalletProvider } from "./multi_wallet";
 import { AppErrorBoundary } from "./components/AppErrorBoundary";
