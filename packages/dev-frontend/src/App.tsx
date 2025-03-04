@@ -203,7 +203,6 @@ const App = () => {
             </HederaDappConnectorContextLoader>
           ),
           children => <MultiWalletProvider>{children}</MultiWalletProvider>,
-          children => <MultiWalletGatekeeper>{children}</MultiWalletGatekeeper>,
           children => (
             <LiquityProvider
               unsupportedNetworkFallback={<UnsupportedNetworkFallback availableNetworks={chains} />}

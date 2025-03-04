@@ -12,13 +12,14 @@ import {
   useOptionalHashConnectSessionData
 } from "./components/HashConnectProvider";
 import { shortenAddress } from "./utils/shortenAddress";
-import { createContext, useContext } from "react";
-import { HederaChain, getChainFromId } from "./configuration/chains";
+import { createContext, useContext, useEffect, useState } from "react";
+import { HederaChain, getChainFromId, mainnet } from "./configuration/chains";
 import { useSelectedChain } from "./components/chain_context";
 import {
   useHederaDappConnectorContext,
   useOptionalHederaDappConnectorSession
 } from "./components/HederaDappConnectorProvider";
+import { WalletConnector } from "./components/WalletConnector";
 
 interface MultiWalletContext {
   hasWagmi: boolean;
@@ -26,8 +27,10 @@ interface MultiWalletContext {
   hasHederaDappConnector: boolean;
   hasConnection: boolean;
   addressDisplayText: string | undefined;
-  chain: HederaChain | null;
+  chain: HederaChain;
   disconnect: () => Promise<void>;
+  showConnectionDialog: () => void;
+  hideConnectionDialog: () => void;
 }
 
 const multiWalletContext = createContext<MultiWalletContext>({
@@ -36,8 +39,10 @@ const multiWalletContext = createContext<MultiWalletContext>({
   hasHederaDappConnector: false,
   hasWagmi: false,
   addressDisplayText: undefined,
-  chain: null,
-  disconnect: async () => undefined
+  chain: mainnet,
+  disconnect: async () => undefined,
+  showConnectionDialog: async () => undefined,
+  hideConnectionDialog: async () => undefined
 });
 
 export const MultiWalletProvider: React.FC = ({ children }) => {
@@ -62,6 +67,20 @@ export const MultiWalletProvider: React.FC = ({ children }) => {
   useSwitchNetwork();
   const hasWagmi = !!wagmiAccount.address && wagmiProvider && !!wagmiSigner.data && !!wagmiChainId;
   const hasHederaDappConnector = !!hederaDappConnectorSession?.userAccountId;
+
+  const hasConnection = hasHashConnect || hasWagmi || hasHederaDappConnector;
+
+  const [isDisplayingConnectionDialog, setIsDisplayingConnectionDialog] = useState(false);
+
+  useEffect(() => {
+    if (hasConnection) {
+      setIsDisplayingConnectionDialog(false);
+    }
+  }, [hasConnection]);
+
+  if (isDisplayingConnectionDialog) {
+    return <WalletConnector />;
+  }
 
   const disconnect = async (): Promise<void> => {
     if (hasHashConnect) {
@@ -88,13 +107,12 @@ export const MultiWalletProvider: React.FC = ({ children }) => {
     );
   };
 
-  const hasConnection = hasHashConnect || hasWagmi || hasHederaDappConnector;
   const addressDisplayText =
     hashConnectSessionData?.userAccountId.toString() ??
     (wagmiAccount.address ? shortenAddress(wagmiAccount.address) : undefined) ??
     hederaDappConnectorSession?.userAccountId.toString();
 
-  let chain = null;
+  let chain = mainnet;
   if (hasWagmi) {
     chain = getChainFromId(wagmiChainId);
   } else if (hasHashConnect) {
@@ -103,14 +121,24 @@ export const MultiWalletProvider: React.FC = ({ children }) => {
     chain = hederaDappConnectorChain;
   }
 
-  const value = {
+  const showConnectionDialog = () => {
+    setIsDisplayingConnectionDialog(true);
+  };
+
+  const hideConnectionDialog = () => {
+    setIsDisplayingConnectionDialog(false);
+  };
+
+  const value: MultiWalletContext = {
     hasWagmi,
     hasHashConnect,
     hasHederaDappConnector,
     hasConnection,
     addressDisplayText,
     chain,
-    disconnect
+    disconnect,
+    showConnectionDialog,
+    hideConnectionDialog
   };
 
   return <multiWalletContext.Provider value={value}>{children}</multiWalletContext.Provider>;

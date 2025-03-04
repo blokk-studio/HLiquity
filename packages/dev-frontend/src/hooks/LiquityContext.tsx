@@ -28,13 +28,13 @@ import { FallbackProvider } from "@ethersproject/providers";
 import { BatchedProvider } from "../providers/BatchingProvider";
 import { AppLoader } from "../components/AppLoader";
 import { Heading } from "theme-ui";
-import { AppError } from "../components/AppError";
 import { useConstants } from "./constants";
 import {
   HederaDappConnectorSessionLoader,
   useHederaDappConnectorContext,
   useHederaDappConnectorSession
 } from "../components/HederaDappConnectorProvider";
+import { PlaceholderLiquity } from "@liquity/lib-placeholder";
 
 export type LiquityContextValue = {
   liquity: ReadableLiquity &
@@ -227,7 +227,7 @@ export const LiquityProvider: React.FC<LiquityProviderProps> = ({
   children,
   unsupportedNetworkFallback
 }) => {
-  const { hasHashConnect, hasWagmi, hasHederaDappConnector } = useMultiWallet();
+  const { chain, hasHashConnect, hasWagmi, hasHederaDappConnector } = useMultiWallet();
   const deployment = useDeployment();
   // wagmi
   const ethersProvider = useProvider<FallbackProvider>();
@@ -312,11 +312,29 @@ export const LiquityProvider: React.FC<LiquityProviderProps> = ({
     );
   }
 
+  const rpcUrl = chain.rpcUrls.default.http[0] as `https://${string}`;
+  const mirrorNodeBaseUrl = chain.apiBaseUrl;
+  const liquity = PlaceholderLiquity.fromEvmAddresses({
+    deploymentAddresses: deployment.addresses as Record<string, `0x${string}`>,
+    totalStabilityPoolHlqtReward: parseInt(deployment.totalStabilityPoolHLQTReward),
+    frontendAddress: deployment.frontendTag,
+    rpcUrl,
+    mirrorNodeBaseUrl,
+    fetch: window.fetch.bind(window),
+    constants,
+    deployment: deployment
+  });
+
   return (
-    <AppError
-      error={new Error("neither wallet is connected")}
-      infoText="Please refresh the page. If that doesn't work, disconnect all your wallets and try again."
-    />
+    <LiquityContext.Provider
+      value={{
+        account: "",
+        liquity,
+        store: liquity
+      }}
+    >
+      {children}
+    </LiquityContext.Provider>
   );
 };
 
