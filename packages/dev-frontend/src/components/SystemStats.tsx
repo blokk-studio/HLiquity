@@ -86,7 +86,7 @@ export const SystemStats: React.FC<SystemStatsProps> = ({ variant = "info", show
   const totalCollateralRatioPct = new Percent(total.collateralRatio(price));
   const borrowingFeePct = new Percent(borrowingRate);
   const kickbackRatePct = frontendTag === AddressZero ? "100" : kickbackRate?.mul(100).prettify();
-  const { chain } = useMultiWallet();
+  const { hasConnection, chain } = useMultiWallet();
   const deployment = useDeployment();
 
   const getHederaLink = (tokenId: string, chainId?: number) => {
@@ -96,7 +96,7 @@ export const SystemStats: React.FC<SystemStatsProps> = ({ variant = "info", show
 
   return (
     <Card {...{ variant }}>
-      {showBalances && <Balances />}
+      {showBalances && hasConnection && <Balances />}
 
       <Heading>HLiquity statistics</Heading>
 
@@ -198,8 +198,9 @@ export const SystemStats: React.FC<SystemStatsProps> = ({ variant = "info", show
             <Link
               sx={{ color: "info" }}
               target="_blank"
-              href={`https://github.com/blokk-studio/HLiquity/commit/${import.meta.env.VITE_APP_VERSION
-                }`}
+              href={`https://github.com/blokk-studio/HLiquity/commit/${
+                import.meta.env.VITE_APP_VERSION
+              }`}
             >
               {import.meta.env.VITE_APP_VERSION.substring(0, 7)}
             </Link>
