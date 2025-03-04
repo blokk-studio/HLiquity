@@ -313,14 +313,11 @@ export const LiquityProvider: React.FC<LiquityProviderProps> = ({
   }
 
   const rpcUrl = chain.rpcUrls.default.http[0] as `https://${string}`;
-  const mirrorNodeBaseUrl = chain.apiBaseUrl;
   const liquity = PlaceholderLiquity.fromEvmAddresses({
     deploymentAddresses: deployment.addresses as Record<string, `0x${string}`>,
     totalStabilityPoolHlqtReward: parseInt(deployment.totalStabilityPoolHLQTReward),
     frontendAddress: deployment.frontendTag,
     rpcUrl,
-    mirrorNodeBaseUrl,
-    fetch: window.fetch.bind(window),
     constants,
     deployment: deployment
   });

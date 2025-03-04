@@ -36,7 +36,6 @@ import Web3, { Contract, MatchPrimitiveType } from 'web3'
 
 // contracts
 import { ContractExecuteTransaction, Transaction, TransactionReceipt } from '@hashgraph/sdk'
-import { Fetch } from '@liquity/mirror-node'
 import { ActivePoolAbi, activePoolAbi } from '../abi/ActivePool'
 import { BorrowerOperationsAbi, borrowerOperationsAbi } from '../abi/BorrowerOperations'
 import { CollSurplusPoolAbi, collSurplusPoolAbi } from '../abi/CollSurplusPool'
@@ -99,8 +98,6 @@ interface TransactionOptions {
   from?: Address
 }
 
-const defaultBorrowingRateSlippageTolerance = Decimal.from(0.005) // 0.5%
-const defaultRedemptionRateSlippageTolerance = Decimal.from(0.001) // 0.1%
 /** With 70 iterations redemption costs about ~10M gas, and each iteration accounts for ~138k more */
 export const redeemMaxIterations = 70
 
@@ -322,8 +319,6 @@ export class PlaceholderLiquity
   private readonly web3: Web3
   private readonly totalStabilityPoolHlqtReward: Decimal
   private readonly frontendAddress: Address
-  private readonly mirrorNodeBaseUrl: `https://${string}`
-  private readonly fetch: Fetch
   protected readonly constants: Constants
 
   // contracts
@@ -367,8 +362,6 @@ export class PlaceholderLiquity
     web3: Web3
     totalStabilityPoolHlqtReward: Decimal
     frontendAddress: Address
-    mirrorNodeBaseUrl: `https://${string}`
-    fetch: Fetch
     constants: Constants
 
     // contracts
@@ -415,8 +408,6 @@ export class PlaceholderLiquity
     this.web3 = options.web3
     this.totalStabilityPoolHlqtReward = options.totalStabilityPoolHlqtReward
     this.frontendAddress = options.frontendAddress
-    this.mirrorNodeBaseUrl = options.mirrorNodeBaseUrl
-    this.fetch = options.fetch
     this.constants = options.constants
 
     this.activePool = options.activePool
@@ -424,6 +415,7 @@ export class PlaceholderLiquity
 
     this.borrowerOperations = options.borrowerOperations
     this.borrowerOperationsContractId = options.borrowerOperationsContractId
+    this.borrowerOperationsContractId
 
     this.collSurplusPool = options.collSurplusPool
     this.collSurplusPoolContractId = options.collSurplusPoolContractId
@@ -439,15 +431,19 @@ export class PlaceholderLiquity
 
     this.hchfToken = options.hchfToken
     this.hchfTokenContractId = options.hchfTokenContractId
+    this.hchfTokenContractId
 
     this.hintHelpers = options.hintHelpers
     this.hintHelpersContractId = options.hintHelpersContractId
+    this.hintHelpers
 
     this.hlqtStaking = options.hlqtStaking
     this.hlqtStakingContractId = options.hlqtStakingContractId
+    this.hlqtStakingContractId
 
     this.hlqtToken = options.hlqtToken
     this.hlqtTokenContractId = options.hlqtTokenContractId
+    this.hlqtTokenContractId
 
     this.lockupContractFactory = options.lockupContractFactory
     this.lockupContractFactoryContractId = options.lockupContractFactoryContractId
@@ -460,15 +456,19 @@ export class PlaceholderLiquity
 
     this.sortedTroves = options.sortedTroves
     this.sortedTrovesContractId = options.sortedTrovesContractId
+    this.sortedTroves
 
     this.stabilityPool = options.stabilityPool
     this.stabilityPoolContractId = options.stabilityPoolContractId
+    this.stabilityPoolContractId
 
     this.troveManager = options.troveManager
     this.troveManagerContractId = options.troveManagerContractId
+    this.troveManagerContractId
 
     this.saucerSwapPool = options.saucerSwapPool
     this.saucerSwapPoolContractId = options.saucerSwapPoolContractId
+    this.saucerSwapPoolContractId
 
     // lasagna
     this.populate = asPopulatable(this)
@@ -1120,15 +1120,13 @@ export class PlaceholderLiquity
     totalStabilityPoolHlqtReward: number
     frontendAddress: Address
     rpcUrl: `wss://${string}` | `https://${string}`
-    mirrorNodeBaseUrl: `https://${string}`
-    fetch: Fetch
     constants: Constants
     // TODO: remove when lasagna is removed
     deployment: Deployment
   }) {
     const totalStabilityPoolHlqtReward = Decimal.from(options.totalStabilityPoolHlqtReward)
 
-    const { frontendAddress, mirrorNodeBaseUrl, fetch, constants } = options
+    const { frontendAddress, constants } = options
     const sendTransaction: SendTransaction = () => {
       throw new Error("the placeholder liquity can't execute transactions")
     }
@@ -1142,8 +1140,6 @@ export class PlaceholderLiquity
       sendTransaction,
       totalStabilityPoolHlqtReward,
       frontendAddress,
-      mirrorNodeBaseUrl,
-      fetch,
       constants,
 
       // lasagna
@@ -1441,14 +1437,17 @@ export class PlaceholderLiquity
   }
 
   async approveHchfToSpendHchf(amount: Decimal): Promise<void> {
+    amount
     throw new Error("the placeholder liquity can't execute transactions")
   }
 
   async approveHlqtToSpendHlqt(amount: Decimal): Promise<void> {
+    amount
     throw new Error("the placeholder liquity can't execute transactions")
   }
 
   async approveSaucerSwapToSpendLpToken(amount: Decimal): Promise<void> {
+    amount
     throw new Error("the placeholder liquity can't execute transactions")
   }
 }
