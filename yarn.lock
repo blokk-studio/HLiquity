@@ -1885,6 +1885,7 @@ __metadata:
     "@hashgraph/sdk": 2.41.0
     "@liquity/chicken-bonds": "file:.yalc/@liquity/chicken-bonds"
     "@liquity/lib-hashgraph": "workspace:^"
+    "@liquity/lib-placeholder": "workspace:^"
     "@metamask/eth-sig-util": 5.1.0
     "@testing-library/dom": 10.4.0
     "@testing-library/jest-dom": 6.6.3
@@ -2004,6 +2005,23 @@ __metadata:
     emittery: ^1.0.3
     eslint: 9.16.0
     hashconnect: ^3.0.13
+    prettier: 3.4.2
+    prettier-plugin-organize-imports: 4.1.0
+    typescript: 5.4.5
+    web3: ^4.8.0
+  languageName: unknown
+  linkType: soft
+
+"@liquity/lib-placeholder@workspace:^, @liquity/lib-placeholder@workspace:packages/lib-placeholder":
+  version: 0.0.0-use.local
+  resolution: "@liquity/lib-placeholder@workspace:packages/lib-placeholder"
+  dependencies:
+    "@hashgraph/sdk": 2.41.0
+    "@liquity/lib-base": "workspace:^"
+    "@liquity/mirror-node": "workspace:^"
+    "@typescript-eslint/eslint-plugin": 7.18.0
+    "@typescript-eslint/parser": 7.18.0
+    eslint: 9.16.0
     prettier: 3.4.2
     prettier-plugin-organize-imports: 4.1.0
     typescript: 5.4.5
