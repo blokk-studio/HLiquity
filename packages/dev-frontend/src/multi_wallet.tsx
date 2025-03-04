@@ -46,11 +46,11 @@ const multiWalletContext = createContext<MultiWalletContext>({
 });
 
 export const MultiWalletProvider: React.FC = ({ children }) => {
+  const selectedChain = useSelectedChain();
   // hashpack
   const hashConnect = useHashConnect();
   const hashConnectSessionData = useOptionalHashConnectSessionData();
   const hashConnectConnectionState = useHashConnectConnectionState();
-  const hashConnectChain = useSelectedChain();
   // wagmi
   const wagmiAccount = useAccount();
   const wagmiProvider = useProvider();
@@ -112,11 +112,11 @@ export const MultiWalletProvider: React.FC = ({ children }) => {
     (wagmiAccount.address ? shortenAddress(wagmiAccount.address) : undefined) ??
     hederaDappConnectorSession?.userAccountId.toString();
 
-  let chain = mainnet;
+  let chain = selectedChain;
   if (hasWagmi) {
     chain = getChainFromId(wagmiChainId);
   } else if (hasHashConnect) {
-    chain = hashConnectChain;
+    chain = selectedChain;
   } else if (hasHederaDappConnector) {
     chain = hederaDappConnectorChain;
   }
