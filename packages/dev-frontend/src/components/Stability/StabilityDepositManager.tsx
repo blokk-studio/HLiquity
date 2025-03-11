@@ -20,6 +20,7 @@ import { Step, getCompletableStepStatus } from "../Steps";
 import { useLoadingState } from "../../loading_state";
 import { useLiquity } from "../../hooks/LiquityContext";
 import { LoadingButton } from "../LoadingButton";
+import { useMultiWallet } from "../../multi_wallet";
 
 const init = ({ stabilityDeposit }: LiquityStoreState) => ({
   originalDeposit: stabilityDeposit,
@@ -103,16 +104,16 @@ export const StabilityDepositManager: React.FC = () => {
   );
   const validationContext = useLiquitySelector(selectForStabilityDepositChangeValidation);
   const { dispatchEvent } = useStabilityView();
+  const multiWallet = useMultiWallet();
 
   const handleCancel = useCallback(() => {
     dispatchEvent("CANCEL_PRESSED");
   }, [dispatchEvent]);
 
-  const [validChange, description] = validateStabilityDepositChange(
-    originalDeposit,
-    editedHCHF,
-    validationContext
-  );
+  const [validChange, description] = validateStabilityDepositChange(originalDeposit, editedHCHF, {
+    ...validationContext,
+    hasConnection: multiWallet.hasConnection
+  });
 
   const makingNewDeposit = originalDeposit.isEmpty;
 
@@ -229,49 +230,51 @@ export const StabilityDepositManager: React.FC = () => {
           <ActionDescription>Adjust the {COIN} amount to deposit or withdraw.</ActionDescription>
         ))}
 
-      <Flex variant="layout.actions">
-        <Button variant="cancel" onClick={handleCancel}>
-          Cancel
-        </Button>
+      {multiWallet.hasConnection && (
+        <Flex variant="layout.actions">
+          <Button variant="cancel" onClick={handleCancel}>
+            Cancel
+          </Button>
 
-        {needsHlqtAssociation ? (
-          <LoadingButton
-            disabled={!validChange}
-            loading={hlqtAssociationLoadingState === "pending"}
-            onClick={associateWithHlqt}
-          >
-            Associate with HLQT
-          </LoadingButton>
-        ) : needsHchfAssociation ? (
-          <LoadingButton
-            disabled={!validChange}
-            loading={hchfAssociationLoadingState === "pending"}
-            onClick={associateWithHchf}
-          >
-            Associate with HCHF
-          </LoadingButton>
-        ) : needsHchfSpenderApproval && !hchfContractHasHchfTokenAllowance ? (
-          <LoadingButton
-            disabled={!validChange}
-            loading={hchfApprovalLoadingState === "pending"}
-            onClick={approveHchfSpender}
-          >
-            Approve allowance of {validChange?.depositHCHF?.toString(2)} HCHF
-          </LoadingButton>
-        ) : validChange ? (
-          <StabilityDepositAction
-            transactionId={transactionId}
-            change={validChange}
-            loading={isTransactionPending}
-          >
-            {validChange?.depositHCHF
-              ? `Deposit ${validChange?.depositHCHF?.toString(2)} HCHF`
-              : `Withdraw ${validChange?.withdrawHCHF?.toString(2)} HCHF`}
-          </StabilityDepositAction>
-        ) : (
-          <Button disabled>Confirm</Button>
-        )}
-      </Flex>
+          {needsHlqtAssociation ? (
+            <LoadingButton
+              disabled={!validChange}
+              loading={hlqtAssociationLoadingState === "pending"}
+              onClick={associateWithHlqt}
+            >
+              Associate with HLQT
+            </LoadingButton>
+          ) : needsHchfAssociation ? (
+            <LoadingButton
+              disabled={!validChange}
+              loading={hchfAssociationLoadingState === "pending"}
+              onClick={associateWithHchf}
+            >
+              Associate with HCHF
+            </LoadingButton>
+          ) : needsHchfSpenderApproval && !hchfContractHasHchfTokenAllowance ? (
+            <LoadingButton
+              disabled={!validChange}
+              loading={hchfApprovalLoadingState === "pending"}
+              onClick={approveHchfSpender}
+            >
+              Approve allowance of {validChange?.depositHCHF?.toString(2)} HCHF
+            </LoadingButton>
+          ) : validChange ? (
+            <StabilityDepositAction
+              transactionId={transactionId}
+              change={validChange}
+              loading={isTransactionPending}
+            >
+              {validChange?.depositHCHF
+                ? `Deposit ${validChange?.depositHCHF?.toString(2)} HCHF`
+                : `Withdraw ${validChange?.withdrawHCHF?.toString(2)} HCHF`}
+            </StabilityDepositAction>
+          ) : (
+            <Button disabled>Confirm</Button>
+          )}
+        </Flex>
+      )}
     </StabilityDepositEditor>
   );
 };
