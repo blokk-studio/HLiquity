@@ -22,6 +22,7 @@ import { useLiquity } from "../../hooks/LiquityContext";
 import { useLoadingState } from "../../loading_state";
 import { LoadingButton } from "../LoadingButton";
 import { useConstants } from "../../hooks/constants";
+import { useMultiWallet } from "../../multi_wallet";
 
 const getInitializer =
   (options: { constants: Constants }) =>
@@ -170,6 +171,7 @@ export const TroveManager: React.FC<TroveManagerProps> = ({ collateral, debt }) 
     getInitializer({ constants })
   );
   const { fees, validationContext, hchfTokenAllowanceOfHchfContract } = useLiquitySelector(select);
+  const multiWallet = useMultiWallet();
 
   useEffect(() => {
     if (collateral !== undefined) {
@@ -188,7 +190,8 @@ export const TroveManager: React.FC<TroveManagerProps> = ({ collateral, debt }) 
     edited,
     borrowingRate,
     validationContext,
-    constants
+    constants,
+    multiWallet.hasConnection
   );
 
   const { dispatchEvent } = useTroveView();
