@@ -22,6 +22,8 @@ import { useLiquity } from "../../hooks/LiquityContext";
 import { useLoadingState } from "../../loading_state";
 import { Step, getCompletableStepStatus } from "../Steps";
 import { LoadingButton } from "../LoadingButton";
+import { useMultiWallet } from "../../multi_wallet";
+import { WalletNotConnectedInfo } from "../WalletNotConnectedInfo";
 
 const init = ({ hlqtStake }: LiquityStoreState) => ({
   originalStake: hlqtStake,
@@ -126,22 +128,29 @@ export const StakingManager: React.FC = () => {
   const { dispatch: dispatchStakingViewAction, changePending } = useStakingView();
   const [{ originalStake, editedLQTY }, dispatch] = useLiquityReducer(reduce, init);
   const hlqtBalance = useLiquitySelector(selectLQTYBalance);
+  const multiWallet = useMultiWallet();
 
   const change = originalStake.whatChanged(editedLQTY);
   const [validChange, description] = !change
     ? [undefined, undefined]
-    : change.stakeHLQT?.gt(hlqtBalance)
-    ? [
-        undefined,
-        <ErrorDescription>
-          The amount you're trying to stake exceeds your balance by{" "}
-          <Amount>
-            {change.stakeHLQT.sub(hlqtBalance).prettify()} {GT}
-          </Amount>
-          .
-        </ErrorDescription>
-      ]
-    : [change, <StakingManagerActionDescription originalStake={originalStake} change={change} />];
+    : multiWallet.hasConnection && change.stakeHLQT?.gt(hlqtBalance)
+      ? [
+          undefined,
+          <ErrorDescription>
+            The amount you're trying to stake exceeds your balance by{" "}
+            <Amount>
+              {change.stakeHLQT.sub(hlqtBalance).prettify()} {GT}
+            </Amount>
+            .
+          </ErrorDescription>
+        ]
+      : [
+          change,
+          <>
+            <StakingManagerActionDescription originalStake={originalStake} change={change} />
+            {!multiWallet.hasConnection && <WalletNotConnectedInfo />}
+          </>
+        ];
 
   const makingNewStake = originalStake.isEmpty;
 
@@ -210,40 +219,42 @@ export const StakingManager: React.FC = () => {
           <ActionDescription>Adjust the {GT} amount to stake or withdraw.</ActionDescription>
         ))}
 
-      <Flex variant="layout.actions">
-        <Button
-          variant="cancel"
-          onClick={() => dispatchStakingViewAction({ type: "cancelAdjusting" })}
-        >
-          Cancel
-        </Button>
+      {multiWallet.hasConnection && (
+        <Flex variant="layout.actions">
+          <Button
+            variant="cancel"
+            onClick={() => dispatchStakingViewAction({ type: "cancelAdjusting" })}
+          >
+            Cancel
+          </Button>
 
-        {!userHasAssociatedWithHchf ? (
-          <LoadingButton
-            disabled={!validChange}
-            loading={hchfAssociationLoadingState === "pending"}
-            onClick={associateWithHchf}
-          >
-            Associate with HCHF
-          </LoadingButton>
-        ) : needsSpenderApproval && !hlqtContractHasHlqtAllowance ? (
-          <LoadingButton
-            disabled={!validChange}
-            loading={hlqtApprovalLoadingState === "pending"}
-            onClick={approveHlqtSpender}
-          >
-            Approve allowance of {validChange?.stakeHLQT?.toString(2)} HLQT
-          </LoadingButton>
-        ) : validChange ? (
-          <StakingManagerAction change={validChange} loading={changePending}>
-            {validChange?.stakeHLQT
-              ? `Stake ${validChange?.stakeHLQT?.toString(2)} HLQT`
-              : `Unstake ${validChange?.unstakeHLQT?.toString(2)} HLQT`}
-          </StakingManagerAction>
-        ) : (
-          <Button disabled>Confirm</Button>
-        )}
-      </Flex>
+          {!userHasAssociatedWithHchf ? (
+            <LoadingButton
+              disabled={!validChange}
+              loading={hchfAssociationLoadingState === "pending"}
+              onClick={associateWithHchf}
+            >
+              Associate with HCHF
+            </LoadingButton>
+          ) : needsSpenderApproval && !hlqtContractHasHlqtAllowance ? (
+            <LoadingButton
+              disabled={!validChange}
+              loading={hlqtApprovalLoadingState === "pending"}
+              onClick={approveHlqtSpender}
+            >
+              Approve allowance of {validChange?.stakeHLQT?.toString(2)} HLQT
+            </LoadingButton>
+          ) : validChange ? (
+            <StakingManagerAction change={validChange} loading={changePending}>
+              {validChange?.stakeHLQT
+                ? `Stake ${validChange?.stakeHLQT?.toString(2)} HLQT`
+                : `Unstake ${validChange?.unstakeHLQT?.toString(2)} HLQT`}
+            </StakingManagerAction>
+          ) : (
+            <Button disabled>Confirm</Button>
+          )}
+        </Flex>
+      )}
     </StakingEditor>
   );
 };
