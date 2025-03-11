@@ -494,6 +494,15 @@ export class PlaceholderLiquity
   private async fetchStoreValues(
     blockTag?: string | number,
   ): Promise<[baseState: LiquityStoreBaseState, extraState: PlaceholderLiquityStoreState]> {
+    const price = await this.getPrice({ blockTag })
+    console.debug(
+      price.prettify(2),
+      this.constants.HCHF_MINIMUM_DEBT.div(price)
+        .mul(this.constants.MINIMUM_COLLATERAL_RATIO.add(0.1))
+        .add(this.constants.HCHF_LIQUIDATION_RESERVE)
+        .prettify(2),
+      Object.entries(this.constants).map(([key, decimal]) => [key, decimal.prettify(2)]),
+    )
     const {
       blockTimestamp,
       calculateRemainingHLQT,
@@ -507,7 +516,7 @@ export class PlaceholderLiquity
         .lastFeeOperationTime()
         .call(undefined, blockTag),
       baseRateResult: this.troveManager.methods.baseRate().call(undefined, blockTag),
-      price: this.getPrice({ blockTag }),
+      price,
       numberOfTroves: this.getNumberOfTroves({ blockTag }),
       totalRedistributed: this.getTotalRedistributed({ blockTag }),
       total: this.getTotal({ blockTag }),
@@ -530,9 +539,15 @@ export class PlaceholderLiquity
       userHasAssociatedWithHlqt: false,
       userHasAssociatedWithLpToken: false,
 
-      accountBalance: Decimal.ZERO,
-      hchfBalance: Decimal.ZERO,
-      hlqtBalance: Decimal.ZERO,
+      // enough to open 1 trove with the minimum debt & a healthy collateral ratio
+      accountBalance: this.constants.HCHF_MINIMUM_DEBT.div(price)
+        // minimum recommended collateral ratio + some extra
+        .mul(this.constants.CRITICAL_COLLATERAL_RATIO.add(0.2))
+        // maximum estimated transaction cost that is subtracted from the maximum collateral ("max" button)
+        .add(40),
+      // as if user opened 1 trove
+      hchfBalance: Decimal.from(this.constants.HCHF_MINIMUM_DEBT.mul(1)),
+      hlqtBalance: Decimal.from(100),
       hchfTokenAddress: '0x',
       hlqtTokenAddress: '0x',
       uniTokenBalance: Decimal.ZERO,
