@@ -233,6 +233,14 @@ const theme: Theme = {
       }
     },
 
+    small: {
+      ...button,
+      ...buttonOutline("primary", "muted"),
+      fontSize: "1rem !important",
+      px: "6px",
+      py: "0px"
+    },
+
     outline: {
       ...button,
       ...buttonOutline("primary", "muted")
