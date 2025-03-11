@@ -18,6 +18,8 @@ import { ErrorDescription } from "../ErrorDescription";
 import { useConstants } from "../../hooks/constants";
 import { InfoIcon } from "../InfoIcon";
 import { NewFeatureDisclaimer } from "../NewFeatureDisclaimer";
+import { useMultiWallet } from "../../multi_wallet";
+import { WalletNotConnectedInfo } from "../WalletNotConnectedInfo";
 
 const TRANSACTION_ID = "trove-adjustment";
 
@@ -35,6 +37,7 @@ const redemptionInformation = (
 export const RedeemHchf: React.FC = () => {
   const constants = useConstants();
   const { hchfBalance } = useLiquitySelector(state => state);
+  const multiWallet = useMultiWallet();
 
   const [amountOfHchfToRedeem, setAmountOfHchfToRedeem] = useState(Decimal.ZERO);
   const transactionState = useMyTransactionState(TRANSACTION_ID);
@@ -201,7 +204,7 @@ export const RedeemHchf: React.FC = () => {
             .
           </ErrorDescription>
         )}
-        {!isRedemptionAmountWithinBalance && (
+        {multiWallet.hasConnection && !isRedemptionAmountWithinBalance && (
           <ErrorDescription>
             The amount you're trying to deposit exceeds your balance by{" "}
             <Amount>
@@ -252,25 +255,29 @@ export const RedeemHchf: React.FC = () => {
           </div>
         </div>
 
-        <Flex variant="layout.actions">
-          {needsSpenderApproval && !hchfContractHasHchfTokenAllowance ? (
-            <LoadingButton
-              disabled={!isValidRedemption}
-              loading={hchfApprovalLoadingState === "pending"}
-              onClick={approveHchfSpender}
-            >
-              Approve allowance of {amountOfHchfToRedeem.prettify(2)} {COIN}
-            </LoadingButton>
-          ) : (
-            <LoadingButton
-              disabled={!isValidRedemption}
-              loading={isTransactionPending}
-              onClick={sendTransaction}
-            >
-              Redeem {amountOfHchfToRedeem.prettify(2)} {COIN}
-            </LoadingButton>
-          )}
-        </Flex>
+        {!multiWallet.hasConnection && <WalletNotConnectedInfo />}
+
+        {multiWallet.hasConnection && (
+          <Flex variant="layout.actions">
+            {needsSpenderApproval && !hchfContractHasHchfTokenAllowance ? (
+              <LoadingButton
+                disabled={!isValidRedemption}
+                loading={hchfApprovalLoadingState === "pending"}
+                onClick={approveHchfSpender}
+              >
+                Approve allowance of {amountOfHchfToRedeem.prettify(2)} {COIN}
+              </LoadingButton>
+            ) : (
+              <LoadingButton
+                disabled={!isValidRedemption}
+                loading={isTransactionPending}
+                onClick={sendTransaction}
+              >
+                Redeem {amountOfHchfToRedeem.prettify(2)} {COIN}
+              </LoadingButton>
+            )}
+          </Flex>
+        )}
       </Box>
     </Card>
   );
