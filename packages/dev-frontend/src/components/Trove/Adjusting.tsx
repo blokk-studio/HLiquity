@@ -23,6 +23,7 @@ import { useLiquity } from "../../hooks/LiquityContext";
 import { useLoadingState } from "../../loading_state";
 import { LoadingButton } from "../LoadingButton";
 import { useConstants } from "../../hooks/constants";
+import { useMultiWallet } from "../../multi_wallet";
 
 const selector = (state: LiquityStoreState) => {
   const { trove, fees, price, accountBalance } = state;
@@ -87,6 +88,7 @@ export const Adjusting: React.FC = () => {
   const [collateral, setCollateral] = useState<Decimal>(trove.collateral);
   const [netDebt, setNetDebt] = useState<Decimal>(trove.netDebt);
   const [auto, setAuto] = useState<boolean>(false);
+  const multiWallet = useMultiWallet();
 
   const transactionState = useMyTransactionState(TRANSACTION_ID);
   const borrowingRate = fees.borrowingRate();
@@ -149,7 +151,8 @@ export const Adjusting: React.FC = () => {
     updatedTrove,
     borrowingRate,
     validationContext,
-    constants
+    constants,
+    multiWallet.hasConnection
   );
 
   const stableTroveChange = useStableTroveChange(troveChange);
