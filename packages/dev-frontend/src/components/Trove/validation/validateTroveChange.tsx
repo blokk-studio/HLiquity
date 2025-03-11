@@ -14,6 +14,7 @@ import { COIN, COLLATERAL_COIN } from "../../../strings";
 
 import { ActionDescription, Amount } from "../../ActionDescription";
 import { ErrorDescription } from "../../ErrorDescription";
+import { WalletNotConnectedInfo } from "../../WalletNotConnectedInfo";
 
 type TroveAdjustmentDescriptionParams = {
   params: TroveAdjustmentParams<Decimal>;
@@ -115,6 +116,8 @@ interface TroveChangeValidationContext extends TroveChangeValidationSelectedStat
   resultingTrove: Trove;
   recoveryMode: boolean;
   wouldTriggerRecoveryMode: boolean;
+  /** whether a wallet is currently connected */
+  hasConnection: boolean;
 }
 
 export const validateTroveChange = (
@@ -122,7 +125,9 @@ export const validateTroveChange = (
   adjustedTrove: Trove,
   borrowingRate: Decimal,
   selectedState: TroveChangeValidationSelectedState,
-  constants: Constants
+  constants: Constants,
+  /** whether a wallet is currently connected */
+  hasConnection: boolean
 ): [
   validChange: Exclude<TroveChange<Decimal>, { type: "invalidCreation" }> | undefined,
   description: JSX.Element | undefined
@@ -148,7 +153,8 @@ export const validateTroveChange = (
     originalTrove,
     resultingTrove,
     recoveryMode,
-    wouldTriggerRecoveryMode
+    wouldTriggerRecoveryMode,
+    hasConnection
   };
 
   if (change.type === "invalidCreation") {
@@ -186,7 +192,8 @@ const validateTroveCreation = (
     recoveryMode,
     wouldTriggerRecoveryMode,
     accountBalance,
-    price
+    price,
+    hasConnection
   }: TroveChangeValidationContext,
   constants: Constants
 ): JSX.Element | null => {
@@ -231,6 +238,10 @@ const validateTroveCreation = (
         </ErrorDescription>
       );
     }
+  }
+
+  if (!hasConnection) {
+    return <WalletNotConnectedInfo />;
   }
 
   if (depositCollateral.gt(accountBalance)) {

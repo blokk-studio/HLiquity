@@ -22,6 +22,7 @@ import { Step, Steps, getCompletableStepStatus } from "../Steps";
 import { useLoadingState } from "../../loading_state";
 import { useLiquity } from "../../hooks/LiquityContext";
 import { useConstants } from "../../hooks/constants";
+import { useMultiWallet } from "../../multi_wallet";
 
 const selector = (state: LiquityStoreState) => {
   const { fees, price, accountBalance } = state;
@@ -37,6 +38,7 @@ const TRANSACTION_ID = "trove-creation";
 const TX_MAX_COSTS = Decimal.from(40);
 
 export const Opening: React.FC = () => {
+  const multiWallet = useMultiWallet();
   const constants = useConstants();
   const EMPTY_TROVE = new Trove(constants, Decimal.ZERO, Decimal.ZERO);
   const { dispatchEvent } = useTroveView();
@@ -67,7 +69,8 @@ export const Opening: React.FC = () => {
     trove,
     borrowingRate,
     validationContext,
-    constants
+    constants,
+    multiWallet.hasConnection
   );
 
   const stableTroveChange = useStableTroveChange(troveChange);
@@ -305,40 +308,42 @@ export const Opening: React.FC = () => {
           setGasEstimationState={setGasEstimationState}
         />
 
-        <Flex variant="layout.actions">
-          <Button variant="cancel" onClick={handleCancelPressed}>
-            Cancel
-          </Button>
+        {multiWallet.hasConnection && (
+          <Flex variant="layout.actions">
+            <Button variant="cancel" onClick={handleCancelPressed}>
+              Cancel
+            </Button>
 
-          {gasEstimationState.type === "inProgress" ? (
-            <Button disabled>
-              <Spinner size="24px" />
-            </Button>
-          ) : !userHasAssociatedWithHchf ? (
-            <Button
-              onClick={associateWithHchf}
-              disabled={!stableTroveChange || hchfAssociationLoadingState === "pending"}
-              sx={{ gap: "1rem" }}
-            >
-              Associate with HCHF
-              {hchfAssociationLoadingState === "pending" && (
-                <Spinner size="1rem" color="currentColor" />
-              )}
-            </Button>
-          ) : !stableTroveChange ? (
-            <Button disabled>Confirm</Button>
-          ) : (
-            <TroveAction
-              transactionId={TRANSACTION_ID}
-              change={stableTroveChange}
-              maxBorrowingRate={maxBorrowingRate}
-              borrowingFeeDecayToleranceMinutes={60}
-              loading={isTransactionPending}
-            >
-              Borrow {stableTroveChange?.params.borrowHCHF?.toString(2)} HCHF
-            </TroveAction>
-          )}
-        </Flex>
+            {gasEstimationState.type === "inProgress" ? (
+              <Button disabled>
+                <Spinner size="24px" />
+              </Button>
+            ) : !userHasAssociatedWithHchf ? (
+              <Button
+                onClick={associateWithHchf}
+                disabled={!stableTroveChange || hchfAssociationLoadingState === "pending"}
+                sx={{ gap: "1rem" }}
+              >
+                Associate with HCHF
+                {hchfAssociationLoadingState === "pending" && (
+                  <Spinner size="1rem" color="currentColor" />
+                )}
+              </Button>
+            ) : !stableTroveChange ? (
+              <Button disabled>Confirm</Button>
+            ) : (
+              <TroveAction
+                transactionId={TRANSACTION_ID}
+                change={stableTroveChange}
+                maxBorrowingRate={maxBorrowingRate}
+                borrowingFeeDecayToleranceMinutes={60}
+                loading={isTransactionPending}
+              >
+                Borrow {stableTroveChange?.params.borrowHCHF?.toString(2)} HCHF
+              </TroveAction>
+            )}
+          </Flex>
+        )}
       </Box>
     </Card>
   );
