@@ -1,7 +1,6 @@
 /** @jsxImportSource theme-ui */
 import { Icon } from "./Icon";
 import { Tooltip } from "./Tooltip";
-import { Text } from "theme-ui";
 import styles from "./FeatureHighlighter.module.css";
 import { ReactNode } from "react";
 
