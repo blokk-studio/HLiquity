@@ -2,10 +2,10 @@
 import { Icon } from "./Icon";
 import { Tooltip } from "./Tooltip";
 import { Text } from "theme-ui";
-import styles from "./NewFeatureDisclaimer.module.css";
+import styles from "./FeatureHighlighter.module.css";
 import { ReactNode } from "react";
 
-export const NewFeatureDisclaimer: React.FC<{ tooltip?: ReactNode }> = props => {
+export const FeatureHighlighter: React.FC<{ tooltip?: ReactNode }> = props => {
   const spinnerElement = (
     <span
       role="presentation"
