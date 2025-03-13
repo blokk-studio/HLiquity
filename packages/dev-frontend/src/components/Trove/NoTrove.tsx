@@ -3,7 +3,7 @@ import React, { useCallback } from "react";
 import { Card, Heading, Box, Flex, Button } from "theme-ui";
 import { InfoMessage } from "../InfoMessage";
 import { useTroveView } from "./context/TroveViewContext";
-import { NewFeatureDisclaimer } from "../NewFeatureDisclaimer";
+import { FeatureHighlighter } from "../FeatureHighlighter";
 
 export const NoTrove: React.FC = () => {
   const { dispatchEvent } = useTroveView();
@@ -39,7 +39,7 @@ export const NoTrove: React.FC = () => {
                 translate: "0.5rem -0.5rem"
               }}
             >
-              <NewFeatureDisclaimer />
+              <FeatureHighlighter />
             </div>
           </div>
         </Flex>
