@@ -22,9 +22,6 @@ export const Imprint: React.FC = () => {
       <ImprintItem title="Contact">
         <address sx={{ display: "flex", flexDirection: "column", fontStyle: "normal" }}>
           <span>blokk.</span>
-          <span>Dammstrasse 16</span>
-          <span>6300 Zug</span>
-          <span>Switzerland</span>
           <Link href="https://blokk.studio/" target="_blank">
             https://blokk.studio/
           </Link>
