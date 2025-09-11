@@ -131,6 +131,7 @@
     "word-wrap": "^1.2.4",
     "braces": "^3.0.3",
     "tmp": "^0.2.4",
-    "@eslint/plugin-kit": "^0.3.4"
+    "@eslint/plugin-kit": "^0.3.4",
+    "cookie": "^0.7.0"
   }
 }
