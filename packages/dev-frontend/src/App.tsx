@@ -17,7 +17,6 @@ import { useHederaChains } from "./hooks/chains";
 import { AuthenticationProvider, LoginForm } from "./authentication";
 import { useConfiguration } from "./configuration";
 import "./App.scss";
-import { HashConnectProvider, HashConnectLoader } from "./components/HashConnectProvider";
 import { LiquityStoreProvider } from "./components/LiquityStoreProvider";
 import { SelectedChainProvider, useSelectedChain } from "./components/chain_context";
 import { MultiWalletProvider } from "./multi_wallet";
@@ -177,23 +176,11 @@ const App = () => {
             <ConnectKitProvider options={{ hideBalance: true }}>{children}</ConnectKitProvider>
           ),
           children => (
-            <HashConnectProvider walletConnectProjectId={walletConnectProjectId}>
-              {children}
-            </HashConnectProvider>
-          ),
-          children => (
             <HederaDappConnectorProvider walletConnectProjectId={walletConnectProjectId}>
               {children}
             </HederaDappConnectorProvider>
           ),
           children => <TransactionProvider>{children}</TransactionProvider>,
-          children => (
-            <HashConnectLoader
-              loader={<AppLoader content={<Heading>Setting up HashPack</Heading>} />}
-            >
-              {children}
-            </HashConnectLoader>
-          ),
           children => (
             <HederaDappConnectorContextLoader
               loader={<AppLoader content={<Heading>Setting up Hedera wallets</Heading>} />}

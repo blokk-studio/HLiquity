@@ -35,7 +35,6 @@ import {
   _normalizeTroveAdjustment,
   _normalizeTroveCreation,
 } from '@liquity/lib-base'
-import { HashConnect } from 'hashconnect'
 import Web3, { Contract, MatchPrimitiveType } from 'web3'
 
 // contracts
@@ -1250,56 +1249,6 @@ export class HashgraphLiquity
     }
 
     return { status: 'unregistered' }
-  }
-
-  public static fromEvmAddressesAndHashConnect(options: {
-    deploymentAddresses: Record<DeploymentAddressesKey, Address>
-    totalStabilityPoolHlqtReward: number
-    frontendAddress: Address
-    userAccountId: AccountId
-    userAccountAddress: Address
-    userHashConnect: HashConnect
-    rpcUrl: `wss://${string}` | `https://${string}`
-    mirrorNodeBaseUrl: `https://${string}`
-    fetch: Fetch
-    constants: Constants
-    // TODO: remove when lasagna is removed
-    deployment: Deployment
-  }) {
-    const totalStabilityPoolHlqtReward = Decimal.from(options.totalStabilityPoolHlqtReward)
-
-    const {
-      userAccountId,
-      userAccountAddress,
-      frontendAddress,
-      mirrorNodeBaseUrl,
-      fetch,
-      constants,
-    } = options
-    const sendTransaction: SendTransaction = (transaction) => {
-      return options.userHashConnect.sendTransaction(userAccountId, transaction)
-    }
-
-    const web3Contracts = getWeb3Contracts(options)
-
-    const hashgraphLiquity = new HashgraphLiquity({
-      // contracts
-      ...web3Contracts,
-      // utilities
-      userAccountId,
-      userAccountAddress,
-      sendTransaction,
-      totalStabilityPoolHlqtReward,
-      frontendAddress,
-      mirrorNodeBaseUrl,
-      fetch,
-      constants,
-
-      // lasagna
-      connection: options.deployment,
-    })
-
-    return hashgraphLiquity
   }
 
   public static fromEvmAddressesAndDappConnector(options: {
