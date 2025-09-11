@@ -14,9 +14,10 @@
     "@hashgraph/sdk": "2.41.0",
     "@liquity/lib-base": "workspace:^",
     "@liquity/mirror-node": "workspace:^",
+    "@walletconnect/qrcode-modal": "^1.8.0",
+    "@walletconnect/web3wallet": "^1.16.1",
     "bignumber.js": "9.1.2",
     "emittery": "^1.0.3",
-    "hashconnect": "^3.0.13",
     "web3": "^4.8.0"
   },
   "exports": {

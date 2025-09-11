@@ -1,5 +1,4 @@
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
-import { DappMetadata, HashConnectConnectionState } from "hashconnect";
 import { AccountId, LedgerId } from "@hashgraph/sdk";
 import { getConsumer, getHook, getLoader, getOptionalHook } from "../optional_context";
 import { useSelectedChain } from "./chain_context";
@@ -17,6 +16,19 @@ import {
   HederaJsonRpcMethod,
   HederaSessionEvent
 } from "@hashgraph/hedera-wallet-connect";
+
+enum HashConnectConnectionState {
+  Connecting = "Connecting",
+  Connected = "Connected",
+  Disconnected = "Disconnected",
+  Paired = "Paired"
+}
+interface DappMetadata {
+  name: string;
+  description: string;
+  icons: string[];
+  url: string;
+}
 
 const getHederaChainId = (chainId: number): HederaChainId => {
   switch (chainId) {
