@@ -106,6 +106,7 @@
   "packageManager": "yarn@3.8.7",
   "resolutions": {
     "sha.js": "^2.4.12",
-    "cipher-base": "^1.0.5"
+    "cipher-base": "^1.0.5",
+    "form-data": "^4.0.4"
   }
 }
