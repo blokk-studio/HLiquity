@@ -128,6 +128,7 @@
     "nanoid": "^3.3.8",
     "@grpc/grpc-js": "^1.8.22",
     "follow-redirects": "^1.15.6",
-    "word-wrap": "^1.2.4"
+    "word-wrap": "^1.2.4",
+    "braces": "^3.0.3"
   }
 }
