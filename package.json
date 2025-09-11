@@ -119,6 +119,7 @@
     "ws": "^8.17.1",
     "socks": "^2.8.7",
     "@solana/web3.js": "^1.76.1",
-    "browserify-sign": "^4.2.2"
+    "browserify-sign": "^4.2.2",
+    "semver": "^6.3.1"
   }
 }
