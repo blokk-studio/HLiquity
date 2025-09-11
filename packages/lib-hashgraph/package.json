@@ -11,7 +11,7 @@
   },
   "dependencies": {
     "@hashgraph/hedera-wallet-connect": "^1.4.2",
-    "@hashgraph/sdk": "2.41.0",
+    "@hashgraph/sdk": "2.72.0",
     "@liquity/lib-base": "workspace:^",
     "@liquity/mirror-node": "workspace:^",
     "@walletconnect/qrcode-modal": "^1.8.0",
