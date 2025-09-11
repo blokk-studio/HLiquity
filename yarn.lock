@@ -1926,7 +1926,7 @@ __metadata:
     rollup-plugin-polyfill-node: 0.13.0
     theme-ui: 0.6.0-canary.1544.5359f8a1e408a4dfeb74a9ae39688270286e534a.0
     typescript: 5.4.2
-    vite: 5.4.12
+    vite: 5.4.20
     vite-plugin-node-polyfills: 0.22.0
     vitest: 2.1.9
     wagmi: ^0.12.0
@@ -19234,9 +19234,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"vite@npm:5.4.12":
-  version: 5.4.12
-  resolution: "vite@npm:5.4.12"
+"vite@npm:5.4.20":
+  version: 5.4.20
+  resolution: "vite@npm:5.4.20"
   dependencies:
     esbuild: ^0.21.3
     fsevents: ~2.3.3
@@ -19273,7 +19273,7 @@ __metadata:
       optional: true
   bin:
     vite: bin/vite.js
-  checksum: 6b1a558fd6f5478149a805d173ce4129a102435426a95a99a12a7953d8afe7560dfe8df8e17ec9a1f0e2c74503bc406828b913ae7c2fc61f015633c82795fd64
+  checksum: 67af97e818977e92d1e55bc35d45f58d41eba6fc87f2a18435d3402adb07f4c4ec1ba838d954829f80f7784e65b65f8d147db695cfaefe45f667ee283530770d
   languageName: node
   linkType: hard
 
