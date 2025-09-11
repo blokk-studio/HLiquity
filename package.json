@@ -124,6 +124,7 @@
     "ansi-regex": "^4.1.1",
     "@babel/runtime-corejs3": "^7.26.10",
     "esbuild": "^0.25.0",
-    "undici": "^5.29.0"
+    "undici": "^5.29.0",
+    "nanoid": "^3.3.8"
   }
 }
