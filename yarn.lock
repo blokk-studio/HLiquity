@@ -2017,7 +2017,7 @@ __metadata:
     "@testing-library/react": 16.1.0
     "@testing-library/user-event": 14.5.2
     "@tippyjs/react": 4.2.6
-    "@types/react": 17.0.83
+    "@types/react": 17.0.88
     "@types/react-copy-to-clipboard": 5.0.7
     "@types/react-dom": 17.0.26
     "@types/react-modal": 3.16.3
@@ -2159,7 +2159,7 @@ __metadata:
   resolution: "@liquity/lib-react@workspace:packages/lib-react"
   dependencies:
     "@ethersproject/bignumber": 5.7.0
-    "@types/react": 17.0.83
+    "@types/react": 17.0.88
     "@typescript-eslint/eslint-plugin": 4.33.0
     "@typescript-eslint/parser": 4.33.0
     eslint: 7.32.0
@@ -5400,14 +5400,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react@npm:17.0.83":
-  version: 17.0.83
-  resolution: "@types/react@npm:17.0.83"
+"@types/react@npm:17.0.88":
+  version: 17.0.88
+  resolution: "@types/react@npm:17.0.88"
   dependencies:
     "@types/prop-types": "*"
     "@types/scheduler": ^0.16
     csstype: ^3.0.2
-  checksum: c237dc47fc19bbe1af14ff89d0e9b749abfb95c0d9c3bca8292539f3d4a4b22c2a359db5e405cd274999a62e1a5fadc8e0eafe62ecc070ff3b2bbba89600b35e
+  checksum: fe65e8bbb9028d4222075ae04c56217fb54d3030293585150bf93cbf1b8e00a5c44d9adfabf9cd3a556082b654d38531cce5580429bab42c37f4ad49ec71a446
   languageName: node
   linkType: hard
 
