@@ -7753,6 +7753,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"bn.js@npm:^5.2.2":
+  version: 5.2.2
+  resolution: "bn.js@npm:5.2.2"
+  checksum: 4384d35fef785c757eb050bc1f13d60dd8e37662ca72392ae6678b35cfa2a2ae8f0494291086294683a7d977609c7878ac3cff08ecca7f74c3ca73f3acbadbe8
+  languageName: node
+  linkType: hard
+
 "borsh@npm:^0.7.0":
   version: 0.7.0
   resolution: "borsh@npm:0.7.0"
@@ -7885,7 +7892,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"browserify-rsa@npm:^4.1.0":
+"browserify-rsa@npm:^4.1.1":
   version: 4.1.1
   resolution: "browserify-rsa@npm:4.1.1"
   dependencies:
@@ -7897,20 +7904,19 @@ __metadata:
   linkType: hard
 
 "browserify-sign@npm:^4.2.2":
-  version: 4.2.3
-  resolution: "browserify-sign@npm:4.2.3"
+  version: 4.2.5
+  resolution: "browserify-sign@npm:4.2.5"
   dependencies:
-    bn.js: ^5.2.1
-    browserify-rsa: ^4.1.0
+    bn.js: ^5.2.2
+    browserify-rsa: ^4.1.1
     create-hash: ^1.2.0
     create-hmac: ^1.1.7
-    elliptic: ^6.5.5
-    hash-base: ~3.0
+    elliptic: ^6.6.1
     inherits: ^2.0.4
-    parse-asn1: ^5.1.7
+    parse-asn1: ^5.1.9
     readable-stream: ^2.3.8
     safe-buffer: ^5.2.1
-  checksum: 403a8061d229ae31266670345b4a7c00051266761d2c9bbeb68b1a9bcb05f68143b16110cf23a171a5d6716396a1f41296282b3e73eeec0a1871c77f0ff4ee6b
+  checksum: 1cea126a0539f4f26d2b55290fbe49934e72129ce8120b20b1f9c75ce070db0a69d8fe3a46927db3dcb73391967b1bf546b89f2835defe05a18b2da41afa14b1
   languageName: node
   linkType: hard
 
@@ -12110,16 +12116,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"hash-base@npm:~3.0":
-  version: 3.0.5
-  resolution: "hash-base@npm:3.0.5"
-  dependencies:
-    inherits: ^2.0.4
-    safe-buffer: ^5.2.1
-  checksum: 6a82675a5de2ea9347501bbe655a2334950c7ec972fd9810ae9529e06aeab8f7e8ef68fc2112e5e6f0745561a7e05326efca42ad59bb5fd116537f5f8b0a216d
-  languageName: node
-  linkType: hard
-
 "hash.js@npm:1.1.7, hash.js@npm:^1.0.0, hash.js@npm:^1.0.3, hash.js@npm:^1.1.7":
   version: 1.1.7
   resolution: "hash.js@npm:1.1.7"
@@ -15956,17 +15952,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"parse-asn1@npm:^5.1.7":
-  version: 5.1.7
-  resolution: "parse-asn1@npm:5.1.7"
+"parse-asn1@npm:^5.1.9":
+  version: 5.1.9
+  resolution: "parse-asn1@npm:5.1.9"
   dependencies:
     asn1.js: ^4.10.1
     browserify-aes: ^1.2.0
     evp_bytestokey: ^1.0.3
-    hash-base: ~3.0
-    pbkdf2: ^3.1.2
+    pbkdf2: ^3.1.5
     safe-buffer: ^5.2.1
-  checksum: 93c7194c1ed63a13e0b212d854b5213ad1aca0ace41c66b311e97cca0519cf9240f79435a0306a3b412c257f0ea3f1953fd0d9549419a0952c9e995ab361fd6c
+  checksum: c85a34d15774e8bbb353291b8373a78f0e5b246803ef0e117fbf2f9a27616ea2d6db675fda77ce4cafcb1d18fb9074135fed6c450e3acfe8c915b51da0340ed6
   languageName: node
   linkType: hard
 
