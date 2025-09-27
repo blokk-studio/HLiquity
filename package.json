@@ -93,8 +93,8 @@
     "coverage": "run-s 'coverage:*'"
   },
   "devDependencies": {
-    "@commitlint/cli": "19.6.0",
-    "@commitlint/config-conventional": "19.6.0",
+    "@commitlint/cli": "19.8.1",
+    "@commitlint/config-conventional": "19.8.1",
     "@microsoft/api-documenter": "7.26.34",
     "fs-extra": "11.2.0",
     "npm-run-all2": "6.2.6",
