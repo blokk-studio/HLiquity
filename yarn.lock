@@ -2100,7 +2100,7 @@ __metadata:
     "@microsoft/api-extractor": 7.52.13
     "@nomicfoundation/hardhat-network-helpers": 1.1.0
     "@nomiclabs/hardhat-ethers": 2.2.3
-    "@types/chai": 5.0.1
+    "@types/chai": 5.2.2
     "@types/chai-as-promised": 8.0.2
     "@types/chai-spies": 1.0.6
     "@types/fs-extra": 11.0.4
@@ -2111,7 +2111,7 @@ __metadata:
     "@typescript-eslint/eslint-plugin": 5.62.0
     "@typescript-eslint/parser": 5.62.0
     axios: ^1.6.7
-    chai: 5.1.2
+    chai: 5.3.3
     chai-as-promised: 8.0.2
     chai-spies: 1.1.0
     cross-env: 7.0.3
@@ -5021,12 +5021,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/chai@npm:5.0.1":
-  version: 5.0.1
-  resolution: "@types/chai@npm:5.0.1"
+"@types/chai@npm:5.2.2":
+  version: 5.2.2
+  resolution: "@types/chai@npm:5.2.2"
   dependencies:
     "@types/deep-eql": "*"
-  checksum: 53d813cbca3755c025381ad4ac8b51b17897df90316350247f9527bdba3adb48b3b1315308fbd717d9013d8e60375c0ab4bd004dc72330133486ff5db4cb0b2c
+  checksum: 386887bd55ba684572cececd833ed91aba6cce2edd8cc1d8cefa78800b3a74db6dbf5c5c41af041d1d1f3ce672ea30b45c9520f948cdc75431eb7df3fbba8405
   languageName: node
   linkType: hard
 
@@ -8187,7 +8187,20 @@ __metadata:
   languageName: node
   linkType: hard
 
-"chai@npm:5.1.2, chai@npm:^5.1.2":
+"chai@npm:5.3.3":
+  version: 5.3.3
+  resolution: "chai@npm:5.3.3"
+  dependencies:
+    assertion-error: ^2.0.1
+    check-error: ^2.1.1
+    deep-eql: ^5.0.1
+    loupe: ^3.1.0
+    pathval: ^2.0.0
+  checksum: bc4091f1cccfee63f6a3d02ce477fe847f5c57e747916a11bd72675c9459125084e2e55dc2363ee2b82b088a878039ee7ee27c75d6d90f7de9202bf1b12ce573
+  languageName: node
+  linkType: hard
+
+"chai@npm:^5.1.2":
   version: 5.1.2
   resolution: "chai@npm:5.1.2"
   dependencies:
