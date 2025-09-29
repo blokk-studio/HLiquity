@@ -96,7 +96,7 @@
     "@commitlint/cli": "19.8.1",
     "@commitlint/config-conventional": "19.8.1",
     "@microsoft/api-documenter": "7.26.34",
-    "fs-extra": "11.2.0",
+    "fs-extra": "11.3.2",
     "npm-run-all2": "6.2.6",
     "prettier": "3.4.2",
     "sass": "1.82.0",
