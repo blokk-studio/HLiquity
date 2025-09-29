@@ -9620,9 +9620,9 @@ __metadata:
   linkType: hard
 
 "emittery@npm:^1.0.3":
-  version: 1.0.3
-  resolution: "emittery@npm:1.0.3"
-  checksum: c9e760431294a546dacc236e563ee29cc650374696ef5f824a465a4a7c584ca2c0046885a3e5d7cd3d9592713200c82f4a4ded11d0b49c06cb5bb587dedc46b4
+  version: 1.2.0
+  resolution: "emittery@npm:1.2.0"
+  checksum: 9c0286a450cbdbda18dcdadb3bab0252fb8671467f42bea0767d114ccb880fd7a265cd16fc8c269d0d53aba3e40f920eb09658d15a197796be254464bbccd912
   languageName: node
   linkType: hard
 
