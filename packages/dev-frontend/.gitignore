@@ -2,3 +2,5 @@
 /build
 /.env
 /config.json
+
+.mirror-node

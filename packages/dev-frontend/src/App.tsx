@@ -27,6 +27,7 @@ import {
   HederaDappConnectorContextLoader,
   HederaDappConnectorProvider
 } from "./components/HederaDappConnectorProvider";
+import { MirrorNodeClientProvider } from "./components/MirrorNodeClientContext";
 
 const isDemoMode = import.meta.env.VITE_APP_DEMO_MODE === "true";
 
@@ -189,6 +190,7 @@ const App = () => {
             </HederaDappConnectorContextLoader>
           ),
           children => <MultiWalletProvider>{children}</MultiWalletProvider>,
+          children => <MirrorNodeClientProvider>{children}</MirrorNodeClientProvider>,
           children => (
             <LiquityProvider
               unsupportedNetworkFallback={<UnsupportedNetworkFallback availableNetworks={chains} />}
