@@ -9,6 +9,8 @@ import { AccountId, TokenId } from "@hashgraph/sdk";
 import { useLiquitySelector } from "@liquity/lib-react";
 import { Tooltip } from "../components/Tooltip";
 import { components } from "../../.mirror-node";
+import { ActionDescription } from "../components/ActionDescription";
+import { ErrorDescription } from "../components/ErrorDescription";
 
 /** hard-coded version of:
  * const { keccak256 } = require("js-sha3");
@@ -37,7 +39,7 @@ const longDateTimeFormat = new Intl.DateTimeFormat(navigator.language, {
 });
 
 export const RedemptionsPage: React.FC = () => {
-  const [redemptions, setRedemptions] = useState<Redemption[] | null>(null);
+  const [redemptions, setRedemptions] = useState<Redemption[] | Error | null>(null);
 
   const mirrorNodeClient = useMirrorNodeClient();
   const deployment = useDeployment();
@@ -59,6 +61,7 @@ export const RedemptionsPage: React.FC = () => {
   useEffect(() => {
     const effect = async () => {
       if (!deployment || !accountIdString) {
+        setRedemptions(new Error("Please connect your wallet."));
         return;
       }
 
@@ -78,7 +81,16 @@ export const RedemptionsPage: React.FC = () => {
           }
         }
       );
+      if (resultsResponse.error) {
+        setRedemptions(
+          new Error(
+            resultsResponse.error._status?.messages?.[0].message ??
+              "Something went wrong unexpectedly."
+          )
+        );
+      }
       if (!resultsResponse.data?.results) {
+        setRedemptions([]);
         return;
       }
 
@@ -226,6 +238,17 @@ export const RedemptionsPage: React.FC = () => {
             }}
           >
             <Spinner />
+          </Box>
+        ) : redemptions instanceof Error ? (
+          <ErrorDescription>{redemptions.message}</ErrorDescription>
+        ) : !redemptions.length ? (
+          <Box
+            sx={{
+              my: 4,
+              px: 3
+            }}
+          >
+            <ActionDescription>You haven't redeemed any HCHF for HBAR yet.</ActionDescription>
           </Box>
         ) : (
           <Box
