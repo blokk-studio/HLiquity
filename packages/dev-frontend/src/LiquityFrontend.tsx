@@ -28,7 +28,7 @@ import { ImprintPage } from "./pages/ImprintPage";
 import ScrollToTop from "./components/ScrollToTop";
 import { ComponentTree } from "./components/ComponentTree";
 import { DisclaimerPage } from "./pages/DisclaimerPage.tsx";
-import { RedemptionsPage } from "./pages/RedemptionPage.tsx";
+import { RedemptionsPage } from "./pages/RedemptionsPage.tsx";
 
 export const LiquityFrontend: React.FC = () => {
   const { account: accountAddress, liquity } = useLiquity();
