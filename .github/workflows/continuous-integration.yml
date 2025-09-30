@@ -41,8 +41,8 @@ jobs:
           FORCE_COLOR: 0
       - run: yarn install --immutable
 
-      - run: yarn workspace @liquity/dev-frontend build:tsc
       - run: yarn workspace @liquity/dev-frontend build:vite
+      - run: yarn workspace @liquity/dev-frontend build:tsc
 
   # lib-base
   lint_lib-base:
