@@ -11,6 +11,9 @@ export const Nav: React.FC = () => {
         <Link sx={{ fontSize: 1 }} to="/risky-troves">
           Risky Troves
         </Link>
+        <Link sx={{ fontSize: 1 }} to="/redemptions">
+          Redemptions
+        </Link>
       </Flex>
     </Box>
   );
