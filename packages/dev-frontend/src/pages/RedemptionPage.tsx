@@ -163,8 +163,6 @@ export const RedemptionsPage: React.FC = () => {
             // find the first hchf transfer
             if (!hchfTransfer && transaction.name === "CRYPTOTRANSFER") {
               hchfTransfer = transaction.token_transfers?.find(tokenTransfer => {
-                console.debug();
-
                 return (
                   tokenTransfer.token_id === hchfTokenIdString &&
                   tokenTransfer.account === accountIdString
