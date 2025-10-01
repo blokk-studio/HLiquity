@@ -541,8 +541,8 @@ export class PlaceholderLiquity
       // as if user opened 1 trove
       hchfBalance: Decimal.from(this.constants.HCHF_MINIMUM_DEBT.mul(1)),
       hlqtBalance: Decimal.from(100),
-      hchfTokenAddress: '0x',
-      hlqtTokenAddress: '0x',
+      hchfTokenAddress: this.getHCHFTokenAddress({ blockTag }),
+      hlqtTokenAddress: this.getHLQTTokenAddress({ blockTag }),
       uniTokenBalance: Decimal.ZERO,
       uniTokenAllowance: Decimal.ZERO,
       liquidityMiningStake: Decimal.ZERO,
