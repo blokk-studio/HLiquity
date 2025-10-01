@@ -238,7 +238,14 @@ export const RedemptionsPage: React.FC = () => {
             <Spinner />
           </Box>
         ) : redemptions instanceof Error ? (
-          <ErrorDescription>{redemptions.message}</ErrorDescription>
+          <Box
+            sx={{
+              my: 4,
+              px: 3
+            }}
+          >
+            <ErrorDescription>{redemptions.message}</ErrorDescription>
+          </Box>
         ) : !redemptions.length ? (
           <Box
             sx={{
