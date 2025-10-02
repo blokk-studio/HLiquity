@@ -390,25 +390,25 @@ const theme: Theme = {
       ml: 0,
       pr: 0,
 
-      '&': {
+      "&": {
         backgroundColor: "transparent"
       },
 
-      '&:focus': {
+      "&:focus": {
         backgroundColor: "transparent"
       },
 
-      'input:checked ~ &': {
-        backgroundColor: 'transparent',
+      "input:checked ~ &": {
+        backgroundColor: "transparent"
       },
 
-      'input ~ &': {
-        backgroundColor: 'transparent',
+      "input ~ &": {
+        backgroundColor: "transparent"
       },
 
-      'input:focus ~ &': {
-        backgroundColor: 'transparent',
-      },
+      "input:focus ~ &": {
+        backgroundColor: "transparent"
+      }
     },
 
     label: {
@@ -578,7 +578,7 @@ const theme: Theme = {
     },
 
     a: {
-      color: "primary",
+      color: "inherit",
       ":hover": { fontWeight: "bold" },
       textDecoration: "none"
     },
