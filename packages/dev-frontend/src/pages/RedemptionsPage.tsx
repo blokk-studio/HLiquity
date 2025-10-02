@@ -462,7 +462,6 @@ export const RedemptionsPage: React.FC = () => {
               textAlign: "start",
               lineHeight: 1.15,
               my: 4,
-              px: 3,
               borderCollapse: "collapse"
             }}
           >
@@ -474,7 +473,8 @@ export const RedemptionsPage: React.FC = () => {
                     textAlign: "start",
                     paddingBottom: "0.5rem",
                     verticalAlign: "top",
-                    p: 2
+                    p: 2,
+                    pl: 3
                   }}
                 >
                   <Tooltip message={<Text>The user who redeemed the HCHF for HBAR.</Text>}>
@@ -532,7 +532,8 @@ export const RedemptionsPage: React.FC = () => {
                     textAlign: "end",
                     paddingBottom: "0.5rem",
                     verticalAlign: "top",
-                    p: 2
+                    p: 2,
+                    pr: 3
                   }}
                 >
                   Link
@@ -563,7 +564,8 @@ export const RedemptionsPage: React.FC = () => {
                     {/* account */}
                     <td
                       sx={{
-                        p: 2
+                        p: 2,
+                        pl: 3
                       }}
                     >
                       {redemption.accountIdString}
@@ -604,9 +606,10 @@ export const RedemptionsPage: React.FC = () => {
                     {/* date */}
                     <td
                       sx={{
-                        p: 2,
                         display: "grid",
-                        justifyContent: "end"
+                        justifyContent: "end",
+                        p: 2,
+                        pr: 3
                       }}
                     >
                       <Tooltip message={<Text>View transaction on HashScan</Text>}>
