@@ -27,6 +27,7 @@ export const useEnabledChainIds = () => {
 
 export interface HederaChain extends Chain {
   apiBaseUrl: `https://${string}`;
+  hashscanBaseUrl: `https://${string}`;
   color: `#${string}`;
   ledgerId: LedgerId;
 }
@@ -57,6 +58,7 @@ export const testnet: HederaChain = {
   },
   testnet: true,
   apiBaseUrl: "https://testnet.mirrornode.hedera.com/api/v1",
+  hashscanBaseUrl: "https://hashscan.io/testnet",
   color: "#e302ab"
 };
 
@@ -82,6 +84,7 @@ export const previewnet: HederaChain = {
   },
   testnet: true,
   apiBaseUrl: "https://previewnet.mirrornode.hedera.com/api/v1",
+  hashscanBaseUrl: "https://hashscan.io/previewnet",
   color: "#e47a2e"
 };
 
@@ -111,6 +114,7 @@ export const mainnet: HederaChain = {
   },
   testnet: true,
   apiBaseUrl: "https://mainnet-public.mirrornode.hedera.com/api/v1",
+  hashscanBaseUrl: "https://hashscan.io/mainnet",
   color: "#1896b2"
 };
 
