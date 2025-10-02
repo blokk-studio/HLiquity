@@ -525,6 +525,18 @@ export const RedemptionsPage: React.FC = () => {
                     Date
                   </Tooltip>
                 </th>
+
+                {/* links */}
+                <th
+                  sx={{
+                    textAlign: "end",
+                    paddingBottom: "0.5rem",
+                    verticalAlign: "top",
+                    p: 2
+                  }}
+                >
+                  Link
+                </th>
               </tr>
             </thead>
 
@@ -554,13 +566,8 @@ export const RedemptionsPage: React.FC = () => {
                         p: 2
                       }}
                     >
-                      <Link
-                        href={`${chain.hashscanBaseUrl}/account/${redemption.accountIdString}`}
-                        target="_blank"
-                      >
-                        {redemption.accountIdString}
-                        {isOwnedByUser && <> (you)</>}
-                      </Link>
+                      {redemption.accountIdString}
+                      {isOwnedByUser && <> (you)</>}
                     </td>
 
                     {/* hchf */}
@@ -591,12 +598,32 @@ export const RedemptionsPage: React.FC = () => {
                         p: 2
                       }}
                     >
-                      <Link
-                        href={`${chain.hashscanBaseUrl}/transaction/${redemption.transactionId}`}
-                        target="_blank"
-                      >
-                        <Tooltip message={<Text>{longDate}</Text>}>{shortDate}</Tooltip>
-                      </Link>
+                      <Tooltip message={<Text>{longDate}</Text>}>{shortDate}</Tooltip>
+                    </td>
+
+                    {/* date */}
+                    <td
+                      sx={{
+                        p: 2,
+                        display: "grid",
+                        justifyContent: "end"
+                      }}
+                    >
+                      <Tooltip message={<Text>View transaction on HashScan</Text>}>
+                        <Link
+                          aria-label="View transaction on HashScan"
+                          href={`${chain.hashscanBaseUrl}/transaction/${redemption.transactionId}`}
+                          target="_blank"
+                          sx={{
+                            display: "flex",
+                            columnGap: 3,
+                            m: -2,
+                            p: 2
+                          }}
+                        >
+                          <Icon name="external-link-alt" />
+                        </Link>
+                      </Tooltip>
                     </td>
                   </tr>
                 );
