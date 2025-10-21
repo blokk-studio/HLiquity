@@ -60,7 +60,7 @@
     "openapi-typescript": "^7.9.1",
     "rollup-plugin-polyfill-node": "0.13.0",
     "typescript": "5.4.2",
-    "vite": "5.4.20",
+    "vite": "5.4.21",
     "vite-plugin-node-polyfills": "0.22.0",
     "vitest": "2.1.9",
     "yalc": "1.0.0-pre.53"
