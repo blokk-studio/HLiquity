@@ -103,6 +103,9 @@ export default defineConfig({
     lightningcss: {
       cssModules: {
         dashedIdents: true
+      },
+      drafts: {
+        customMedia: true
       }
     }
   }
