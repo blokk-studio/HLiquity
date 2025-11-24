@@ -170,7 +170,7 @@ const headerGradient: ThemeUIStyleObject = {
 };
 
 const theme: Theme = {
-  breakpoints: ["48em", "52em", "64em"],
+  breakpoints: ["48rem", "52rem", "64rem"],
 
   space: [0, 4, 8, 16, 32, 64, 128, 256, 512],
 
@@ -589,7 +589,7 @@ const theme: Theme = {
   },
 
   links: {
-    nav: {
+    logoLink: {
       px: 2,
       py: 1,
       fontWeight: "medium",
@@ -598,17 +598,6 @@ const theme: Theme = {
       letterSpacing: "2px",
       width: ["100%", "auto"],
       mt: [3, "auto"]
-    },
-    default: {
-      color: "primary",
-      ":hover": { fontWeight: "bold" },
-      textDecoration: "none",
-      px: "inherit",
-      py: "inherit",
-      textTransform: "unset",
-      letterSpacing: "unset",
-      mt: "unset",
-      fontWeight: "unset"
     }
   }
 };
