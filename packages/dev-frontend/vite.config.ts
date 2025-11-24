@@ -1,6 +1,6 @@
 /// <reference types="vitest" />
 
-import { defineConfig, Plugin, UserConfig } from "vite";
+import { defineConfig, Plugin } from "vite";
 import react from "@vitejs/plugin-react-swc";
 import { nodePolyfills } from "vite-plugin-node-polyfills";
 import openapiTypescript, { astToString } from "openapi-typescript";
@@ -8,6 +8,7 @@ import { writeFile, mkdir } from "fs/promises";
 import { cwd } from "process";
 import { join } from "path";
 import { existsSync } from "fs";
+import svgr from "vite-plugin-svgr";
 
 const getMirrorNodeTypegenPlugin = (options?: {
   /**
@@ -40,7 +41,19 @@ const getMirrorNodeTypegenPlugin = (options?: {
 // https://vitejs.dev/config/
 export default defineConfig({
   base: "./",
-  plugins: [nodePolyfills(), react(), getMirrorNodeTypegenPlugin()],
+  plugins: [
+    svgr({
+      svgrOptions: {
+        dimensions: false,
+        svgProps: {
+          role: "img"
+        }
+      }
+    }),
+    nodePolyfills(),
+    react(),
+    getMirrorNodeTypegenPlugin()
+  ],
   define: { "process.env": {} }, // Coinbase SDK wants this
   optimizeDeps: {
     include: [
