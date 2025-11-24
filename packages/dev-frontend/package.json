@@ -32,6 +32,7 @@
     "react-router-dom": "5.3.4",
     "recharts": "2.13.2",
     "theme-ui": "0.6.0-canary.1544.5359f8a1e408a4dfeb74a9ae39688270286e534a.0",
+    "vite-plugin-svgr": "^4.5.0",
     "wagmi": "^0.12.0"
   },
   "devDependencies": {
