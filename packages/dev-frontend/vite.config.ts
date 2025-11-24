@@ -113,5 +113,13 @@ export default defineConfig({
   },
   server: {
     cors: false
+  },
+  css: {
+    transformer: "lightningcss",
+    lightningcss: {
+      cssModules: {
+        dashedIdents: true
+      }
+    }
   }
 });
