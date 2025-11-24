@@ -1,3 +1,4 @@
+/** @jsxImportSource theme-ui */
 import React from "react";
 import { LiquityStoreState } from "@liquity/lib-base";
 import { useLiquitySelector } from "@liquity/lib-react";
@@ -6,8 +7,8 @@ import { AddressZero } from "@ethersproject/constants";
 import { useLiquity } from "../hooks/LiquityContext";
 
 import { LiquityLogo } from "./LiquityLogo";
-import { Nav } from "./Nav";
 import { SideNav } from "./SideNav";
+import { Link } from "./Link";
 
 const logoHeight = "32px";
 
@@ -34,13 +35,19 @@ export const Header: React.FC = ({ children }) => {
             mx: [2, 3],
             width: "0px",
             height: "100%",
-            borderLeft: ["none", "1px solid lightgrey"]
+            borderLeft: ["none", "none", "1px solid lightgrey"]
           }}
         />
         {isFrontendRegistered && (
           <>
+            <nav sx={{ display: ["none", "none", "block"] }}>
+              <Flex>
+                <Link to="/" variant="logoLink">
+                  Hliquity
+                </Link>
+              </Flex>
+            </nav>
             <SideNav />
-            <Nav />
           </>
         )}
       </Flex>
