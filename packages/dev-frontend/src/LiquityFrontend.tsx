@@ -1,6 +1,6 @@
 /** @jsxImportSource theme-ui */
 import React from "react";
-import { Flex, Container } from "theme-ui";
+import { Container, Box } from "theme-ui";
 import { HashRouter as Router, Switch, Route } from "react-router-dom";
 import { Wallet } from "@ethersproject/wallet";
 
@@ -22,13 +22,17 @@ import "tippy.js/dist/tippy.css"; // Tooltip default style
 
 import { Imprint } from "./components/Imprint";
 import { AutomaticDevelopmentDebugMenu } from "./components/DevelopmentDebugMenu";
-import { Dashboard } from "./pages/Dashboard";
 import { PrivacyPolicyPage } from "./pages/PrivacyPolicyPage";
 import { ImprintPage } from "./pages/ImprintPage";
 import ScrollToTop from "./components/ScrollToTop";
 import { ComponentTree } from "./components/ComponentTree";
 import { DisclaimerPage } from "./pages/DisclaimerPage.tsx";
 import { RedemptionsPage } from "./pages/RedemptionsPage.tsx";
+import { Nav } from "./components/Nav.tsx";
+import { Trove as TrovePage } from "./components/Trove/Trove.tsx";
+import { RedeemHchf } from "./components/RedeemHchf/RedeemHchf.tsx";
+import { Stability } from "./components/Stability/Stability.tsx";
+import { Staking } from "./components/Staking/Staking.tsx";
 
 export const LiquityFrontend: React.FC = () => {
   const { account: accountAddress, liquity } = useLiquity();
@@ -54,30 +58,49 @@ export const LiquityFrontend: React.FC = () => {
           children => <StabilityViewProvider>{children}</StabilityViewProvider>
         ]}
       >
-        <Flex sx={{ flexDirection: "column", minHeight: "100%" }}>
-          <Header>
-            <UserAccount />
-            <SystemStatsPopup />
-          </Header>
+        <Header>
+          <UserAccount />
+          <SystemStatsPopup />
+        </Header>
 
-          <Container
-            variant="main"
-            sx={{
-              display: "flex",
-              flexGrow: 1,
-              flexDirection: "column",
-              alignItems: "center"
-            }}
-          >
-            <PageSwitcher>
-              <ScrollToTop />
+        <Container variant="main">
+          <PageSwitcher>
+            <ScrollToTop />
+
+            <Box
+              role="presentation"
+              sx={{
+                display: "grid",
+                gridTemplateColumns: ["1fr", "1fr", "auto 1fr"],
+                columnGap: [0, 0, 4, 6]
+              }}
+            >
+              <Nav
+                sx={{
+                  display: ["none", "none", "grid"],
+                  marginTop: 4
+                }}
+              />
               <Switch>
-                <Route path="/" exact>
-                  <Dashboard />
-                </Route>
                 <Route path="/risky-troves">
                   <RiskyTrovesPage />
                 </Route>
+                <Route path="/" exact>
+                  <TrovePage />
+                </Route>
+                <Route path="/redeem">
+                  <RedeemHchf />
+                </Route>
+                <Route path="/stability">
+                  <Stability />
+                </Route>
+                <Route path="/staking">
+                  <Staking />
+                </Route>
+                <Route path="/redemptions">
+                  <RedemptionsPage />
+                </Route>
+
                 <Route path="/privacy-policy">
                   <PrivacyPolicyPage />
                 </Route>
@@ -87,13 +110,10 @@ export const LiquityFrontend: React.FC = () => {
                 <Route path="/disclaimer">
                   <DisclaimerPage />
                 </Route>
-                <Route path="/redemptions">
-                  <RedemptionsPage />
-                </Route>
               </Switch>
-            </PageSwitcher>
-          </Container>
-        </Flex>
+            </Box>
+          </PageSwitcher>
+        </Container>
 
         <footer sx={{ marginInline: "clamp(2rem, 100%, 50% - 38rem)", paddingBottom: "2rem" }}>
           <Imprint />

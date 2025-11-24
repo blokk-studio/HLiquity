@@ -1,8 +1,9 @@
+/** @jsxImportSource theme-ui */
 import React, { useState, useRef } from "react";
-import { Box, Button, Container, Flex } from "theme-ui";
+import { Button, Container, Flex } from "theme-ui";
 import { Icon } from "./Icon";
 import { LiquityLogo } from "./LiquityLogo";
-import { Link } from "./Link";
+import { Nav } from "./Nav";
 
 const logoHeight = "32px";
 
@@ -12,7 +13,11 @@ export const SideNav: React.FC = () => {
 
   if (!isVisible) {
     return (
-      <Button sx={{ display: ["flex", "none"] }} variant="icon" onClick={() => setIsVisible(true)}>
+      <Button
+        sx={{ display: ["flex", "flex", "none"] }}
+        variant="icon"
+        onClick={() => setIsVisible(true)}
+      >
         <Icon name="bars" size="lg" />
       </Button>
     );
@@ -36,11 +41,16 @@ export const SideNav: React.FC = () => {
           <Icon name="times" size="2x" />
         </Button>
         <LiquityLogo height={logoHeight} p={2} />
-        <Box as="nav" sx={{ m: 3, mt: 1, p: 0 }} onClick={() => setIsVisible(false)}>
-          <Link to="/">Dashboard</Link>
-          <Link to="/risky-troves">Risky Troves</Link>
-          <Link to="/redemptions">Redemptions</Link>
-        </Box>
+        <Nav
+          onLinkClick={() => {
+            console.debug("click");
+            setIsVisible(false);
+          }}
+          sx={{
+            px: 3,
+            py: 2
+          }}
+        />
       </Flex>
     </Container>
   );
