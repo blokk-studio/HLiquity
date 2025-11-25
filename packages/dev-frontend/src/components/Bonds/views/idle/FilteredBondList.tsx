@@ -28,7 +28,8 @@ export const FilteredBondList = () => {
   const isAllOrPending = bondFilter === "all" || bondFilter === "pending";
   const showOptimisticBond = optimisticBond !== undefined && isAllOrPending;
 
-  const filteredBonds = bondFilter === "all" ? bonds : getFilteredBonds(bonds, bondFilter);
+  const filteredBonds =
+    bondFilter && bondFilter !== "all" ? getFilteredBonds(bonds, bondFilter) : bonds;
 
   return (
     <>
