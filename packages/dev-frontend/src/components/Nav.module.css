@@ -24,15 +24,14 @@
     column-gap: 2rem;
   }
 }
-.link:hover {
-  background-color: var(---0 from "../styles/colors/surface.module.css");
+.link:hover,
+.link:focus-visible {
+  outline-color: transparent;
+  background-color: var(---200 from "../styles/colors/surface.module.css");
 }
 
 .navLinkIsActive {
   color: var(---0 from "../styles/colors/text.module.css") !important;
-  background-color: var(---1000 from "../styles/colors/surface.module.css");
+  background-color: var(---1000 from "../styles/colors/surface.module.css") !important;
   font-weight: 700 !important;
-}
-.navLinkIsActive:hover {
-  background-color: var(---1000 from "../styles/colors/surface.module.css");
 }
