@@ -1,8 +1,11 @@
-import { Component, ErrorInfo, ReactNode } from "react";
+import { Component, ErrorInfo } from "react";
 import { AppError } from "./AppError";
 
-export class AppErrorBoundary extends Component<unknown, { error: Error | null }> {
-  constructor(props: { children?: ReactNode }) {
+export class AppErrorBoundary extends Component<
+  { children?: React.ReactChild },
+  { error: Error | null }
+> {
+  constructor(props: { children?: React.ReactChild }) {
     super(props);
     this.state = { error: null };
   }
@@ -16,7 +19,7 @@ export class AppErrorBoundary extends Component<unknown, { error: Error | null }
     console.warn("an unexpected error was caught by the error boundary.", { error, errorInfo });
   }
 
-  render(): React.ReactNode {
+  render() {
     if (this.state.error) {
       return (
         <AppError

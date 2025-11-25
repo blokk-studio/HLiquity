@@ -9,7 +9,7 @@ type CombinedProps = ThemeUILinkProps & RouterLinkProps;
 const RouterLinkWithFixedType = RouterLink as unknown as FunctionComponent<RouterLinkProps>;
 
 const ExactLink: React.FC<CombinedProps> = props => {
-  return <RouterLinkWithFixedType exact {...props} />;
+  return <RouterLinkWithFixedType {...props} />;
 };
 
 export const Link: React.FC<CombinedProps> = props => {

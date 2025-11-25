@@ -12,7 +12,7 @@ type LiquityStoreProviderProps = {
   loader?: React.ReactNode;
 };
 
-export const LiquityStoreProvider: React.FC<LiquityStoreProviderProps> = ({
+export const LiquityStoreProvider: React.FC<React.PropsWithChildren<LiquityStoreProviderProps>> = ({
   store,
   children,
   loader
@@ -44,7 +44,11 @@ export const LiquityStoreProvider: React.FC<LiquityStoreProviderProps> = ({
 };
 
 const AppError: React.FC<
-  void | { error: Error; heading?: string | ReactNode; infoText?: string | ReactNode }
+  React.PropsWithChildren<void | {
+    error: Error;
+    heading?: string | ReactNode;
+    infoText?: string | ReactNode;
+  }>
 > = props => (
   <Flex
     sx={{

@@ -1,7 +1,7 @@
 /** @jsxImportSource theme-ui */
 import React from "react";
 import { Container, Box } from "theme-ui";
-import { HashRouter as Router, Switch, Route } from "react-router-dom";
+import { HashRouter as Router, Route, Routes } from "react-router-dom";
 import { Wallet } from "@ethersproject/wallet";
 
 import { Decimal, Difference, Trove } from "@liquity/lib-base";
@@ -81,36 +81,18 @@ export const LiquityFrontend: React.FC = () => {
                   marginTop: 4
                 }}
               />
-              <Switch>
-                <Route path="/risky-troves">
-                  <RiskyTrovesPage />
-                </Route>
-                <Route path="/" exact>
-                  <TrovePage />
-                </Route>
-                <Route path="/redeem">
-                  <RedeemHchf />
-                </Route>
-                <Route path="/stability">
-                  <Stability />
-                </Route>
-                <Route path="/staking">
-                  <Staking />
-                </Route>
-                <Route path="/redemptions">
-                  <RedemptionsPage />
-                </Route>
+              <Routes>
+                <Route path="/risky-troves" element={<RiskyTrovesPage />} />
+                <Route path="/" element={<TrovePage />} />
+                <Route path="/redeem" element={<RedeemHchf />} />
+                <Route path="/stability" element={<Stability />} />
+                <Route path="/staking" element={<Staking />} />
+                <Route path="/redemptions" element={<RedemptionsPage />} />
 
-                <Route path="/privacy-policy">
-                  <PrivacyPolicyPage />
-                </Route>
-                <Route path="/imprint">
-                  <ImprintPage />
-                </Route>
-                <Route path="/disclaimer">
-                  <DisclaimerPage />
-                </Route>
-              </Switch>
+                <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
+                <Route path="/imprint" element={<ImprintPage />} />
+                <Route path="/disclaimer" element={<DisclaimerPage />} />
+              </Routes>
             </Box>
           </PageSwitcher>
         </Container>
