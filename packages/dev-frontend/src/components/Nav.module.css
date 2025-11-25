@@ -17,7 +17,7 @@
   border-radius: 0.25rem;
   font-weight: 300 !important;
   font-size: 1.25rem;
-  color: var(---900 from "../styles/colors/text.module.css") !important;
+  color: var(---1000 from "../styles/colors/text.module.css") !important;
 
   @media (--wide) {
     padding-right: 3rem;
@@ -25,14 +25,14 @@
   }
 }
 .link:hover {
-  background-color: var(---50 from "../styles/colors/surface.module.css");
+  background-color: var(---0 from "../styles/colors/surface.module.css");
 }
 
 .navLinkIsActive {
-  color: var(---50 from "../styles/colors/text.module.css") !important;
-  background-color: var(---900 from "../styles/colors/surface.module.css");
+  color: var(---0 from "../styles/colors/text.module.css") !important;
+  background-color: var(---1000 from "../styles/colors/surface.module.css");
   font-weight: 700 !important;
 }
 .navLinkIsActive:hover {
-  background-color: var(---900 from "../styles/colors/surface.module.css");
+  background-color: var(---1000 from "../styles/colors/surface.module.css");
 }
