@@ -8,7 +8,10 @@ type ClaimRewardsProps = {
   disabled?: boolean;
 };
 
-export const ClaimRewards: React.FC<ClaimRewardsProps> = ({ disabled, children }) => {
+export const ClaimRewards: React.FC<React.PropsWithChildren<ClaimRewardsProps>> = ({
+  disabled,
+  children
+}) => {
   const { liquity } = useLiquity();
 
   const [sendTransaction] = useTxFunction(

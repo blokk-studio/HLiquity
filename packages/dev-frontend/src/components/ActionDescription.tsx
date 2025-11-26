@@ -1,9 +1,12 @@
 import { Box, Flex, Text } from "theme-ui";
 
 import { Icon } from "./Icon";
-import { ReactNode } from "react";
 
-export const ActionDescription: React.FC<{ icon?: ReactNode }> = ({ children, icon }) => (
+export const ActionDescription: React.FC<
+  React.PropsWithChildren<{
+    icon?: React.ReactNode;
+  }>
+> = ({ children, icon }) => (
   <Box
     sx={{
       display: "flex",
@@ -27,6 +30,6 @@ export const ActionDescription: React.FC<{ icon?: ReactNode }> = ({ children, ic
   </Box>
 );
 
-export const Amount: React.FC = ({ children }) => (
-  <Text sx={{ fontWeight: "bold", whiteSpace: "nowrap" }}>{children}</Text>
-);
+export const Amount: React.FC<{
+  children: React.ReactNode;
+}> = ({ children }) => <Text sx={{ fontWeight: "bold", whiteSpace: "nowrap" }}>{children}</Text>;

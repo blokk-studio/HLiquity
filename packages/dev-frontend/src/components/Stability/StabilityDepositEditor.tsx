@@ -31,14 +31,9 @@ type StabilityDepositEditorProps = {
   transactionSteps: Step[];
 };
 
-export const StabilityDepositEditor: React.FC<StabilityDepositEditorProps> = ({
-  originalDeposit,
-  editedHCHF,
-  changePending,
-  dispatch,
-  transactionSteps,
-  children
-}) => {
+export const StabilityDepositEditor: React.FC<
+  React.PropsWithChildren<StabilityDepositEditorProps>
+> = ({ originalDeposit, editedHCHF, changePending, dispatch, transactionSteps, children }) => {
   const { hchfBalance, hchfInStabilityPool } = useLiquitySelector(select);
   const editingState = useState<string>();
 

@@ -1,7 +1,7 @@
 import React from "react";
 import { Chain, createClient, WagmiConfig } from "wagmi";
 import { ConnectKitProvider } from "connectkit";
-import { Flex, Heading, ThemeProvider, useColorMode } from "theme-ui";
+import { Flex, Heading, ThemeUIProvider, useColorMode } from "theme-ui";
 import { Global, css } from "@emotion/react";
 
 import getDefaultClient from "./connectkit/defaultClient";
@@ -79,7 +79,9 @@ const UnsupportedNetworkFallback: React.FC<{ availableNetworks: Chain[] }> = ({
   );
 };
 
-const DefaultWagmiClientProvider: React.FC = ({ children }) => {
+const DefaultWagmiClientProvider: React.FC<{
+  children: React.ReactNode;
+}> = ({ children }) => {
   const selectedChain = useSelectedChain();
   const hederaChains = useHederaChains();
   const { walletConnectProjectId } = useConfiguration();
@@ -178,7 +180,7 @@ const App = () => {
 
       <ComponentTree
         renderers={[
-          children => <ThemeProvider theme={theme}>{children}</ThemeProvider>,
+          children => <ThemeUIProvider theme={theme}>{children}</ThemeUIProvider>,
           children => <ColorModeContainer>{children}</ColorModeContainer>,
           children => <AppErrorBoundary>{children}</AppErrorBoundary>,
           children => <SnackbarProvider>{children}</SnackbarProvider>,

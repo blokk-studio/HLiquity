@@ -7,7 +7,10 @@ type ClaimAndMoveProps = {
   disabled?: boolean;
 };
 
-export const ClaimAndMove: React.FC<ClaimAndMoveProps> = ({ disabled, children }) => {
+export const ClaimAndMove: React.FC<React.PropsWithChildren<ClaimAndMoveProps>> = ({
+  disabled,
+  children
+}) => {
   const { liquity } = useLiquity();
 
   const [sendTransaction] = useTxFunction(

@@ -66,7 +66,9 @@ const TransactionContext = React.createContext<
   [TransactionState, (state: TransactionState) => void] | undefined
 >(undefined);
 
-export const TransactionProvider: React.FC = ({ children }) => {
+export const TransactionProvider: React.FC<{
+  children: React.ReactNode;
+}> = ({ children }) => {
   const transactionState = useState<TransactionState>({ type: "idle" });
   return (
     <TransactionContext.Provider value={transactionState}>{children}</TransactionContext.Provider>
@@ -185,7 +187,7 @@ export function Transaction<C extends React.ReactElement<ButtonlikeProps>>({
   }
 
   showFailure =
-    failureReasons.length > 0 ? showFailure ?? (tooltip ? "asTooltip" : "asChildText") : undefined;
+    failureReasons.length > 0 ? (showFailure ?? (tooltip ? "asTooltip" : "asChildText")) : undefined;
 
   const clonedTrigger =
     showFailure === "asChildText"
@@ -198,8 +200,8 @@ export function Transaction<C extends React.ReactElement<ButtonlikeProps>>({
           failureReasons[0]
         )
       : showFailure === "asTooltip"
-      ? React.cloneElement(trigger, { disabled: true })
-      : React.cloneElement(trigger, { onClick: sendTransaction });
+        ? React.cloneElement(trigger, { disabled: true })
+        : React.cloneElement(trigger, { onClick: sendTransaction });
 
   if (showFailure === "asTooltip") {
     tooltip = failureReasons[0];

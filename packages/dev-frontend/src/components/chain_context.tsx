@@ -66,7 +66,9 @@ const getSelectedChainIdCookieValue = (cookieString: typeof document.cookie) => 
   return chainId;
 };
 
-export const SelectedChainProvider: React.FC = ({ children }) => {
+export const SelectedChainProvider: React.FC<{
+  children: React.ReactNode;
+}> = ({ children }) => {
   const selectedChainIdCookieValue = getSelectedChainIdCookieValue(document.cookie);
   const initiallySelectedChain =
     chainsWithDeployment.find(chain => chain.id === selectedChainIdCookieValue) ??

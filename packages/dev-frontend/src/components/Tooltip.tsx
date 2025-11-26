@@ -19,7 +19,12 @@ export const LearnMoreLink: React.FC<LearnMoreLinkProps> = ({ link }) => {
   );
 };
 
-export const Tooltip: React.FC<TooltipProps> = ({ children, message, placement = "top", link }) => {
+export const Tooltip: React.FC<React.PropsWithChildren<TooltipProps>> = ({
+  children,
+  message,
+  placement = "top",
+  link
+}) => {
   return (
     <Tippy
       interactive={true}

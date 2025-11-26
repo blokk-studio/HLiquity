@@ -83,7 +83,7 @@ type LabelProps = {
 };
 
 type SubLabelProps = { style?: ThemeUIStyleObject };
-export const SubLabel: React.FC<SubLabelProps> = ({ style, children }) => (
+export const SubLabel: React.FC<React.PropsWithChildren<SubLabelProps>> = ({ style, children }) => (
   <Flex
     sx={{
       fontWeight: 200,
@@ -98,7 +98,11 @@ export const SubLabel: React.FC<SubLabelProps> = ({ style, children }) => (
   </Flex>
 );
 
-export const Label: React.FC<LabelProps> = ({ children, description, style }) => {
+export const Label: React.FC<React.PropsWithChildren<LabelProps>> = ({
+  children,
+  description,
+  style
+}) => {
   return (
     <Flex
       sx={{
@@ -176,8 +180,8 @@ const Event: React.FC<EventProps> = ({
     isToday && isEndOfLife
       ? "Now"
       : isUnknownDate
-      ? "Unknown"
-      : date.toLocaleDateString("en-GB", { month: "short", day: "2-digit", year: "numeric" });
+        ? "Unknown"
+        : date.toLocaleDateString("en-GB", { month: "short", day: "2-digit", year: "numeric" });
 
   return (
     <Flex sx={{ flexDirection: "column", flexGrow: 1 }}>
@@ -206,8 +210,8 @@ export const HorizontalTimeline: React.FC<HorizontalTimelineProps> = ({ events, 
     a.date.getTime() === b.date.getTime()
       ? Number(a.isEndOfLife) - Number(b.isEndOfLife)
       : a.date.getTime() > b.date.getTime()
-      ? 1
-      : -1
+        ? 1
+        : -1
   );
 
   const endOfLifeIdx = orderedEvents.findIndex(event => event.isEndOfLife);

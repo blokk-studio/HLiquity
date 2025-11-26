@@ -166,7 +166,11 @@ const getAccountEvmAddress = async (options: { accountIdString: string; chain: H
   }
   return accountEvmAddress;
 };
-export const HederaDappConnectorProvider: React.FC<{ walletConnectProjectId: string }> = props => {
+export const HederaDappConnectorProvider: React.FC<
+  React.PropsWithChildren<{
+    walletConnectProjectId: string;
+  }>
+> = props => {
   const [dappConnector, setHederaDappConnector] = useState<DAppConnector | null>(null);
   const [session, setSession] = useState<HederaDappConnectorSession | null>(null);
   const [connectionState, setConnectionState] = useState<HashConnectConnectionState>(

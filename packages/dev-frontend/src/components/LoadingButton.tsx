@@ -15,7 +15,8 @@ export const LoadingButton: React.FC<LoadingButtonProps> = ({
       {children}
       {loading && (
         <Spinner
-          size="1rem"
+          height="1rem"
+          width="1rem"
           color="currentColor"
           sx={{ marginLeft: "1rem", marginRight: "-0.75rem" }}
         />

@@ -11,7 +11,7 @@ type WaitingDialogProps = {
   onCancel: () => void;
 };
 
-export const WaitingDialog: React.FC<WaitingDialogProps> = ({
+export const WaitingDialog: React.FC<React.PropsWithChildren<WaitingDialogProps>> = ({
   title,
   icon,
   waitReason,
@@ -30,7 +30,7 @@ export const WaitingDialog: React.FC<WaitingDialogProps> = ({
           alignItems: ["center", "auto"]
         }}
       >
-        <Spinner size="3em" sx={{ mr: [0, 3], mb: [2, 0] }} />
+        <Spinner height="3em" width="3em" sx={{ mr: [0, 3], mb: [2, 0] }} />
         <Flex sx={{ flexDirection: "column", alignItems: ["center", "flex-start"] }}>
           {waitReason}
         </Flex>

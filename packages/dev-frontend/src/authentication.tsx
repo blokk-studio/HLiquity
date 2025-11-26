@@ -20,9 +20,11 @@ const getPasswordCookieValue = (cookieString: typeof document.cookie) => {
   return cookieValue;
 };
 
-export const AuthenticationProvider: React.FC<{
-  loginForm: ReactNode;
-}> = ({ children, loginForm: loginForm }) => {
+export const AuthenticationProvider: React.FC<
+  React.PropsWithChildren<{
+    loginForm: ReactNode;
+  }>
+> = ({ children, loginForm: loginForm }) => {
   const [encodedPassword, setCookieValue] = useState<string | undefined>(
     getPasswordCookieValue(document.cookie)
   );

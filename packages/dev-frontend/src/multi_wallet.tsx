@@ -38,7 +38,9 @@ const multiWalletContext = createContext<MultiWalletContext>({
   hideConnectionDialog: async () => undefined
 });
 
-export const MultiWalletProvider: React.FC = ({ children }) => {
+export const MultiWalletProvider: React.FC<{
+  children: React.ReactNode;
+}> = ({ children }) => {
   const selectedChain = useSelectedChain();
   // wagmi
   const wagmiAccount = useAccount();

@@ -7,7 +7,10 @@ type StatisticProps = {
   lexicon: Lexicon;
 };
 
-export const Statistic: React.FC<StatisticProps> = ({ lexicon, children }) => {
+export const Statistic: React.FC<React.PropsWithChildren<StatisticProps>> = ({
+  lexicon,
+  children
+}) => {
   return (
     <Grid
       sx={{

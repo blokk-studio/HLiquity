@@ -316,7 +316,7 @@ export const Opening: React.FC = () => {
 
             {gasEstimationState.type === "inProgress" ? (
               <Button disabled>
-                <Spinner size="24px" />
+                <Spinner height="24px" width="24px" />
               </Button>
             ) : !userHasAssociatedWithHchf ? (
               <Button
@@ -326,7 +326,7 @@ export const Opening: React.FC = () => {
               >
                 Associate with HCHF
                 {hchfAssociationLoadingState === "pending" && (
-                  <Spinner size="1rem" color="currentColor" />
+                  <Spinner height="1rem" width="1rem" color="currentColor" />
                 )}
               </Button>
             ) : !stableTroveChange ? (

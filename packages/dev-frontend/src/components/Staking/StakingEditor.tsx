@@ -25,7 +25,7 @@ type StakingEditorProps = {
   transactionSteps: Step[];
 };
 
-export const StakingEditor: React.FC<StakingEditorProps> = ({
+export const StakingEditor: React.FC<React.PropsWithChildren<StakingEditorProps>> = ({
   children,
   title,
   originalStake,

@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useCallback } from "react";
-import CopyToClipboard from "react-copy-to-clipboard";
 import { Card, Button, Text, Box, Heading, Flex } from "theme-ui";
 
 import { Percent, UserTrove, Decimal, Constants } from "@liquity/lib-base";
@@ -284,21 +283,24 @@ export const RiskyTroves: React.FC<RiskyTrovesProps> = ({ pageSize }) => {
                           </Text>
                         </Tooltip>
 
-                        <CopyToClipboard
-                          text={getTroveAccountId(trove.ownerAddress)}
-                          onCopy={() => setCopied(getTroveAccountId(trove.ownerAddress))}
+                        <Button
+                          variant="icon"
+                          sx={{ width: "24px", height: "24px" }}
+                          onClick={() => {
+                            const accountId = getTroveAccountId(trove.ownerAddress);
+                            navigator.clipboard.writeText(accountId);
+                            setCopied(accountId);
+                          }}
                         >
-                          <Button variant="icon" sx={{ width: "24px", height: "24px" }}>
-                            <Icon
-                              name={
-                                copied === getTroveAccountId(trove.ownerAddress)
-                                  ? "clipboard-check"
-                                  : "clipboard"
-                              }
-                              size="sm"
-                            />
-                          </Button>
-                        </CopyToClipboard>
+                          <Icon
+                            name={
+                              copied === getTroveAccountId(trove.ownerAddress)
+                                ? "clipboard-check"
+                                : "clipboard"
+                            }
+                            size="sm"
+                          />
+                        </Button>
                       </td>
                       <td>
                         <Abbreviation short={trove.collateral.shorten()}>
@@ -317,8 +319,8 @@ export const RiskyTroves: React.FC<RiskyTrovesProps> = ({ pageSize }) => {
                               collateralRatio.gt(constants.CRITICAL_COLLATERAL_RATIO)
                                 ? "success"
                                 : collateralRatio.gt(1.2)
-                                ? "warning"
-                                : "danger"
+                                  ? "warning"
+                                  : "danger"
                             }
                           >
                             {new Percent(collateralRatio).prettify()}

@@ -1,5 +1,14 @@
 import React, { useState } from "react";
-import { Text, Flex, Label, Input, SxProp, Button, ThemeUICSSProperties } from "theme-ui";
+import {
+  Text,
+  Flex,
+  Label,
+  Input,
+  SxProp,
+  Button,
+  ThemeUICSSProperties,
+  ThemeUIStyleObject
+} from "theme-ui";
 
 import { Icon } from "../Icon";
 
@@ -10,7 +19,14 @@ type RowProps = SxProp & {
   infoIcon?: React.ReactNode;
 };
 
-export const Row: React.FC<RowProps> = ({ sx, label, labelId, labelFor, children, infoIcon }) => {
+export const Row: React.FC<React.PropsWithChildren<RowProps>> = ({
+  sx,
+  label,
+  labelId,
+  labelFor,
+  children,
+  infoIcon
+}) => {
   return (
     <Flex sx={{ alignItems: "stretch", position: "relative", width: "100%", ...sx }}>
       <Label
@@ -38,10 +54,11 @@ export const Row: React.FC<RowProps> = ({ sx, label, labelId, labelFor, children
 
 type PendingAmountProps = {
   value: string;
+  sx: ThemeUIStyleObject;
 };
 
-const PendingAmount: React.FC<PendingAmountProps & SxProp> = ({ sx, value }) => (
-  <Text {...{ sx }}>
+const PendingAmount: React.FC<PendingAmountProps> = ({ sx, value }) => (
+  <Text sx={sx}>
     (
     {value === "++" ? (
       <Icon name="angle-double-up" />
@@ -73,7 +90,7 @@ type StaticAmountsProps = {
   onClick?: () => void;
 };
 
-export const StaticAmounts: React.FC<StaticAmountsProps & SxProp> = ({
+export const StaticAmounts: React.FC<React.PropsWithChildren<StaticAmountsProps & SxProp>> = ({
   sx,
   inputId,
   labelledBy,
@@ -161,7 +178,7 @@ const editableStyle: ThemeUICSSProperties = {
 
 type StaticRowProps = RowProps & StaticAmountsProps;
 
-export const StaticRow: React.FC<StaticRowProps> = ({
+export const StaticRow: React.FC<React.PropsWithChildren<StaticRowProps>> = ({
   label,
   labelId,
   labelFor,
@@ -191,12 +208,9 @@ type DisabledEditableRowProps = Omit<StaticAmountsProps, "labelledBy" | "onClick
   label: string;
 };
 
-export const DisabledEditableAmounts: React.FC<StaticAmountsProps & SxProp> = ({
-  inputId,
-  children,
-  sx,
-  ...props
-}) => (
+export const DisabledEditableAmounts: React.FC<
+  React.PropsWithChildren<StaticAmountsProps & SxProp>
+> = ({ inputId, children, sx, ...props }) => (
   <StaticAmounts
     sx={{ ...editableStyle, boxShadow: 0, ...sx }}
     labelledBy={`${inputId}-label`}
@@ -207,7 +221,7 @@ export const DisabledEditableAmounts: React.FC<StaticAmountsProps & SxProp> = ({
   </StaticAmounts>
 );
 
-export const DisabledEditableRow: React.FC<DisabledEditableRowProps> = ({
+export const DisabledEditableRow: React.FC<React.PropsWithChildren<DisabledEditableRowProps>> = ({
   inputId,
   label,
   amount,

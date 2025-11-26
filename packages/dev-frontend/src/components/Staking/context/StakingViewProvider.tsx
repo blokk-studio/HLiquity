@@ -71,7 +71,9 @@ const reduce = (
   return state;
 };
 
-export const StakingViewProvider: React.FC = ({ children }) => {
+export const StakingViewProvider: React.FC<{
+  children: React.ReactNode;
+}> = ({ children }) => {
   const stakingTransactionState = useMyTransactionState("stake");
   const [{ adjusting, changePending, hlqtStake }, dispatch] = useLiquityReducer(reduce, init);
   const [viewState, setViewState] = useState<StakingView>("NONE");

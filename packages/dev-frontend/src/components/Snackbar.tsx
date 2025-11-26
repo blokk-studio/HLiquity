@@ -32,7 +32,9 @@ export const useSnackbar = () => {
   return useContext(snackbarContext);
 };
 
-export const SnackbarProvider: React.FC = ({ children }) => {
+export const SnackbarProvider: React.FC<{
+  children: React.ReactNode;
+}> = ({ children }) => {
   const [snacks, setSnacks] = useState<Snack[]>([]);
 
   const addSnack = (snack: Snack) => {

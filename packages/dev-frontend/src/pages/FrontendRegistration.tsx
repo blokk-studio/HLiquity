@@ -22,7 +22,7 @@ const FrontendRegistrationAction: React.FC<FrontendRegistrationActionProps> = ({
 
   return myTransactionState.type === "waitingForApproval" ? (
     <Button disabled>
-      <Spinner sx={{ mr: 2, color: "white" }} size="20px" />
+      <Spinner sx={{ mr: 2, color: "white" }} height="20px" width="20px" />
       Waiting for your approval
     </Button>
   ) : myTransactionState.type !== "waitingForConfirmation" &&

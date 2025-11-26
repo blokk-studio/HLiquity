@@ -13,7 +13,9 @@ import { AssociateAsFrontendOwner } from "./AssociateAsFrontendOwner";
 
 const selectFrontend = ({ frontend }: LiquityStoreState) => frontend;
 
-export const PageSwitcher: React.FC = ({ children }) => {
+export const PageSwitcher: React.FC<{
+  children: React.ReactNode;
+}> = ({ children }) => {
   const {
     account,
     liquity: {

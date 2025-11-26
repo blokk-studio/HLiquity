@@ -7,12 +7,18 @@ type InfoMessageProps = {
   icon?: React.ReactNode;
 };
 
-export const InfoMessage: React.FC<InfoMessageProps> = ({ title, children, icon }) => (
-  <Box sx={{ mx: 1, mb: 3, }}>
+export const InfoMessage: React.FC<React.PropsWithChildren<InfoMessageProps>> = ({
+  title,
+  children,
+  icon
+}) => (
+  <Box sx={{ mx: 1, mb: 3 }}>
     <Flex sx={{ alignItems: "center", mb: "10px" }}>
       <Box sx={{ mr: "12px", fontSize: "20px" }}>{icon || <Icon name="info-circle" />}</Box>
 
-      <Heading as="h3" sx={{ fontSize: 4 }}>{title}</Heading>
+      <Heading as="h3" sx={{ fontSize: 4 }}>
+        {title}
+      </Heading>
     </Flex>
 
     <Text sx={{ fontSize: 4 }}>{children}</Text>

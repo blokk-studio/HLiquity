@@ -21,7 +21,11 @@ export const getConsumer = <Type,>(
 };
 
 export const getLoader = <Type,>(context: Context<Type | null>) => {
-  const Loader: React.FC<{ loader: ReactNode }> = props => {
+  const Loader: React.FC<
+    React.PropsWithChildren<{
+      loader: ReactNode;
+    }>
+  > = props => {
     const hashConnect = useReactContext(context);
 
     if (!hashConnect) {

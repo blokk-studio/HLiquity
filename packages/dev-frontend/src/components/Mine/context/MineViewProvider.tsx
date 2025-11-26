@@ -26,7 +26,9 @@ const selector = ({
   remainingLiquidityMiningHLQTReward
 }: LiquityStoreState) => ({ liquidityMiningStake, remainingLiquidityMiningHLQTReward });
 
-export const MineViewProvider: React.FC = props => {
+export const MineViewProvider: React.FC<{
+  children: React.ReactNode;
+}> = props => {
   const { children } = props;
   const { liquidityMiningStake, remainingLiquidityMiningHLQTReward } = useLiquitySelector(selector);
   const { store } = useLiquity();
