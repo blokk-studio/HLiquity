@@ -1,5 +1,5 @@
 import React from "react";
-import { Flex, Box, Card } from "theme-ui";
+import { Flex, Box, Card, ThemeUIStyleObject } from "theme-ui";
 
 import { Decimal, Difference, Percent } from "@liquity/lib-base";
 
@@ -13,15 +13,16 @@ import { useConstants } from "../../hooks/constants";
 type CollateralRatioProps = {
   value?: Decimal;
   change?: Difference;
+  sx?: ThemeUIStyleObject;
 };
 
-export const CollateralRatio: React.FC<CollateralRatioProps> = ({ value, change }) => {
+export const CollateralRatio: React.FC<CollateralRatioProps> = ({ value, change, sx }) => {
   const collateralRatioPct = new Percent(value ?? { toString: () => "N/A" });
   const changePct = change && new Percent(change);
   const constants = useConstants();
   return (
     <>
-      <Flex>
+      <Flex sx={sx}>
         <Box sx={{ mt: [2, 0], ml: 3, mr: -2, fontSize: "24px" }}>
           <Icon name="heartbeat" />
         </Box>
@@ -34,17 +35,17 @@ export const CollateralRatio: React.FC<CollateralRatioProps> = ({ value, change 
             value?.gt(constants.CRITICAL_COLLATERAL_RATIO)
               ? "success"
               : value?.gt(1.2)
-              ? "warning"
-              : value?.lte(1.2)
-              ? "danger"
-              : "muted"
+                ? "warning"
+                : value?.lte(1.2)
+                  ? "danger"
+                  : "muted"
           }
           pendingAmount={
             change?.positive?.absoluteValue?.gt(10)
               ? "++"
               : change?.negative?.absoluteValue?.gt(10)
-              ? "--"
-              : changePct?.nonZeroish(2)?.prettify()
+                ? "--"
+                : changePct?.nonZeroish(2)?.prettify()
           }
           pendingColor={change?.positive ? "success" : "danger"}
           infoIcon={
