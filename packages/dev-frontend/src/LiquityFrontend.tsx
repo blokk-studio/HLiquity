@@ -63,7 +63,12 @@ export const LiquityFrontend: React.FC = () => {
           <SystemStatsPopup />
         </Header>
 
-        <Container variant="main">
+        <Container
+          variant="main"
+          sx={{
+            paddingTop: 4
+          }}
+        >
           <PageSwitcher>
             <ScrollToTop />
 
@@ -77,8 +82,7 @@ export const LiquityFrontend: React.FC = () => {
             >
               <Nav
                 sx={{
-                  display: ["none", "none", "grid"],
-                  marginTop: 4
+                  display: ["none", "none", "grid"]
                 }}
               />
               <Routes>
