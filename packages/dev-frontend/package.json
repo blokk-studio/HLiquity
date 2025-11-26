@@ -13,6 +13,7 @@
     "@fortawesome/react-fontawesome": "0.2.6",
     "@hashgraph/hedera-wallet-connect": "^1.4.2",
     "@hashgraph/sdk": "2.72.0",
+    "@headlessui/react": "^2.2.9",
     "@liquity/chicken-bonds": "file:.yalc/@liquity/chicken-bonds",
     "@liquity/lib-hashgraph": "workspace:^",
     "@liquity/lib-placeholder": "workspace:^",
