@@ -1,9 +1,14 @@
-import { Box, Flex, Text } from "theme-ui";
+import { Box, Flex, Text, ThemeUIStyleObject } from "theme-ui";
 
 import { Icon } from "./Icon";
-import React, { ReactNode } from "react";
+import React from "react";
 
-export const ActionDescription: React.FC<React.PropsWithChildren<{ icon?: ReactNode }>> = ({ children, icon }) => (
+export const ActionDescription: React.FC<
+  React.PropsWithChildren<{
+    icon?: React.ReactNode;
+    sx?: ThemeUIStyleObject;
+  }>
+> = ({ children, icon, sx }) => (
   <Box
     sx={{
       display: "flex",
@@ -17,7 +22,8 @@ export const ActionDescription: React.FC<React.PropsWithChildren<{ icon?: ReactN
       borderRadius: "8px",
       borderColor: "accent",
       boxShadow: 2,
-      bg: "rgba(46, 182, 234, 0.05)"
+      bg: "rgba(46, 182, 234, 0.05)",
+      ...sx
     }}
   >
     <Flex sx={{ alignItems: "center" }}>
