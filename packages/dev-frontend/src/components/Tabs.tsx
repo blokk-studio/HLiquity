@@ -16,7 +16,7 @@ export const Tabs: React.FC<{
       <TabList className={styles.tabList}>
         {props.tabs.map(tab => {
           return (
-            <Tab disabled={tab.disabled} className={styles.tab}>
+            <Tab disabled={tab.disabled} className={styles.tab} key={tab.title}>
               {tab.title}
             </Tab>
           );
@@ -24,7 +24,7 @@ export const Tabs: React.FC<{
       </TabList>
       <TabPanels className={styles.tabPanels}>
         {props.tabs.map(tab => {
-          return <TabPanel>{tab.content}</TabPanel>;
+          return <TabPanel key={tab.title}>{tab.content}</TabPanel>;
         })}
       </TabPanels>
     </TabGroup>
