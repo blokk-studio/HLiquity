@@ -3,7 +3,7 @@ import styles from "./Tabs.module.css";
 
 export interface Tab {
   title: string;
-  content: React.ReactChild;
+  content: React.ReactNode;
   disabled?: boolean;
 }
 
