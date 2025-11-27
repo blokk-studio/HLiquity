@@ -14,9 +14,11 @@ type CollateralRatioProps = {
   value?: Decimal;
   change?: Difference;
   sx?: ThemeUIStyleObject;
+  /** `sx` prop for the info message that is displayed if the CR is <150% */
+  infoSx?: ThemeUIStyleObject;
 };
 
-export const CollateralRatio: React.FC<CollateralRatioProps> = ({ value, change, sx }) => {
+export const CollateralRatio: React.FC<CollateralRatioProps> = ({ value, change, sx, infoSx }) => {
   const collateralRatioPct = new Percent(value ?? { toString: () => "N/A" });
   const changePct = change && new Percent(change);
   const constants = useConstants();
@@ -64,7 +66,7 @@ export const CollateralRatio: React.FC<CollateralRatioProps> = ({ value, change,
         />
       </Flex>
       {value?.lt(1.5) && (
-        <ActionDescription>
+        <ActionDescription sx={infoSx}>
           Keeping your CR above 150% can help avoid liquidation under Recovery Mode.
         </ActionDescription>
       )}
