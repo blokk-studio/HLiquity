@@ -1,0 +1,20 @@
+.field {
+  color: var(---1000 from "./colors/text.module.css");
+  border-style: solid;
+  border-width: 1px;
+  border-color: var(---1000 from "./colors/text.module.css");
+  padding: 0.5rem;
+  font-size: 1.25rem;
+}
+.field:hover,
+.field:focus-visible {
+  outline-style: solid;
+  outline-width: 3px;
+  outline-offset: -3px;
+  outline-color: var(---1000 from "../styles/colors/surface.module.css");
+}
+
+.labelText {
+  color: var(---1000 from "./colors/text.module.css");
+  font-size: 1.25rem;
+}
