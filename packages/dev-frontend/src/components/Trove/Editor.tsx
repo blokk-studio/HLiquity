@@ -175,7 +175,11 @@ export const StaticRow: React.FC<React.PropsWithChildren<StaticRowProps>> = ({
     labelId={labelId}
     labelFor={labelFor}
     infoIcon={infoIcon}
-    sx={{ mt: [-2, -3], pb: [2, 3] }}
+    sx={{
+      mt: [-2, -3],
+      pb: [2, 3],
+      whiteSpace: "nowrap"
+    }}
   >
     {amount ? (
       <StaticAmounts amount={amount} {...props}>
