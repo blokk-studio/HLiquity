@@ -3,63 +3,73 @@ import { useId } from "react";
 import styles from "./DecimalInput.module.css";
 import clsx from "clsx";
 
-export const DecimalInput: React.FC<{
+const isPropsWithMax = (props: DecimalInputProps): props is { max: Decimal } & DecimalInputProps => {
+  return !!props.max;
+};
+
+interface DecimalInputProps {
   label: string;
   value: Decimal;
   onInput: (value: Decimal) => void;
-  max: Decimal;
+  max?: Decimal;
   className?: string;
-}> = props => {
+}
+
+export const DecimalInput: React.FC<DecimalInputProps> = props => {
   const id = useId();
 
   return (
     <fieldset className={clsx(styles.container, props.className)}>
       <legend className={styles.legend}>{props.label}</legend>
 
-      <button
-        type="button"
-        aria-controls={id}
-        aria-label="Set to 25%"
-        onClick={() => {
-          props.onInput(props.max.mul(0.25));
-        }}
-        className={styles.set25}
-      >
-        25%
-      </button>
-      <button
-        type="button"
-        aria-controls={id}
-        aria-label="Set to 50%"
-        onClick={() => {
-          props.onInput(props.max.mul(0.5));
-        }}
-        className={styles.set50}
-      >
-        50%
-      </button>
-      <button
-        type="button"
-        aria-controls={id}
-        aria-label="Set to 75%"
-        onClick={() => {
-          props.onInput(props.max.mul(0.75));
-        }}
-        className={styles.set75}
-      >
-        75%
-      </button>
-      <button
-        type="button"
-        aria-controls={id}
-        aria-label="Set to maximum"
-        onClick={() => {
-          props.onInput(props.max);
-        }}
-        className={styles.setMax}
-      >
-        max
-      </button>
+      {isPropsWithMax(props) && (
+        <>
+          <button
+            type="button"
+            aria-controls={id}
+            aria-label="Set to 25%"
+            onClick={() => {
+              props.onInput(props.max.mul(0.25));
+            }}
+            className={styles.set25}
+          >
+            25%
+          </button>
+          <button
+            type="button"
+            aria-controls={id}
+            aria-label="Set to 50%"
+            onClick={() => {
+              props.onInput(props.max.mul(0.5));
+            }}
+            className={styles.set50}
+          >
+            50%
+          </button>
+          <button
+            type="button"
+            aria-controls={id}
+            aria-label="Set to 75%"
+            onClick={() => {
+              props.onInput(props.max.mul(0.75));
+            }}
+            className={styles.set75}
+          >
+            75%
+          </button>
+          <button
+            type="button"
+            aria-controls={id}
+            aria-label="Set to maximum"
+            onClick={() => {
+              props.onInput(props.max);
+            }}
+            className={styles.setMax}
+          >
+            max
+          </button>
+        </>
+      )}
 
       <label className={styles.inputContainer}>
         <span role="presentation" className={styles.labelText}>
@@ -71,7 +81,7 @@ export const DecimalInput: React.FC<{
           type="number"
           value={props.value.toString()}
           min={0}
-          max={props.max.toString()}
+          max={props.max?.toString()}
           onInput={event => {
             let newDecimal = Decimal.ZERO;
             try {
@@ -108,7 +118,7 @@ export const DecimalInput: React.FC<{
         onClick={() => {
           let newValue = props.value.add(Decimal.ONE);
 
-          if (newValue.gt(props.max)) {
+          if (props.max && newValue.gt(props.max)) {
             newValue = props.max;
           }
 
