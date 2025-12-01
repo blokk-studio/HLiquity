@@ -13,7 +13,7 @@ import { Icon } from "../Icon";
 import { InfoIcon } from "../InfoIcon";
 import { CollateralRatio } from "./CollateralRatio";
 import { EditableRow, StaticRow } from "./Editor";
-import { ExpensiveTroveChangeWarning, GasEstimationState } from "./ExpensiveTroveChangeWarning";
+import { ExpensiveTroveChangeWarning } from "./ExpensiveTroveChangeWarning";
 import {
   selectForTroveChangeValidation,
   validateTroveChange
@@ -156,7 +156,6 @@ export const Adjusting: React.FC = () => {
   );
 
   const stableTroveChange = useStableTroveChange(troveChange);
-  const [gasEstimationState, setGasEstimationState] = useState<GasEstimationState>({ type: "idle" });
 
   const isTransactionPending =
     transactionState.type === "waitingForApproval" ||
@@ -404,8 +403,6 @@ export const Adjusting: React.FC = () => {
           troveChange={stableTroveChange}
           maxBorrowingRate={maxBorrowingRate}
           borrowingFeeDecayToleranceMinutes={60}
-          gasEstimationState={gasEstimationState}
-          setGasEstimationState={setGasEstimationState}
         />
 
         <Flex variant="layout.actions">
