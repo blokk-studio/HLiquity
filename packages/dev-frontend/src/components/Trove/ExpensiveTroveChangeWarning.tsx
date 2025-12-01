@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 
 import { Decimal, PopulatedLiquityTransaction, TroveChange } from "@liquity/lib-base";
 
@@ -14,20 +14,23 @@ type ExpensiveTroveChangeWarningParams = {
   troveChange?: Exclude<TroveChange<Decimal>, { type: "invalidCreation" }>;
   maxBorrowingRate: Decimal;
   borrowingFeeDecayToleranceMinutes: number;
-  gasEstimationState: GasEstimationState;
-  setGasEstimationState: (newState: GasEstimationState) => void;
+  onGasEstimationStateChange?: (newState: GasEstimationState) => void;
 };
 
 export const ExpensiveTroveChangeWarning: React.FC<ExpensiveTroveChangeWarningParams> = ({
   troveChange,
   maxBorrowingRate,
   borrowingFeeDecayToleranceMinutes,
-  gasEstimationState,
-  setGasEstimationState
+  onGasEstimationStateChange
 }) => {
   const { liquity } = useLiquity();
   // TODO: fix?
   borrowingFeeDecayToleranceMinutes;
+
+  const [gasEstimationState, setGasEstimationState] = useState<GasEstimationState>({ type: "idle" });
+  useEffect(() => {
+    onGasEstimationStateChange?.(gasEstimationState);
+  }, [onGasEstimationStateChange, gasEstimationState]);
 
   useEffect(() => {
     if (troveChange && troveChange.type !== "closure") {
