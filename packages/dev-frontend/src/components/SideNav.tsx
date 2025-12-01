@@ -43,7 +43,6 @@ export const SideNav: React.FC = () => {
         <LiquityLogo height={logoHeight} p={2} />
         <Nav
           onLinkClick={() => {
-            console.debug("click");
             setIsVisible(false);
           }}
           sx={{
