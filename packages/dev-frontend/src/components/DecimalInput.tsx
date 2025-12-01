@@ -70,6 +70,8 @@ export const DecimalInput: React.FC<{
           id={id}
           type="number"
           value={props.value.toString()}
+          min={0}
+          max={props.max.toString()}
           onInput={event => {
             let newDecimal = Decimal.ZERO;
             try {
@@ -104,7 +106,13 @@ export const DecimalInput: React.FC<{
         aria-controls={id}
         aria-label="Increase by 1"
         onClick={() => {
-          props.onInput(props.value.add(Decimal.ONE));
+          let newValue = props.value.add(Decimal.ONE);
+
+          if (newValue.gt(props.max)) {
+            newValue = props.max;
+          }
+
+          props.onInput(newValue);
         }}
         className={styles.plus}
       >
