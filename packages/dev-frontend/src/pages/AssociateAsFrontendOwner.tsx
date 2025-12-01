@@ -1,5 +1,5 @@
 import { Flex, Paragraph } from "theme-ui";
-import { LoadingButton } from "../components/LoadingButton";
+import { LoadingThemeUiButton } from "../components/LoadingButton";
 import { useLoadingState } from "../loading_state";
 import { useLiquity } from "../hooks/LiquityContext";
 import { useLiquitySelector } from "@liquity/lib-react";
@@ -26,7 +26,7 @@ export const AssociateAsFrontendOwner: React.FC = () => {
     <Flex sx={{ flexDirection: "column", marginTop: "4rem" }}>
       <Paragraph>Frontend owners have to be associated with both tokens.</Paragraph>
 
-      <LoadingButton
+      <LoadingThemeUiButton
         loading={hchfAssociationLoadingState === "pending"}
         onClick={associateWithHchf}
         disabled={userHasAssociatedWithHchf}
@@ -34,9 +34,9 @@ export const AssociateAsFrontendOwner: React.FC = () => {
         variant={userHasAssociatedWithHchf ? "success" : "primary"}
       >
         Associate with HCHF
-      </LoadingButton>
+      </LoadingThemeUiButton>
 
-      <LoadingButton
+      <LoadingThemeUiButton
         loading={hlqtAssociationLoadingState === "pending"}
         onClick={associateWithHlqt}
         disabled={userHasAssociatedWithHlqt}
@@ -44,7 +44,7 @@ export const AssociateAsFrontendOwner: React.FC = () => {
         variant={userHasAssociatedWithHlqt ? "success" : "primary"}
       >
         Associate with HLQT
-      </LoadingButton>
+      </LoadingThemeUiButton>
     </Flex>
   );
 };

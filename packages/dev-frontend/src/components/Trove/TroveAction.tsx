@@ -2,14 +2,14 @@ import { Decimal, TroveChange } from "@liquity/lib-base";
 
 import { useLiquity } from "../../hooks/LiquityContext";
 import { useTxFunction } from "../Transaction";
-import { LoadingButton, LoadingButtonProps } from "../LoadingButton";
+import { LoadingThemeUiButton, LoadingThemeUiButtonProps } from "../LoadingButton";
 
 type TroveActionProps = {
   transactionId: string;
   change: Exclude<TroveChange<Decimal>, { type: "invalidCreation" }>;
   maxBorrowingRate: Decimal;
   borrowingFeeDecayToleranceMinutes: number;
-} & LoadingButtonProps;
+} & LoadingThemeUiButtonProps;
 
 export const TroveAction: React.FC<TroveActionProps> = ({
   children,
@@ -37,21 +37,21 @@ export const TroveAction: React.FC<TroveActionProps> = ({
           // }
         )
       : change.type === "closure"
-      ? liquity.send.closeTrove.bind(liquity.send)
-      : liquity.send.adjustTrove.bind(
-          liquity.send,
-          change.params,
-          maxBorrowingRate
-          // TODO: fix?
-          // {
-          //   borrowingFeeDecayToleranceMinutes
-          // }
-        )
+        ? liquity.send.closeTrove.bind(liquity.send)
+        : liquity.send.adjustTrove.bind(
+            liquity.send,
+            change.params,
+            maxBorrowingRate
+            // TODO: fix?
+            // {
+            //   borrowingFeeDecayToleranceMinutes
+            // }
+          )
   );
 
   return (
-    <LoadingButton {...loadingButtonProps} onClick={sendTransaction}>
+    <LoadingThemeUiButton {...loadingButtonProps} onClick={sendTransaction}>
       {children}
-    </LoadingButton>
+    </LoadingThemeUiButton>
   );
 };

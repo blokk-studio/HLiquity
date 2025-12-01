@@ -11,7 +11,7 @@ import { Icon } from "../Icon";
 import { Step, Steps, getCompletableStepStatus } from "../Steps";
 import { useLiquity } from "../../hooks/LiquityContext";
 import { useLoadingState } from "../../loading_state";
-import { LoadingButton } from "../LoadingButton";
+import { LoadingThemeUiButton } from "../LoadingButton";
 import { EditableRow } from "../Trove/Editor";
 import { ErrorDescription } from "../ErrorDescription";
 import { useConstants } from "../../hooks/constants";
@@ -241,21 +241,21 @@ export const RedeemHchf: React.FC = () => {
         {multiWallet.hasConnection && (
           <Flex variant="layout.actions">
             {needsSpenderApproval && !hchfContractHasHchfTokenAllowance ? (
-              <LoadingButton
+              <LoadingThemeUiButton
                 disabled={!isValidRedemption}
                 loading={hchfApprovalLoadingState === "pending"}
                 onClick={approveHchfSpender}
               >
                 Approve allowance of {amountOfHchfToRedeem.prettify(2)} {COIN}
-              </LoadingButton>
+              </LoadingThemeUiButton>
             ) : (
-              <LoadingButton
+              <LoadingThemeUiButton
                 disabled={!isValidRedemption}
                 loading={isTransactionPending}
                 onClick={sendTransaction}
               >
                 Redeem {amountOfHchfToRedeem.prettify(2)} {COIN}
-              </LoadingButton>
+              </LoadingThemeUiButton>
             )}
           </Flex>
         )}
