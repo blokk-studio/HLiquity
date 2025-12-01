@@ -1,5 +1,6 @@
 .field {
   color: var(---1000 from "./colors/text.module.css");
+  background-color: var(---0 from "./colors/surface.module.css");
   border-style: solid;
   border-width: 1px;
   border-color: var(---1000 from "./colors/text.module.css");
