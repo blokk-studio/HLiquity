@@ -7,7 +7,7 @@ import { GT, LP } from "../../../../strings";
 import { ClaimReward } from "../Active/ClaimReward";
 import { useLiquity } from "../../../../hooks/LiquityContext";
 import { useLoadingState } from "../../../../loading_state";
-import { LoadingButton } from "../../../LoadingButton";
+import { LoadingThemeUiButton } from "../../../LoadingButton";
 import { ActionDescription } from "../../../ActionDescription";
 
 const selector = ({
@@ -85,23 +85,23 @@ export const Disabled: React.FC = () => {
 
             <Flex variant="layout.actions">
               {hasStake && hasRewards && (
-                <LoadingButton
+                <LoadingThemeUiButton
                   loading={loadableExit.state === "pending"}
                   onClick={loadableExit.call}
                 >
                   Claim reward & Withdraw all LP
-                </LoadingButton>
+                </LoadingThemeUiButton>
               )}
 
               {hasRewards && <ClaimReward />}
 
               {hasStake && (
-                <LoadingButton
+                <LoadingThemeUiButton
                   loading={loadableWithdraw.state === "pending"}
                   onClick={loadableWithdraw.call}
                 >
                   Withdraw all LP
-                </LoadingButton>
+                </LoadingThemeUiButton>
               )}
             </Flex>
           </>

@@ -1,6 +1,6 @@
 import { Flex, Heading } from "theme-ui";
 import { useDeployment } from "../hooks/deployments";
-import { LoadingButton } from "./LoadingButton";
+import { LoadingThemeUiButton } from "./LoadingButton";
 import { useLoadingState } from "../loading_state";
 import React, { useEffect, useState } from "react";
 import { DeploymentEnvironmentGenerator } from "../pages/DeploymentEnvironmentGenerator";
@@ -96,95 +96,95 @@ export const DevelopmentDebugMenu: React.FC = () => {
           <dd>{deployment.hchfTokenAddress}</dd>
           <dd>
             {hchfAssociationError && <p>{hchfAssociationError.message}</p>}
-            <LoadingButton
+            <LoadingThemeUiButton
               loading={hchfAssociationLoadingState === "pending"}
               variant="success"
               disabled={userHasAssociatedWithHchf}
               onClick={associateWithHchf}
             >
               Associate
-            </LoadingButton>
+            </LoadingThemeUiButton>
 
             {hchfDissociationError && <p>{hchfDissociationError.message}</p>}
-            <LoadingButton
+            <LoadingThemeUiButton
               loading={hchfDissociationLoadingState === "pending"}
               variant="danger"
               disabled={!userHasAssociatedWithHchf}
               onClick={dissociateFromHchf}
             >
               Dissociate
-            </LoadingButton>
+            </LoadingThemeUiButton>
 
             {hchfApprovalError && <p>{hchfApprovalError.message}</p>}
-            <LoadingButton
+            <LoadingThemeUiButton
               loading={hchfApprovalLoadingState === "pending"}
               onClick={approveHchfToSpendHchf}
             >
               Approve allowance of 1 HCHF
-            </LoadingButton>
+            </LoadingThemeUiButton>
           </dd>
 
           <dt>HLQT</dt>
           <dd>{deployment.hlqtTokenAddress}</dd>
           <dd>
             {hlqtAssociationError && <p>{hlqtAssociationError.message}</p>}
-            <LoadingButton
+            <LoadingThemeUiButton
               loading={hlqtAssociationLoadingState === "pending"}
               variant="success"
               disabled={userHasAssociatedWithHlqt}
               onClick={associateWithHlqt}
             >
               Associate
-            </LoadingButton>
+            </LoadingThemeUiButton>
 
             {hlqtDissociationError && <p>{hlqtDissociationError.message}</p>}
-            <LoadingButton
+            <LoadingThemeUiButton
               loading={hlqtDissociationLoadingState === "pending"}
               variant="danger"
               disabled={!userHasAssociatedWithHlqt}
               onClick={dissociateFromHlqt}
             >
               Dissociate
-            </LoadingButton>
+            </LoadingThemeUiButton>
 
             {hlqtApprovalError && <p>{hlqtApprovalError.message}</p>}
-            <LoadingButton
+            <LoadingThemeUiButton
               loading={hlqtApprovalLoadingState === "pending"}
               onClick={approveHlqtToSpendHlqt}
             >
               Approve allowance of 1 HLQT
-            </LoadingButton>
+            </LoadingThemeUiButton>
           </dd>
 
           <dt>LP Token</dt>
           <dd>
             {lpTokenAssociationError && <p>{lpTokenAssociationError.message}</p>}
-            <LoadingButton
+            <LoadingThemeUiButton
               loading={lpTokenAssociationLoadingState === "pending"}
               variant="success"
               disabled={userHasAssociatedWithLpToken}
               onClick={associateWithLpToken}
             >
               Associate
-            </LoadingButton>
+            </LoadingThemeUiButton>
 
             {lpTokenDissociationError && <p>{lpTokenDissociationError.message}</p>}
-            <LoadingButton
+            <LoadingThemeUiButton
               loading={lpTokenDissociationLoadingState === "pending"}
               variant="danger"
               disabled={!userHasAssociatedWithLpToken}
               onClick={dissociateFromLpToken}
             >
               Dissociate
-            </LoadingButton>
+            </LoadingThemeUiButton>
 
             {lpTokenApprovalError && <p>{lpTokenApprovalError.message}</p>}
-            <LoadingButton
+            <LoadingThemeUiButton
               loading={lpTokenApprovalLoadingState === "pending"}
               onClick={approveSaucerSwapToSpendLpToken}
             >
               Approve allowance of 1 LP Token
-            </LoadingButton>
+            </LoadingThemeUiButton>
           </dd>
 
           {Object.entries(deployment.addresses).map(([contractKey, contractAddress]) => (

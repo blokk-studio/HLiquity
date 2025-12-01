@@ -2,11 +2,11 @@ import { Decimal, HLQTStakeChange } from "@liquity/lib-base";
 
 import { useLiquity } from "../../hooks/LiquityContext";
 import { useTxFunction } from "../Transaction";
-import { LoadingButton, LoadingButtonProps } from "../LoadingButton";
+import { LoadingThemeUiButton, LoadingThemeUiButtonProps } from "../LoadingButton";
 
 type StakingActionProps = {
   change: HLQTStakeChange<Decimal>;
-} & LoadingButtonProps;
+} & LoadingThemeUiButtonProps;
 
 export const StakingManagerAction: React.FC<React.PropsWithChildren<StakingActionProps>> = ({
   change,
@@ -23,8 +23,8 @@ export const StakingManagerAction: React.FC<React.PropsWithChildren<StakingActio
   );
 
   return (
-    <LoadingButton {...loadingButtonProps} onClick={sendTransaction}>
+    <LoadingThemeUiButton {...loadingButtonProps} onClick={sendTransaction}>
       {children}
-    </LoadingButton>
+    </LoadingThemeUiButton>
   );
 };
