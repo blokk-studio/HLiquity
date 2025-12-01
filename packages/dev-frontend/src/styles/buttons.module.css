@@ -1,0 +1,31 @@
+.normal {
+  color: var(---1000 from "./colors/text.module.css");
+  background-color: var(---0 from "./colors/surface.module.css");
+  border-style: solid;
+  border-radius: 0.5rem;
+  border-width: 1px;
+  border-color: var(---1000 from "./colors/surface.module.css");
+  padding-inline: 2rem;
+  padding-block: 0.5rem;
+  font-size: 1rem;
+}
+.normal:hover,
+.normal:focus-visible {
+  outline-width: 3px;
+  outline-offset: -3px;
+  outline-style: solid;
+  outline-color: var(---1000 from "./colors/surface.module.css");
+}
+.normal:disabled {
+  color: var(---500 from "./colors/text.module.css");
+  background-color: var(---0 from "./colors/surface.module.css");
+  border-color: var(---500 from "./colors/surface.module.css");
+  outline-color: transparent;
+}
+
+.green {
+  composes: normal;
+
+  color: var(---0 from "./colors/text.module.css");
+  background-color: var(---500 from "./colors/green.module.css");
+}
