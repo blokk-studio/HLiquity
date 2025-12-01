@@ -13,7 +13,7 @@ import { useLiquity } from "../../../../hooks/LiquityContext";
 import { useLiquitySelector } from "@liquity/lib-react";
 import { Step, Steps, getCompletableStepStatus } from "../../../Steps";
 import { useLoadingState } from "../../../../loading_state";
-import { LoadingButton } from "../../../LoadingButton";
+import { LoadingThemeUiButton } from "../../../LoadingButton";
 
 const transactionId = "mine-stake";
 
@@ -143,27 +143,27 @@ export const Staking: React.FC = () => {
             Cancel
           </Button>
           {!userHasAssociatedWithLpToken ? (
-            <LoadingButton
+            <LoadingThemeUiButton
               loading={lpTokenAssociationLoadingState === "pending"}
               onClick={associateWithLpToken}
             >
               Associate with {LP}
-            </LoadingButton>
+            </LoadingThemeUiButton>
           ) : !userHasAssociatedWithHlqt ? (
-            <LoadingButton
+            <LoadingThemeUiButton
               loading={hlqtAssociationLoadingState === "pending"}
               onClick={associateWithHlqt}
             >
               Associate with HLQT
-            </LoadingButton>
+            </LoadingThemeUiButton>
           ) : !hasApproved ? (
-            <LoadingButton
+            <LoadingThemeUiButton
               disabled={!amount}
               loading={LPApprovalLoadingState === "pending"}
               onClick={approveLPSpender}
             >
               Approve allowance of {amount.prettify(2)} {LP}
-            </LoadingButton>
+            </LoadingThemeUiButton>
           ) : (
             <Transaction
               id={transactionId}

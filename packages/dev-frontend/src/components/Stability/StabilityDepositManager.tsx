@@ -19,7 +19,7 @@ import {
 import { Step, getCompletableStepStatus } from "../Steps";
 import { useLoadingState } from "../../loading_state";
 import { useLiquity } from "../../hooks/LiquityContext";
-import { LoadingButton } from "../LoadingButton";
+import { LoadingThemeUiButton } from "../LoadingButton";
 import { useMultiWallet } from "../../multi_wallet";
 
 const init = ({ stabilityDeposit }: LiquityStoreState) => ({
@@ -237,29 +237,29 @@ export const StabilityDepositManager: React.FC = () => {
           </Button>
 
           {needsHlqtAssociation ? (
-            <LoadingButton
+            <LoadingThemeUiButton
               disabled={!validChange}
               loading={hlqtAssociationLoadingState === "pending"}
               onClick={associateWithHlqt}
             >
               Associate with HLQT
-            </LoadingButton>
+            </LoadingThemeUiButton>
           ) : needsHchfAssociation ? (
-            <LoadingButton
+            <LoadingThemeUiButton
               disabled={!validChange}
               loading={hchfAssociationLoadingState === "pending"}
               onClick={associateWithHchf}
             >
               Associate with HCHF
-            </LoadingButton>
+            </LoadingThemeUiButton>
           ) : needsHchfSpenderApproval && !hchfContractHasHchfTokenAllowance ? (
-            <LoadingButton
+            <LoadingThemeUiButton
               disabled={!validChange}
               loading={hchfApprovalLoadingState === "pending"}
               onClick={approveHchfSpender}
             >
               Approve allowance of {validChange?.depositHCHF?.toString(2)} HCHF
-            </LoadingButton>
+            </LoadingThemeUiButton>
           ) : validChange ? (
             <StabilityDepositAction
               transactionId={transactionId}

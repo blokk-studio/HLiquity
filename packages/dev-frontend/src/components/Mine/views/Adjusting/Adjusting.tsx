@@ -14,7 +14,7 @@ import { Step, Steps, getCompletableStepStatus } from "../../../Steps";
 import { useLoadingState } from "../../../../loading_state";
 import { useLiquity } from "../../../../hooks/LiquityContext";
 import { useValidationState } from "../../context/useValidationState";
-import { LoadingButton } from "../../../LoadingButton";
+import { LoadingThemeUiButton } from "../../../LoadingButton";
 import { ActionDescription } from "../../../ActionDescription";
 
 const selector = ({
@@ -160,39 +160,47 @@ export const Adjusting: React.FC = () => {
           unit={GT}
         />
         <ActionDescription>
-          <Text>Deposit your tokens into the <Link sx={{ textDecoration: "underline" }} target="_blank" href="https://www.saucerswap.finance/liquidity/0.0.6070468">HBAR/HCHF liquidity pool</Link></Text>
+          <Text>
+            Deposit your tokens into the{" "}
+            <Link
+              sx={{ textDecoration: "underline" }}
+              target="_blank"
+              href="https://www.saucerswap.finance/liquidity/0.0.6070468"
+            >
+              HBAR/HCHF liquidity pool
+            </Link>
+          </Text>
         </ActionDescription>
 
         {isDirty && <Validation amount={amount} />}
         <Description amount={amount} />
-
 
         <Flex variant="layout.actions">
           <Button variant="cancel" onClick={handleCancelPressed}>
             Cancel
           </Button>
           {!userHasAssociatedWithLpToken ? (
-            <LoadingButton
+            <LoadingThemeUiButton
               loading={lpTokenAssociationLoadingState === "pending"}
               onClick={associateWithLpToken}
             >
               Associate with {LP}
-            </LoadingButton>
+            </LoadingThemeUiButton>
           ) : !userHasAssociatedWithHlqt ? (
-            <LoadingButton
+            <LoadingThemeUiButton
               loading={hlqtAssociationLoadingState === "pending"}
               onClick={associateWithHlqt}
             >
               Associate with HLQT
-            </LoadingButton>
+            </LoadingThemeUiButton>
           ) : !hasApproved ? (
-            <LoadingButton
+            <LoadingThemeUiButton
               disabled={!amount}
               loading={LPApprovalLoadingState === "pending"}
               onClick={approveLPSpender}
             >
               Approve allowance of {amount.prettify(2)} {LP}
-            </LoadingButton>
+            </LoadingThemeUiButton>
           ) : (
             <Transaction
               id={transactionId}

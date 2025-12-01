@@ -21,7 +21,7 @@ import {
 import { Step, Steps, getCompletableStepStatus } from "../Steps";
 import { useLiquity } from "../../hooks/LiquityContext";
 import { useLoadingState } from "../../loading_state";
-import { LoadingButton } from "../LoadingButton";
+import { LoadingThemeUiButton } from "../LoadingButton";
 import { useConstants } from "../../hooks/constants";
 import { useMultiWallet } from "../../multi_wallet";
 
@@ -414,21 +414,21 @@ export const Adjusting: React.FC = () => {
           </Button>
 
           {needsHchfAssociation && !userHasAssociatedWithHchf ? (
-            <LoadingButton
+            <LoadingThemeUiButton
               disabled={!stableTroveChange}
               loading={hchfAssociationLoadingState === "pending"}
               onClick={associateWithHchf}
             >
               Associate with HCHF
-            </LoadingButton>
+            </LoadingThemeUiButton>
           ) : needsSpenderApproval && !hchfContractHasHchfTokenAllowance ? (
-            <LoadingButton
+            <LoadingThemeUiButton
               disabled={!stableTroveChange}
               loading={hchfApprovalLoadingState === "pending"}
               onClick={approveHchfSpender}
             >
               Approve allowance of {stableTroveChange?.params.repayHCHF?.toString(2)} HCHF
-            </LoadingButton>
+            </LoadingThemeUiButton>
           ) : stableTroveChange ? (
             <TroveAction
               transactionId={TRANSACTION_ID}
@@ -440,12 +440,12 @@ export const Adjusting: React.FC = () => {
               {stableTroveChange?.params.borrowHCHF
                 ? `Borrow ${stableTroveChange?.params.borrowHCHF.toString(2)} HCHF`
                 : stableTroveChange?.params.repayHCHF
-                ? `Repay ${stableTroveChange?.params.repayHCHF.toString(2)} HCHF`
-                : stableTroveChange?.params.depositCollateral
-                ? `Deposit ${stableTroveChange?.params.depositCollateral.toString(2)} HBAR`
-                : stableTroveChange?.params.withdrawCollateral
-                ? `Withdraw ${stableTroveChange?.params.withdrawCollateral.toString(2)} HBAR`
-                : "Adjust trove"}
+                  ? `Repay ${stableTroveChange?.params.repayHCHF.toString(2)} HCHF`
+                  : stableTroveChange?.params.depositCollateral
+                    ? `Deposit ${stableTroveChange?.params.depositCollateral.toString(2)} HBAR`
+                    : stableTroveChange?.params.withdrawCollateral
+                      ? `Withdraw ${stableTroveChange?.params.withdrawCollateral.toString(2)} HBAR`
+                      : "Adjust trove"}
             </TroveAction>
           ) : (
             <Button disabled>Confirm</Button>
