@@ -15,6 +15,7 @@ const equals = (a: ValidTroveChange, b: ValidTroveChange): boolean => {
   );
 };
 
+/** @deprecated use {@link useEqualValue} instead */
 export const useStableTroveChange = (
   troveChange: ValidTroveChange | undefined
 ): ValidTroveChange | undefined => {
