@@ -304,8 +304,7 @@ export const Opening: React.FC = () => {
           troveChange={stableTroveChange}
           maxBorrowingRate={maxBorrowingRate}
           borrowingFeeDecayToleranceMinutes={60}
-          gasEstimationState={gasEstimationState}
-          setGasEstimationState={setGasEstimationState}
+          onGasEstimationStateChange={setGasEstimationState}
         />
 
         {multiWallet.hasConnection && (
