@@ -7,28 +7,6 @@ import {
   validateTroveChange
 } from "../components/Trove/validation/validateTroveChange";
 import { Trove } from "@liquity/lib-base";
-import { Decimal } from "@liquity/lib-base";
-import { IsEqual, useEqualValue } from "./useEqualValue";
-
-const paramsEq = (a?: Decimal, b?: Decimal) => (a && b ? a.eq(b) : !a && !b);
-const isEqualValidatedTroveChange: IsEqual<ReturnType<typeof validateTroveChange>> = (
-  validationA,
-  validationB
-): boolean => {
-  const [a] = validationA;
-  const [b] = validationB;
-
-  return !!(
-    (a === undefined && b === undefined) ||
-    (a &&
-      b &&
-      a.type === b.type &&
-      paramsEq(a.params.borrowHCHF, b.params.borrowHCHF) &&
-      paramsEq(a.params.repayHCHF, b.params.repayHCHF) &&
-      paramsEq(a.params.depositCollateral, b.params.depositCollateral) &&
-      paramsEq(a.params.withdrawCollateral, b.params.withdrawCollateral))
-  );
-};
 
 /** returns the validated trove change for a difference of troves */
 export const useValidatedTroveChange = (
@@ -60,7 +38,6 @@ export const useValidatedTroveChange = (
 
     return validatedTroveChange;
   }, [state, previousTrove, updatedTrove, constants, multiWallet.hasConnection]);
-  const equalValidatedTroveChange = useEqualValue(validatedTroveChange, isEqualValidatedTroveChange);
 
-  return equalValidatedTroveChange;
+  return validatedTroveChange;
 };
