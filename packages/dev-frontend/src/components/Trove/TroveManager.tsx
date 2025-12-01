@@ -20,7 +20,7 @@ import { COLLATERAL_COIN } from "../../strings";
 import { Step, getCompletableStepStatus } from "../Steps";
 import { useLiquity } from "../../hooks/LiquityContext";
 import { useLoadingState } from "../../loading_state";
-import { LoadingButton } from "../LoadingButton";
+import { LoadingThemeUiButton } from "../LoadingButton";
 import { useConstants } from "../../hooks/constants";
 import { useMultiWallet } from "../../multi_wallet";
 
@@ -284,13 +284,13 @@ export const TroveManager: React.FC<TroveManagerProps> = ({ collateral, debt }) 
         </Button>
 
         {!hchfContractHasHchfTokenAllowance ? (
-          <LoadingButton
+          <LoadingThemeUiButton
             disabled={!validChange}
             loading={hchfApprovalLoadingState === "pending"}
             onClick={approveHchfSpender}
           >
             Approve allowance of {validChange?.params.repayHCHF?.toString(2)} HCHF
-          </LoadingButton>
+          </LoadingThemeUiButton>
         ) : validChange ? (
           <TroveAction
             transactionId={`${transactionIdPrefix}${validChange.type}`}

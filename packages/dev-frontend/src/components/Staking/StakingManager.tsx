@@ -21,7 +21,7 @@ import { ErrorDescription } from "../ErrorDescription";
 import { useLiquity } from "../../hooks/LiquityContext";
 import { useLoadingState } from "../../loading_state";
 import { Step, getCompletableStepStatus } from "../Steps";
-import { LoadingButton } from "../LoadingButton";
+import { LoadingThemeUiButton } from "../LoadingButton";
 import { useMultiWallet } from "../../multi_wallet";
 import { WalletNotConnectedInfo } from "../WalletNotConnectedInfo";
 
@@ -229,21 +229,21 @@ export const StakingManager: React.FC = () => {
           </Button>
 
           {!userHasAssociatedWithHchf ? (
-            <LoadingButton
+            <LoadingThemeUiButton
               disabled={!validChange}
               loading={hchfAssociationLoadingState === "pending"}
               onClick={associateWithHchf}
             >
               Associate with HCHF
-            </LoadingButton>
+            </LoadingThemeUiButton>
           ) : needsSpenderApproval && !hlqtContractHasHlqtAllowance ? (
-            <LoadingButton
+            <LoadingThemeUiButton
               disabled={!validChange}
               loading={hlqtApprovalLoadingState === "pending"}
               onClick={approveHlqtSpender}
             >
               Approve allowance of {validChange?.stakeHLQT?.toString(2)} HLQT
-            </LoadingButton>
+            </LoadingThemeUiButton>
           ) : validChange ? (
             <StakingManagerAction change={validChange} loading={changePending}>
               {validChange?.stakeHLQT

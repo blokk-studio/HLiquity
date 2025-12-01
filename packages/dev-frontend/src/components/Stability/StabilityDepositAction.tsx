@@ -3,12 +3,12 @@ import { useLiquitySelector } from "@liquity/lib-react";
 
 import { useLiquity } from "../../hooks/LiquityContext";
 import { useTxFunction } from "../Transaction";
-import { LoadingButton, LoadingButtonProps } from "../LoadingButton";
+import { LoadingThemeUiButton, LoadingThemeUiButtonProps } from "../LoadingButton";
 
 type StabilityDepositActionProps = {
   transactionId: string;
   change: StabilityDepositChange<Decimal>;
-} & LoadingButtonProps;
+} & LoadingThemeUiButtonProps;
 
 const selectFrontendRegistered = ({ frontend }: LiquityStoreState) =>
   frontend.status === "registered";
@@ -32,8 +32,8 @@ export const StabilityDepositAction: React.FC<React.PropsWithChildren<StabilityD
   );
 
   return (
-    <LoadingButton {...loadingButtonProps} onClick={sendTransaction}>
+    <LoadingThemeUiButton {...loadingButtonProps} onClick={sendTransaction}>
       {children}
-    </LoadingButton>
+    </LoadingThemeUiButton>
   );
 };
