@@ -71,7 +71,12 @@ export const DecimalInput: React.FC<{
           type="number"
           value={props.value.toString()}
           onInput={event => {
-            const newDecimal = Decimal.from(event.currentTarget.value);
+            let newDecimal = Decimal.ZERO;
+            try {
+              newDecimal = Decimal.from(event.currentTarget.value);
+            } catch {
+              // ignore errors (default to 0)
+            }
 
             props.onInput(newDecimal);
           }}
