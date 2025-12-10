@@ -11,12 +11,14 @@ interface DecimalInputProps {
   label: string;
   value: Decimal;
   onInput: (value: Decimal) => void;
+  min?: Decimal;
   max?: Decimal;
   className?: string;
 }
 
 export const DecimalInput: React.FC<DecimalInputProps> = props => {
   const id = useId();
+  const min = props.min ?? Decimal.ZERO;
 
   return (
     <fieldset className={clsx(styles.container, props.className)}>
@@ -80,7 +82,7 @@ export const DecimalInput: React.FC<DecimalInputProps> = props => {
           id={id}
           type="number"
           value={props.value.toString()}
-          min={0}
+          min={min.toString()}
           max={props.max?.toString()}
           onInput={event => {
             let newDecimal = Decimal.ZERO;
@@ -102,9 +104,15 @@ export const DecimalInput: React.FC<DecimalInputProps> = props => {
         aria-label="Decrease by 1"
         onClick={() => {
           let newValue = Decimal.ZERO;
+          // carefully decrease, because decimal doesn't support negatives
           if (props.value.gt(Decimal.ONE)) {
             newValue = props.value.sub(Decimal.ONE);
           }
+
+          if (newValue.lt(min)) {
+            newValue = min;
+          }
+
           props.onInput(newValue);
         }}
         className={styles.minus}

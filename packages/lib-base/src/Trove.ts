@@ -583,7 +583,9 @@ export class Trove {
       });
     }
 
-    if (that.isEmpty) {
+    // repayment of net debt is closure. liquidation reserve is refunded.
+    // https://docs.hliquity.org/deep-dive/borrowing#how-to-borrow-with-hliquity
+    if (that.collateral.isZero && that.netDebt.isZero) {
       return troveClosure(
         this.netDebt.nonZero
           ? { withdrawCollateral: this.collateral, repayHCHF: this.netDebt }
@@ -594,14 +596,17 @@ export class Trove {
     return this.collateral.eq(that.collateral)
       ? troveAdjustment<Decimal>(this._debtChange(that, borrowingRate), that.debt.zero && "debt")
       : this.debt.eq(that.debt)
-      ? troveAdjustment<Decimal>(this._collateralChange(that), that.collateral.zero && "collateral")
-      : troveAdjustment<Decimal>(
-          {
-            ...this._debtChange(that, borrowingRate),
-            ...this._collateralChange(that)
-          },
-          (that.debt.zero && "debt") ?? (that.collateral.zero && "collateral")
-        );
+        ? troveAdjustment<Decimal>(
+            this._collateralChange(that),
+            that.collateral.zero && "collateral"
+          )
+        : troveAdjustment<Decimal>(
+            {
+              ...this._debtChange(that, borrowingRate),
+              ...this._collateralChange(that)
+            },
+            (that.debt.zero && "debt") ?? (that.collateral.zero && "collateral")
+          );
   }
 
   /**
@@ -661,12 +666,12 @@ export class Trove {
         return setToZero === "collateral"
           ? this.setCollateral(Decimal.ZERO).addDebt(debtIncrease).subtractDebt(debtDecrease)
           : setToZero === "debt"
-          ? this.setDebt(Decimal.ZERO)
-              .addCollateral(collateralIncrease)
-              .subtractCollateral(collateralDecrease)
-          : this.add(new Trove(this.constants, collateralIncrease, debtIncrease)).subtract(
-              new Trove(this.constants, collateralDecrease, debtDecrease)
-            );
+            ? this.setDebt(Decimal.ZERO)
+                .addCollateral(collateralIncrease)
+                .subtractCollateral(collateralDecrease)
+            : this.add(new Trove(this.constants, collateralIncrease, debtIncrease)).subtract(
+                new Trove(this.constants, collateralDecrease, debtDecrease)
+              );
       }
     }
   }
