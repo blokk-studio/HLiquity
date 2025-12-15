@@ -10,6 +10,8 @@ import { Icon } from "./Icon";
 import { t } from "../i18n";
 import { useMultiWallet } from "../multi_wallet";
 
+import buttonStyles from '../styles/buttons.module.css'
+
 export const UserAccount: React.FC = () => {
   const { accountBalance, hchfBalance, hlqtBalance, uniTokenBalance } = useLiquitySelector(
     state => state
@@ -19,7 +21,7 @@ export const UserAccount: React.FC = () => {
   return (
     <Flex>
       {!hasConnection ? (
-        <Button onClick={showConnectionDialog}>Connect wallet</Button>
+        <button className={buttonStyles.normal} onClick={showConnectionDialog}>Connect wallet</button>
       ) : (
         <>
           <Flex sx={{ alignItems: "center" }}>

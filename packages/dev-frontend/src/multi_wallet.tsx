@@ -62,6 +62,15 @@ export const MultiWalletProvider: React.FC<{
 
   const [isDisplayingConnectionDialog, setIsDisplayingConnectionDialog] = useState(false);
 
+  const showConnectionDialog = () => {
+    setIsDisplayingConnectionDialog(true);
+  };
+
+  const hideConnectionDialog = () => {
+    setIsDisplayingConnectionDialog(false);
+  };
+
+
   useEffect(() => {
     if (hasConnection) {
       setIsDisplayingConnectionDialog(false);
@@ -69,7 +78,7 @@ export const MultiWalletProvider: React.FC<{
   }, [hasConnection]);
 
   if (isDisplayingConnectionDialog) {
-    return <WalletConnector />;
+    return <WalletConnector onCloseWalletConnector={hideConnectionDialog} />;
   }
 
   const disconnect = async (): Promise<void> => {
@@ -100,14 +109,6 @@ export const MultiWalletProvider: React.FC<{
   } else if (hasHederaDappConnector) {
     chain = hederaDappConnectorChain;
   }
-
-  const showConnectionDialog = () => {
-    setIsDisplayingConnectionDialog(true);
-  };
-
-  const hideConnectionDialog = () => {
-    setIsDisplayingConnectionDialog(false);
-  };
 
   const value: MultiWalletContext = {
     hasWagmi,

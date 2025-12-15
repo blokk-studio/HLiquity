@@ -1,24 +1,37 @@
 /** @jsxImportSource theme-ui */
-import { Button, Flex, Heading, Paragraph } from "theme-ui";
+import { Button, Container, Flex, Heading, Paragraph } from "theme-ui";
 import ThemeSwitcher from "./ThemeSwitcher";
 import React from "react";
 import { ChainSelector } from "./chain_context";
 import { ConnectKitButton } from "connectkit";
 import { useHederaDappConnectorContext } from "./HederaDappConnectorProvider";
 import { Hedera } from "./icons/Hedera";
+import buttonStyles from "../styles/buttons.module.css";
+import { LiquityLogo } from "./LiquityLogo.tsx";
 
 type WalletConnectorProps = {
   loader?: React.ReactNode;
+  onCloseWalletConnector: () => void;
 };
 
-export const WalletConnector: React.FC<WalletConnectorProps> = () => {
+export const WalletConnector: React.FC<WalletConnectorProps> = ({ onCloseWalletConnector }) => {
   const hederaDappConnectorContext = useHederaDappConnectorContext();
 
   return (
     <React.Fragment>
       <div className="switcher-header">
         <div className="switcher-container">
-          <ThemeSwitcher />
+          <Container variant="header">
+            <Flex sx={{ justifyContent: "space-between", alignItems: "center", flex: 1 }}>
+              <LiquityLogo height={32} />
+
+              <Flex sx={{ alignItems: "center" }}>
+                <button className={buttonStyles.normal} onClick={onCloseWalletConnector}>Close</button>
+                <ThemeSwitcher />
+              </Flex>
+            </Flex>
+          </Container>
+
         </div>
       </div>
       <Flex
@@ -27,7 +40,7 @@ export const WalletConnector: React.FC<WalletConnectorProps> = () => {
           justifyContent: "center",
           flexDirection: "column",
           marginInline: "clamp(2rem, 100%, 50% - 16rem)",
-          paddingBlock: "4rem"
+          paddingBottom: "12rem"
         }}
       >
         <hgroup>
@@ -64,6 +77,7 @@ export const WalletConnector: React.FC<WalletConnectorProps> = () => {
             })
           ) : (
             <Button
+              className={buttonStyles.normal}
               sx={{ justifyContent: "start", marginTop: "0.5rem", gap: "1rem" }}
               onClick={() => {
                 hederaDappConnectorContext.connect();
@@ -80,6 +94,7 @@ export const WalletConnector: React.FC<WalletConnectorProps> = () => {
             {connectkit => {
               return (
                 <Button
+                  className={buttonStyles.normal}
                   onClick={() => {
                     connectkit.show?.();
                   }}
