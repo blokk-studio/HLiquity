@@ -27,7 +27,7 @@ export const Tooltip: React.FC<React.PropsWithChildren<TooltipProps>> = ({
 }) => {
   return (
     <Tippy
-      interactive={true}
+      interactive={false}
       placement={placement}
       content={
         <Card variant="tooltip">
