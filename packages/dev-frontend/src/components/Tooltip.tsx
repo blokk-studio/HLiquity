@@ -22,7 +22,7 @@ export const LearnMoreLink: React.FC<React.PropsWithChildren<LearnMoreLinkProps>
 export const Tooltip: React.FC<React.PropsWithChildren<TooltipProps>> = ({ children, message, placement = "top", link }) => {
   return (
     <Tippy
-      interactive={true}
+      interactive={false}
       placement={placement}
       content={
         <Card variant="tooltip">
