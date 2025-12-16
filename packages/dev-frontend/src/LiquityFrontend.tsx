@@ -33,6 +33,7 @@ import { Trove as TrovePage } from "./components/Trove/Trove.tsx";
 import { RedeemHchf } from "./components/RedeemHchf/RedeemHchf.tsx";
 import { Stability } from "./components/Stability/Stability.tsx";
 import { Staking } from "./components/Staking/Staking.tsx";
+import { SystemStats } from "./components/SystemStats.tsx";
 
 export const LiquityFrontend: React.FC = () => {
   const { account: accountAddress, liquity } = useLiquity();
@@ -76,8 +77,8 @@ export const LiquityFrontend: React.FC = () => {
               role="presentation"
               sx={{
                 display: "grid",
-                gridTemplateColumns: ["1fr", "1fr", "auto 1fr"],
-                columnGap: [0, 0, 4, 6]
+                gridTemplateColumns: ["1fr", "1fr", "1fr", "250px 3fr 2fr"],
+                columnGap: [0, 0, 3, 4]
               }}
             >
               <Nav
@@ -97,6 +98,8 @@ export const LiquityFrontend: React.FC = () => {
                 <Route path="/imprint" element={<ImprintPage />} />
                 <Route path="/disclaimer" element={<DisclaimerPage />} />
               </Routes>
+
+              <SystemStats />
             </Box>
           </PageSwitcher>
         </Container>
