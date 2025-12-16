@@ -92,6 +92,11 @@ export const DecimalInput: React.FC<DecimalInputProps> = props => {
               // ignore errors (default to 0)
             }
 
+            // enforce max possible if added more than max
+            if (props.max && newDecimal.gt(props.max)) {
+              newDecimal = props.max;
+            }
+
             props.onInput(newDecimal);
           }}
           className={styles.inputField}
