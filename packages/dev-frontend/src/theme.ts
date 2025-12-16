@@ -110,7 +110,7 @@ const cardGapY = [3, 3, 4];
 
 const card: ThemeUIStyleObject = {
   position: "relative",
-  mt: cardGapY,
+  mb: cardGapY,
   border: 1,
   boxShadow: [1, null, 2]
 };
@@ -444,14 +444,15 @@ const theme: Theme = {
     header: {
       display: "flex",
       justifyContent: "space-between",
-      alignItems: "stretch",
+      alignItems: "center",
       bg: "secondary",
+      maxWidth: 1280,
 
       position: ["fixed", "relative"],
       top: 0,
       zIndex: 1,
 
-      px: [2, "12px", "12px", 5],
+      px: cardGapX,
       py: [2, "12px", "12px"],
 
       ...headerGradient,
