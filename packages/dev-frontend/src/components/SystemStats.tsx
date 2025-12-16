@@ -98,9 +98,7 @@ export const SystemStats: React.FC<SystemStatsProps> = ({ variant = "info", show
     <Card {...{ variant }}>
       {showBalances && hasConnection && <Balances />}
 
-      <Heading>HLiquity statistics</Heading>
-
-      <Heading as="h2" sx={{ mt: 3, fontWeight: "body" }}>
+      <Heading as="h2" sx={{ fontWeight: "body" }}>
         Protocol
       </Heading>
 
