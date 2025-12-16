@@ -33,3 +33,6 @@ ngrok.config.yml
 !/.yarn/releases
 !/.yarn/sdks
 !/.yarn/versions
+
+# IDE
+.idea
