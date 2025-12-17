@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { Flex, Button, Box, Card, Heading, Spinner } from "theme-ui";
+import { Flex, Box, Spinner, Paragraph } from "theme-ui";
 import { Decimal, getRedemptionDetails, Percent } from "@liquity/lib-base";
+import buttons from "../../styles/buttons.module.css";
+
 import { useLiquitySelector } from "@liquity/lib-react";
 
 import { ActionDescription, Amount } from "../ActionDescription";
@@ -12,12 +14,12 @@ import { Step, Steps, getCompletableStepStatus } from "../Steps";
 import { useLiquity } from "../../hooks/LiquityContext";
 import { useLoadingState } from "../../loading_state";
 import { LoadingThemeUiButton } from "../LoadingButton";
-import { EditableRow } from "../Trove/Editor";
 import { ErrorDescription } from "../ErrorDescription";
 import { useConstants } from "../../hooks/constants";
 import { InfoIcon } from "../InfoIcon";
 import { useMultiWallet } from "../../multi_wallet";
 import { WalletNotConnectedInfo } from "../WalletNotConnectedInfo";
+import { DecimalInput } from "../DecimalInput.tsx";
 
 const TRANSACTION_ID = "trove-adjustment";
 
@@ -93,8 +95,6 @@ export const RedeemHchf: React.FC = () => {
     }
   ];
 
-  const editingState = useState<string>();
-
   const [areRedemptionDetailsLoading, setAreRedemptionDetailsLoading] = useState(false);
   const [redemptionDetails, setRedemptionDetails] = useState<
     | (ReturnType<typeof getRedemptionDetails> & { redemptionFeePercent: Percent<Decimal, Decimal> })
@@ -157,41 +157,28 @@ export const RedeemHchf: React.FC = () => {
   }, [liquity, amountOfHchfToRedeem, constants]);
 
   return (
-    <Card>
-      <Heading
+    <div>
+      <Paragraph
         sx={{
           display: "grid !important",
           gridAutoFlow: "column",
-          gridTemplateColumns: "1fr repeat(2, auto)"
+          gridTemplateColumns: "1fr repeat(2, auto)",
+          mb: 3,
         }}
       >
-        Redeem HCHF
+        Exchange HCHF directly for HBAR
         <Steps steps={transactionSteps} />
-        {isDirty && !isTransactionPending && (
-          <Button
-            variant="titleIcon"
-            sx={{ ":enabled:hover": { color: "danger" }, marginLeft: "1rem" }}
-            onClick={reset}
-          >
-            <Icon name="history" size="lg" />
-          </Button>
-        )}
-      </Heading>
+      </Paragraph>
 
       <Box sx={{ p: [2, 3] }}>
-        <EditableRow
-          label="HCHF to redeem for HBAR"
-          inputId="hchf-redemption-amount"
-          amount={amountOfHchfToRedeem.prettify()}
-          maxAmount={hchfBalance.toString()}
-          maxedOut={amountOfHchfToRedeem.eq(hchfBalance)}
-          editingState={editingState}
-          unit={COIN}
-          editedAmount={amountOfHchfToRedeem.prettify(2)}
-          setEditedAmount={amount => {
-            setAmountOfHchfToRedeem(Decimal.from(amount));
-          }}
-        />
+        <Box sx={{mb: 3}}>
+          <DecimalInput
+            label=""
+            value={amountOfHchfToRedeem}
+            onInput={setAmountOfHchfToRedeem}
+            max={hchfBalance}
+          />
+        </Box>
 
         {!isRedeemingMinimum && (
           <ErrorDescription>
@@ -240,6 +227,15 @@ export const RedeemHchf: React.FC = () => {
 
         {multiWallet.hasConnection && (
           <Flex variant="layout.actions">
+            {isDirty && !isTransactionPending && (
+              <button
+                className={buttons.normal}
+                onClick={reset}
+              >
+                Cancel
+              </button>
+            )}
+
             {needsSpenderApproval && !hchfContractHasHchfTokenAllowance ? (
               <LoadingThemeUiButton
                 disabled={!isValidRedemption}
@@ -260,6 +256,6 @@ export const RedeemHchf: React.FC = () => {
           </Flex>
         )}
       </Box>
-    </Card>
+    </div>
   );
 };
