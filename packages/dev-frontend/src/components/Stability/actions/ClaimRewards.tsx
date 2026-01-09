@@ -1,8 +1,9 @@
 import React from "react";
-import { Button } from "theme-ui";
 
 import { useLiquity } from "../../../hooks/LiquityContext";
 import { useTxFunction } from "../../Transaction";
+import buttons from "../../../styles/buttons.module.css";
+
 
 type ClaimRewardsProps = {
   disabled?: boolean;
@@ -20,8 +21,8 @@ export const ClaimRewards: React.FC<React.PropsWithChildren<ClaimRewardsProps>> 
   );
 
   return (
-    <Button onClick={sendTransaction} disabled={disabled}>
+    <button className={buttons.normal} onClick={sendTransaction} disabled={disabled}>
       {children}
-    </Button>
+    </button>
   );
 };

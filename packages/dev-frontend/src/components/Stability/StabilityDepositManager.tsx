@@ -3,6 +3,7 @@ import { Button, Flex } from "theme-ui";
 
 import { Decimal, Decimalish, LiquityStoreState } from "@liquity/lib-base";
 import { LiquityStoreUpdate, useLiquityReducer, useLiquitySelector } from "@liquity/lib-react";
+import buttons from "../../styles/buttons.module.css";
 
 import { COIN } from "../../strings";
 
@@ -232,9 +233,10 @@ export const StabilityDepositManager: React.FC = () => {
 
       {multiWallet.hasConnection && (
         <Flex variant="layout.actions">
-          <Button variant="cancel" onClick={handleCancel}>
+
+          <button className={buttons.normal} onClick={handleCancel}>
             Cancel
-          </Button>
+          </button>
 
           {needsHlqtAssociation ? (
             <LoadingThemeUiButton
