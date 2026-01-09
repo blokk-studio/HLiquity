@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { Heading, Box, Card, Button } from "theme-ui";
+import React from "react";
+import { Button, Flex } from "theme-ui";
 
 import { Decimal, Decimalish, Difference, LiquityStoreState, HLQTStake } from "@liquity/lib-base";
 import { useLiquitySelector } from "@liquity/lib-react";
@@ -7,10 +7,12 @@ import { useLiquitySelector } from "@liquity/lib-react";
 import { COIN, COLLATERAL_COIN, GT } from "../../strings";
 
 import { Icon } from "../Icon";
-import { EditableRow, StaticRow } from "../Trove/Editor";
+import { StaticRow } from "../Trove/Editor";
+import { DecimalInput } from "../DecimalInput";
 
 import { useStakingView } from "./context/StakingViewContext";
 import { Step, Steps } from "../Steps";
+import { HeadingWithChildren } from "../shared";
 
 const select = ({ hlqtBalance, totalStakedHLQT }: LiquityStoreState) => ({
   hlqtBalance,
@@ -35,7 +37,6 @@ export const StakingEditor: React.FC<React.PropsWithChildren<StakingEditorProps>
 }) => {
   const { hlqtBalance, totalStakedHLQT } = useLiquitySelector(select);
   const { changePending } = useStakingView();
-  const editingState = useState<string>();
 
   const edited = !editedLQTY.eq(originalStake.stakedHLQT);
 
@@ -50,75 +51,65 @@ export const StakingEditor: React.FC<React.PropsWithChildren<StakingEditorProps>
     originalStake.stakedHLQT.nonZero && Difference.between(newPoolShare, originalPoolShare).nonZero;
 
   return (
-    <Card>
-      <Heading
-        sx={{
-          display: "grid !important",
-          gridAutoFlow: "column",
-          gridTemplateColumns: "1fr repeat(2, auto)"
-        }}
-      >
-        {title}
-        <Steps steps={transactionSteps} />
-        {edited && !changePending && (
-          <Button
-            variant="titleIcon"
-            sx={{ ":enabled:hover": { color: "danger" }, marginLeft: "1rem" }}
-            onClick={() => dispatch({ type: "revert" })}
-          >
-            <Icon name="history" size="lg" />
-          </Button>
-        )}
-      </Heading>
+    <div>
+      <HeadingWithChildren text={title || 'Adjust your HLQT stake'}>
 
-      <Box sx={{ p: [2, 3] }}>
-        <EditableRow
-          label="Stake"
-          inputId="stake-lqty"
-          amount={editedLQTY.prettify()}
-          maxAmount={maxAmount.toString()}
-          maxedOut={maxedOut}
-          unit={GT}
-          {...{ editingState }}
-          editedAmount={editedLQTY.toString(2)}
-          setEditedAmount={newValue => dispatch({ type: "setStake", newValue })}
+        <Flex sx={{gap: 16}}>
+          <Steps steps={transactionSteps} />
+
+          {edited && !changePending && (
+            <Button
+              variant="titleIcon"
+              sx={{ width: 24, height: 24, ":enabled:hover": { color: "danger" }, marginLeft: "0.5rem" }}
+              onClick={() => dispatch({ type: "revert" })}
+            >
+              <Icon style={{width: 24, height: 24}} name="history" size="lg" />
+            </Button>
+          )}
+        </Flex>
+      </HeadingWithChildren>
+
+      <DecimalInput
+        label=""
+        value={editedLQTY}
+        onInput={newValue => dispatch({ type: "setStake", newValue })}
+        max={maxAmount}
+      />
+
+      {newPoolShare.infinite ? (
+        <StaticRow label="Pool share" inputId="stake-share" amount="N/A" />
+      ) : (
+        <StaticRow
+          label="Pool share"
+          inputId="stake-share"
+          amount={newPoolShare.prettify(4)}
+          pendingAmount={poolShareChange?.prettify(4).concat("%")}
+          pendingColor={poolShareChange?.positive ? "success" : "danger"}
+          unit="%"
         />
+      )}
 
-        {newPoolShare.infinite ? (
-          <StaticRow label="Pool share" inputId="stake-share" amount="N/A" />
-        ) : (
+      {!originalStake.isEmpty && (
+        <>
           <StaticRow
-            label="Pool share"
-            inputId="stake-share"
-            amount={newPoolShare.prettify(4)}
-            pendingAmount={poolShareChange?.prettify(4).concat("%")}
-            pendingColor={poolShareChange?.positive ? "success" : "danger"}
-            unit="%"
+            label="Redemption gain"
+            inputId="stake-gain-eth"
+            amount={originalStake.collateralGain.prettify(6)}
+            color={originalStake.collateralGain.nonZero && "success"}
+            unit={COLLATERAL_COIN}
           />
-        )}
 
-        {!originalStake.isEmpty && (
-          <>
-            <StaticRow
-              label="Redemption gain"
-              inputId="stake-gain-eth"
-              amount={originalStake.collateralGain.prettify(6)}
-              color={originalStake.collateralGain.nonZero && "success"}
-              unit={COLLATERAL_COIN}
-            />
+          <StaticRow
+            label="Issuance gain"
+            inputId="stake-gain-lusd"
+            amount={originalStake.hchfGain.prettify(4)}
+            color={originalStake.hchfGain.nonZero && "success"}
+            unit={COIN}
+          />
+        </>
+      )}
 
-            <StaticRow
-              label="Issuance gain"
-              inputId="stake-gain-lusd"
-              amount={originalStake.hchfGain.prettify(4)}
-              color={originalStake.hchfGain.nonZero && "success"}
-              unit={COIN}
-            />
-          </>
-        )}
-
-        {children}
-      </Box>
-    </Card>
+      {children}
+    </div>
   );
 };

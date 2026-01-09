@@ -24,6 +24,7 @@ import { Step, getCompletableStepStatus } from "../Steps";
 import { LoadingThemeUiButton } from "../LoadingButton";
 import { useMultiWallet } from "../../multi_wallet";
 import { WalletNotConnectedInfo } from "../WalletNotConnectedInfo";
+import buttons from "../../styles/buttons.module.css";
 
 const init = ({ hlqtStake }: LiquityStoreState) => ({
   originalStake: hlqtStake,
@@ -208,7 +209,7 @@ export const StakingManager: React.FC = () => {
 
   return (
     <StakingEditor
-      title={"Staking"}
+      title="Lock HLQT to earn rewards"
       {...{ originalStake, editedLQTY, dispatch }}
       transactionSteps={transactionSteps}
     >
@@ -221,12 +222,12 @@ export const StakingManager: React.FC = () => {
 
       {multiWallet.hasConnection && (
         <Flex variant="layout.actions">
-          <Button
-            variant="cancel"
+          <button
+            className={buttons.normal}
             onClick={() => dispatchStakingViewAction({ type: "cancelAdjusting" })}
           >
             Cancel
-          </Button>
+          </button>
 
           {!userHasAssociatedWithHchf ? (
             <LoadingThemeUiButton

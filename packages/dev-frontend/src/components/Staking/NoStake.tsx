@@ -1,25 +1,28 @@
-import { Card, Heading, Box, Flex, Button } from "theme-ui";
+import { Flex } from "theme-ui";
 
 import { GT } from "../../strings";
+import buttons from "../../styles/buttons.module.css";
 
 import { InfoMessage } from "../InfoMessage";
 import { useStakingView } from "./context/StakingViewContext";
+import { HeadingWithChildren } from "../shared";
 
 export const NoStake: React.FC = () => {
   const { dispatch } = useStakingView();
 
   return (
-    <Card>
-      <Heading>Staking</Heading>
-      <Box sx={{ p: [2, 3] }}>
+    <div>
+      <HeadingWithChildren text="Staking" />
+
+      <div>
         <InfoMessage title={`You haven't staked ${GT} yet.`}>
           Stake {GT} to earn a share of borrowing and redemption fees.
         </InfoMessage>
 
         <Flex variant="layout.actions">
-          <Button sx={{ minWidth: 160 }} onClick={() => dispatch({ type: "startAdjusting" })}>Start staking</Button>
+          <button className={buttons.normal} onClick={() => dispatch({ type: "startAdjusting" })}>Start staking</button>
         </Flex>
-      </Box>
-    </Card>
+      </div>
+    </div>
   );
 };

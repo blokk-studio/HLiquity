@@ -1,10 +1,10 @@
-import { Button } from "theme-ui";
-
 import { LiquityStoreState } from "@liquity/lib-base";
 import { useLiquitySelector } from "@liquity/lib-react";
 
 import { useLiquity } from "../../hooks/LiquityContext";
 import { useTxFunction } from "../Transaction";
+import buttons from "../../styles/buttons.module.css";
+import React from "react";
 
 const selectLQTYStake = ({ hlqtStake }: LiquityStoreState) => hlqtStake;
 
@@ -18,8 +18,12 @@ export const StakingGainsAction: React.FC = () => {
   );
 
   return (
-    <Button onClick={sendTransaction} disabled={collateralGain.isZero && hchfGain.isZero}>
-      Claim gains
-    </Button>
+    <button
+      className={buttons.normal}
+      onClick={sendTransaction} disabled={collateralGain.isZero && hchfGain.isZero}
+    >
+
+      <span>Claim gains</span>
+    </button>
   );
 };
