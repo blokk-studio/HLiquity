@@ -86,15 +86,11 @@ export const DecimalInput: React.FC<DecimalInputProps> = props => {
           max={props.max?.toString()}
           onInput={event => {
             let newDecimal = Decimal.ZERO;
+
             try {
               newDecimal = Decimal.from(event.currentTarget.value);
             } catch {
               // ignore errors (default to 0)
-            }
-
-            // enforce max possible if added more than max
-            if (props.max && newDecimal.gt(props.max)) {
-              newDecimal = props.max;
             }
 
             props.onInput(newDecimal);
@@ -129,12 +125,7 @@ export const DecimalInput: React.FC<DecimalInputProps> = props => {
         aria-controls={id}
         aria-label="Increase by 1"
         onClick={() => {
-          let newValue = props.value.add(Decimal.ONE);
-
-          if (props.max && newValue.gt(props.max)) {
-            newValue = props.max;
-          }
-
+          const newValue = props.value.add(Decimal.ONE);
           props.onInput(newValue);
         }}
         className={styles.plus}

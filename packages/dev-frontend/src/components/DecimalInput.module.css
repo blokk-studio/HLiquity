@@ -6,6 +6,7 @@
   grid-template-columns: 1fr repeat(6, auto);
   border: none;
   padding: 0;
+  margin-bottom: 16px;
 }
 
 .legend {
