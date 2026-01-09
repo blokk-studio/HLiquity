@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Flex, Box, Spinner, Paragraph } from "theme-ui";
+import { Flex, Box, Spinner, Paragraph, Heading } from "theme-ui";
 import { Decimal, getRedemptionDetails, Percent } from "@liquity/lib-base";
 import buttons from "../../styles/buttons.module.css";
 
@@ -20,6 +20,7 @@ import { InfoIcon } from "../InfoIcon";
 import { useMultiWallet } from "../../multi_wallet";
 import { WalletNotConnectedInfo } from "../WalletNotConnectedInfo";
 import { DecimalInput } from "../DecimalInput.tsx";
+import { HeadingWithChildren } from "../shared";
 
 const TRANSACTION_ID = "trove-adjustment";
 
@@ -158,20 +159,12 @@ export const RedeemHchf: React.FC = () => {
 
   return (
     <div>
-      <Paragraph
-        sx={{
-          display: "grid !important",
-          gridAutoFlow: "column",
-          gridTemplateColumns: "1fr repeat(2, auto)",
-          mb: 3,
-        }}
-      >
-        Exchange HCHF directly for HBAR
+      <HeadingWithChildren isSmall text="Exchange HCHF directly for HBAR">
         <Steps steps={transactionSteps} />
-      </Paragraph>
+      </HeadingWithChildren>
 
-      <Box sx={{ p: [2, 3] }}>
-        <Box sx={{mb: 3}}>
+      <Box>
+        <Box sx={{ mb: 3 }}>
           <DecimalInput
             label=""
             value={amountOfHchfToRedeem}
