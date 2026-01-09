@@ -26,9 +26,9 @@
   outline-color: var(---1000 from "./colors/surface.module.css");
 }
 .normal:disabled {
-  color: var(---500 from "./colors/text.module.css");
+  color: var(---200 from "./colors/text.module.css");
   background-color: var(---0 from "./colors/surface.module.css");
-  border-color: var(---500 from "./colors/surface.module.css");
+  border-color: var(---200 from "./colors/surface.module.css");
   outline-color: transparent;
 }
 
