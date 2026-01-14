@@ -8,7 +8,10 @@ import { useFee } from "../../hooks/useFee";
 import { useMaxTroveCollateral } from "../../hooks/useMaxTroveCollateral";
 import { useMaxNetDebt } from "../../hooks/useMaxNetDebt";
 import { DecimalInput } from "../DecimalInput";
-import { Card, Grid, Paragraph } from "theme-ui";
+import { Card, Grid } from "theme-ui";
+import { Step, Steps, getCompletableStepStatus } from "../Steps";
+import { useLoadingState } from "../../loading_state";
+import { useLiquity } from "../../hooks/LiquityContext";
 import { CollateralRatio } from "./CollateralRatio";
 import { StaticRow } from "./Editor";
 import { InfoIcon } from "../InfoIcon";
@@ -18,10 +21,13 @@ import { ActionDescription } from "../ActionDescription";
 import buttons from "../../styles/buttons.module.css";
 import { useTroveTransactionFunction } from "../../hooks/useTroveTransactionFunction";
 import { useValidatedTroveChange } from "../../hooks/useValidatedTroveChange";
+import { LoadingThemeUiButton } from "../LoadingButton";
+import { HeadingWithChildren } from "../shared";
 
 const TRANSACTION_ID = "borrow";
 export const Borrow: React.FC = () => {
   const constants = useConstants();
+  const { liquity } = useLiquity();
   const state = useLiquitySelector(state => {
     const initialNetDebt = state.trove.debt.lt(constants.HCHF_LIQUIDATION_RESERVE)
       ? Decimal.ZERO
@@ -33,7 +39,8 @@ export const Borrow: React.FC = () => {
       trove: state.trove,
       initialNetDebt,
       borrowingRate,
-      maxBorrowingRate
+      maxBorrowingRate,
+      userHasAssociatedWithHchf: state.userHasAssociatedWithHchf
     };
   });
   const collateralRatio = useCollateralRatio(state.trove);
@@ -68,9 +75,39 @@ export const Borrow: React.FC = () => {
     troveChange
   );
 
+  const isTransactionPending =
+    transactionState.type === "waitingForApproval" ||
+    transactionState.type === "waitingForConfirmation";
+
+  const { call: associateWithHchf, state: hchfAssociationLoadingState } = useLoadingState(
+    async () => {
+      await liquity.associateWithHchf();
+    },
+    [state.userHasAssociatedWithHchf]
+  );
+
+  const transactionSteps: Step[] = [
+    {
+      title: "Associate with HCHF",
+      status: getCompletableStepStatus({
+        isCompleted: state.userHasAssociatedWithHchf,
+        completionLoadingState: hchfAssociationLoadingState
+      }),
+      description: state.userHasAssociatedWithHchf
+        ? "You've already associated with HCHF."
+        : "You have to associate with HCHF tokens before you can use HLiquity."
+    },
+    {
+      title: "Borrow HCHF",
+      status: isTransactionPending ? "pending" : "idle"
+    }
+  ];
+
   return (
     <>
-      <Paragraph>Mint new HCHF against your collateral.</Paragraph>
+      <HeadingWithChildren isSmall text="Mint new HCHF against your collateral">
+        <Steps steps={transactionSteps} />
+      </HeadingWithChildren>
 
       <form
         onSubmit={event => {
@@ -187,13 +224,27 @@ export const Borrow: React.FC = () => {
             Cancel
           </button>
 
-          <button type="submit" disabled={!troveChange} className={buttons.green}>
-            {troveChange?.params.borrowHCHF ? (
-              <>Borrow {troveChange.params.borrowHCHF.toString(2)} HCHF</>
-            ) : (
-              <>Borrow HCHF</>
-            )}
-          </button>
+          {!state.userHasAssociatedWithHchf ? (
+            <LoadingThemeUiButton
+              disabled={!troveChange}
+              loading={hchfAssociationLoadingState === "pending"}
+              onClick={associateWithHchf}
+            >
+              Associate with HCHF
+            </LoadingThemeUiButton>
+          ) : (
+            <LoadingThemeUiButton
+              type="submit"
+              disabled={!troveChange}
+              loading={isTransactionPending}
+            >
+              {troveChange?.params.borrowHCHF ? (
+                <>Borrow {troveChange.params.borrowHCHF.toString(2)} HCHF</>
+              ) : (
+                <>Borrow HCHF</>
+              )}
+            </LoadingThemeUiButton>
+          )}
         </Grid>
       </form>
     </>
