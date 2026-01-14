@@ -3,15 +3,21 @@ import { useMemo, useState } from "react";
 import { Decimal } from "@liquity/lib-base";
 import { useTrove } from "../../hooks/useTrove";
 import { DecimalInput } from "../DecimalInput";
-import { Grid, Paragraph } from "theme-ui";
+import { Grid } from "theme-ui";
 import spacings from "../../styles/spacings.module.css";
 import { ExpensiveTroveChangeWarning } from "./ExpensiveTroveChangeWarning";
 import buttons from "../../styles/buttons.module.css";
 import { useTroveTransactionFunction } from "../../hooks/useTroveTransactionFunction";
 import { useValidatedTroveChange } from "../../hooks/useValidatedTroveChange";
+import { Step, Steps, getCompletableStepStatus } from "../Steps";
+import { useLoadingState } from "../../loading_state";
+import { useLiquity } from "../../hooks/LiquityContext";
+import { LoadingThemeUiButton } from "../LoadingButton";
+import { HeadingWithChildren } from "../shared";
 
 const TRANSACTION_ID = "repay";
 export const Repay: React.FC = () => {
+  const { liquity } = useLiquity();
   const state = useLiquitySelector(state => {
     const borrowingRate = state.fees.borrowingRate();
     const maxBorrowingRate = borrowingRate.add(0.005);
@@ -19,15 +25,20 @@ export const Repay: React.FC = () => {
     return {
       trove: state.trove,
       price: state.price,
-      maxBorrowingRate
+      maxBorrowingRate,
+      userHasAssociatedWithHchf: state.userHasAssociatedWithHchf,
+      hchfTokenAllowanceOfHchfContract: state.hchfTokenAllowanceOfHchfContract
     };
   });
 
   const [repayment, setRepayment] = useState(Decimal.ZERO);
 
+  // Clamp repayment to not exceed netDebt to prevent negative debt calculations
+  const effectiveRepayment = repayment.gt(state.trove.netDebt) ? state.trove.netDebt : repayment;
+
   const updatedTrove = useTrove(
-    repayment.eq(state.trove.netDebt) ? Decimal.ZERO : state.trove.collateral,
-    state.trove.netDebt.sub(repayment),
+    effectiveRepayment.eq(state.trove.netDebt) ? Decimal.ZERO : state.trove.collateral,
+    state.trove.netDebt.sub(effectiveRepayment),
     state.trove
   );
 
@@ -42,9 +53,63 @@ export const Repay: React.FC = () => {
     troveChange
   );
 
+  const isTransactionPending =
+    transactionState.type === "waitingForApproval" ||
+    transactionState.type === "waitingForConfirmation";
+
+  const { call: associateWithHchf, state: hchfAssociationLoadingState } = useLoadingState(
+    async () => {
+      await liquity.associateWithHchf();
+    },
+    [state.userHasAssociatedWithHchf]
+  );
+
+  // HCHF spender approval
+  const hchfContractHasHchfTokenAllowance = troveChange?.params.repayHCHF
+    ? troveChange.params.repayHCHF.lte(state.hchfTokenAllowanceOfHchfContract)
+    : false;
+  const { call: approveHchfSpender, state: hchfApprovalLoadingState } = useLoadingState(
+    async () => {
+      if (!troveChange?.params.repayHCHF) {
+        throw "cannot approve a repayment of 0";
+      }
+      await liquity.approveHchfToSpendHchf(troveChange.params.repayHCHF);
+    },
+    [troveChange?.params.repayHCHF, state.hchfTokenAllowanceOfHchfContract]
+  );
+
+  const transactionSteps: Step[] = [
+    {
+      title: "Associate with HCHF",
+      status: getCompletableStepStatus({
+        isCompleted: state.userHasAssociatedWithHchf,
+        completionLoadingState: hchfAssociationLoadingState
+      }),
+      description: state.userHasAssociatedWithHchf
+        ? "You've already associated with HCHF."
+        : "You have to associate with HCHF tokens before you can use HLiquity."
+    },
+    {
+      title: "Approve HCHF allowance",
+      status: getCompletableStepStatus({
+        isCompleted: hchfContractHasHchfTokenAllowance,
+        completionLoadingState: hchfApprovalLoadingState
+      }),
+      description: hchfContractHasHchfTokenAllowance
+        ? "You've already given the HCHF contract allowance to spend the requested amount of HCHF tokens."
+        : "You have to give HCHF contract an HCHF token allowance."
+    },
+    {
+      title: "Repay HCHF",
+      status: isTransactionPending ? "pending" : "idle"
+    }
+  ];
+
   return (
     <>
-      <Paragraph>Pay back HCHF to reduce your debt.</Paragraph>
+      <HeadingWithChildren isSmall text="Pay back HCHF to reduce your debt.">
+        <Steps steps={transactionSteps} />
+      </HeadingWithChildren>
 
       <form
         onSubmit={event => {
@@ -71,8 +136,6 @@ export const Repay: React.FC = () => {
 
         {description}
 
-        {JSON.stringify(troveChange)}
-
         <ExpensiveTroveChangeWarning
           troveChange={troveChange}
           maxBorrowingRate={state.maxBorrowingRate}
@@ -91,13 +154,35 @@ export const Repay: React.FC = () => {
             Cancel
           </button>
 
-          <button type="submit" disabled={!troveChange} className={buttons.green}>
-            {troveChange?.params.repayHCHF ? (
-              <>Repay {troveChange.params.repayHCHF.toString(2)} HCHF</>
-            ) : (
-              <>Repay HCHF</>
-            )}
-          </button>
+          {!state.userHasAssociatedWithHchf ? (
+            <LoadingThemeUiButton
+              disabled={!troveChange}
+              loading={hchfAssociationLoadingState === "pending"}
+              onClick={associateWithHchf}
+            >
+              Associate with HCHF
+            </LoadingThemeUiButton>
+          ) : !hchfContractHasHchfTokenAllowance ? (
+            <LoadingThemeUiButton
+              disabled={!troveChange}
+              loading={hchfApprovalLoadingState === "pending"}
+              onClick={approveHchfSpender}
+            >
+              Approve allowance of {troveChange?.params.repayHCHF?.toString(2)} HCHF
+            </LoadingThemeUiButton>
+          ) : (
+            <LoadingThemeUiButton
+              type="submit"
+              disabled={!troveChange}
+              loading={isTransactionPending}
+            >
+              {troveChange?.params.repayHCHF ? (
+                <>Repay {troveChange.params.repayHCHF.toString(2)} HCHF</>
+              ) : (
+                <>Repay HCHF</>
+              )}
+            </LoadingThemeUiButton>
+          )}
         </Grid>
       </form>
     </>
