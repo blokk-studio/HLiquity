@@ -597,8 +597,7 @@ const theme: Theme = {
       fontSize: 2,
       textTransform: "uppercase",
       letterSpacing: "2px",
-      width: ["100%", "auto"],
-      mt: [3, "auto"]
+      width: "auto",
     }
   }
 };
