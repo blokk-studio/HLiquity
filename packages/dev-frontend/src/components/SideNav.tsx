@@ -51,6 +51,14 @@ export const SideNav: React.FC = () => {
           }}
         />
       </Flex>
+
+      <Button
+        sx={{ display: ["flex", "flex", "none"] }}
+        variant="icon"
+        onClick={() => setIsVisible(true)}
+      >
+        <Icon name="bars" size="lg" />
+      </Button>
     </Container>
   );
 };

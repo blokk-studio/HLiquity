@@ -25,7 +25,7 @@ export const WalletConnector: React.FC<WalletConnectorProps> = ({ onCloseWalletC
             <Flex sx={{ justifyContent: "space-between", alignItems: "center", flex: 1 }}>
               <LiquityLogo height={32} />
 
-              <Flex sx={{ alignItems: "center" }}>
+              <Flex sx={{ alignItems: "center", gap: 3 }}>
                 <button className={buttonStyles.normal} onClick={onCloseWalletConnector}>Close</button>
                 <ThemeSwitcher />
               </Flex>
