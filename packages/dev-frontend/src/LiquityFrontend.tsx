@@ -59,10 +59,7 @@ export const LiquityFrontend: React.FC = () => {
           children => <StabilityViewProvider>{children}</StabilityViewProvider>
         ]}
       >
-        <Header>
-          <UserAccount />
-          <SystemStatsPopup />
-        </Header>
+        <Header />
 
         <Container
           variant="main"

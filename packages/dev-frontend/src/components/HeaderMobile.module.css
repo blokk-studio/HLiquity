@@ -1,0 +1,98 @@
+@import "../styles/media.module.css";
+
+.header {
+    display: flex;
+}
+
+.headerContent {
+    display: flex;
+    align-items: center;
+    flex: 1;
+    gap: 2rem;
+
+    @media screen and (max-width: 767px) {
+        gap: 1rem;
+    }
+}
+
+.headerRight {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+
+    @media screen and (max-width: 767px) {
+        gap: 0.5rem;
+    }
+}
+
+.desktopUserAccount {
+    display: none;
+}
+
+@media screen and (min-width: 768px) {
+    .desktopUserAccount {
+        display: block;
+    }
+}
+
+.menuButton {
+    display: block;
+
+    @media screen and (min-width: 768px) {
+        display: none !important;
+    }
+}
+
+
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 100vw;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+    display: flex;
+    z-index: 999;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.overlay.animatingIn {
+    opacity: 1;
+}
+
+.menuPanel {
+    width: 80vw;
+    max-width: 320px;
+    position: fixed;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    padding: 0.5rem 1rem;
+    background-color: var(---0 from "../styles/colors/surface.module.css");
+    box-shadow: -4px 0 12px rgba(0, 0, 0, 0.15);
+    transform: translateX(100%);
+    transition: transform 0.3s ease;
+    z-index: 1000;
+    gap: 1.5rem;
+}
+
+.menuPanel.animatingIn {
+    transform: translateX(0);
+}
+
+.menuHeader {
+    margin-left: 0.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.menuNav {
+    display: flex;
+    flex-direction: column;
+}
