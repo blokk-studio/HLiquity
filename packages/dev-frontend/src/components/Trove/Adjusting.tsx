@@ -143,7 +143,6 @@ export const Adjusting: React.FC = () => {
   const maxCollateral = availableEth.gt(TX_MAX_COSTS)
     ? availableEth.sub(TX_MAX_COSTS)
     : Decimal.ZERO;
-  const collateralMaxedOut = collateral.eq(maxCollateral);
   const collateralRatio =
     !collateral.isZero && !netDebt.isZero ? updatedTrove.collateralRatio(price) : undefined;
   const collateralRatioChange = Difference.between(collateralRatio, trove.collateralRatio(price));

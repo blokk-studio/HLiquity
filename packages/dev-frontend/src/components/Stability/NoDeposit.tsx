@@ -1,9 +1,7 @@
 import React, { useCallback } from "react";
-import { Card, Heading, Box, Flex, Button } from "theme-ui";
+import { Flex } from "theme-ui";
 import { InfoMessage } from "../InfoMessage";
 import { useStabilityView } from "./context/StabilityViewContext";
-import { RemainingLQTY } from "./RemainingLQTY";
-import { Yield } from "./Yield";
 import { COIN, COLLATERAL_COIN, GT } from "../../strings";
 import { HeadingWithChildren } from "../shared";
 import buttons from "../../styles/buttons.module.css";

@@ -6,11 +6,8 @@ import {
   Input,
   SxProp,
   Button,
-  ThemeUICSSProperties,
-  ThemeUIStyleObject
+  ThemeUICSSProperties
 } from "theme-ui";
-
-import { Icon } from "../Icon";
 
 type RowProps = SxProp & {
   label: string | React.ReactNode;
@@ -52,33 +49,6 @@ export const Row: React.FC<React.PropsWithChildren<RowProps>> = ({
   );
 };
 
-type PendingAmountProps = {
-  value: string;
-  sx: ThemeUIStyleObject;
-};
-
-const PendingAmount: React.FC<PendingAmountProps> = ({ sx, value }) => (
-  <Text sx={sx}>
-    (
-    {value === "++" ? (
-      <Icon name="angle-double-up" />
-    ) : value === "--" ? (
-      <Icon name="angle-double-down" />
-    ) : value?.startsWith("+") ? (
-      <>
-        <Icon name="angle-up" /> {value.substr(1)}
-      </>
-    ) : value?.startsWith("-") ? (
-      <>
-        <Icon name="angle-down" /> {value.substr(1)}
-      </>
-    ) : (
-      value
-    )}
-    )
-  </Text>
-);
-
 type StaticAmountsProps = {
   inputId?: string;
   labelledBy?: string;
@@ -97,8 +67,6 @@ export const StaticAmounts: React.FC<React.PropsWithChildren<StaticAmountsProps 
   amount,
   unit,
   color,
-  pendingAmount,
-  pendingColor,
   onClick,
   children
 }) => {

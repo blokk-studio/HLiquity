@@ -4,7 +4,7 @@ import { Button, Flex, Grid } from "theme-ui";
 import { Decimal, Decimalish, Difference, LiquityStoreState, HLQTStake } from "@liquity/lib-base";
 import { useLiquitySelector } from "@liquity/lib-react";
 
-import { COIN, COLLATERAL_COIN, GT } from "../../strings";
+import { COIN, COLLATERAL_COIN } from "../../strings";
 
 import { Icon } from "../Icon";
 import { StaticRow } from "../Trove/Editor";
@@ -41,7 +41,6 @@ export const StakingEditor: React.FC<React.PropsWithChildren<StakingEditorProps>
   const edited = !editedLQTY.eq(originalStake.stakedHLQT);
 
   const maxAmount = originalStake.stakedHLQT.add(hlqtBalance);
-  const maxedOut = editedLQTY.eq(maxAmount);
 
   const totalStakedLQTYAfterChange = totalStakedHLQT.sub(originalStake.stakedHLQT).add(editedLQTY);
 

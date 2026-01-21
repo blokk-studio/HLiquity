@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Flex, Box, Spinner, Paragraph, Heading } from "theme-ui";
+import { Flex, Box, Spinner } from "theme-ui";
 import { Decimal, getRedemptionDetails, Percent } from "@liquity/lib-base";
 import buttons from "../../styles/buttons.module.css";
 
@@ -8,7 +8,6 @@ import { useLiquitySelector } from "@liquity/lib-react";
 import { ActionDescription, Amount } from "../ActionDescription";
 import { useMyTransactionState, useTxFunction } from "../Transaction";
 import { COIN } from "../../strings";
-import { Icon } from "../Icon";
 
 import { Step, Steps, getCompletableStepStatus } from "../Steps";
 import { useLiquity } from "../../hooks/LiquityContext";

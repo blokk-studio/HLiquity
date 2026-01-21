@@ -11,7 +11,7 @@ import {
 
 import { useLiquitySelector } from "@liquity/lib-react";
 
-import { COIN, COLLATERAL_COIN, GT } from "../../strings";
+import { COLLATERAL_COIN, GT } from "../../strings";
 
 import { Icon } from "../Icon";
 import { StaticRow } from "../Trove/Editor";
@@ -42,7 +42,6 @@ export const StabilityDepositEditor: React.FC<
   const edited = !editedHCHF.eq(originalDeposit.currentHCHF);
 
   const maxAmount = originalDeposit.currentHCHF.add(hchfBalance);
-  const maxedOut = editedHCHF.eq(maxAmount);
 
   const lusdInStabilityPoolAfterChange = hchfInStabilityPool
     .sub(originalDeposit.currentHCHF)

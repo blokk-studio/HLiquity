@@ -63,7 +63,6 @@ export const Opening: React.FC = () => {
   const maxCollateral = accountBalance.gt(TX_MAX_COSTS)
     ? accountBalance.sub(TX_MAX_COSTS)
     : Decimal.ZERO;
-  const collateralMaxedOut = collateral.eq(maxCollateral);
   const collateralRatio =
     !collateral.isZero && !borrowAmount.isZero ? trove.collateralRatio(price) : undefined;
 

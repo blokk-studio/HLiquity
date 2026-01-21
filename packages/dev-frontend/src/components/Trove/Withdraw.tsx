@@ -83,7 +83,7 @@ export const Withdraw: React.FC = () => {
     [state, updatedTrove, constants, multiWallet.hasConnection]
   );
 
-  const [sendTransaction, transactionState] = useTroveTransactionFunction(TRANSACTION_ID);
+  const [sendTransaction] = useTroveTransactionFunction(TRANSACTION_ID, troveChange);
 
   return (
     <>
