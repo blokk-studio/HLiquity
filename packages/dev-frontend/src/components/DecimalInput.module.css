@@ -100,3 +100,12 @@
   composes: button stepButton;
   grid-area: plus;
 }
+
+@media screen and (max-width: 1023px) {
+    .set25,
+    .set50,
+    .set75,
+    .setMax {
+        display: none;
+    }
+}
