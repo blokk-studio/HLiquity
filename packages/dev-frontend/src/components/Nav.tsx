@@ -13,14 +13,14 @@ import Rotation from "../icons/Rotation.svg?react";
 
 const links = [
   {
-    link: "/risky-troves",
-    icon: <SecurityWarning aria-hidden="true" />,
-    label: 'Risky Troves'
-  },
-  {
     link: "/",
     icon: <LowProtection aria-hidden="true" />,
     label: 'Trove'
+  },
+  {
+    link: "/risky-troves",
+    icon: <SecurityWarning aria-hidden="true" />,
+    label: 'Risky Troves'
   },
   {
     link: "/redeem",
