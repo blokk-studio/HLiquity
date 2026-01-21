@@ -1,4 +1,4 @@
-import { Heading, Box, Card, Flex, Button, Paragraph } from "theme-ui";
+import { Flex, Grid } from "theme-ui";
 
 import { LiquityStoreState } from "@liquity/lib-base";
 import { useLiquitySelector } from "@liquity/lib-react";
@@ -37,28 +37,30 @@ export const ReadOnlyStake: React.FC = () => {
         unit={GT}
       />
 
-      <StaticRow
-        label="Pool share"
-        inputId="stake-share"
-        amount={poolShare.prettify(4)}
-        unit="%"
-      />
+      <Grid variant="layout.staticRows">
+        <StaticRow
+          label="Pool share"
+          inputId="stake-share"
+          amount={poolShare.prettify(4)}
+          unit="%"
+        />
 
-      <StaticRow
-        label="Redemption gain"
-        inputId="stake-gain-eth"
-        amount={hlqtStake.collateralGain.prettify(6)}
-        color={hlqtStake.collateralGain.nonZero && "success"}
-        unit={COLLATERAL_COIN}
-      />
+        <StaticRow
+          label="Redemption gain"
+          inputId="stake-gain-eth"
+          amount={hlqtStake.collateralGain.prettify(6)}
+          color={hlqtStake.collateralGain.nonZero && "success"}
+          unit={COLLATERAL_COIN}
+        />
 
-      <StaticRow
-        label="Issuance gain"
-        inputId="stake-gain-lusd"
-        amount={hlqtStake.hchfGain.prettify(4)}
-        color={hlqtStake.hchfGain.nonZero && "success"}
-        unit={COIN}
-      />
+        <StaticRow
+          label="Issuance gain"
+          inputId="stake-gain-lusd"
+          amount={hlqtStake.hchfGain.prettify(4)}
+          color={hlqtStake.hchfGain.nonZero && "success"}
+          unit={COIN}
+        />
+      </Grid>
 
       <Flex variant="layout.actions">
         <button

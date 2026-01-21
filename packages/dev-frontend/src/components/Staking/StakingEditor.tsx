@@ -1,5 +1,5 @@
 import React from "react";
-import { Button, Flex } from "theme-ui";
+import { Button, Flex, Grid } from "theme-ui";
 
 import { Decimal, Decimalish, Difference, LiquityStoreState, HLQTStake } from "@liquity/lib-base";
 import { useLiquitySelector } from "@liquity/lib-react";
@@ -76,38 +76,39 @@ export const StakingEditor: React.FC<React.PropsWithChildren<StakingEditorProps>
         max={maxAmount}
       />
 
-      {newPoolShare.infinite ? (
-        <StaticRow label="Pool share" inputId="stake-share" amount="N/A" />
-      ) : (
-        <StaticRow
-          label="Pool share"
-          inputId="stake-share"
-          amount={newPoolShare.prettify(4)}
-          pendingAmount={poolShareChange?.prettify(4).concat("%")}
-          pendingColor={poolShareChange?.positive ? "success" : "danger"}
-          unit="%"
-        />
-      )}
-
-      {!originalStake.isEmpty && (
-        <>
+      <Grid variant="layout.staticRows">
+        {newPoolShare.infinite ? (
+          <StaticRow label="Pool share" inputId="stake-share" amount="N/A" />
+        ) : (
           <StaticRow
-            label="Redemption gain"
-            inputId="stake-gain-eth"
-            amount={originalStake.collateralGain.prettify(6)}
-            color={originalStake.collateralGain.nonZero && "success"}
-            unit={COLLATERAL_COIN}
+            label="Pool share"
+            inputId="stake-share"
+            amount={newPoolShare.prettify(4)}
+            pendingAmount={poolShareChange?.prettify(4).concat("%")}
+            pendingColor={poolShareChange?.positive ? "success" : "danger"}
+            unit="%"
           />
+        )}
+        {!originalStake.isEmpty && (
+          <>
+            <StaticRow
+              label="Redemption gain"
+              inputId="stake-gain-eth"
+              amount={originalStake.collateralGain.prettify(6)}
+              color={originalStake.collateralGain.nonZero && "success"}
+              unit={COLLATERAL_COIN}
+            />
 
-          <StaticRow
-            label="Issuance gain"
-            inputId="stake-gain-lusd"
-            amount={originalStake.hchfGain.prettify(4)}
-            color={originalStake.hchfGain.nonZero && "success"}
-            unit={COIN}
-          />
-        </>
-      )}
+            <StaticRow
+              label="Issuance gain"
+              inputId="stake-gain-lusd"
+              amount={originalStake.hchfGain.prettify(4)}
+              color={originalStake.hchfGain.nonZero && "success"}
+              unit={COIN}
+            />
+          </>
+        )}
+      </Grid>
 
       {children}
     </div>
