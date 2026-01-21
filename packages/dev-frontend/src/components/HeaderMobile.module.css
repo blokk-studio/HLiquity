@@ -10,7 +10,7 @@
     flex: 1;
     gap: 2rem;
 
-    @media screen and (max-width: 767px) {
+    @media screen and (max-width: 1023px) {
         gap: 1rem;
     }
 }
@@ -20,7 +20,7 @@
     align-items: center;
     gap: 1rem;
 
-    @media screen and (max-width: 767px) {
+    @media screen and (max-width: 1023px) {
         gap: 0.5rem;
     }
 }
@@ -29,7 +29,7 @@
     display: none;
 }
 
-@media screen and (min-width: 768px) {
+@media screen and (min-width: 1024px) {
     .desktopUserAccount {
         display: block;
     }
@@ -38,7 +38,7 @@
 .menuButton {
     display: block;
 
-    @media screen and (min-width: 768px) {
+    @media screen and (min-width: 1024px) {
         display: none !important;
     }
 }
