@@ -52,7 +52,7 @@ const buttonBase: ThemeUIStyleObject = {
   justifyContent: "center",
   fontSize: 4,
   fontWeight: 300,
-  "@media screen and (max-width: 767px)": {
+  "@media screen and (max-width: 1023px)": {
     fontSize: 3
   },
 
