@@ -15,7 +15,7 @@ export const Imprint: React.FC = () => {
       p: 0,
       listStyleType: "none",
       display: "inline-flex",
-      '@media screen and (max-width: 767px)': {
+      '@media screen and (max-width: 1023px)': {
         display: "block"
       },
     }}>
