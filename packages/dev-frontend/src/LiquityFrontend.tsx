@@ -1,15 +1,13 @@
 /** @jsxImportSource theme-ui */
 import React from "react";
 import { Container, Box } from "theme-ui";
-import { HashRouter as Router, Route, Routes } from "react-router-dom";
+import { HashRouter as Router, Route, Routes, useLocation } from "react-router-dom";
 import { Wallet } from "@ethersproject/wallet";
 
 import { Decimal, Difference, Trove } from "@liquity/lib-base";
 
 import { useLiquity } from "./hooks/LiquityContext";
 import { TransactionMonitor } from "./components/Transaction";
-import { UserAccount } from "./components/UserAccount";
-import { SystemStatsPopup } from "./components/SystemStatsPopup";
 import { Header } from "./components/Header";
 
 import { PageSwitcher } from "./pages/PageSwitcher";
@@ -34,6 +32,33 @@ import { RedeemHchf } from "./components/RedeemHchf/RedeemHchf.tsx";
 import { Stability } from "./components/Stability/Stability.tsx";
 import { Staking } from "./components/Staking/Staking.tsx";
 import { SystemStats } from "./components/SystemStats.tsx";
+
+const ConditionalSystemStats: React.FC = () => {
+  const location = useLocation();
+  const shouldShowSystemStats = location.pathname !== '/redemptions';
+
+  return shouldShowSystemStats ? <SystemStats /> : null;
+};
+
+const ConditionalLayoutBox: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const location = useLocation();
+  const shouldShowSystemStats = location.pathname !== '/redemptions';
+
+  return (
+    <Box
+      role="presentation"
+      sx={{
+        display: "grid",
+        gridTemplateColumns: shouldShowSystemStats
+          ? ["1fr", "1fr", "1fr", "240px 1fr 320px"]
+          : ["1fr", "1fr", "1fr", "250px 1fr"],
+        columnGap: [0, 0, 0, 3, 4]
+      }}
+    >
+      {children}
+    </Box>
+  );
+};
 
 export const LiquityFrontend: React.FC = () => {
   const { account: accountAddress, liquity } = useLiquity();
@@ -70,17 +95,10 @@ export const LiquityFrontend: React.FC = () => {
           <PageSwitcher>
             <ScrollToTop />
 
-            <Box
-              role="presentation"
-              sx={{
-                display: "grid",
-                gridTemplateColumns: ["1fr", "1fr", "1fr", "250px 3fr 2fr"],
-                columnGap: [0, 0, 3, 4]
-              }}
-            >
+            <ConditionalLayoutBox>
               <Nav
                 sx={{
-                  display: ["none", "none", "grid"]
+                  display: ["none", "none", "none", "grid"]
                 }}
               />
               <Routes>
@@ -96,8 +114,8 @@ export const LiquityFrontend: React.FC = () => {
                 <Route path="/disclaimer" element={<DisclaimerPage />} />
               </Routes>
 
-              <SystemStats />
-            </Box>
+              <ConditionalSystemStats />
+            </ConditionalLayoutBox>
           </PageSwitcher>
         </Container>
 
