@@ -16,17 +16,18 @@ export const SystemStatsPopup: React.FC = () => {
   const systemStatsOverlayRef = useRef<HTMLDivElement>(null);
 
   return (
-    <>
+    <div>
       <Button
         onClick={() => setSystemStatsOpen(!systemStatsOpen)}
         variant="icon"
         sx={{
+          zIndex: 4,
           position: "relative",
           display: ["block", "none"],
           mr: 1
         }}
       >
-        <Icon name="info-circle" size="lg" />
+        <Icon name={systemStatsOpen ? "times" : "info-circle"} size="lg" />
 
         {total.collateralRatioIsBelowCritical(price) && (
           <Flex
@@ -62,6 +63,6 @@ export const SystemStatsPopup: React.FC = () => {
           <SystemStats variant="infoPopup" showBalances />
         </Container>
       )}
-    </>
+    </div>
   );
 };
