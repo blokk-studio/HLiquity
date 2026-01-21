@@ -14,14 +14,14 @@ const listSX = {
     mb: 16,
     fontSize: 20
   },
-  '@media screen and (max-width: 767px)': {
+  '@media screen and (max-width: 1023px)': {
     display: "block"
   },
 };
 
 const listEl = {
   display: "block",
-  '@media screen and (max-width: 767px)': {
+  '@media screen and (max-width: 1023px)': {
     "&.d-none": {
       display: "none"
     },
@@ -31,14 +31,14 @@ const listEl = {
 const headerMobile = {
   display: "none",
   cursor: "pointer",
-  '@media screen and (max-width: 767px)': {
+  '@media screen and (max-width: 1023px)': {
     display: "inline-block"
   },
 };
 
 const headerDesktop = {
   display: "block",
-  '@media screen and (max-width: 767px)': {
+  '@media screen and (max-width: 1023px)': {
     display: "none"
   },
 };
