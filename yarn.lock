@@ -2414,7 +2414,7 @@ __metadata:
     "@ethersproject/bignumber": 5.7.0
     "@typescript-eslint/eslint-plugin": ^8.0.0
     "@typescript-eslint/parser": ^8.0.0
-    eslint: 7.32.0
+    eslint: ^8.57.0
     eslint-plugin-react: 7.37.5
     eslint-plugin-react-hooks: 4.6.2
     npm-run-all2: 6.2.6
@@ -11006,7 +11006,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint@npm:8.57.1":
+"eslint@npm:8.57.1, eslint@npm:^8.57.0":
   version: 8.57.1
   resolution: "eslint@npm:8.57.1"
   dependencies:
