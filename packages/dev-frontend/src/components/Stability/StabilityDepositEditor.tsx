@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { Box, Card, Button, Flex } from "theme-ui";
+import React from "react";
+import { Button, Flex, Grid } from "theme-ui";
 
 import {
   Decimal,
@@ -14,11 +14,12 @@ import { useLiquitySelector } from "@liquity/lib-react";
 import { COIN, COLLATERAL_COIN, GT } from "../../strings";
 
 import { Icon } from "../Icon";
-import { EditableRow, StaticRow } from "../Trove/Editor";
+import { StaticRow } from "../Trove/Editor";
 import { InfoIcon } from "../InfoIcon";
 import { Step, Steps } from "../Steps";
+import { DecimalInput } from "../DecimalInput";
 import { HeadingWithChildren } from "../shared";
-import { DecimalInput } from "../DecimalInput.tsx";
+import { Card } from "theme-ui";
 
 const select = ({ hchfBalance, hchfInStabilityPool }: LiquityStoreState) => ({
   hchfBalance,
@@ -37,7 +38,6 @@ export const StabilityDepositEditor: React.FC<
   React.PropsWithChildren<StabilityDepositEditorProps>
 > = ({ originalDeposit, editedHCHF, changePending, dispatch, transactionSteps, children }) => {
   const { hchfBalance, hchfInStabilityPool } = useLiquitySelector(select);
-  const editingState = useState<string>();
 
   const edited = !editedHCHF.eq(originalDeposit.currentHCHF);
 
@@ -57,8 +57,7 @@ export const StabilityDepositEditor: React.FC<
   return (
     <div>
       <HeadingWithChildren text="Stability Pool">
-
-        <Flex sx={{ gap: 16 }}>
+        <Flex sx={{gap: 16}}>
           <Steps steps={transactionSteps} />
 
           {edited && !changePending && (
@@ -67,16 +66,20 @@ export const StabilityDepositEditor: React.FC<
               sx={{ width: 24, height: 24, ":enabled:hover": { color: "danger" }, marginLeft: "0.5rem" }}
               onClick={() => dispatch({ type: "revert" })}
             >
-              <Icon style={{ width: 24, height: 24 }} name="history" size="lg" />
+              <Icon style={{width: 24, height: 24}} name="history" size="lg" />
             </Button>
           )}
         </Flex>
       </HeadingWithChildren>
 
-      <Box>
-        <DecimalInput max={maxAmount} label="" value={editedHCHF}
-                      onInput={newValue => dispatch({ type: "setDeposit", newValue })} {...{ editingState }} />
+      <DecimalInput
+        label=""
+        value={editedHCHF}
+        onInput={newValue => dispatch({ type: "setDeposit", newValue })}
+        max={maxAmount}
+      />
 
+      <Grid variant="layout.staticRows">
         {newPoolShare.infinite ? (
           <StaticRow label="Pool share" inputId="deposit-share" amount="N/A" />
         ) : (
@@ -89,7 +92,6 @@ export const StabilityDepositEditor: React.FC<
             unit="%"
           />
         )}
-
         {!originalDeposit.isEmpty && (
           <>
             <StaticRow
@@ -120,8 +122,8 @@ export const StabilityDepositEditor: React.FC<
             />
           </>
         )}
-        {children}
-      </Box>
+      </Grid>
+      {children}
     </div>
   );
 };

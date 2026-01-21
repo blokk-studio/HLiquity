@@ -1,9 +1,8 @@
 import React, { useCallback, useEffect } from "react";
-import { Button, Flex } from "theme-ui";
+import { Flex } from "theme-ui";
 
 import { Decimal, Decimalish, LiquityStoreState } from "@liquity/lib-base";
 import { LiquityStoreUpdate, useLiquityReducer, useLiquitySelector } from "@liquity/lib-react";
-import buttons from "../../styles/buttons.module.css";
 
 import { COIN } from "../../strings";
 
@@ -22,6 +21,7 @@ import { useLoadingState } from "../../loading_state";
 import { useLiquity } from "../../hooks/LiquityContext";
 import { LoadingThemeUiButton } from "../LoadingButton";
 import { useMultiWallet } from "../../multi_wallet";
+import buttons from "../../styles/buttons.module.css";
 
 const init = ({ stabilityDeposit }: LiquityStoreState) => ({
   originalDeposit: stabilityDeposit,
@@ -233,7 +233,6 @@ export const StabilityDepositManager: React.FC = () => {
 
       {multiWallet.hasConnection && (
         <Flex variant="layout.actions">
-
           <button className={buttons.normal} onClick={handleCancel}>
             Cancel
           </button>
@@ -273,7 +272,7 @@ export const StabilityDepositManager: React.FC = () => {
                 : `Withdraw ${validChange?.withdrawHCHF?.toString(2)} HCHF`}
             </StabilityDepositAction>
           ) : (
-            <Button disabled>Confirm</Button>
+            <button className={buttons.normal} disabled>Confirm</button>
           )}
         </Flex>
       )}

@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect } from "react";
-import { Card, Box, Flex } from "theme-ui";
+import { Card, Box, Flex, Grid } from "theme-ui";
 
 import { LiquityStoreState } from "@liquity/lib-base";
 import { useLiquitySelector } from "@liquity/lib-react";
@@ -64,22 +64,22 @@ export const ActiveDeposit: React.FC = () => {
           unit={COIN}
         />
 
-        <StaticRow
-          label="Pool share"
-          inputId="deposit-share"
-          amount={poolShare.prettify(4)}
-          unit="%"
-        />
+        <Grid mb={3} pt={3} bg="#f2f2f2" sx={{ gridTemplateColumns: ["1fr", "1fr", "1fr", "1fr 1fr 1fr"] }} gap={16}>
+          <StaticRow
+            label="Pool share"
+            inputId="deposit-share"
+            amount={poolShare.prettify(4)}
+            unit="%"
+          />
 
-        <StaticRow
-          label="Liquidation gain"
-          inputId="deposit-gain"
-          amount={stabilityDeposit.collateralGain.prettify(4)}
-          color={stabilityDeposit.collateralGain.nonZero && "success"}
-          unit={COLLATERAL_COIN}
-        />
+          <StaticRow
+            label="Liquidation gain"
+            inputId="deposit-gain"
+            amount={stabilityDeposit.collateralGain.prettify(4)}
+            color={stabilityDeposit.collateralGain.nonZero && "success"}
+            unit={COLLATERAL_COIN}
+          />
 
-        <Flex sx={{ alignItems: "center" }}>
           <StaticRow
             label="Reward"
             inputId="deposit-reward"
@@ -98,15 +98,16 @@ export const ActiveDeposit: React.FC = () => {
               />
             }
           />
-          <Flex sx={{ justifyContent: "flex-end", flexShrink: 0 }}>
-            <Yield />
-          </Flex>
+        </Grid>
+
+        <Flex mb={4}>
+          <Yield />
         </Flex>
       </Box>
 
       <Flex variant="layout.actions">
         <button className={buttons.normal} onClick={handleAdjustDeposit}>
-          <Flex sx={{alignItems: "center", gap: 2}}>
+          <Flex sx={{ alignItems: "center", gap: 2 }}>
             <Icon name="pen" size="sm" />
 
             Adjust
