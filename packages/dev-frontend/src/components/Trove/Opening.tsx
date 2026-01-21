@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { Flex, Button, Box, Card, Heading, Spinner, Checkbox, Label } from "theme-ui";
-import { LiquityStoreState, Decimal, Trove, Percent } from "@liquity/lib-base";
+import { Flex, Box, Card, Spinner, Checkbox, Label, Button } from "theme-ui";
+import { LiquityStoreState, Decimal, Trove, Percent, Decimalish } from "@liquity/lib-base";
 import { useLiquitySelector } from "@liquity/lib-react";
 
 import { useStableTroveChange } from "../../hooks/useStableTroveChange";
@@ -12,7 +12,7 @@ import { COIN, COLLATERAL_COIN } from "../../strings";
 import { Icon } from "../Icon";
 import { InfoIcon } from "../InfoIcon";
 import { CollateralRatio } from "./CollateralRatio";
-import { EditableRow, StaticRow } from "./Editor";
+import { StaticRow } from "./Editor";
 import { ExpensiveTroveChangeWarning, GasEstimationState } from "./ExpensiveTroveChangeWarning";
 import {
   selectForTroveChangeValidation,
@@ -23,6 +23,10 @@ import { useLoadingState } from "../../loading_state";
 import { useLiquity } from "../../hooks/LiquityContext";
 import { useConstants } from "../../hooks/constants";
 import { useMultiWallet } from "../../multi_wallet";
+import buttons from "../../styles/buttons.module.css";
+import { DecimalInput } from "../DecimalInput";
+import { LoadingThemeUiButton } from "../LoadingButton";
+import { HeadingWithChildren } from "../shared";
 
 const selector = (state: LiquityStoreState) => {
   const { fees, price, accountBalance } = state;
@@ -44,7 +48,6 @@ export const Opening: React.FC = () => {
   const { dispatchEvent } = useTroveView();
   const { fees, price, accountBalance, validationContext } = useLiquitySelector(selector);
   const borrowingRate = fees.borrowingRate();
-  const editingState = useState<string>();
 
   const [collateral, setCollateral] = useState<Decimal>(Decimal.ZERO);
   const [borrowAmount, setBorrowAmount] = useState<Decimal>(Decimal.ZERO);
@@ -121,7 +124,7 @@ export const Opening: React.FC = () => {
     }
   ];
 
-  const collateralHandler = (amount: string) => {
+  const collateralHandler = (amount: Decimalish) => {
     const newCol = Decimal.from(amount);
     const collRat = newCol.mul(price).div(totalDebt);
     setCollateral(newCol);
@@ -137,7 +140,7 @@ export const Opening: React.FC = () => {
     }
   };
 
-  const netDebtHandler = (amount: string) => {
+  const netDebtHandler = (amount: Decimalish) => {
     const newDebt = Decimal.from(amount);
     const newTotalDebt = newDebt
       .add(constants.HCHF_LIQUIDATION_RESERVE)
@@ -157,48 +160,35 @@ export const Opening: React.FC = () => {
   };
 
   return (
-    <Card>
-      <Heading
-        sx={{
-          display: "grid !important",
-          gridAutoFlow: "column",
-          gridTemplateColumns: "1fr repeat(2, auto)"
-        }}
-      >
-        Trove
-        <Steps steps={steps} />
-        {isDirty && !isTransactionPending && (
-          <Button
-            variant="titleIcon"
-            sx={{ ":enabled:hover": { color: "danger" }, marginLeft: "1rem" }}
-            onClick={reset}
-          >
-            <Icon name="history" size="lg" />
-          </Button>
-        )}
-      </Heading>
+    <div>
+      <HeadingWithChildren text="Trove">
+        <Flex sx={{gap: 16}}>
+          <Steps steps={steps} />
 
-      <Box sx={{ p: [2, 3] }}>
-        <EditableRow
+          {isDirty && !isTransactionPending && (
+            <Button
+              variant="titleIcon"
+              sx={{ width: 24, height: 24, ":enabled:hover": { color: "danger" }, marginLeft: "0.5rem" }}
+              onClick={reset}
+            >
+              <Icon style={{width: 24, height: 24}} name="history" size="lg" />
+            </Button>
+          )}
+        </Flex>
+      </HeadingWithChildren>
+
+      <Box>
+        <DecimalInput
           label="Collateral"
-          inputId="trove-collateral"
-          amount={collateral.prettify()}
-          maxAmount={maxCollateral.toString(2)}
-          maxedOut={collateralMaxedOut}
-          editingState={editingState}
-          unit={COLLATERAL_COIN}
-          editedAmount={collateral.toString(2)}
-          setEditedAmount={collateralHandler}
+          value={collateral}
+          onInput={collateralHandler}
+          max={maxCollateral}
         />
 
-        <EditableRow
+        <DecimalInput
           label="Borrow"
-          inputId="trove-borrow-amount"
-          amount={borrowAmount.prettify()}
-          unit={COIN}
-          editingState={editingState}
-          editedAmount={borrowAmount.toString(2)}
-          setEditedAmount={netDebtHandler}
+          value={borrowAmount}
+          onInput={netDebtHandler}
         />
 
         <Flex
@@ -309,27 +299,24 @@ export const Opening: React.FC = () => {
 
         {multiWallet.hasConnection && (
           <Flex variant="layout.actions">
-            <Button variant="cancel" onClick={handleCancelPressed}>
+            <button className={buttons.normal} onClick={handleCancelPressed}>
               Cancel
-            </Button>
+            </button>
 
             {gasEstimationState.type === "inProgress" ? (
-              <Button disabled>
+              <button className={buttons.normal} disabled>
                 <Spinner height="24px" width="24px" />
-              </Button>
+              </button>
             ) : !userHasAssociatedWithHchf ? (
-              <Button
+              <LoadingThemeUiButton
+                disabled={!stableTroveChange}
+                loading={hchfAssociationLoadingState === "pending"}
                 onClick={associateWithHchf}
-                disabled={!stableTroveChange || hchfAssociationLoadingState === "pending"}
-                sx={{ gap: "1rem" }}
               >
                 Associate with HCHF
-                {hchfAssociationLoadingState === "pending" && (
-                  <Spinner height="1rem" width="1rem" color="currentColor" />
-                )}
-              </Button>
+              </LoadingThemeUiButton>
             ) : !stableTroveChange ? (
-              <Button disabled>Confirm</Button>
+              <button className={buttons.normal} disabled>Confirm</button>
             ) : (
               <TroveAction
                 transactionId={TRANSACTION_ID}
@@ -344,6 +331,6 @@ export const Opening: React.FC = () => {
           </Flex>
         )}
       </Box>
-    </Card>
+    </div>
   );
 };

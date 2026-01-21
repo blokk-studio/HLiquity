@@ -1,5 +1,5 @@
 import { useCallback, useEffect } from "react";
-import { Flex, Button } from "theme-ui";
+import { Flex } from "theme-ui";
 
 import { LiquityStoreState, Decimal, Trove, Decimalish, Constants } from "@liquity/lib-base";
 
@@ -23,6 +23,7 @@ import { useLoadingState } from "../../loading_state";
 import { LoadingThemeUiButton } from "../LoadingButton";
 import { useConstants } from "../../hooks/constants";
 import { useMultiWallet } from "../../multi_wallet";
+import buttons from "../../styles/buttons.module.css";
 
 const getInitializer =
   (options: { constants: Constants }) =>
@@ -279,9 +280,9 @@ export const TroveManager: React.FC<TroveManagerProps> = ({ collateral, debt }) 
         ))}
 
       <Flex variant="layout.actions">
-        <Button variant="cancel" onClick={handleCancel}>
+        <button className={buttons.normal} onClick={handleCancel}>
           Cancel
-        </Button>
+        </button>
 
         {!hchfContractHasHchfTokenAllowance ? (
           <LoadingThemeUiButton
@@ -302,7 +303,7 @@ export const TroveManager: React.FC<TroveManagerProps> = ({ collateral, debt }) 
             Repay {validChange?.params.repayHCHF?.toString(2)} HCHF
           </TroveAction>
         ) : (
-          <Button disabled>Confirm</Button>
+          <button className={buttons.normal} disabled>Confirm</button>
         )}
       </Flex>
     </TroveEditor>

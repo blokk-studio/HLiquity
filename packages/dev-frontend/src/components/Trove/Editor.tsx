@@ -128,15 +128,15 @@ export const StaticAmounts: React.FC<React.PropsWithChildren<StaticAmountsProps 
             </>
           )}
 
-          {pendingAmount && (
-            <>
-              &nbsp;
-              <PendingAmount
-                sx={{ color: pendingColor, opacity: 0.8, fontSize: "0.666em" }}
-                value={pendingAmount}
-              />
-            </>
-          )}
+          {/*{pendingAmount && (*/}
+          {/*  <>*/}
+          {/*    &nbsp;*/}
+          {/*    <PendingAmount*/}
+          {/*      sx={{ color: pendingColor, opacity: 0.8, fontSize: "0.666em" }}*/}
+          {/*      value={pendingAmount}*/}
+          {/*    />*/}
+          {/*  </>*/}
+          {/*)}*/}
         </Flex>
       )}
 

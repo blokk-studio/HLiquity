@@ -1,5 +1,5 @@
 import React from "react";
-import { Heading, Box, Card } from "theme-ui";
+import { Card, Grid } from "theme-ui";
 
 import {
   Percent,
@@ -18,6 +18,7 @@ import { CollateralRatio } from "./CollateralRatio";
 import { InfoIcon } from "../InfoIcon";
 import { Step, Steps } from "../Steps";
 import { useConstants } from "../../hooks/constants";
+import { HeadingWithChildren } from "../shared";
 
 type TroveEditorProps = {
   original: Trove;
@@ -51,26 +52,19 @@ export const TroveEditor: React.FC<React.PropsWithChildren<TroveEditorProps>> = 
   const collateralRatioChange = Difference.between(collateralRatio, originalCollateralRatio);
 
   return (
-    <Card>
-      <Heading
-        sx={{
-          display: "grid !important",
-          gridAutoFlow: "column",
-          gridTemplateColumns: "1fr repeat(2, auto)"
-        }}
-      >
-        Trove
+    <div>
+      <HeadingWithChildren text="Trove">
         <Steps steps={transactionSteps} />
-      </Heading>
+      </HeadingWithChildren>
 
-      <Box sx={{ p: [2, 3] }}>
+
+      <Grid variant="layout.staticRows">
         <StaticRow
           label="Collateral"
           inputId="trove-collateral"
           amount={edited.collateral.prettify(4)}
           unit={COLLATERAL_COIN}
         />
-
         <StaticRow label="Debt" inputId="trove-debt" amount={edited.debt.prettify()} unit={COIN} />
 
         {original.isEmpty && (
@@ -110,11 +104,11 @@ export const TroveEditor: React.FC<React.PropsWithChildren<TroveEditorProps>> = 
             />
           }
         />
+      </Grid>
 
-        <CollateralRatio value={collateralRatio} change={collateralRatioChange} />
+      <CollateralRatio value={collateralRatio} change={collateralRatioChange} />
 
-        {children}
-      </Box>
-    </Card>
+      {children}
+    </div>
   );
 };

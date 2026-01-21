@@ -1,9 +1,10 @@
-/** @jsxImportSource theme-ui */
 import React, { useCallback } from "react";
-import { Card, Heading, Box, Flex, Button } from "theme-ui";
+import { Flex } from "theme-ui";
 import { InfoMessage } from "../InfoMessage";
 import { useTroveView } from "./context/TroveViewContext";
 import { FeatureHighlighter } from "../FeatureHighlighter";
+import { HeadingWithChildren } from "../shared";
+import buttons from "../../styles/buttons.module.css";
 
 export const NoTrove: React.FC = () => {
   const { dispatchEvent } = useTroveView();
@@ -13,22 +14,23 @@ export const NoTrove: React.FC = () => {
   }, [dispatchEvent]);
 
   return (
-    <Card>
-      <Heading>Trove</Heading>
-      <Box sx={{ p: [2, 3] }}>
+    <div>
+      <HeadingWithChildren text="Trove" />
+
+      <div>
         <InfoMessage title="You haven't borrowed any HCHF yet.">
           You can borrow HCHF by opening a Trove.
         </InfoMessage>
 
         <Flex variant="layout.actions">
-          <div role="presentation" sx={{ position: "relative", isolation: "isolate" }}>
-            <Button sx={{ minWidth: 160 }} onClick={handleOpenTrove}>
+          <div role="presentation" style={{ position: "relative", isolation: "isolate" }}>
+            <button className={buttons.normal} onClick={handleOpenTrove}>
               Open Trove
-            </Button>
+            </button>
 
             <div
               role="presentation"
-              sx={{
+              style={{
                 position: "absolute",
                 top: 0,
                 right: 0,
@@ -43,7 +45,7 @@ export const NoTrove: React.FC = () => {
             </div>
           </div>
         </Flex>
-      </Box>
-    </Card>
+      </div>
+    </div>
   );
 };

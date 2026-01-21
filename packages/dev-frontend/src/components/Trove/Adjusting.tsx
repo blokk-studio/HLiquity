@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState, useRef } from "react";
-import { Flex, Button, Box, Card, Heading, Label, Checkbox } from "theme-ui";
-import { LiquityStoreState, Decimal, Trove, Percent, Difference } from "@liquity/lib-base";
+import { Flex, Box, Card, Label, Checkbox, Button, Grid } from "theme-ui";
+import { LiquityStoreState, Decimal, Trove, Percent, Difference, Decimalish } from "@liquity/lib-base";
 import { useLiquitySelector } from "@liquity/lib-react";
 
 import { useStableTroveChange } from "../../hooks/useStableTroveChange";
@@ -8,11 +8,11 @@ import { ActionDescription } from "../ActionDescription";
 import { useMyTransactionState } from "../Transaction";
 import { TroveAction } from "./TroveAction";
 import { useTroveView } from "./context/TroveViewContext";
-import { COIN, COLLATERAL_COIN } from "../../strings";
+import { COIN } from "../../strings";
 import { Icon } from "../Icon";
 import { InfoIcon } from "../InfoIcon";
 import { CollateralRatio } from "./CollateralRatio";
-import { EditableRow, StaticRow } from "./Editor";
+import { StaticRow } from "./Editor";
 import { ExpensiveTroveChangeWarning } from "./ExpensiveTroveChangeWarning";
 import {
   selectForTroveChangeValidation,
@@ -24,6 +24,9 @@ import { useLoadingState } from "../../loading_state";
 import { LoadingThemeUiButton } from "../LoadingButton";
 import { useConstants } from "../../hooks/constants";
 import { useMultiWallet } from "../../multi_wallet";
+import buttons from "../../styles/buttons.module.css";
+import { DecimalInput } from "../DecimalInput";
+import { HeadingWithChildren } from "../shared";
 
 const selector = (state: LiquityStoreState) => {
   const { trove, fees, price, accountBalance } = state;
@@ -83,7 +86,6 @@ export const Adjusting: React.FC = () => {
   const constants = useConstants();
   const { dispatchEvent } = useTroveView();
   const { trove, fees, price, accountBalance, validationContext } = useLiquitySelector(selector);
-  const editingState = useState<string>();
   const previousTrove = useRef<Trove>(trove);
   const [collateral, setCollateral] = useState<Decimal>(trove.collateral);
   const [netDebt, setNetDebt] = useState<Decimal>(trove.netDebt);
@@ -220,7 +222,7 @@ export const Adjusting: React.FC = () => {
     status: isTransactionPending ? "pending" : "idle"
   });
 
-  const collateralHandler = (amount: string) => {
+  const collateralHandler = (amount: Decimalish) => {
     const newCol = Decimal.from(amount);
     const collRat = newCol.mul(price).div(totalDebt);
 
@@ -237,7 +239,7 @@ export const Adjusting: React.FC = () => {
     setCollateral(newCol);
   };
 
-  const netDebtHandler = (amount: string) => {
+  const netDebtHandler = (amount: Decimalish) => {
     const newDebt = Decimal.from(amount);
     const newTotalDebt = newDebt.add(constants.HCHF_LIQUIDATION_RESERVE).add(fee);
     const collRat = collateral.mul(price).div(newTotalDebt);
@@ -256,48 +258,37 @@ export const Adjusting: React.FC = () => {
   };
 
   return (
-    <Card>
-      <Heading
-        sx={{
-          display: "grid !important",
-          gridAutoFlow: "column",
-          gridTemplateColumns: "1fr repeat(2, auto)"
-        }}
-      >
-        Trove
-        <Steps steps={transactionSteps} />
-        {isDirty && !isTransactionPending && (
-          <Button
-            variant="titleIcon"
-            sx={{ ":enabled:hover": { color: "danger" }, marginLeft: "1rem" }}
-            onClick={reset}
-          >
-            <Icon name="history" size="lg" />
-          </Button>
-        )}
-      </Heading>
+    <div>
+      <HeadingWithChildren text="Adjust Trove">
 
-      <Box sx={{ p: [2, 3] }}>
-        <EditableRow
+        <Flex sx={{ gap: 16 }}>
+          <Steps steps={transactionSteps} />
+
+          {isDirty && !isTransactionPending && (
+
+            <Button
+              variant="titleIcon"
+              sx={{ width: 24, height: 24, ":enabled:hover": { color: "danger" }, marginLeft: "0.5rem" }}
+              onClick={reset}
+            >
+              <Icon style={{ width: 24, height: 24 }} name="history" size="lg" />
+            </Button>
+          )}
+        </Flex>
+      </HeadingWithChildren>
+
+      <Box>
+        <DecimalInput
           label="Collateral"
-          inputId="trove-collateral"
-          amount={collateral.prettify()}
-          maxAmount={maxCollateral.toString()}
-          maxedOut={collateralMaxedOut}
-          editingState={editingState}
-          unit={COLLATERAL_COIN}
-          editedAmount={collateral.toString(2)}
-          setEditedAmount={collateralHandler}
+          value={collateral}
+          onInput={collateralHandler}
+          max={maxCollateral}
         />
 
-        <EditableRow
+        <DecimalInput
           label="Net debt"
-          inputId="trove-net-debt-amount"
-          amount={netDebt.prettify()}
-          unit={COIN}
-          editingState={editingState}
-          editedAmount={netDebt.toString(2)}
-          setEditedAmount={netDebtHandler}
+          value={netDebt}
+          onInput={netDebtHandler}
         />
 
         <Flex
@@ -331,65 +322,67 @@ export const Adjusting: React.FC = () => {
           />
         </Flex>
 
-        <StaticRow
-          label="Liquidation Reserve"
-          inputId="trove-liquidation-reserve"
-          amount={`${constants.HCHF_LIQUIDATION_RESERVE}`}
-          unit={COIN}
-          infoIcon={
-            <InfoIcon
-              tooltip={
-                <Card variant="tooltip" sx={{ width: "200px" }}>
-                  An amount set aside to cover the liquidator’s gas costs if your Trove needs to be
-                  liquidated. The amount increases your debt and is refunded if you close your Trove
-                  by fully paying off its net debt.
-                </Card>
-              }
-            />
-          }
-        />
+        <Grid variant="layout.staticRows">
+          <StaticRow
+            label="Liquidation Reserve"
+            inputId="trove-liquidation-reserve"
+            amount={`${constants.HCHF_LIQUIDATION_RESERVE}`}
+            unit={COIN}
+            infoIcon={
+              <InfoIcon
+                tooltip={
+                  <Card variant="tooltip" sx={{ width: "200px" }}>
+                    An amount set aside to cover the liquidator’s gas costs if your Trove needs to be
+                    liquidated. The amount increases your debt and is refunded if you close your Trove
+                    by fully paying off its net debt.
+                  </Card>
+                }
+              />
+            }
+          />
 
-        <StaticRow
-          label="Borrowing Fee"
-          inputId="trove-borrowing-fee"
-          amount={fee.prettify(2)}
-          pendingAmount={`currently ${feePct.toString(2)} of debt`}
-          unit={COIN}
-          infoIcon={
-            <InfoIcon
-              tooltip={
-                <Card variant="tooltip" sx={{ width: "240px" }}>
-                  This amount is deducted from the borrowed amount as a one-time fee. There are no
-                  recurring fees for borrowing, which is thus interest-free.
-                </Card>
-              }
-            />
-          }
-        />
+          <StaticRow
+            label="Borrowing Fee"
+            inputId="trove-borrowing-fee"
+            amount={fee.prettify(2)}
+            pendingAmount={`currently ${feePct.toString(2)} of debt`}
+            unit={COIN}
+            infoIcon={
+              <InfoIcon
+                tooltip={
+                  <Card variant="tooltip" sx={{ width: "240px" }}>
+                    This amount is deducted from the borrowed amount as a one-time fee. There are no
+                    recurring fees for borrowing, which is thus interest-free.
+                  </Card>
+                }
+              />
+            }
+          />
 
-        <StaticRow
-          label="Total debt"
-          inputId="trove-total-debt"
-          amount={totalDebt.prettify(2)}
-          unit={COIN}
-          infoIcon={
-            <InfoIcon
-              tooltip={
-                <Card variant="tooltip" sx={{ width: "240px" }}>
-                  The total amount of HCHF your Trove will hold.{" "}
-                  {isDirty && (
-                    <>
-                      You will need to repay{" "}
-                      {totalDebt.sub(constants.HCHF_LIQUIDATION_RESERVE).prettify(2)} HCHF to reclaim
-                      your collateral ({constants.HCHF_LIQUIDATION_RESERVE.toString()} HCHF
-                      Liquidation Reserve excluded).
-                    </>
-                  )}
-                </Card>
-              }
-            />
-          }
-        />
+          <StaticRow
+            label="Total debt"
+            inputId="trove-total-debt"
+            amount={totalDebt.prettify(2)}
+            unit={COIN}
+            infoIcon={
+              <InfoIcon
+                tooltip={
+                  <Card variant="tooltip" sx={{ width: "240px" }}>
+                    The total amount of HCHF your Trove will hold.{" "}
+                    {isDirty && (
+                      <>
+                        You will need to repay{" "}
+                        {totalDebt.sub(constants.HCHF_LIQUIDATION_RESERVE).prettify(2)} HCHF to reclaim
+                        your collateral ({constants.HCHF_LIQUIDATION_RESERVE.toString()} HCHF
+                        Liquidation Reserve excluded).
+                      </>
+                    )}
+                  </Card>
+                }
+              />
+            }
+          />
+        </Grid>
 
         <CollateralRatio value={collateralRatio} change={collateralRatioChange} />
 
@@ -406,9 +399,9 @@ export const Adjusting: React.FC = () => {
         />
 
         <Flex variant="layout.actions">
-          <Button variant="cancel" onClick={handleCancelPressed}>
+          <button className={buttons.normal} onClick={handleCancelPressed}>
             Cancel
-          </Button>
+          </button>
 
           {needsHchfAssociation && !userHasAssociatedWithHchf ? (
             <LoadingThemeUiButton
@@ -445,10 +438,10 @@ export const Adjusting: React.FC = () => {
                       : "Adjust trove"}
             </TroveAction>
           ) : (
-            <Button disabled>Confirm</Button>
+            <button className={buttons.normal} disabled>Confirm</button>
           )}
         </Flex>
       </Box>
-    </Card>
+    </div>
   );
 };
