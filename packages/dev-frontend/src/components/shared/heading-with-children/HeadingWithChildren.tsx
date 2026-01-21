@@ -9,9 +9,11 @@ interface Props extends PropsWithChildren {
 
 export const HeadingWithChildren: FC<Props> = ({ text, noMargin, children }) => {
   return (
-    <Box sx={{ marginBottom: 32 }}>
-      <Flex sx={{justifyContent: "space-between", gap: 16}}>
-        <Heading sx={{ fontSize: 2, fontWeight: 300, marginBottom: noMargin ? 0 : 24 }}>{text}</Heading>
+    <Box sx={{ marginBottom: [2] }}>
+      <Flex sx={{ justifyContent: "space-between", gap: 16 }}>
+        <div>
+          <Heading sx={{ fontSize: 3, fontWeight: 700, marginBottom: noMargin ? 0 : 24 }}>{text}</Heading>
+        </div>
 
         <div>
           {children}
