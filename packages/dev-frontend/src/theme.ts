@@ -510,7 +510,7 @@ const theme: Theme = {
       mb: 3,
       pt: [3, 3],
       pb: [2, 0],
-      bg: '#f2f2f2',
+      bg: 'muted',
       gap: [2, 4],
       gridTemplateColumns: ["1fr", "1fr", "1fr", "1fr 1fr 1fr"]
     },

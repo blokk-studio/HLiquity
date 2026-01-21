@@ -64,7 +64,7 @@ export const ActiveDeposit: React.FC = () => {
           unit={COIN}
         />
 
-        <Grid mb={3} pt={3} bg="#f2f2f2" sx={{ gridTemplateColumns: ["1fr", "1fr", "1fr", "1fr 1fr 1fr"] }} gap={16}>
+        <Grid variant="layout.staticRows">
           <StaticRow
             label="Pool share"
             inputId="deposit-share"
