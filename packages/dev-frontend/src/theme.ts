@@ -496,12 +496,23 @@ const theme: Theme = {
     },
 
     actions: {
+      flexDirection: ["column-reverse", "row"],
+      gap: [2, 3],
       justifyContent: "flex-end",
       mt: 2,
 
       button: {
-        ml: 2
+        py: [3, 2]
       }
+    },
+
+    staticRows: {
+      mb: 3,
+      pt: [3, 3],
+      pb: [2, 0],
+      bg: '#f2f2f2',
+      gap: [2, 4],
+      gridTemplateColumns: ["1fr", "1fr", "1fr", "1fr 1fr 1fr"]
     },
 
     disabledOverlay: {
@@ -591,13 +602,12 @@ const theme: Theme = {
 
   links: {
     logoLink: {
-      px: 2,
       py: 1,
       fontWeight: "medium",
       fontSize: 2,
       textTransform: "uppercase",
       letterSpacing: "2px",
-      width: "auto",
+      width: "auto"
     }
   }
 };
