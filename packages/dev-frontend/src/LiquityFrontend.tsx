@@ -18,7 +18,7 @@ import { StabilityViewProvider } from "./components/Stability/context/StabilityV
 import { StakingViewProvider } from "./components/Staking/context/StakingViewProvider";
 import "tippy.js/dist/tippy.css"; // Tooltip default style
 
-import { Imprint } from "./components/Imprint";
+import { Footer } from "./components/Footer";
 import { AutomaticDevelopmentDebugMenu } from "./components/DevelopmentDebugMenu";
 import { PrivacyPolicyPage } from "./pages/PrivacyPolicyPage";
 import { ImprintPage } from "./pages/ImprintPage";
@@ -33,16 +33,19 @@ import { Stability } from "./components/Stability/Stability.tsx";
 import { Staking } from "./components/Staking/Staking.tsx";
 import { SystemStats } from "./components/SystemStats.tsx";
 
-const ConditionalSystemStats: React.FC = () => {
+const useShouldShowSystemStats = () => {
   const location = useLocation();
-  const shouldShowSystemStats = location.pathname !== '/redemptions';
+  return !["/redemptions", "/imprint", "/disclaimer", "/privacy-policy"].includes(location.pathname);
+};
+
+const ConditionalSystemStats: React.FC = () => {
+  const shouldShowSystemStats = useShouldShowSystemStats();
 
   return shouldShowSystemStats ? <SystemStats /> : null;
 };
 
 const ConditionalLayoutBox: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const location = useLocation();
-  const shouldShowSystemStats = location.pathname !== '/redemptions';
+  const shouldShowSystemStats = useShouldShowSystemStats();
 
   return (
     <Box
@@ -119,9 +122,7 @@ export const LiquityFrontend: React.FC = () => {
           </PageSwitcher>
         </Container>
 
-        <footer sx={{ marginInline: "clamp(2rem, 100%, 50% - 38rem)", paddingBottom: "2rem" }}>
-          <Imprint />
-        </footer>
+        <Footer />
       </ComponentTree>
 
       <TransactionMonitor />
