@@ -537,8 +537,7 @@ const theme: Theme = {
     infoOverlay: {
       ...modalOverlay,
 
-      display: ["block", "none"],
-
+      display: ["block", "block", "block", "none"],
       bg: "secondary"
     },
 

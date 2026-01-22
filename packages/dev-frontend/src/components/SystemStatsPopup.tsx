@@ -23,7 +23,7 @@ export const SystemStatsPopup: React.FC = () => {
         sx={{
           zIndex: 4,
           position: "relative",
-          display: ["block", "none"],
+          display: ["block", "block", "block", "none"],
           mr: 1
         }}
       >

@@ -41,7 +41,9 @@ const useShouldShowSystemStats = () => {
 const ConditionalSystemStats: React.FC = () => {
   const shouldShowSystemStats = useShouldShowSystemStats();
 
-  return shouldShowSystemStats ? <SystemStats /> : null;
+  return shouldShowSystemStats ? <div sx={{ display: ["none", "none", "none", "grid"] }}>
+    <SystemStats />
+  </div> : null;
 };
 
 const ConditionalLayoutBox: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -116,6 +118,7 @@ export const LiquityFrontend: React.FC = () => {
                 <Route path="/imprint" element={<ImprintPage />} />
                 <Route path="/disclaimer" element={<DisclaimerPage />} />
               </Routes>
+
 
               <ConditionalSystemStats />
             </ConditionalLayoutBox>
