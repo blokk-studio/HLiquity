@@ -34,6 +34,7 @@ import {
   faCertificate
 } from "@fortawesome/free-solid-svg-icons";
 import { faClipboard, faQuestionCircle } from "@fortawesome/free-regular-svg-icons";
+import { faGithub, faXTwitter } from "@fortawesome/free-brands-svg-icons";
 import { FontAwesomeIcon, FontAwesomeIconProps } from "@fortawesome/react-fontawesome";
 
 library.add(
@@ -69,7 +70,9 @@ library.add(
   faArrowDown,
   faWindowClose,
   faChevronDown,
-  faCertificate
+  faCertificate,
+  faGithub as any,
+  faXTwitter as any,
 );
 
 const getIcon = (name: IconName): IconProp => {
@@ -78,6 +81,10 @@ const getIcon = (name: IconName): IconProp => {
       return ["far", "clipboard"];
     case "question-circle":
       return ["far", "question-circle"];
+    case "github":
+      return ["fab", "github"];
+    case "twitter":
+      return ["fab", "x-twitter" as IconName];
     default:
       return name;
   }
