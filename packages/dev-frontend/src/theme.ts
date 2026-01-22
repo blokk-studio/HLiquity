@@ -460,15 +460,13 @@ const theme: Theme = {
     },
 
     footer: {
-      display: "flex",
+      px: cardGapX,
+      maxWidth: 1280,
       alignItems: "center",
       justifyContent: "center",
-
-      mt: cardGapY,
-      px: 3,
       minHeight: "72px",
-
-      bg: "muted"
+      mx: "auto",
+      pb: 4,
     },
 
     main: {
@@ -608,6 +606,15 @@ const theme: Theme = {
       textTransform: "uppercase",
       letterSpacing: "2px",
       width: "auto"
+    },
+    footer: {
+      color: "inherit",
+      textDecoration: "none",
+      fontWeight: 300,
+      "&:hover": {
+        textDecoration: "underline",
+        fontWeight: 300,
+      }
     }
   }
 };
