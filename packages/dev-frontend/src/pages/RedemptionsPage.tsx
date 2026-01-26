@@ -1,6 +1,7 @@
 /** @jsxImportSource theme-ui */
 import React, { useEffect, useMemo, useState } from "react";
 import {
+  Badge,
   Box,
   Button,
   Card,
@@ -160,7 +161,7 @@ export const RedemptionsPage: React.FC = () => {
         setRedemptions(
           new Error(
             resultsResponse.error._status?.messages?.[0].message ??
-              "Something went wrong unexpectedly."
+            "Something went wrong unexpectedly."
           )
         );
       }
@@ -523,141 +524,132 @@ export const RedemptionsPage: React.FC = () => {
             }}
           >
             <thead>
-              <tr>
-                {/* account */}
-                <th
-                  sx={{
-                    textAlign: "start",
-                    paddingBottom: "0.5rem",
-                    verticalAlign: "top",
-                    p: 2,
-                    pl: 3
-                  }}
-                >
-                  <Tooltip message={<Text>The user who redeemed the HCHF for HBAR.</Text>}>
-                    Account
-                  </Tooltip>
-                </th>
+            <tr>
+              {/* account */}
+              <th
+                sx={{
+                  textAlign: "start",
+                  paddingBottom: "0.5rem",
+                  verticalAlign: "top",
+                  p: 2,
+                  pl: 3
+                }}
+              >
+                <Tooltip message={<Text>The user who redeemed the HCHF for HBAR.</Text>}>
+                  Account
+                </Tooltip>
+              </th>
 
-                {/* hchf */}
-                <th
-                  sx={{
-                    textAlign: "start",
-                    paddingBottom: "0.5rem",
-                    verticalAlign: "top",
-                    p: 2
-                  }}
-                >
-                  <Tooltip message={<Text>The amount of HCHF the user paid.</Text>}>
-                    Redeemed
-                    <Box sx={{ fontSize: [0, 1], fontWeight: "body", opacity: 0.5 }}>HCHF</Box>
-                  </Tooltip>
-                </th>
+              {/* hchf */}
+              <th
+                sx={{
+                  textAlign: "start",
+                  paddingBottom: "0.5rem",
+                  verticalAlign: "top",
+                  p: 2
+                }}
+              >
+                <Tooltip message={<Text>The amount of HCHF the user paid.</Text>}>
+                  Redeemed
+                  <Box sx={{ fontSize: [0, 1], fontWeight: "body", opacity: 0.5 }}>HCHF</Box>
+                </Tooltip>
+              </th>
 
-                {/* hbar */}
-                <th
-                  sx={{
-                    textAlign: "start",
-                    paddingBottom: "0.5rem",
-                    verticalAlign: "top",
-                    p: 2
-                  }}
-                >
-                  <Tooltip message={<Text>The amount of HBAR user received.</Text>}>
-                    Received
-                    <Box sx={{ fontSize: [0, 1], fontWeight: "body", opacity: 0.5 }}>HBAR</Box>
-                  </Tooltip>
-                </th>
+              {/* hbar */}
+              <th
+                sx={{
+                  textAlign: "start",
+                  paddingBottom: "0.5rem",
+                  verticalAlign: "top",
+                  p: 2
+                }}
+              >
+                <Tooltip message={<Text>The amount of HBAR user received.</Text>}>
+                  Received
+                  <Box sx={{ fontSize: [0, 1], fontWeight: "body", opacity: 0.5 }}>HBAR</Box>
+                </Tooltip>
+              </th>
 
 
-                {/* redemption fee */}
-                <th
-                  sx={{
-                    textAlign: "start",
-                    paddingBottom: "0.5rem",
-                    verticalAlign: "top",
-                    p: 2
-                  }}
-                >
-                  <Tooltip message={<Text>The protocol fee charged to compensate Trove owners for redemption risk.</Text>}>
-                    Redemption Fee
-                    <Box sx={{ fontSize: [0, 1], fontWeight: "body", opacity: 0.5 }}>HBAR</Box>
-                  </Tooltip>
-                </th>
+              {/* redemption fee */}
+              <th
+                sx={{
+                  textAlign: "start",
+                  paddingBottom: "0.5rem",
+                  verticalAlign: "top",
+                  p: 2
+                }}
+              >
+                <Tooltip
+                  message={<Text>The protocol fee charged to compensate Trove owners for redemption risk.</Text>}>
+                  Redemption Fee
+                  <Box sx={{ fontSize: [0, 1], fontWeight: "body", opacity: 0.5 }}>HBAR</Box>
+                </Tooltip>
+              </th>
 
-                {/* network fee */}
-                <th
-                  sx={{
-                    textAlign: "start",
-                    paddingBottom: "0.5rem",
-                    verticalAlign: "top",
-                    p: 2
-                  }}
-                >
-                  <Tooltip message={<Text>The network fee charged for this transaction.</Text>}>
-                    Network Fee
-                    <Box sx={{ fontSize: [0, 1], fontWeight: "body", opacity: 0.5 }}>HBAR</Box>
-                  </Tooltip>
-                </th>
+              {/* network fee */}
+              <th
+                sx={{
+                  textAlign: "start",
+                  paddingBottom: "0.5rem",
+                  verticalAlign: "top",
+                  p: 2
+                }}
+              >
+                <Tooltip message={<Text>The network fee charged for this transaction.</Text>}>
+                  Network Fee
+                  <Box sx={{ fontSize: [0, 1], fontWeight: "body", opacity: 0.5 }}>HBAR</Box>
+                </Tooltip>
+              </th>
 
-                {/* date */}
-                <th
-                  sx={{
-                    textAlign: "start",
-                    paddingBottom: "0.5rem",
-                    verticalAlign: "top",
-                    p: 2
-                  }}
-                >
-                  <Tooltip message={<Text>The date and time of the transaction.</Text>}>
-                    Date
-                  </Tooltip>
-                </th>
+              {/* date */}
+              <th
+                sx={{
+                  textAlign: "start",
+                  paddingBottom: "0.5rem",
+                  verticalAlign: "top",
+                  p: 2
+                }}
+              >
+                <Tooltip message={<Text>The date and time of the transaction.</Text>}>
+                  Date
+                </Tooltip>
+              </th>
 
-                {/* links */}
-                <th
-                  sx={{
-                    textAlign: "end",
-                    paddingBottom: "0.5rem",
-                    verticalAlign: "top",
-                    p: 2,
-                    pr: 3
-                  }}
-                >
-                  Link
-                </th>
-              </tr>
+              {/* links */}
+              <th
+                sx={{
+                  textAlign: "end",
+                  paddingBottom: "0.5rem",
+                  verticalAlign: "top",
+                  p: 2,
+                  pr: 3
+                }}
+              >
+                Link
+              </th>
+            </tr>
             </thead>
 
             <tbody>
-              {redemptions.map(redemption => {
-                const date = new Date(parseFloat(redemption.timestamp) * 1000);
-                const shortDate = shortDateTimeFormat.format(date);
-                const longDate = fullDateTimeFormat.format(date);
-                const isOwnedByUser = redemption.accountIdString === accountIdString;
-                const isExpanded = expandedRows.has(redemption.transactionId);
-                const hasAffectedTroves = redemption.affectedTroves.length > 0;
+            {redemptions.map(redemption => {
+              const date = new Date(parseFloat(redemption.timestamp) * 1000);
+              const shortDate = shortDateTimeFormat.format(date);
+              const longDate = fullDateTimeFormat.format(date);
+              const isOwnedByUser = redemption.accountIdString === accountIdString;
+              const isExpanded = expandedRows.has(redemption.transactionId);
+              const hasAffectedTroves = redemption.affectedTroves.length > 0;
 
-                console.log("Rendering redemption:", {
-                  transactionId: redemption.transactionId,
-                  hasAffectedTroves,
-                  affectedTrovesCount: redemption.affectedTroves.length,
-                  isExpanded
-                });
+              console.log("Rendering redemption:", {
+                transactionId: redemption.transactionId,
+                hasAffectedTroves,
+                affectedTrovesCount: redemption.affectedTroves.length,
+                isExpanded
+              });
 
-                return (
-                  <React.Fragment key={redemption.transactionId}>
-                    <tr
-                      sx={
-                      isOwnedByUser
-                        ? {
-                            backgroundColor: "primary",
-                            color: "secondary",
-                            fontWeight: 500
-                          }
-                        : undefined
-                    }
-                  >
+              return (
+                <React.Fragment key={redemption.transactionId}>
+                  <tr>
                     {/* account */}
                     <td
                       sx={{
@@ -670,7 +662,7 @@ export const RedemptionsPage: React.FC = () => {
                           <Button
                             variant="icon"
                             onClick={() => toggleRow(redemption.transactionId)}
-                            sx={{ minWidth: "24px", height: "24px", p: 0, color: isOwnedByUser ? '#fff' : "#000" }}
+                            sx={{ minWidth: "24px", height: "24px", p: 0 }}
                           >
                             <Icon
                               name={isExpanded ? "chevron-down" : "chevron-right"}
@@ -680,10 +672,22 @@ export const RedemptionsPage: React.FC = () => {
                         ) : (
                           <Box sx={{ minWidth: "40px", height: "24px" }} />
                         )}
-                        <Box>
-                          {redemption.accountIdString}
-                          {isOwnedByUser && <> (you)</>}
-                        </Box>
+                        <Flex sx={{ alignItems: "center", gap: 2 }}>
+                          <Text>{redemption.accountIdString}</Text>
+                          {isOwnedByUser && (
+                            <Badge
+                              sx={{
+                                px: 2,
+                                py: 1,
+                                borderRadius: 4,
+                                bg: "primary",
+                                color: "background"
+                              }}
+                            >
+                              You
+                            </Badge>
+                          )}
+                        </Flex>
                       </Flex>
                     </td>
 
@@ -794,210 +798,210 @@ export const RedemptionsPage: React.FC = () => {
                             }}
                           >
                             <thead>
-                              <tr>
-                                <th>Trove Owner
-                                  <Box sx={{ fontSize: 0, fontWeight: "body", opacity: 0.5 }}>
-                                    Account
-                                  </Box>
+                            <tr>
+                              <th>Trove Owner
+                                <Box sx={{ fontSize: 0, fontWeight: "body", opacity: 0.5 }}>
+                                  Account
+                                </Box>
 
-                                </th>
-                                <th>
-                                  <Tooltip message={<Text>HCHF debt before redemption</Text>}>
-                                    Debt Before
-                                    <Box sx={{ fontSize: 0, fontWeight: "body", opacity: 0.5 }}>
-                                      HCHF
-                                    </Box>
-                                  </Tooltip>
-                                </th>
-                                <th>
-                                  <Tooltip
-                                    message={<Text>Amount of HCHF debt removed by redemption</Text>}
-                                  >
-                                    Debt Redeemed
-                                    <Box sx={{ fontSize: 0, fontWeight: "body", opacity: 0.5 }}>
-                                      HCHF
-                                    </Box>
-                                  </Tooltip>
-                                </th>
-                                <th>
-                                  <Tooltip message={<Text>HCHF debt remaining after redemption</Text>}>
-                                    Debt After
-                                    <Box sx={{ fontSize: 0, fontWeight: "body", opacity: 0.5 }}>
-                                      HCHF
-                                    </Box>
-                                  </Tooltip>
-                                </th>
-                                <th>
-                                  <Tooltip message={<Text>HBAR collateral before redemption</Text>}>
-                                    Coll. Before
-                                    <Box sx={{ fontSize: 0, fontWeight: "body", opacity: 0.5 }}>
-                                      HBAR
-                                    </Box>
-                                  </Tooltip>
-                                </th>
-                                <th>
-                                  <Tooltip
-                                    message={
-                                      <Text>Amount of HBAR collateral taken by redemption</Text>
-                                    }
-                                  >
-                                    Coll. Taken
-                                    <Box sx={{ fontSize: 0, fontWeight: "body", opacity: 0.5 }}>
-                                      HBAR
-                                    </Box>
-                                  </Tooltip>
-                                </th>
-                                <th>
-                                  <Tooltip
-                                    message={<Text>HBAR collateral remaining after redemption</Text>}
-                                  >
-                                    Coll. After
-                                    <Box sx={{ fontSize: 0, fontWeight: "body", opacity: 0.5 }}>
-                                      HBAR
-                                    </Box>
-                                  </Tooltip>
-                                </th>
-                              </tr>
+                              </th>
+                              <th>
+                                <Tooltip message={<Text>HCHF debt before redemption</Text>}>
+                                  Debt Before
+                                  <Box sx={{ fontSize: 0, fontWeight: "body", opacity: 0.5 }}>
+                                    HCHF
+                                  </Box>
+                                </Tooltip>
+                              </th>
+                              <th>
+                                <Tooltip
+                                  message={<Text>Amount of HCHF debt removed by redemption</Text>}
+                                >
+                                  Debt Redeemed
+                                  <Box sx={{ fontSize: 0, fontWeight: "body", opacity: 0.5 }}>
+                                    HCHF
+                                  </Box>
+                                </Tooltip>
+                              </th>
+                              <th>
+                                <Tooltip message={<Text>HCHF debt remaining after redemption</Text>}>
+                                  Debt After
+                                  <Box sx={{ fontSize: 0, fontWeight: "body", opacity: 0.5 }}>
+                                    HCHF
+                                  </Box>
+                                </Tooltip>
+                              </th>
+                              <th>
+                                <Tooltip message={<Text>HBAR collateral before redemption</Text>}>
+                                  Coll. Before
+                                  <Box sx={{ fontSize: 0, fontWeight: "body", opacity: 0.5 }}>
+                                    HBAR
+                                  </Box>
+                                </Tooltip>
+                              </th>
+                              <th>
+                                <Tooltip
+                                  message={
+                                    <Text>Amount of HBAR collateral taken by redemption</Text>
+                                  }
+                                >
+                                  Coll. Taken
+                                  <Box sx={{ fontSize: 0, fontWeight: "body", opacity: 0.5 }}>
+                                    HBAR
+                                  </Box>
+                                </Tooltip>
+                              </th>
+                              <th>
+                                <Tooltip
+                                  message={<Text>HBAR collateral remaining after redemption</Text>}
+                                >
+                                  Coll. After
+                                  <Box sx={{ fontSize: 0, fontWeight: "body", opacity: 0.5 }}>
+                                    HBAR
+                                  </Box>
+                                </Tooltip>
+                              </th>
+                            </tr>
                             </thead>
                             <tbody>
-                              {redemption.affectedTroves.map((trove, index) => {
-                                const troveAccountId = AccountId.fromEvmAddress(
-                                  0,
-                                  0,
-                                  trove.borrower
-                                ).toString();
+                            {redemption.affectedTroves.map((trove, index) => {
+                              const troveAccountId = AccountId.fromEvmAddress(
+                                0,
+                                0,
+                                trove.borrower
+                              ).toString();
 
-                                // Check if historical data is missing (redeemed amounts are zero)
-                                const hasHistoricalData =
-                                  !trove.debtRedeemed.isZero || !trove.collateralRedeemed.isZero;
+                              // Check if historical data is missing (redeemed amounts are zero)
+                              const hasHistoricalData =
+                                !trove.debtRedeemed.isZero || !trove.collateralRedeemed.isZero;
 
-                                return (
-                                  <React.Fragment key={`${redemption.transactionId}-${index}`}>
-                                    <tr>
-                                      <td>
-                                        <Tooltip message={<Text>{troveAccountId}</Text>}>
-                                          {troveAccountId}
-                                        </Tooltip>
-                                      </td>
-                                      <td>
-                                        {hasHistoricalData ? (
-                                          <Tooltip
-                                            message={<Text>{trove.debtBefore.toString()}</Text>}
-                                          >
-                                            {trove.debtBefore.shorten()}
-                                          </Tooltip>
-                                        ) : (
-                                          <Tooltip
-                                            message={
-                                              <Text>Historical data not available</Text>
-                                            }
-                                          >
-                                            <Text sx={{ opacity: 0.5, fontStyle: "italic" }}>N/A</Text>
-                                          </Tooltip>
-                                        )}
-                                      </td>
-                                      <td
-                                        sx={{
-                                          fontWeight: hasHistoricalData ? "bold" : "body",
-                                          color: hasHistoricalData ? "danger" : "text"
-                                        }}
-                                      >
-                                        {hasHistoricalData ? (
-                                          <Tooltip
-                                            message={<Text>{trove.debtRedeemed.toString()}</Text>}
-                                          >
-                                            -{trove.debtRedeemed.shorten()}
-                                          </Tooltip>
-                                        ) : (
-                                          <Tooltip
-                                            message={
-                                              <Text>
-                                                Historical data not available. Cannot calculate
-                                                redeemed amount.
-                                              </Text>
-                                            }
-                                          >
-                                            <Text sx={{ opacity: 0.5, fontStyle: "italic" }}>N/A</Text>
-                                          </Tooltip>
-                                        )}
-                                      </td>
-                                      <td>
-                                        <Tooltip message={<Text>{trove.debtAfter.toString()}</Text>}>
-                                          {trove.debtAfter.shorten()}
-                                        </Tooltip>
-                                      </td>
-                                      <td>
-                                        {hasHistoricalData ? (
-                                          <Tooltip
-                                            message={<Text>{trove.collateralBefore.toString()}</Text>}
-                                          >
-                                            {trove.collateralBefore.shorten()}
-                                          </Tooltip>
-                                        ) : (
-                                          <Tooltip
-                                            message={
-                                              <Text>Historical data not available</Text>
-                                            }
-                                          >
-                                            <Text sx={{ opacity: 0.5, fontStyle: "italic" }}>N/A</Text>
-                                          </Tooltip>
-                                        )}
-                                      </td>
-                                      <td
-                                        sx={{
-                                          fontWeight: hasHistoricalData ? "bold" : "body",
-                                          color: hasHistoricalData ? "danger" : "text"
-                                        }}
-                                      >
-                                        {hasHistoricalData ? (
-                                          <Tooltip
-                                            message={
-                                              <Text>{trove.collateralRedeemed.toString()}</Text>
-                                            }
-                                          >
-                                            -{trove.collateralRedeemed.shorten()}
-                                          </Tooltip>
-                                        ) : (
-                                          <Tooltip
-                                            message={
-                                              <Text>
-                                                Historical data not available. Cannot calculate taken
-                                                amount.
-                                              </Text>
-                                            }
-                                          >
-                                            <Text sx={{ opacity: 0.5, fontStyle: "italic" }}>N/A</Text>
-                                          </Tooltip>
-                                        )}
-                                      </td>
-                                      <td>
+                              return (
+                                <React.Fragment key={`${redemption.transactionId}-${index}`}>
+                                  <tr>
+                                    <td>
+                                      <Tooltip message={<Text>{troveAccountId}</Text>}>
+                                        {troveAccountId}
+                                      </Tooltip>
+                                    </td>
+                                    <td>
+                                      {hasHistoricalData ? (
                                         <Tooltip
-                                          message={<Text>{trove.collateralAfter.toString()}</Text>}
+                                          message={<Text>{trove.debtBefore.toString()}</Text>}
                                         >
-                                          {trove.collateralAfter.shorten()}
+                                          {trove.debtBefore.shorten()}
                                         </Tooltip>
+                                      ) : (
+                                        <Tooltip
+                                          message={
+                                            <Text>Historical data not available</Text>
+                                          }
+                                        >
+                                          <Text sx={{ opacity: 0.5, fontStyle: "italic" }}>N/A</Text>
+                                        </Tooltip>
+                                      )}
+                                    </td>
+                                    <td
+                                      sx={{
+                                        fontWeight: hasHistoricalData ? "bold" : "body",
+                                        color: hasHistoricalData ? "danger" : "text"
+                                      }}
+                                    >
+                                      {hasHistoricalData ? (
+                                        <Tooltip
+                                          message={<Text>{trove.debtRedeemed.toString()}</Text>}
+                                        >
+                                          -{trove.debtRedeemed.shorten()}
+                                        </Tooltip>
+                                      ) : (
+                                        <Tooltip
+                                          message={
+                                            <Text>
+                                              Historical data not available. Cannot calculate
+                                              redeemed amount.
+                                            </Text>
+                                          }
+                                        >
+                                          <Text sx={{ opacity: 0.5, fontStyle: "italic" }}>N/A</Text>
+                                        </Tooltip>
+                                      )}
+                                    </td>
+                                    <td>
+                                      <Tooltip message={<Text>{trove.debtAfter.toString()}</Text>}>
+                                        {trove.debtAfter.shorten()}
+                                      </Tooltip>
+                                    </td>
+                                    <td>
+                                      {hasHistoricalData ? (
+                                        <Tooltip
+                                          message={<Text>{trove.collateralBefore.toString()}</Text>}
+                                        >
+                                          {trove.collateralBefore.shorten()}
+                                        </Tooltip>
+                                      ) : (
+                                        <Tooltip
+                                          message={
+                                            <Text>Historical data not available</Text>
+                                          }
+                                        >
+                                          <Text sx={{ opacity: 0.5, fontStyle: "italic" }}>N/A</Text>
+                                        </Tooltip>
+                                      )}
+                                    </td>
+                                    <td
+                                      sx={{
+                                        fontWeight: hasHistoricalData ? "bold" : "body",
+                                        color: hasHistoricalData ? "danger" : "text"
+                                      }}
+                                    >
+                                      {hasHistoricalData ? (
+                                        <Tooltip
+                                          message={
+                                            <Text>{trove.collateralRedeemed.toString()}</Text>
+                                          }
+                                        >
+                                          -{trove.collateralRedeemed.shorten()}
+                                        </Tooltip>
+                                      ) : (
+                                        <Tooltip
+                                          message={
+                                            <Text>
+                                              Historical data not available. Cannot calculate taken
+                                              amount.
+                                            </Text>
+                                          }
+                                        >
+                                          <Text sx={{ opacity: 0.5, fontStyle: "italic" }}>N/A</Text>
+                                        </Tooltip>
+                                      )}
+                                    </td>
+                                    <td>
+                                      <Tooltip
+                                        message={<Text>{trove.collateralAfter.toString()}</Text>}
+                                      >
+                                        {trove.collateralAfter.shorten()}
+                                      </Tooltip>
+                                    </td>
+                                  </tr>
+                                  {!hasHistoricalData && (
+                                    <tr>
+                                      <td
+                                        colSpan={7}
+                                        sx={{
+                                          py: 1,
+                                          px: 2,
+                                          fontSize: 0,
+                                          fontStyle: "italic",
+                                          opacity: 0.6
+                                        }}
+                                      >
+                                        ⚠ Historical data not available for this trove. Only
+                                        showing final state after redemption.
                                       </td>
                                     </tr>
-                                    {!hasHistoricalData && (
-                                      <tr>
-                                        <td
-                                          colSpan={7}
-                                          sx={{
-                                            py: 1,
-                                            px: 2,
-                                            fontSize: 0,
-                                            fontStyle: "italic",
-                                            opacity: 0.6
-                                          }}
-                                        >
-                                          ⚠ Historical data not available for this trove. Only
-                                          showing final state after redemption.
-                                        </td>
-                                      </tr>
-                                    )}
-                                  </React.Fragment>
-                                );
-                              })}
+                                  )}
+                                </React.Fragment>
+                              );
+                            })}
                             </tbody>
                           </Box>
                         </Box>
