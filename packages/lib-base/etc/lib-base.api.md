@@ -68,7 +68,7 @@ export class _CachedReadableLiquity<T extends unknown[]> implements _ReadableLiq
     getUniTokenAllowance(address?: string, ...extraParams: T): Promise<Decimal>;
     // (undocumented)
     getUniTokenBalance(address?: string, ...extraParams: T): Promise<Decimal>;
-    }
+}
 
 // @internal (undocumented)
 export type _CollateralChange<T> = (_CollateralDeposit<T> & _NoCollateralWithdrawal) | (_CollateralWithdrawal<T> & _NoCollateralDeposit);
@@ -336,10 +336,26 @@ export type FrontendStatus = {
 export const getConstants: (configuration: Record<string, string | undefined>, defaultValues: Constants) => Constants;
 
 // @public (undocumented)
-export const getConstantsFromJsonObjectString: (jsonObjectString?: string | undefined) => Constants;
+export const getConstantsFromJsonObjectString: (jsonObjectString?: string) => Constants;
 
 // @public (undocumented)
 export const getDeployment: (deploymentDefinition: DeploymentDefinition) => Deployment;
+
+// @public (undocumented)
+export const getRedemptionDetails: (options: {
+    sortedTroves: Trove[];
+    totalHchf: Decimal;
+    totalHbar: Decimal;
+    redeemedHchf: Decimal;
+    redemptionFee: Decimal;
+    constants: Pick<Constants, "HCHF_LIQUIDATION_RESERVE">;
+    price: Decimal;
+}) => {
+    redeemedHchf: Decimal;
+    receivedHbar: Decimal;
+    redemptionFeeInHbar: Decimal;
+    slippage: Percent<Decimal, Decimal>;
+} | null;
 
 // @internal (undocumented)
 export type _HCHFBorrowing<T> = {
@@ -375,7 +391,7 @@ export abstract class HLiquityStore<T = unknown> {
     subscribe(listener: (params: LiquityStoreListenerParams<T>) => void): () => void;
     // @internal (undocumented)
     protected _update(baseStateUpdate?: Partial<LiquityStoreBaseState>, extraStateUpdate?: Partial<T>): void;
-    }
+}
 
 // @public
 export class HLQTStake {
@@ -771,7 +787,7 @@ export type SuccessfulReceipt<R = unknown, D = unknown> = {
 };
 
 // @internal (undocumented)
-export const _successfulReceipt: <R, D>(rawReceipt: R, details: D, toString?: (() => string) | undefined) => SuccessfulReceipt<R, D>;
+export const _successfulReceipt: <R, D>(rawReceipt: R, details: D, toString?: () => string) => SuccessfulReceipt<R, D>;
 
 // @public
 export interface TransactableLiquity {
@@ -937,7 +953,7 @@ export class TroveWithPendingRedistribution extends UserTrove {
     applyRedistribution(totalRedistributed: Trove): UserTrove;
     // (undocumented)
     equals(that: TroveWithPendingRedistribution): boolean;
-    }
+}
 
 // @public
 export class UserTrove extends Trove {
@@ -954,6 +970,9 @@ export class UserTrove extends Trove {
 // @public
 export type UserTroveStatus = "nonExistent" | "open" | "closedByOwner" | "closedByLiquidation" | "closedByRedemption";
 
+// Warnings were encountered during analysis:
+//
+// src/redemptionDetails.ts:32:3 - (ae-incompatible-release-tags) The symbol "slippage" is marked as @public, but its signature references "Percent" which is marked as @alpha
 
 // (No @packageDocumentation comment for this package)
 
