@@ -166,7 +166,11 @@ const getAccountEvmAddress = async (options: { accountIdString: string; chain: H
   }
   return accountEvmAddress;
 };
-export const HederaDappConnectorProvider: React.FC<{ walletConnectProjectId: string }> = props => {
+export const HederaDappConnectorProvider: React.FC<
+  React.PropsWithChildren<{
+    walletConnectProjectId: string;
+  }>
+> = props => {
   const [dappConnector, setHederaDappConnector] = useState<DAppConnector | null>(null);
   const [session, setSession] = useState<HederaDappConnectorSession | null>(null);
   const [connectionState, setConnectionState] = useState<HashConnectConnectionState>(
@@ -240,14 +244,15 @@ export const HederaDappConnectorProvider: React.FC<{ walletConnectProjectId: str
 
   const enabledChainIds = useEnabledChainIds();
   useEffect(() => {
-    let destroyEffect: () => void = () => undefined;
+    let currentDestroy: (() => void) | null = null;
 
     const effect = async () => {
       try {
-        destroyEffect();
-        destroyEffect = () => {
-          destroy();
-        };
+        // Cleanup previous instance if any
+        if (currentDestroy) {
+          currentDestroy();
+          currentDestroy = null;
+        }
 
         const enabledHederaChainIds = enabledChainIds.map(chainId => {
           return getHederaChainId(chainId);
@@ -258,6 +263,7 @@ export const HederaDappConnectorProvider: React.FC<{ walletConnectProjectId: str
           enabledChainIds: enabledHederaChainIds
         });
 
+        currentDestroy = destroy;
         setHederaDappConnector(dappConnector);
       } catch (error: unknown) {
         setHederaDappConnector(null);
@@ -267,7 +273,11 @@ export const HederaDappConnectorProvider: React.FC<{ walletConnectProjectId: str
 
     effect();
 
-    return destroyEffect;
+    return () => {
+      if (currentDestroy) {
+        currentDestroy();
+      }
+    };
   }, [props.walletConnectProjectId, selectedChain, enabledChainIds]);
 
   const hederaDappConnectorContextValue = useMemo<HederaDappConnectorContext | null>(() => {
