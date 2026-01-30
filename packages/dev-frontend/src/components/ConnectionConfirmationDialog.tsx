@@ -9,7 +9,7 @@ type ConnectionConfirmationDialogProps = {
   onCancel: () => void;
 };
 
-export const ConnectionConfirmationDialog: React.FC<ConnectionConfirmationDialogProps> = ({
+export const ConnectionConfirmationDialog: React.FC<React.PropsWithChildren<ConnectionConfirmationDialogProps>> = ({
   title,
   icon,
   onCancel,

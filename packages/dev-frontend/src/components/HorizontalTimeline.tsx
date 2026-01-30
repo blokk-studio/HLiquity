@@ -83,7 +83,7 @@ type LabelProps = {
 };
 
 type SubLabelProps = { style?: ThemeUIStyleObject };
-export const SubLabel: React.FC<SubLabelProps> = ({ style, children }) => (
+export const SubLabel: React.FC<React.PropsWithChildren<SubLabelProps>> = ({ style, children }) => (
   <Flex
     sx={{
       fontWeight: 200,
@@ -98,7 +98,7 @@ export const SubLabel: React.FC<SubLabelProps> = ({ style, children }) => (
   </Flex>
 );
 
-export const Label: React.FC<LabelProps> = ({ children, description, style }) => {
+export const Label: React.FC<React.PropsWithChildren<LabelProps>> = ({ children, description, style }) => {
   return (
     <Flex
       sx={{

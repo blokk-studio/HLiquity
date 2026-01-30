@@ -12,7 +12,7 @@ interface LinkProps extends NavLinkProps {
   active?: boolean;
 }
 
-const Link: React.FC<LinkProps> = ({ active, children, ...props }) => (
+const Link: React.FC<React.PropsWithChildren<LinkProps>> = ({ active, children, ...props }) => (
   <NavLink {...props} sx={{ cursor: "pointer", ...(active ? { color: "primary" } : {}) }}>
     {children}
   </NavLink>

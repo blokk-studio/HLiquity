@@ -96,7 +96,7 @@ export const StakePane: React.FC = () => {
             onClick={handleApprovePressed}
             disabled={stakeAmount.isZero || isApprovePending}
           >
-            {isApprovePending ? <Spinner size="28px" sx={{ color: "white" }} /> : <>Approve</>}
+            {isApprovePending ? <Spinner size={28} sx={{ color: "white" }} /> : <>Approve</>}
           </Button>
         )}
 
@@ -107,7 +107,7 @@ export const StakePane: React.FC = () => {
             disabled={stakeAmount.isZero || isBalanceInsufficient || isManageLiquidityPending}
           >
             {isManageLiquidityPending ? (
-              <Spinner size="28px" sx={{ color: "white" }} />
+              <Spinner size={28} sx={{ color: "white" }} />
             ) : (
               <>Confirm</>
             )}

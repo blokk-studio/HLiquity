@@ -30,7 +30,7 @@ export type WizardProviderProps = {
   onFinish?: () => void;
 };
 
-export const WizardProvider: React.FC<WizardProviderProps> = ({ children, onCancel, onFinish }) => {
+export const WizardProvider: React.FC<React.PropsWithChildren<WizardProviderProps>> = ({ children, onCancel, onFinish }) => {
   const [step, setStep] = useState<number>(0);
   const [history, setHistory] = useState<number[]>([]);
 

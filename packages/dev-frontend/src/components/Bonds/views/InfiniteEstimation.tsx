@@ -1,3 +1,4 @@
+import React from "react";
 import { Decimal, Decimalish } from "@liquity/lib-base";
 import { InfoIcon } from "../../InfoIcon";
 import * as l from "../lexicon";
@@ -6,7 +7,7 @@ type InfiniteEstimateProps = {
   estimate: Decimalish;
 };
 
-export const InfiniteEstimate: React.FC<InfiniteEstimateProps> = ({ estimate, children }) => {
+export const InfiniteEstimate: React.FC<React.PropsWithChildren<InfiniteEstimateProps>> = ({ estimate, children }) => {
   if (estimate.toString() !== Decimal.INFINITY.toString()) return <>{children ?? estimate}</>;
 
   return (

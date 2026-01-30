@@ -1,13 +1,14 @@
 import React from "react";
 import { Flex } from "theme-ui";
-import { Redirect, Route, Switch, useRouteMatch } from "react-router-dom";
+import { Navigate, Route, Routes, useResolvedPath } from "react-router-dom";
 import { Link } from "../../../Link";
 import { FilteredBondList } from "./FilteredBondList";
 import { useBondView } from "../../context/BondViewContext";
 
 export const BondList: React.FC = () => {
   const { bonds } = useBondView();
-  const { url, path } = useRouteMatch();
+  const resolvedPath = useResolvedPath("");
+  const url = resolvedPath.pathname;
 
   return (
     <>
@@ -28,14 +29,10 @@ export const BondList: React.FC = () => {
         </Flex>
       )}
 
-      <Switch>
-        <Route exact path={path}>
-          <Redirect to={`${path}/pending`} />
-        </Route>
-        <Route path={`${path}/:bondFilter`}>
-          <FilteredBondList />
-        </Route>
-      </Switch>
+      <Routes>
+        <Route path="/" element={<Navigate to="pending" replace />} />
+        <Route path=":bondFilter" element={<FilteredBondList />} />
+      </Routes>
     </>
   );
 };
