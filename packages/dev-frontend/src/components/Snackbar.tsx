@@ -1,4 +1,4 @@
-import { ReactNode, createContext, useContext, useState } from "react";
+import React, { ReactNode, createContext, useContext, useState } from "react";
 import { Heading, Paragraph, Alert, Flex, IconButton, Grid } from "theme-ui";
 import { Icon } from "./Icon";
 
@@ -32,7 +32,7 @@ export const useSnackbar = () => {
   return useContext(snackbarContext);
 };
 
-export const SnackbarProvider: React.FC = ({ children }) => {
+export const SnackbarProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
   const [snacks, setSnacks] = useState<Snack[]>([]);
 
   const addSnack = (snack: Snack) => {

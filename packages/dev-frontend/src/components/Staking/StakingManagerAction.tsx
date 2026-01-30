@@ -8,7 +8,7 @@ type StakingActionProps = {
   change: HLQTStakeChange<Decimal>;
 } & LoadingButtonProps;
 
-export const StakingManagerAction: React.FC<StakingActionProps> = ({
+export const StakingManagerAction: React.FC<React.PropsWithChildren<StakingActionProps>> = ({
   change,
   children,
   ...loadingButtonProps

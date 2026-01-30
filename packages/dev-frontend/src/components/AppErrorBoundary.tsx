@@ -1,8 +1,8 @@
 import { Component, ErrorInfo, ReactNode } from "react";
 import { AppError } from "./AppError";
 
-export class AppErrorBoundary extends Component<unknown, { error: Error | null }> {
-  constructor(props: { children?: ReactNode }) {
+export class AppErrorBoundary extends Component<{ children: ReactNode }, { error: Error | null }> {
+  constructor(props: { children: ReactNode }) {
     super(props);
     this.state = { error: null };
   }

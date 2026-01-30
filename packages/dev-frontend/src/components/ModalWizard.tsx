@@ -8,7 +8,7 @@ type ModalWizardProps = WizardProviderProps & {
   style?: React.CSSProperties;
 };
 
-export const ModalWizard: React.FC<ModalWizardProps> = ({ children, onDismiss, style }) => {
+export const ModalWizard: React.FC<React.PropsWithChildren<ModalWizardProps>> = ({ children, onDismiss, style }) => {
   const handleDismiss = () => onDismiss();
 
   return (

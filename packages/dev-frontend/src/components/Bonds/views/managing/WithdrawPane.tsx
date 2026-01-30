@@ -15,7 +15,7 @@ const tokenSymbol = new Map([
   [BLusdAmmTokenIndex.HCHF, "HCHF"]
 ]);
 
-const WithdrawnAmount: React.FC<{ symbol: string }> = ({ symbol, children }) => (
+const WithdrawnAmount: React.FC<React.PropsWithChildren<{ symbol: string }>> = ({ symbol, children }) => (
   <>
     <Text sx={{ fontWeight: "medium" }}>{children}</Text>
     &nbsp;
@@ -216,7 +216,7 @@ export const WithdrawPane: React.FC = () => {
             onClick={handleApprovePressed}
             disabled={burnLpTokens.isZero || isApprovePending}
           >
-            {isApprovePending ? <Spinner size="28px" sx={{ color: "white" }} /> : <>Approve</>}
+            {isApprovePending ? <Spinner size={28} sx={{ color: "white" }} /> : <>Approve</>}
           </Button>
         )}
 
@@ -227,7 +227,7 @@ export const WithdrawPane: React.FC = () => {
             disabled={burnLpTokens.isZero || isBalanceInsufficient || isManageLiquidityPending}
           >
             {isManageLiquidityPending ? (
-              <Spinner size="28px" sx={{ color: "white" }} />
+              <Spinner size={28} sx={{ color: "white" }} />
             ) : (
               <>Confirm</>
             )}

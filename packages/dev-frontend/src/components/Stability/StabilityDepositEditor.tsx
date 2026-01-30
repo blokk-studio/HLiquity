@@ -31,7 +31,7 @@ type StabilityDepositEditorProps = {
   transactionSteps: Step[];
 };
 
-export const StabilityDepositEditor: React.FC<StabilityDepositEditorProps> = ({
+export const StabilityDepositEditor: React.FC<React.PropsWithChildren<StabilityDepositEditorProps>> = ({
   originalDeposit,
   editedHCHF,
   changePending,

@@ -7,7 +7,7 @@ import {
   useSwitchNetwork
 } from "wagmi";
 import { shortenAddress } from "./utils/shortenAddress";
-import { createContext, useContext, useEffect, useState } from "react";
+import React, { createContext, useContext, useEffect, useState } from "react";
 import { HederaChain, getChainFromId, mainnet } from "./configuration/chains";
 import { useSelectedChain } from "./components/chain_context";
 import {
@@ -38,7 +38,7 @@ const multiWalletContext = createContext<MultiWalletContext>({
   hideConnectionDialog: async () => undefined
 });
 
-export const MultiWalletProvider: React.FC = ({ children }) => {
+export const MultiWalletProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
   const selectedChain = useSelectedChain();
   // wagmi
   const wagmiAccount = useAccount();

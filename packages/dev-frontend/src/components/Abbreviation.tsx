@@ -5,7 +5,7 @@ type AbbreviationProps = BoxProps & {
   short: React.ReactNode;
 };
 
-export const Abbreviation: React.FC<AbbreviationProps> = ({ children, short, ...boxProps }) => (
+export const Abbreviation: React.FC<React.PropsWithChildren<AbbreviationProps>> = ({ children, short, ...boxProps }) => (
   <Box as="span" {...boxProps}>
     <Box as="span" sx={{ display: ["none", "unset"] }}>
       {children}

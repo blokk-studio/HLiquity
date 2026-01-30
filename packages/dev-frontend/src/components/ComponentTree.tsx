@@ -1,12 +1,13 @@
 import React, { ReactElement } from "react";
 
 /** renders as list of components with its following sibling as its children using a function */
-export const ComponentTree: React.FC<{
+export const ComponentTree: React.FC<React.PropsWithChildren<{
   renderers: ((children: ReactElement) => ReactElement)[];
-}> = ({ renderers, children }) => {
+}>> = ({ renderers, children }) => {
   const tree = renderers
-    .toReversed()
-    .reduce((children, renderer) => renderer(children), <>{children}</>);
+    .slice()
+    .reverse()
+    .reduce((children: ReactElement, renderer) => renderer(children), <>{children}</> as ReactElement);
 
   return tree;
 };

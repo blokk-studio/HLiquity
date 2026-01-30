@@ -13,7 +13,7 @@ type StabilityDepositActionProps = {
 const selectFrontendRegistered = ({ frontend }: LiquityStoreState) =>
   frontend.status === "registered";
 
-export const StabilityDepositAction: React.FC<StabilityDepositActionProps> = ({
+export const StabilityDepositAction: React.FC<React.PropsWithChildren<StabilityDepositActionProps>> = ({
   children,
   transactionId,
   change,

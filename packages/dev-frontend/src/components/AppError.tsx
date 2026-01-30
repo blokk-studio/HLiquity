@@ -1,10 +1,10 @@
 /** @jsxImportSource theme-ui */
-import { ReactNode } from "react";
+import React, { ReactNode } from "react";
 import { Button, Flex, Heading, Paragraph } from "theme-ui";
 import { Icon } from "./Icon";
 
 export const AppError: React.FC<
-  void | { error: Error; heading?: string | ReactNode; infoText?: string | ReactNode }
+  React.PropsWithChildren<void | { error: Error; heading?: string | ReactNode; infoText?: string | ReactNode }>
 > = props => (
   <Flex
     sx={{
