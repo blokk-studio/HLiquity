@@ -27,7 +27,7 @@ const iconFromIntent = (intent: DialogIntent | undefined) => {
   return null;
 };
 
-export const Dialog: React.FC<DialogProps> = ({
+export const Dialog: React.FC<React.PropsWithChildren<DialogProps>> = ({
   intent,
   title,
   icon,

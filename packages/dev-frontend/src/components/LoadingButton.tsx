@@ -5,7 +5,7 @@ export interface LoadingButtonProps extends ButtonProps {
   loading?: boolean;
 }
 
-export const LoadingButton: React.FC<LoadingButtonProps> = ({
+export const LoadingButton: React.FC<React.PropsWithChildren<LoadingButtonProps>> = ({
   children,
   loading,
   ...buttonProps
@@ -15,7 +15,7 @@ export const LoadingButton: React.FC<LoadingButtonProps> = ({
       {children}
       {loading && (
         <Spinner
-          size="1rem"
+          size={16}
           color="currentColor"
           sx={{ marginLeft: "1rem", marginRight: "-0.75rem" }}
         />

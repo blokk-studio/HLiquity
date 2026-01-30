@@ -33,7 +33,7 @@ type TroveEditorProps = {
 
 const select = ({ price }: LiquityStoreState) => ({ price });
 
-export const TroveEditor: React.FC<TroveEditorProps> = ({
+export const TroveEditor: React.FC<React.PropsWithChildren<TroveEditorProps>> = ({
   children,
   original,
   edited,

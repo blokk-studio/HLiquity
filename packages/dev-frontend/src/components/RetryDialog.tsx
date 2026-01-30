@@ -11,7 +11,7 @@ type RetryDialogProps = {
   onRetry: () => void;
 };
 
-export const RetryDialog: React.FC<RetryDialogProps> = ({
+export const RetryDialog: React.FC<React.PropsWithChildren<RetryDialogProps>> = ({
   title,
   cancelLabel,
   onCancel,

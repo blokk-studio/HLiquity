@@ -61,7 +61,7 @@ interface HederaDappConnectorLiquityProviderProps {
   chain: HederaChain;
   constants: Constants;
 }
-const HederaDappConnectorLiquityProvider: React.FC<HederaDappConnectorLiquityProviderProps> = ({
+const HederaDappConnectorLiquityProvider: React.FC<React.PropsWithChildren<HederaDappConnectorLiquityProviderProps>> = ({
   children,
   deployment,
   chain,
@@ -113,7 +113,7 @@ interface EthersLiquityProviderProps {
   constants: Constants;
 }
 
-const EthersLiquityProvider: React.FC<EthersLiquityProviderProps> = ({
+const EthersLiquityProvider: React.FC<React.PropsWithChildren<EthersLiquityProviderProps>> = ({
   children,
   provider,
   signer,
@@ -158,7 +158,7 @@ export const LiquityConsumer = getConsumer(LiquityContext, {
 });
 export const LiquityLoader = getLoader(LiquityContext);
 
-export const WagmiLoader: React.FC<{ loader: React.ReactNode }> = ({ loader, children }) => {
+export const WagmiLoader: React.FC<React.PropsWithChildren<{ loader: React.ReactNode }>> = ({ loader, children }) => {
   const wagmiProvider = useProvider<FallbackProvider>();
   const signer = useSigner();
   const account = useAccount();
@@ -170,7 +170,7 @@ export const WagmiLoader: React.FC<{ loader: React.ReactNode }> = ({ loader, chi
   return <>{children}</>;
 };
 
-export const LiquityProvider: React.FC<LiquityProviderProps> = ({
+export const LiquityProvider: React.FC<React.PropsWithChildren<LiquityProviderProps>> = ({
   children,
   unsupportedNetworkFallback
 }) => {

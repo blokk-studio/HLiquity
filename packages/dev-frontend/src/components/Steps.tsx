@@ -20,7 +20,7 @@ export interface ExtendedStep extends Step {
 
 const getStepIconElement = (step: Step, stepNumber: number) => {
   if (step.status === "pending") {
-    return <Spinner size="1.5rem" color="currentColor" />;
+    return <Spinner size={24} color="currentColor" />;
   }
 
   if (step.status === "success") {

@@ -22,7 +22,7 @@ type ModalProps = {
   style?: React.CSSProperties;
 };
 
-export const ReactModal: React.FC<ModalProps> = ({ children, onDismiss, style }) => {
+export const ReactModal: React.FC<React.PropsWithChildren<ModalProps>> = ({ children, onDismiss, style }) => {
   const handleDismiss = () => onDismiss();
 
   return (

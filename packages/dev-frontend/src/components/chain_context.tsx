@@ -1,4 +1,4 @@
-import { createContext, useContext, useState } from "react";
+import React, { createContext, useContext, useState } from "react";
 import { HederaChain } from "../configuration/chains";
 import { chainsWithDeployment } from "../hooks/chains";
 import { Select, ThemeUIStyleObject } from "theme-ui";
@@ -66,7 +66,7 @@ const getSelectedChainIdCookieValue = (cookieString: typeof document.cookie) => 
   return chainId;
 };
 
-export const SelectedChainProvider: React.FC = ({ children }) => {
+export const SelectedChainProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
   const selectedChainIdCookieValue = getSelectedChainIdCookieValue(document.cookie);
   const initiallySelectedChain =
     chainsWithDeployment.find(chain => chain.id === selectedChainIdCookieValue) ??

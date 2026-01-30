@@ -79,7 +79,7 @@ const UnsupportedNetworkFallback: React.FC<{ availableNetworks: Chain[] }> = ({
   );
 };
 
-const DefaultWagmiClientProvider: React.FC = ({ children }) => {
+const DefaultWagmiClientProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
   const selectedChain = useSelectedChain();
   const hederaChains = useHederaChains();
   const { walletConnectProjectId } = useConfiguration();

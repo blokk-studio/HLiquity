@@ -11,7 +11,7 @@ type TroveActionProps = {
   borrowingFeeDecayToleranceMinutes: number;
 } & LoadingButtonProps;
 
-export const TroveAction: React.FC<TroveActionProps> = ({
+export const TroveAction: React.FC<React.PropsWithChildren<TroveActionProps>> = ({
   children,
   transactionId,
   change,

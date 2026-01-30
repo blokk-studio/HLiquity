@@ -10,7 +10,7 @@ type RowProps = SxProp & {
   infoIcon?: React.ReactNode;
 };
 
-export const Row: React.FC<RowProps> = ({ sx, label, labelId, labelFor, children, infoIcon }) => {
+export const Row: React.FC<React.PropsWithChildren<RowProps>> = ({ sx, label, labelId, labelFor, children, infoIcon }) => {
   return (
     <Flex sx={{ alignItems: "stretch", position: "relative", width: "100%", ...sx }}>
       <Label
@@ -73,7 +73,7 @@ type StaticAmountsProps = {
   onClick?: () => void;
 };
 
-export const StaticAmounts: React.FC<StaticAmountsProps & SxProp> = ({
+export const StaticAmounts: React.FC<React.PropsWithChildren<StaticAmountsProps & SxProp>> = ({
   sx,
   inputId,
   labelledBy,
@@ -161,7 +161,7 @@ const editableStyle: ThemeUICSSProperties = {
 
 type StaticRowProps = RowProps & StaticAmountsProps;
 
-export const StaticRow: React.FC<StaticRowProps> = ({
+export const StaticRow: React.FC<React.PropsWithChildren<StaticRowProps>> = ({
   label,
   labelId,
   labelFor,
@@ -207,7 +207,7 @@ export const DisabledEditableAmounts: React.FC<StaticAmountsProps & SxProp> = ({
   </StaticAmounts>
 );
 
-export const DisabledEditableRow: React.FC<DisabledEditableRowProps> = ({
+export const DisabledEditableRow: React.FC<React.PropsWithChildren<DisabledEditableRowProps>> = ({
   inputId,
   label,
   amount,
@@ -233,7 +233,7 @@ type EditableRowProps = DisabledEditableRowProps & {
   maxedOut?: boolean;
 };
 
-export const EditableRow: React.FC<EditableRowProps> = ({
+export const EditableRow: React.FC<React.PropsWithChildren<EditableRowProps>> = ({
   label,
   inputId,
   unit,

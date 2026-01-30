@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import { LiquityStoreState, HLQTStake } from "@liquity/lib-base";
 import { LiquityStoreUpdate, useLiquityReducer } from "@liquity/lib-react";
@@ -71,7 +71,7 @@ const reduce = (
   return state;
 };
 
-export const StakingViewProvider: React.FC = ({ children }) => {
+export const StakingViewProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
   const stakingTransactionState = useMyTransactionState("stake");
   const [{ adjusting, changePending, hlqtStake }, dispatch] = useLiquityReducer(reduce, init);
   const [viewState, setViewState] = useState<StakingView>("NONE");

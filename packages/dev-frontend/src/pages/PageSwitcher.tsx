@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { AddressZero } from "@ethersproject/constants";
 
 import { LiquityStoreState } from "@liquity/lib-base";
@@ -13,7 +13,7 @@ import { AssociateAsFrontendOwner } from "./AssociateAsFrontendOwner";
 
 const selectFrontend = ({ frontend }: LiquityStoreState) => frontend;
 
-export const PageSwitcher: React.FC = ({ children }) => {
+export const PageSwitcher: React.FC<React.PropsWithChildren> = ({ children }) => {
   const {
     account,
     liquity: {

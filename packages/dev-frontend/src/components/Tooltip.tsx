@@ -11,7 +11,7 @@ export type TooltipProps = Pick<TippyProps, "placement"> & {
 
 export type LearnMoreLinkProps = Pick<TooltipProps, "link">;
 
-export const LearnMoreLink: React.FC<LearnMoreLinkProps> = ({ link }) => {
+export const LearnMoreLink: React.FC<React.PropsWithChildren<LearnMoreLinkProps>> = ({ link }) => {
   return (
     <Link href={link} target="_blank">
       Learn more <Icon size="xs" name="external-link-alt" />
@@ -19,7 +19,7 @@ export const LearnMoreLink: React.FC<LearnMoreLinkProps> = ({ link }) => {
   );
 };
 
-export const Tooltip: React.FC<TooltipProps> = ({ children, message, placement = "top", link }) => {
+export const Tooltip: React.FC<React.PropsWithChildren<TooltipProps>> = ({ children, message, placement = "top", link }) => {
   return (
     <Tippy
       interactive={true}
