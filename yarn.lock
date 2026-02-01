@@ -2086,7 +2086,7 @@ __metadata:
     node-fetch: 3.3.2
     npm-run-all2: 6.2.6
     openapi-fetch: ^0.14.0
-    openapi-typescript: ^7.9.1
+    openapi-typescript: 7.9.1
     react: 17.0.2
     react-circular-progressbar: 2.1.0
     react-copy-to-clipboard: 5.1.0
@@ -15706,7 +15706,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"openapi-typescript@npm:^7.9.1":
+"openapi-typescript@npm:7.9.1":
   version: 7.9.1
   resolution: "openapi-typescript@npm:7.9.1"
   dependencies:
