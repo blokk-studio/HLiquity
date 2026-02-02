@@ -2148,7 +2148,7 @@ __metadata:
   resolution: "@liquity/lib-ethers@workspace:packages/lib-ethers"
   dependencies:
     "@microsoft/api-extractor": 7.52.13
-    "@nomicfoundation/hardhat-network-helpers": 1.1.0
+    "@nomicfoundation/hardhat-network-helpers": 1.1.2
     "@nomiclabs/hardhat-ethers": 2.2.3
     "@types/chai": 5.2.2
     "@types/chai-as-promised": 8.0.2
@@ -2775,14 +2775,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@nomicfoundation/hardhat-network-helpers@npm:1.1.0":
-  version: 1.1.0
-  resolution: "@nomicfoundation/hardhat-network-helpers@npm:1.1.0"
+"@nomicfoundation/hardhat-network-helpers@npm:1.1.2":
+  version: 1.1.2
+  resolution: "@nomicfoundation/hardhat-network-helpers@npm:1.1.2"
   dependencies:
     ethereumjs-util: ^7.1.4
   peerDependencies:
     hardhat: ^2.26.0
-  checksum: e900aa716504b258951ad9e3e44ad0591a3d70097c56f065c49b192dabad4ab2b00a8b9f6cb4a30600fe6569295fdf92d4429ddf4bf96d01d5eb3fbe600376b7
+  checksum: 9b0f3152ebd7ec0b813372f3e837bc249f54e86b76a96bedb78f6142fb1ccc21e3f877a0003542d847a0a8a0aa4243f682bdc1dfbcd964b16e9d2c6f04baec3c
   languageName: node
   linkType: hard
 
