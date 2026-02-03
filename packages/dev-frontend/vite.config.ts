@@ -37,10 +37,39 @@ const getMirrorNodeTypegenPlugin = (options?: {
   };
 };
 
+/**
+ * Vite plugin to add security headers to prevent clickjacking attacks
+ * Adds X-Frame-Options and Content-Security-Policy headers
+ */
+const securityHeadersPlugin = (): Plugin => {
+  return {
+    name: "security-headers",
+    configureServer(server) {
+      server.middlewares.use((req, res, next) => {
+        // Prevent clickjacking on iframe
+        res.setHeader(
+          "Content-Security-Policy",
+          "frame-ancestors 'none'"
+        );
+
+        res.setHeader("X-Content-Type-Options", "nosniff");
+        res.setHeader("Referrer-Policy", "strict-origin-when-cross-origin");
+
+        next();
+      });
+    }
+  };
+};
+
 // https://vitejs.dev/config/
 export default defineConfig({
   base: "./",
-  plugins: [nodePolyfills(), react(), getMirrorNodeTypegenPlugin()],
+  plugins: [
+    nodePolyfills(),
+    react(),
+    getMirrorNodeTypegenPlugin(),
+    securityHeadersPlugin()
+  ],
   define: { "process.env": {} }, // Coinbase SDK wants this
   optimizeDeps: {
     include: [
