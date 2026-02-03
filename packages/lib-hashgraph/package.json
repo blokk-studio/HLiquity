@@ -4,19 +4,20 @@
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "7.18.0",
     "@typescript-eslint/parser": "7.18.0",
-    "eslint": "9.16.0",
+    "eslint": "9.36.0",
     "prettier": "3.4.2",
     "prettier-plugin-organize-imports": "4.1.0",
     "typescript": "5.4.5"
   },
   "dependencies": {
     "@hashgraph/hedera-wallet-connect": "^1.4.2",
-    "@hashgraph/sdk": "2.41.0",
+    "@hashgraph/sdk": "2.72.0",
     "@liquity/lib-base": "workspace:^",
     "@liquity/mirror-node": "workspace:^",
+    "@walletconnect/qrcode-modal": "^1.8.0",
+    "@walletconnect/web3wallet": "^1.16.1",
     "bignumber.js": "9.1.2",
     "emittery": "^1.0.3",
-    "hashconnect": "^3.0.13",
     "web3": "^4.8.0"
   },
   "exports": {

@@ -17,7 +17,6 @@ import { useHederaChains } from "./hooks/chains";
 import { AuthenticationProvider, LoginForm } from "./authentication";
 import { useConfiguration } from "./configuration";
 import "./App.scss";
-import { HashConnectProvider, HashConnectLoader } from "./components/HashConnectProvider";
 import { LiquityStoreProvider } from "./components/LiquityStoreProvider";
 import { SelectedChainProvider, useSelectedChain } from "./components/chain_context";
 import { MultiWalletProvider } from "./multi_wallet";
@@ -28,6 +27,7 @@ import {
   HederaDappConnectorContextLoader,
   HederaDappConnectorProvider
 } from "./components/HederaDappConnectorProvider";
+import { MirrorNodeClientProvider } from "./components/MirrorNodeClientContext";
 
 const isDemoMode = import.meta.env.VITE_APP_DEMO_MODE === "true";
 
@@ -177,23 +177,11 @@ const App = () => {
             <ConnectKitProvider options={{ hideBalance: true }}>{children}</ConnectKitProvider>
           ),
           children => (
-            <HashConnectProvider walletConnectProjectId={walletConnectProjectId}>
-              {children}
-            </HashConnectProvider>
-          ),
-          children => (
             <HederaDappConnectorProvider walletConnectProjectId={walletConnectProjectId}>
               {children}
             </HederaDappConnectorProvider>
           ),
           children => <TransactionProvider>{children}</TransactionProvider>,
-          children => (
-            <HashConnectLoader
-              loader={<AppLoader content={<Heading>Setting up HashPack</Heading>} />}
-            >
-              {children}
-            </HashConnectLoader>
-          ),
           children => (
             <HederaDappConnectorContextLoader
               loader={<AppLoader content={<Heading>Setting up Hedera wallets</Heading>} />}
@@ -202,6 +190,7 @@ const App = () => {
             </HederaDappConnectorContextLoader>
           ),
           children => <MultiWalletProvider>{children}</MultiWalletProvider>,
+          children => <MirrorNodeClientProvider>{children}</MirrorNodeClientProvider>,
           children => (
             <LiquityProvider
               unsupportedNetworkFallback={<UnsupportedNetworkFallback availableNetworks={chains} />}

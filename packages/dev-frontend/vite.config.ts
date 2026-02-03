@@ -1,15 +1,75 @@
 /// <reference types="vitest" />
 
-import { defineConfig } from "vite";
+import { defineConfig, Plugin, UserConfig } from "vite";
 import react from "@vitejs/plugin-react-swc";
-import { NodeModulesPolyfillPlugin } from "@esbuild-plugins/node-modules-polyfill";
-import RollupPluginPolyfillNode from "rollup-plugin-polyfill-node";
 import { nodePolyfills } from "vite-plugin-node-polyfills";
+import openapiTypescript, { astToString } from "openapi-typescript";
+import { writeFile, mkdir } from "fs/promises";
+import { cwd } from "process";
+import { join } from "path";
+import { existsSync } from "fs";
+
+const getMirrorNodeTypegenPlugin = (options?: {
+  /**
+   * the folder to write the types to
+   *
+   * @default '.mirror-node''
+   */
+  outDir?: string;
+}): Plugin => {
+  return {
+    name: "mirrorNodeTypegen",
+    async buildStart() {
+      const indexDtsFileAst = await openapiTypescript(
+        "https://mainnet.mirrornode.hedera.com/api/v1/docs/openapi.yml"
+      );
+      const indexDtsFileString = astToString(indexDtsFileAst);
+
+      const outDir = options?.outDir ?? ".mirror-node";
+      const outDirFilePath = join(cwd(), outDir);
+      if (!existsSync(outDirFilePath)) {
+        await mkdir(outDirFilePath);
+      }
+
+      const indexDtsFilePath = join(outDirFilePath, "index.d.ts");
+      await writeFile(indexDtsFilePath, indexDtsFileString);
+    }
+  };
+};
+
+/**
+ * Vite plugin to add security headers to prevent clickjacking attacks
+ * Adds X-Frame-Options and Content-Security-Policy headers
+ */
+const securityHeadersPlugin = (): Plugin => {
+  return {
+    name: "security-headers",
+    configureServer(server) {
+      server.middlewares.use((req, res, next) => {
+        // Prevent clickjacking on iframe
+        res.setHeader(
+          "Content-Security-Policy",
+          "frame-ancestors 'none'"
+        );
+
+        res.setHeader("X-Content-Type-Options", "nosniff");
+        res.setHeader("Referrer-Policy", "strict-origin-when-cross-origin");
+
+        next();
+      });
+    }
+  };
+};
 
 // https://vitejs.dev/config/
 export default defineConfig({
   base: "./",
-  plugins: [nodePolyfills(), react()],
+  plugins: [
+    nodePolyfills(),
+    react(),
+    getMirrorNodeTypegenPlugin(),
+    securityHeadersPlugin()
+  ],
   define: { "process.env": {} }, // Coinbase SDK wants this
   optimizeDeps: {
     include: [

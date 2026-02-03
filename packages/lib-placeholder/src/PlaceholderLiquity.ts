@@ -495,14 +495,7 @@ export class PlaceholderLiquity
     blockTag?: string | number,
   ): Promise<[baseState: LiquityStoreBaseState, extraState: PlaceholderLiquityStoreState]> {
     const price = await this.getPrice({ blockTag })
-    console.debug(
-      price.prettify(2),
-      this.constants.HCHF_MINIMUM_DEBT.div(price)
-        .mul(this.constants.MINIMUM_COLLATERAL_RATIO.add(0.1))
-        .add(this.constants.HCHF_LIQUIDATION_RESERVE)
-        .prettify(2),
-      Object.entries(this.constants).map(([key, decimal]) => [key, decimal.prettify(2)]),
-    )
+
     const {
       blockTimestamp,
       calculateRemainingHLQT,
@@ -548,8 +541,8 @@ export class PlaceholderLiquity
       // as if user opened 1 trove
       hchfBalance: Decimal.from(this.constants.HCHF_MINIMUM_DEBT.mul(1)),
       hlqtBalance: Decimal.from(100),
-      hchfTokenAddress: '0x',
-      hlqtTokenAddress: '0x',
+      hchfTokenAddress: this.getHCHFTokenAddress({ blockTag }),
+      hlqtTokenAddress: this.getHLQTTokenAddress({ blockTag }),
       uniTokenBalance: Decimal.ZERO,
       uniTokenAllowance: Decimal.ZERO,
       liquidityMiningStake: Decimal.ZERO,
