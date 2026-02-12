@@ -8683,11 +8683,12 @@ __metadata:
   linkType: hard
 
 "connectkit@npm:^1.3.0":
-  version: 1.3.0
-  resolution: "connectkit@npm:1.3.0"
+  version: 1.9.1
+  resolution: "connectkit@npm:1.9.1"
   dependencies:
     buffer: ^6.0.3
     detect-browser: ^5.3.0
+    family: ^0.1.2
     framer-motion: ^6.3.11
     qrcode: ^1.5.0
     react-transition-state: ^1.1.4
@@ -8695,11 +8696,12 @@ __metadata:
     resize-observer-polyfill: ^1.5.1
     styled-components: ^5.3.5
   peerDependencies:
-    ethers: ">=5.5.0 <6"
+    "@tanstack/react-query": ">=5.0.0"
     react: 17.x || 18.x
     react-dom: 17.x || 18.x
-    wagmi: 0.12.x
-  checksum: b54fc6b7267be17d3fff69cb51f38d8537ca40d4611fb2685bb41501cac05b77e91cc35c1b5542958aae2d6d0bc1f987210ca3951b7e55e88da7b417f90195a0
+    viem: 2.x
+    wagmi: 2.x
+  checksum: f8dd498535e71445f0e307645857c847c12728ec1d4dda8bd3fa455128bd49af4574baca9c75e24700fb4ae3c9101ac718bc4e65d19a78d971da551945ad311e
   languageName: node
   linkType: hard
 
@@ -10940,6 +10942,27 @@ __metadata:
   version: 0.1.8
   resolution: "eyes@npm:0.1.8"
   checksum: c31703a92bf36ba75ee8d379ee7985c24ee6149f3a6175f44cec7a05b178c38bce9836d3ca48c9acb0329a960ac2c4b2ead4e60cdd4fe6e8c92cad7cd6913687
+  languageName: node
+  linkType: hard
+
+"family@npm:^0.1.2":
+  version: 0.1.6
+  resolution: "family@npm:0.1.6"
+  peerDependencies:
+    react: 17.x || 18.x || 19.x
+    react-dom: 17.x || 18.x || 19.x
+    viem: 2.x
+    wagmi: 2.x
+  peerDependenciesMeta:
+    react:
+      optional: true
+    react-dom:
+      optional: true
+    viem:
+      optional: true
+    wagmi:
+      optional: true
+  checksum: be9e79a93444797d8dcdf6fe0d5e95a361fdda7a0dc387f7fae13b78efad7944a8de77766fe281131446e9f53ead2df61c6f89653989ef56786b7a68826491c5
   languageName: node
   linkType: hard
 
