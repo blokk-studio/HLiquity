@@ -1,6 +1,7 @@
 /** @jsxImportSource theme-ui */
 import React, { useEffect, useMemo, useState } from "react";
 import {
+  Badge,
   Box,
   Button,
   Card,
@@ -26,6 +27,14 @@ import { useSelectedChain } from "../components/chain_context";
 import { useLocation } from "react-router";
 import { Icon } from "../components/Icon";
 import { Link as RouterLink } from "../components/Link";
+import { extractRedemptionFeeFromLogs } from "../utils/redemption-page/extractRedemptionFee.ts";
+import {
+  extractAffectedTrovesFromLogs,
+  enrichAffectedTroves,
+  AffectedTroveAfter,
+  AffectedTrove
+} from "../utils/redemption-page/extractAffectedTroves.ts";
+import { RedemptionDetails } from "../components/RedemptionPage/RedemptionDetails";
 
 /** hard-coded version of:
  * const { keccak256 } = require("js-sha3");
@@ -42,6 +51,10 @@ interface Redemption {
   accountIdString: string;
   amountOfHchf: Decimal;
   amountOfHbar: Decimal;
+  fee: Decimal;
+  redemptionFee: Decimal;
+  effectivePrice: Decimal;
+  affectedTrovesAfter: AffectedTroveAfter[];
 }
 
 const shortDateTimeFormat = new Intl.DateTimeFormat(navigator.language, {
@@ -72,6 +85,52 @@ const getTimestampFromHref = (href: string) => {
 
 export const RedemptionsPage: React.FC = () => {
   const [redemptions, setRedemptions] = useState<Redemption[] | Error | null>(null);
+  const [expandedRows, setExpandedRows] = useState<Set<string>>(new Set());
+
+  // lazily fill trove details, keyed by transactionId
+  const [enrichedTroves, setEnrichedTroves] = useState<Map<string, AffectedTrove[] | "loading">>(
+    new Map()
+  );
+
+  const toggleRow = (transactionId: string) => {
+    setExpandedRows(prev => {
+      const next = new Set(prev);
+      if (next.has(transactionId)) {
+        next.delete(transactionId);
+      } else {
+        next.add(transactionId);
+
+        if (
+          !enrichedTroves.has(transactionId) &&
+          deployment &&
+          redemptions &&
+          !(redemptions instanceof Error)
+        ) {
+          const redemption = redemptions.find(r => r.transactionId === transactionId);
+          if (redemption && redemption.affectedTrovesAfter.length > 0) {
+            setEnrichedTroves(prev => new Map(prev).set(transactionId, "loading"));
+            enrichAffectedTroves(
+              mirrorNodeClient,
+              redemption.timestamp,
+              deployment.addresses.troveManager,
+              deployment.addresses.borrowerOperations,
+              redemption.affectedTrovesAfter
+            ).then(enriched => {
+              setEnrichedTroves(prev => new Map(prev).set(transactionId, enriched));
+            }).catch(() => {
+              // Remove the "loading" entry so the user can retry by collapsing/expanding
+              setEnrichedTroves(prev => {
+                const next = new Map(prev);
+                next.delete(transactionId);
+                return next;
+              });
+            });
+          }
+        }
+      }
+      return next;
+    });
+  };
 
   const mirrorNodeClient = useMirrorNodeClient();
   const deployment = useDeployment();
@@ -110,6 +169,8 @@ export const RedemptionsPage: React.FC = () => {
     const effect = async () => {
       setRedemptions(null);
       setPagination({});
+      setEnrichedTroves(new Map());
+      setExpandedRows(new Set());
 
       if (!deployment || !hchfTokenIdString) {
         setRedemptions(
@@ -138,7 +199,7 @@ export const RedemptionsPage: React.FC = () => {
         setRedemptions(
           new Error(
             resultsResponse.error._status?.messages?.[0].message ??
-              "Something went wrong unexpectedly."
+            "Something went wrong unexpectedly."
           )
         );
       }
@@ -243,6 +304,26 @@ export const RedemptionsPage: React.FC = () => {
             return;
           }
 
+          const firstSuccessfulTransaction = idTransactionsResponse.data.transactions.find(
+            transaction => transaction.result === "SUCCESS"
+          );
+          const chargedFee = firstSuccessfulTransaction?.charged_tx_fee;
+          const feeInHbar = chargedFee
+            ? Decimal.fromBigNumberStringWithPrecision(chargedFee.toString(), 8)
+            : Decimal.ZERO;
+
+          const redemptionFeeInHbar = await extractRedemptionFeeFromLogs(
+            mirrorNodeClient,
+            timestamp,
+            deployment.addresses.troveManager
+          );
+
+          const affectedTrovesAfter = await extractAffectedTrovesFromLogs(
+            mirrorNodeClient,
+            timestamp,
+            deployment.addresses.troveManager
+          );
+
           const amountOfHchf = Decimal.fromBigNumberStringWithPrecision(
             Math.abs(hchfTransfer.amount).toString(),
             8
@@ -252,12 +333,21 @@ export const RedemptionsPage: React.FC = () => {
             8
           );
 
+          // Calculate effective exchange rate (HBAR per HCHF)
+          const effectivePrice = amountOfHchf.isZero
+            ? Decimal.ZERO
+            : amountOfHbar.div(amountOfHchf);
+
           return {
             timestamp,
             transactionId,
             accountIdString,
             amountOfHchf,
-            amountOfHbar
+            amountOfHbar,
+            fee: feeInHbar,
+            redemptionFee: redemptionFeeInHbar,
+            effectivePrice,
+            affectedTrovesAfter
           };
         })
       );
@@ -466,101 +556,126 @@ export const RedemptionsPage: React.FC = () => {
             }}
           >
             <thead>
-              <tr>
-                {/* account */}
-                <th
-                  sx={{
-                    textAlign: "start",
-                    paddingBottom: "0.5rem",
-                    verticalAlign: "top",
-                    p: 2,
-                    pl: 3
-                  }}
-                >
-                  <Tooltip message={<Text>The user who redeemed the HCHF for HBAR.</Text>}>
-                    Account
-                  </Tooltip>
-                </th>
+            <tr>
+              {/* account */}
+              <th
+                sx={{
+                  textAlign: "start",
+                  paddingBottom: "0.5rem",
+                  verticalAlign: "top",
+                  p: 2,
+                  pl: 3
+                }}
+              >
+                <Tooltip message={<Text>The user who redeemed the HCHF for HBAR.</Text>}>
+                  Account
+                </Tooltip>
+              </th>
 
-                {/* hchf */}
-                <th
-                  sx={{
-                    textAlign: "start",
-                    paddingBottom: "0.5rem",
-                    verticalAlign: "top",
-                    p: 2
-                  }}
-                >
-                  <Tooltip message={<Text>The amount of HCHF the user paid.</Text>}>
-                    Redeemed
-                    <Box sx={{ fontSize: [0, 1], fontWeight: "body", opacity: 0.5 }}>HCHF</Box>
-                  </Tooltip>
-                </th>
+              {/* hchf */}
+              <th
+                sx={{
+                  textAlign: "start",
+                  paddingBottom: "0.5rem",
+                  verticalAlign: "top",
+                  p: 2
+                }}
+              >
+                <Tooltip message={<Text>The amount of HCHF the user paid.</Text>}>
+                  Redeemed
+                  <Box sx={{ fontSize: [0, 1], fontWeight: "body", opacity: 0.5 }}>HCHF</Box>
+                </Tooltip>
+              </th>
 
-                {/* hbar */}
-                <th
-                  sx={{
-                    textAlign: "start",
-                    paddingBottom: "0.5rem",
-                    verticalAlign: "top",
-                    p: 2
-                  }}
-                >
-                  <Tooltip message={<Text>The amount of HBAR user received.</Text>}>
-                    Received
-                    <Box sx={{ fontSize: [0, 1], fontWeight: "body", opacity: 0.5 }}>HBAR</Box>
-                  </Tooltip>
-                </th>
+              {/* hbar */}
+              <th
+                sx={{
+                  textAlign: "start",
+                  paddingBottom: "0.5rem",
+                  verticalAlign: "top",
+                  p: 2
+                }}
+              >
+                <Tooltip message={<Text>The amount of HBAR user received.</Text>}>
+                  Received
+                  <Box sx={{ fontSize: [0, 1], fontWeight: "body", opacity: 0.5 }}>HBAR</Box>
+                </Tooltip>
+              </th>
 
-                {/* date */}
-                <th
-                  sx={{
-                    textAlign: "start",
-                    paddingBottom: "0.5rem",
-                    verticalAlign: "top",
-                    p: 2
-                  }}
-                >
-                  <Tooltip message={<Text>The date and time of the transaction.</Text>}>
-                    Date
-                  </Tooltip>
-                </th>
+              {/* redemption fee */}
+              <th
+                sx={{
+                  textAlign: "start",
+                  paddingBottom: "0.5rem",
+                  verticalAlign: "top",
+                  p: 2
+                }}
+              >
+                <Tooltip
+                  message={<Text>The protocol fee charged to compensate Trove owners for redemption risk.</Text>}>
+                  Redemption Fee
+                  <Box sx={{ fontSize: [0, 1], fontWeight: "body", opacity: 0.5 }}>HBAR</Box>
+                </Tooltip>
+              </th>
 
-                {/* links */}
-                <th
-                  sx={{
-                    textAlign: "end",
-                    paddingBottom: "0.5rem",
-                    verticalAlign: "top",
-                    p: 2,
-                    pr: 3
-                  }}
-                >
-                  Link
-                </th>
-              </tr>
+              {/* network fee */}
+              <th
+                sx={{
+                  textAlign: "start",
+                  paddingBottom: "0.5rem",
+                  verticalAlign: "top",
+                  p: 2
+                }}
+              >
+                <Tooltip message={<Text>The network fee charged for this transaction.</Text>}>
+                  Network Fee
+                  <Box sx={{ fontSize: [0, 1], fontWeight: "body", opacity: 0.5 }}>HBAR</Box>
+                </Tooltip>
+              </th>
+
+              {/* date */}
+              <th
+                sx={{
+                  textAlign: "start",
+                  paddingBottom: "0.5rem",
+                  verticalAlign: "top",
+                  p: 2
+                }}
+              >
+                <Tooltip message={<Text>The date and time of the transaction.</Text>}>
+                  Date
+                </Tooltip>
+              </th>
+
+              {/* links */}
+              <th
+                sx={{
+                  textAlign: "end",
+                  paddingBottom: "0.5rem",
+                  verticalAlign: "top",
+                  p: 2,
+                  pr: 3
+                }}
+              >
+                Link
+              </th>
+            </tr>
             </thead>
 
             <tbody>
-              {redemptions.map(redemption => {
-                const date = new Date(parseFloat(redemption.timestamp) * 1000);
-                const shortDate = shortDateTimeFormat.format(date);
-                const longDate = fullDateTimeFormat.format(date);
-                const isOwnedByUser = redemption.accountIdString === accountIdString;
+            {redemptions.map(redemption => {
+              const date = new Date(parseFloat(redemption.timestamp) * 1000);
+              const shortDate = shortDateTimeFormat.format(date);
+              const longDate = fullDateTimeFormat.format(date);
+              const isOwnedByUser = redemption.accountIdString === accountIdString;
+              const isExpanded = expandedRows.has(redemption.transactionId);
+              const hasAffectedTroves = redemption.affectedTrovesAfter.length > 0;
+              const enriched = enrichedTroves.get(redemption.transactionId);
+              const affectedTroves = enriched === "loading" ? null : enriched ?? null;
 
-                return (
-                  <tr
-                    key={redemption.transactionId}
-                    sx={
-                      isOwnedByUser
-                        ? {
-                            backgroundColor: "primary",
-                            color: "secondary",
-                            fontWeight: 500
-                          }
-                        : undefined
-                    }
-                  >
+              return (
+                <React.Fragment key={redemption.transactionId}>
+                  <tr>
                     {/* account */}
                     <td
                       sx={{
@@ -568,8 +683,38 @@ export const RedemptionsPage: React.FC = () => {
                         pl: 3
                       }}
                     >
-                      {redemption.accountIdString}
-                      {isOwnedByUser && <> (you)</>}
+                      <Flex sx={{ alignItems: "center", gap: 2 }}>
+                        {hasAffectedTroves ? (
+                          <Button
+                            variant="icon"
+                            onClick={() => toggleRow(redemption.transactionId)}
+                            sx={{ minWidth: "24px", height: "24px", p: 0 }}
+                          >
+                            <Icon
+                              name={isExpanded ? "chevron-down" : "chevron-right"}
+                              size="sm"
+                            />
+                          </Button>
+                        ) : (
+                          <Box sx={{ minWidth: "40px", height: "24px" }} />
+                        )}
+                        <Flex sx={{ alignItems: "center", gap: 2 }}>
+                          <Text>{redemption.accountIdString}</Text>
+                          {isOwnedByUser && (
+                            <Badge
+                              sx={{
+                                px: 2,
+                                py: 1,
+                                borderRadius: 4,
+                                bg: "primary",
+                                color: "background"
+                              }}
+                            >
+                              You
+                            </Badge>
+                          )}
+                        </Flex>
+                      </Flex>
                     </td>
 
                     {/* hchf */}
@@ -594,6 +739,28 @@ export const RedemptionsPage: React.FC = () => {
                       </Tooltip>
                     </td>
 
+                    {/* redemption fee */}
+                    <td
+                      sx={{
+                        p: 2
+                      }}
+                    >
+                      <Tooltip message={<Text>{redemption.redemptionFee.toString()}</Text>}>
+                        {redemption.redemptionFee.shorten()}
+                      </Tooltip>
+                    </td>
+
+                    {/* network fee */}
+                    <td
+                      sx={{
+                        p: 2
+                      }}
+                    >
+                      <Tooltip message={<Text>{redemption.fee.toString()}</Text>}>
+                        {redemption.fee.shorten()}
+                      </Tooltip>
+                    </td>
+
                     {/* date */}
                     <td
                       sx={{
@@ -603,7 +770,7 @@ export const RedemptionsPage: React.FC = () => {
                       <Tooltip message={<Text>{longDate}</Text>}>{shortDate}</Tooltip>
                     </td>
 
-                    {/* date */}
+                    {/* link */}
                     <td
                       sx={{
                         display: "grid",
@@ -629,8 +796,18 @@ export const RedemptionsPage: React.FC = () => {
                       </Tooltip>
                     </td>
                   </tr>
-                );
-              })}
+
+                  {/* expandable info for affected troves */}
+                  {isExpanded && hasAffectedTroves && (
+                    <RedemptionDetails
+                      transactionId={redemption.transactionId}
+                      troveCount={redemption.affectedTrovesAfter.length}
+                      affectedTroves={affectedTroves}
+                    />
+                  )}
+                </React.Fragment>
+              );
+            })}
             </tbody>
           </Box>
         )}
