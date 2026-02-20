@@ -30,6 +30,8 @@ import { Link as RouterLink } from "../components/Link";
 import { extractRedemptionFeeFromLogs } from "../utils/extractRedemptionFee";
 import {
   extractAffectedTrovesFromLogs,
+  enrichAffectedTroves,
+  AffectedTroveAfter,
   AffectedTrove
 } from "../utils/extractAffectedTroves";
 
@@ -51,7 +53,7 @@ interface Redemption {
   fee: Decimal;
   redemptionFee: Decimal;
   effectivePrice: Decimal; // HBAR per HCHF exchange rate
-  affectedTroves: AffectedTrove[];
+  affectedTrovesAfter: AffectedTroveAfter[];
 }
 
 const shortDateTimeFormat = new Intl.DateTimeFormat(navigator.language, {
@@ -83,6 +85,10 @@ const getTimestampFromHref = (href: string) => {
 export const RedemptionsPage: React.FC = () => {
   const [redemptions, setRedemptions] = useState<Redemption[] | Error | null>(null);
   const [expandedRows, setExpandedRows] = useState<Set<string>>(new Set());
+  // Lazily enriched trove details, keyed by transactionId
+  const [enrichedTroves, setEnrichedTroves] = useState<Map<string, AffectedTrove[] | "loading">>(
+    new Map()
+  );
 
   const toggleRow = (transactionId: string) => {
     setExpandedRows(prev => {
@@ -91,6 +97,34 @@ export const RedemptionsPage: React.FC = () => {
         next.delete(transactionId);
       } else {
         next.add(transactionId);
+
+        if (
+          !enrichedTroves.has(transactionId) &&
+          deployment &&
+          redemptions &&
+          !(redemptions instanceof Error)
+        ) {
+          const redemption = redemptions.find(r => r.transactionId === transactionId);
+          if (redemption && redemption.affectedTrovesAfter.length > 0) {
+            setEnrichedTroves(prev => new Map(prev).set(transactionId, "loading"));
+            enrichAffectedTroves(
+              mirrorNodeClient,
+              redemption.timestamp,
+              deployment.addresses.troveManager,
+              deployment.addresses.borrowerOperations,
+              redemption.affectedTrovesAfter
+            ).then(enriched => {
+              setEnrichedTroves(prev => new Map(prev).set(transactionId, enriched));
+            }).catch(() => {
+              // Remove the "loading" entry so the user can retry by collapsing/expanding
+              setEnrichedTroves(prev => {
+                const next = new Map(prev);
+                next.delete(transactionId);
+                return next;
+              });
+            });
+          }
+        }
       }
       return next;
     });
@@ -133,6 +167,8 @@ export const RedemptionsPage: React.FC = () => {
     const effect = async () => {
       setRedemptions(null);
       setPagination({});
+      setEnrichedTroves(new Map());
+      setExpandedRows(new Set());
 
       if (!deployment || !hchfTokenIdString) {
         setRedemptions(
@@ -280,7 +316,7 @@ export const RedemptionsPage: React.FC = () => {
             deployment.addresses.troveManager
           );
 
-          const affectedTroves = await extractAffectedTrovesFromLogs(
+          const affectedTrovesAfter = await extractAffectedTrovesFromLogs(
             mirrorNodeClient,
             timestamp,
             deployment.addresses.troveManager
@@ -309,19 +345,13 @@ export const RedemptionsPage: React.FC = () => {
             fee: feeInHbar,
             redemptionFee: redemptionFeeInHbar,
             effectivePrice,
-            affectedTroves
+            affectedTrovesAfter
           };
         })
       );
       const redemptions = redemptionOrUndefined.filter(
         (redemption): redemption is Redemption => !!redemption
       );
-
-      console.log("Redemptions with affected troves:", redemptions.map(r => ({
-        transactionId: r.transactionId,
-        affectedTrovesCount: r.affectedTroves.length,
-        affectedTroves: r.affectedTroves
-      })));
 
       // pagination
       let next: string | undefined = undefined;
@@ -638,14 +668,9 @@ export const RedemptionsPage: React.FC = () => {
               const longDate = fullDateTimeFormat.format(date);
               const isOwnedByUser = redemption.accountIdString === accountIdString;
               const isExpanded = expandedRows.has(redemption.transactionId);
-              const hasAffectedTroves = redemption.affectedTroves.length > 0;
-
-              console.log("Rendering redemption:", {
-                transactionId: redemption.transactionId,
-                hasAffectedTroves,
-                affectedTrovesCount: redemption.affectedTroves.length,
-                isExpanded
-              });
+              const hasAffectedTroves = redemption.affectedTrovesAfter.length > 0;
+              const enriched = enrichedTroves.get(redemption.transactionId);
+              const affectedTroves = enriched === "loading" ? null : enriched ?? null;
 
               return (
                 <React.Fragment key={redemption.transactionId}>
@@ -777,8 +802,13 @@ export const RedemptionsPage: React.FC = () => {
                       <td colSpan={8} sx={{ p: 0, backgroundColor: "muted" }}>
                         <Box sx={{ p: 4, pl: 4 }}>
                           <Heading as="h4" sx={{ fontSize: 2, mb: 3 }}>
-                            Affected Troves ({redemption.affectedTroves.length})
+                            Affected Troves ({redemption.affectedTrovesAfter.length})
                           </Heading>
+                          {!affectedTroves ? (
+                            <Box sx={{ display: "grid", placeContent: "center", my: 3 }}>
+                              <Spinner size={24} />
+                            </Box>
+                          ) : (
                           <Box
                             as="table"
                             sx={{
@@ -864,7 +894,7 @@ export const RedemptionsPage: React.FC = () => {
                             </tr>
                             </thead>
                             <tbody>
-                            {redemption.affectedTroves.map((trove, index) => {
+                            {affectedTroves.map((trove, index) => {
                               const troveAccountId = AccountId.fromEvmAddress(
                                 0,
                                 0,
@@ -1004,6 +1034,7 @@ export const RedemptionsPage: React.FC = () => {
                             })}
                             </tbody>
                           </Box>
+                          )}
                         </Box>
                       </td>
                     </tr>
