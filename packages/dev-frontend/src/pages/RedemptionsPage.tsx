@@ -546,12 +546,19 @@ export const RedemptionsPage: React.FC = () => {
           </Box>
         ) : (
           <Box
+            sx={{
+              overflowX: "auto",
+              overflowY: "hidden",
+              my: 4
+            }}
+          >
+          <Box
             as="table"
             sx={{
               width: "100%",
+              minWidth: "640px",
               textAlign: "start",
               lineHeight: 1.15,
-              my: 4,
               borderCollapse: "collapse"
             }}
           >
@@ -809,6 +816,7 @@ export const RedemptionsPage: React.FC = () => {
               );
             })}
             </tbody>
+          </Box>
           </Box>
         )}
       </Card>
