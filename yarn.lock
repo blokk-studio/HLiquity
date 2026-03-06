@@ -2307,7 +2307,7 @@ __metadata:
     node-fetch: 3.3.2
     npm-run-all2: 6.2.6
     openapi-fetch: ^0.14.0
-    openapi-typescript: ^7.9.1
+    openapi-typescript: 7.9.1
     react: 18.3.1
     react-circular-progressbar: 2.1.0
     react-copy-to-clipboard: 5.1.0
@@ -2352,9 +2352,9 @@ __metadata:
   resolution: "@liquity/lib-ethers@workspace:packages/lib-ethers"
   dependencies:
     "@microsoft/api-extractor": 7.52.13
-    "@nomicfoundation/hardhat-network-helpers": 1.1.0
+    "@nomicfoundation/hardhat-network-helpers": 1.1.2
     "@nomiclabs/hardhat-ethers": 2.2.3
-    "@types/chai": 5.2.2
+    "@types/chai": 5.2.3
     "@types/chai-as-promised": 8.0.2
     "@types/chai-spies": 1.0.6
     "@types/fs-extra": 11.0.4
@@ -2970,14 +2970,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@nomicfoundation/hardhat-network-helpers@npm:1.1.0":
-  version: 1.1.0
-  resolution: "@nomicfoundation/hardhat-network-helpers@npm:1.1.0"
+"@nomicfoundation/hardhat-network-helpers@npm:1.1.2":
+  version: 1.1.2
+  resolution: "@nomicfoundation/hardhat-network-helpers@npm:1.1.2"
   dependencies:
     ethereumjs-util: ^7.1.4
   peerDependencies:
     hardhat: ^2.26.0
-  checksum: e900aa716504b258951ad9e3e44ad0591a3d70097c56f065c49b192dabad4ab2b00a8b9f6cb4a30600fe6569295fdf92d4429ddf4bf96d01d5eb3fbe600376b7
+  checksum: 9b0f3152ebd7ec0b813372f3e837bc249f54e86b76a96bedb78f6142fb1ccc21e3f877a0003542d847a0a8a0aa4243f682bdc1dfbcd964b16e9d2c6f04baec3c
   languageName: node
   linkType: hard
 
@@ -5534,12 +5534,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/chai@npm:5.2.2":
-  version: 5.2.2
-  resolution: "@types/chai@npm:5.2.2"
+"@types/chai@npm:5.2.3":
+  version: 5.2.3
+  resolution: "@types/chai@npm:5.2.3"
   dependencies:
     "@types/deep-eql": "*"
-  checksum: 386887bd55ba684572cececd833ed91aba6cce2edd8cc1d8cefa78800b3a74db6dbf5c5c41af041d1d1f3ce672ea30b45c9520f948cdc75431eb7df3fbba8405
+    assertion-error: ^2.0.1
+  checksum: eb4c2da9ec38b474a983f39bfb5ec4fbcceb5e5d76d184094d2cbc4c41357973eb5769c8972cedac665a233251b0ed754f1e338fcf408d381968af85cdecc596
   languageName: node
   linkType: hard
 
@@ -16296,7 +16297,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"openapi-typescript@npm:^7.9.1":
+"openapi-typescript@npm:7.9.1":
   version: 7.9.1
   resolution: "openapi-typescript@npm:7.9.1"
   dependencies:

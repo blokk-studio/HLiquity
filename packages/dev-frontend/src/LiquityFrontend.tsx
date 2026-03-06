@@ -56,7 +56,7 @@ const ConditionalLayoutBox: React.FC<{ children: React.ReactNode }> = ({ childre
         display: "grid",
         gridTemplateColumns: shouldShowSystemStats
           ? ["1fr", "1fr", "1fr", "240px 1fr 320px"]
-          : ["1fr", "1fr", "1fr", "250px 1fr"],
+          : ["1fr", "1fr", "1fr", "240px 1fr"],
         columnGap: [0, 0, 0, 3, 4]
       }}
     >
