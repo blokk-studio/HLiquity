@@ -21,7 +21,7 @@ export const NoTrove: React.FC = () => {
         </InfoMessage>
 
         <Flex variant="layout.actions">
-          <div role="presentation" sx={{ position: "relative", isolation: "isolate" }}>
+          <div role="presentation" sx={{ position: "relative", isolation: "isolate", width: 'fit-content' }}>
             <Button sx={{ minWidth: 160 }} onClick={handleOpenTrove}>
               Open Trove
             </Button>
