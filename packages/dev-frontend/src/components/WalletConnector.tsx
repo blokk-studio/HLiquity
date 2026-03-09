@@ -6,7 +6,6 @@ import { ChainSelector } from "./chain_context";
 import { ConnectKitButton } from "connectkit";
 import { useHederaDappConnectorContext } from "./HederaDappConnectorProvider";
 import { Hedera } from "./icons/Hedera";
-import buttonStyles from "../styles/buttons.module.css";
 import { LiquityLogo } from "./LiquityLogo.tsx";
 
 type WalletConnectorProps = {
@@ -26,7 +25,7 @@ export const WalletConnector: React.FC<WalletConnectorProps> = ({ onCloseWalletC
               <LiquityLogo height={32} />
 
               <Flex sx={{ alignItems: "center", gap: 3 }}>
-                <button className={buttonStyles.normal} onClick={onCloseWalletConnector}>Close</button>
+                <Button variant="primary" onClick={onCloseWalletConnector}>Close</Button>
                 <ThemeSwitcher />
               </Flex>
             </Flex>
@@ -77,7 +76,7 @@ export const WalletConnector: React.FC<WalletConnectorProps> = ({ onCloseWalletC
             })
           ) : (
             <Button
-              className={buttonStyles.normal}
+              variant="primary"
               sx={{ justifyContent: "start", marginTop: "0.5rem", gap: "1rem" }}
               onClick={() => {
                 hederaDappConnectorContext.connect();
@@ -94,7 +93,7 @@ export const WalletConnector: React.FC<WalletConnectorProps> = ({ onCloseWalletC
             {connectkit => {
               return (
                 <Button
-                  className={buttonStyles.normal}
+                  variant="primary"
                   onClick={() => {
                     connectkit.show?.();
                   }}
