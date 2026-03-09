@@ -1,6 +1,5 @@
 import React from "react";
-import { ButtonProps, Spinner } from "theme-ui";
-import buttonStyles from "../styles/buttons.module.css";
+import { Button, ButtonProps, Spinner } from "theme-ui";
 
 export interface LoadingThemeUiButtonProps extends ButtonProps {
   loading?: boolean;
@@ -12,7 +11,7 @@ export const LoadingThemeUiButton: React.FC<LoadingThemeUiButtonProps> = ({
   ...buttonProps
 }) => {
   return (
-    <button className={buttonStyles.green} {...buttonProps} disabled={buttonProps.disabled || loading}>
+    <Button variant="success" {...buttonProps} disabled={buttonProps.disabled || loading}>
       {children}
       {loading && (
         <Spinner
@@ -21,12 +20,11 @@ export const LoadingThemeUiButton: React.FC<LoadingThemeUiButtonProps> = ({
           sx={{ marginLeft: "1rem", marginRight: "-0.75rem" }}
         />
       )}
-    </button>
+    </Button>
   );
 };
 
-export interface LoadingButtonProps
-  extends React.DetailedHTMLProps<React.ButtonHTMLAttributes<HTMLButtonElement>, HTMLButtonElement> {
+export interface LoadingButtonProps extends ButtonProps {
   loading?: boolean;
 }
 
@@ -36,7 +34,7 @@ export const LoadingButton: React.FC<LoadingButtonProps> = ({
   ...buttonProps
 }) => {
   return (
-    <button className={buttonStyles.normal} {...buttonProps} disabled={buttonProps.disabled || loading}>
+    <Button variant="primary" {...buttonProps} disabled={buttonProps.disabled || loading}>
       {children}
       {loading && (
         <Spinner
@@ -46,6 +44,6 @@ export const LoadingButton: React.FC<LoadingButtonProps> = ({
           sx={{ marginLeft: "1rem", marginRight: "-0.75rem" }}
         />
       )}
-    </button>
+    </Button>
   );
 };

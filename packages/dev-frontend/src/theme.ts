@@ -24,7 +24,6 @@ const colors = {
   danger: baseColors.red,
   dangerHover: "gray",
   info: baseColors.blue,
-  buttonShadow: "#0000003D",
   invalid: "pink",
 
   text: "#primary",
@@ -38,7 +37,6 @@ const colors = {
       background: baseColors.black,
       primary: baseColors.white,
       secondary: baseColors.black,
-      buttonShadow: "#ffffff3D",
       info: baseColors.cyan,
       muted: "#303032",
       accent: "#949597"
@@ -62,29 +60,30 @@ const buttonBase: ThemeUIStyleObject = {
 const button: ThemeUIStyleObject = {
   ...buttonBase,
 
-  px: "12px",
-  py: "5px",
-  // transition: "box-shadow .5s, border .2s",
+  px: "2rem",
+  py: "0.5rem",
   color: "primary",
-  borderRadius: 2,
+  borderRadius: "0.5rem",
   fontWeight: 300,
   fontFamily: "inherit",
+  fontSize: "1rem",
 
   ":disabled": {
-    opacity: 0.5
+    opacity: 0.5,
+    cursor: "not-allowed"
   }
 };
 
-const buttonOutline = (color: string, hoverColor: string): ThemeUIStyleObject => ({
+const buttonOutline = (color: string): ThemeUIStyleObject => ({
   color,
   background: "none",
-  borderColor: "muted",
-  borderWidth: 2,
-  borderStyle: "solid",
+  border: 1,
+  borderColor: "primary",
 
-  ":enabled:hover": {
-    borderColor: hoverColor,
-    boxShadow: `4px 4px 20px var(--theme-ui-colors-muted), inset 0 0 0 2px var(--theme-ui-colors-muted)`
+  ":enabled:hover, :focus-visible": {
+    outline: "3px solid",
+    outlineColor: "primary",
+    outlineOffset: "-3px"
   }
 });
 
@@ -223,19 +222,19 @@ const theme: Theme = {
       ...button,
 
       bg: "secondary",
-      borderColor: "secondary",
-      boxShadow: `inset 0 0 0 1px var(--theme-ui-colors-primary)`,
+      border: 1,
+      borderColor: "primary",
 
-      ":enabled:hover": {
-        bg: "secondary",
-        borderColor: "secondary",
-        boxShadow: `4px 4px 20px var(--theme-ui-colors-buttonShadow), inset 0 0 0 2px var(--theme-ui-colors-primary)`
+      ":enabled:hover, :focus-visible": {
+        outline: "3px solid",
+        outlineColor: "primary",
+        outlineOffset: "-3px"
       }
     },
 
     small: {
       ...button,
-      ...buttonOutline("primary", "muted"),
+      ...buttonOutline("primary"),
       fontSize: "1rem !important",
       px: "6px",
       py: "0px"
@@ -243,20 +242,14 @@ const theme: Theme = {
 
     outline: {
       ...button,
-      ...buttonOutline("primary", "muted")
+      ...buttonOutline("primary")
     },
 
     cancel: {
       ...button,
-      ...buttonOutline("text", "secondary"),
+      ...buttonOutline("primary"),
 
-      opacity: 0.8,
-
-      ":enabled:hover": {
-        bg: "secondary",
-        borderColor: "secondary",
-        boxShadow: `4px 4px 20px var(--theme-ui-colors-buttonShadow), inset 0 0 0 2px var(--theme-ui-colors-primary)`
-      }
+      opacity: 0.8
     },
 
     danger: {
@@ -274,12 +267,22 @@ const theme: Theme = {
     success: {
       ...button,
 
+      color: "secondary",
       bg: "success",
       borderColor: "success",
 
       ":enabled:hover": {
         bg: "successHover",
         borderColor: "successHover"
+      },
+
+      ":disabled": {
+        bg: "secondary",
+        color: "primary",
+        border: 1,
+        borderColor: "primary",
+        opacity: 0.5,
+        cursor: "not-allowed"
       }
     },
 
