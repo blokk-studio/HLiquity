@@ -16,7 +16,8 @@ import {
 import { Decimal } from "@liquity/lib-base";
 import { useMirrorNodeClient } from "../components/MirrorNodeClientContext";
 import { useDeployment } from "../hooks/deployments";
-import { useMultiWallet } from "../multi_wallet";
+import { useAccount } from "wagmi";
+import { useOptionalHederaDappConnectorSession } from "../components/HederaDappConnectorProvider";
 import { AccountId, TokenId } from "@hashgraph/sdk";
 import { useLiquitySelector } from "@liquity/lib-react";
 import { Tooltip } from "../components/Tooltip";
@@ -135,22 +136,21 @@ export const RedemptionsPage: React.FC = () => {
   const mirrorNodeClient = useMirrorNodeClient();
   const deployment = useDeployment();
   const chain = useSelectedChain();
-  const multiWallet = useMultiWallet();
+  const wagmiAccount = useAccount();
+  const hederaSession = useOptionalHederaDappConnectorSession();
   const store = useLiquitySelector(({ hchfTokenAddress }) => ({ hchfTokenAddress }));
+  const accountEvmAddress = wagmiAccount.address ?? hederaSession?.userAccountEvmAddress;
+
   const accountIdString = useMemo(() => {
-    if (!multiWallet.addressDisplayText) {
+    if (!accountEvmAddress) {
       return;
     }
 
-    // evm addresses
-    if (multiWallet.addressDisplayText.startsWith("0x")) {
-      return AccountId.fromEvmAddress(0, 0, multiWallet.addressDisplayText).toString();
-    }
+    return AccountId.fromEvmAddress(0, 0, accountEvmAddress).toString();
+  }, [accountEvmAddress]);
 
-    return AccountId.fromString(multiWallet.addressDisplayText).toString();
-  }, [multiWallet.addressDisplayText]);
   const hchfTokenIdString = useMemo(() => {
-    if (!store.hchfTokenAddress) {
+    if (!store.hchfTokenAddress || store.hchfTokenAddress.length !== 42) {
       return;
     }
 
