@@ -1,5 +1,5 @@
 import React from "react";
-import { library, IconName, IconProp } from "@fortawesome/fontawesome-svg-core";
+import { library, IconName, IconProp, IconDefinition } from "@fortawesome/fontawesome-svg-core";
 import {
   faCircleNotch,
   faCheckCircle,
@@ -71,8 +71,8 @@ library.add(
   faWindowClose,
   faChevronDown,
   faCertificate,
-  faGithub as any,
-  faXTwitter as any,
+  faGithub as IconDefinition,
+  faXTwitter as IconDefinition,
 );
 
 const getIcon = (name: IconName): IconProp => {
