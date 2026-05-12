@@ -10,7 +10,7 @@ import { LiquityLogo } from "./LiquityLogo.tsx";
 
 type WalletConnectorProps = {
   loader?: React.ReactNode;
-  onCloseWalletConnector: () => void;
+  onCloseWalletConnector?: () => void;
 };
 
 export const WalletConnector: React.FC<WalletConnectorProps> = ({ onCloseWalletConnector }) => {
@@ -25,7 +25,9 @@ export const WalletConnector: React.FC<WalletConnectorProps> = ({ onCloseWalletC
               <LiquityLogo height={32} />
 
               <Flex sx={{ alignItems: "center", gap: 3 }}>
-                <Button variant="primary" onClick={onCloseWalletConnector}>Close</Button>
+                {onCloseWalletConnector && (
+                  <Button variant="primary" onClick={onCloseWalletConnector}>Close</Button>
+                )}
                 <ThemeSwitcher />
               </Flex>
             </Flex>
