@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Text, Flex, Label, Input, SxProp, Button, ThemeUICSSProperties } from "theme-ui";
+import { Text, Flex, Label, Input, SxProp, Button, ThemeUICSSProperties, ThemeUIStyleObject } from "theme-ui";
 
 import { Icon } from "../Icon";
 
@@ -38,10 +38,11 @@ export const Row: React.FC<React.PropsWithChildren<RowProps>> = ({ sx, label, la
 
 type PendingAmountProps = {
   value: string;
+  sx?: ThemeUIStyleObject;
 };
 
-const PendingAmount: React.FC<PendingAmountProps & SxProp> = ({ sx, value }) => (
-  <Text {...{ sx }}>
+const PendingAmount: React.FC<PendingAmountProps> = ({ sx, value }) => (
+  <Text sx={sx}>
     (
     {value === "++" ? (
       <Icon name="angle-double-up" />
@@ -195,7 +196,7 @@ type DisabledEditableRowProps = Omit<StaticAmountsProps, "labelledBy" | "onClick
   label: string;
 };
 
-export const DisabledEditableAmounts: React.FC<StaticAmountsProps & SxProp> = ({
+export const DisabledEditableAmounts: React.FC<React.PropsWithChildren<StaticAmountsProps & SxProp>> = ({
   inputId,
   children,
   sx,
