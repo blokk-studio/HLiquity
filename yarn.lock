@@ -12,6 +12,27 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@aave/account@npm:^0.2.0":
+  version: 0.2.0
+  resolution: "@aave/account@npm:0.2.0"
+  peerDependencies:
+    react: 17.x || 18.x || 19.x
+    react-dom: 17.x || 18.x || 19.x
+    viem: 2.x
+    wagmi: 2.x
+  peerDependenciesMeta:
+    react:
+      optional: true
+    react-dom:
+      optional: true
+    viem:
+      optional: true
+    wagmi:
+      optional: true
+  checksum: 533fa0240c3d02456bb4a638fdf9bafa2924ee0bf58667438f55268ea7302a9f792b725dba4377dbf2da4b48ee32226f63b0cf01c92c7623c43ca602c2eaf77d
+  languageName: node
+  linkType: hard
+
 "@adobe/css-tools@npm:^4.4.0":
   version: 4.4.0
   resolution: "@adobe/css-tools@npm:4.4.0"
@@ -9097,9 +9118,10 @@ __metadata:
   linkType: hard
 
 "connectkit@npm:^1.3.0":
-  version: 1.3.0
-  resolution: "connectkit@npm:1.3.0"
+  version: 1.9.2
+  resolution: "connectkit@npm:1.9.2"
   dependencies:
+    "@aave/account": ^0.2.0
     buffer: ^6.0.3
     detect-browser: ^5.3.0
     framer-motion: ^6.3.11
@@ -9109,11 +9131,12 @@ __metadata:
     resize-observer-polyfill: ^1.5.1
     styled-components: ^5.3.5
   peerDependencies:
-    ethers: ">=5.5.0 <6"
+    "@tanstack/react-query": ">=5.0.0"
     react: 17.x || 18.x
     react-dom: 17.x || 18.x
-    wagmi: 0.12.x
-  checksum: b54fc6b7267be17d3fff69cb51f38d8537ca40d4611fb2685bb41501cac05b77e91cc35c1b5542958aae2d6d0bc1f987210ca3951b7e55e88da7b417f90195a0
+    viem: 2.x
+    wagmi: 2.x
+  checksum: e18e8081d28baa458c95f3b196fd79973eb7029058326bfaaaa5f981bd9322d0d0262f6249a1a819da5c3ea43dc71c9e1326e09ada6d9236367b711f569b02fb
   languageName: node
   linkType: hard
 
