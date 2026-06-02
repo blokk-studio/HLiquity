@@ -8266,10 +8266,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"bn.js@npm:^5.2.2":
-  version: 5.2.2
-  resolution: "bn.js@npm:5.2.2"
-  checksum: 4384d35fef785c757eb050bc1f13d60dd8e37662ca72392ae6678b35cfa2a2ae8f0494291086294683a7d977609c7878ac3cff08ecca7f74c3ca73f3acbadbe8
+"bn.js@npm:^5.2.3":
+  version: 5.2.3
+  resolution: "bn.js@npm:5.2.3"
+  checksum: b024fa4ab260670ca0d99f3ffee96a09ba9662f3ae28e01f4d54072bca945724cca1fac53588892c87a909ef8bc91367c442cadc35568d55999adbc221a6f012
   languageName: node
   linkType: hard
 
@@ -8426,10 +8426,10 @@ __metadata:
   linkType: hard
 
 "browserify-sign@npm:^4.2.2":
-  version: 4.2.5
-  resolution: "browserify-sign@npm:4.2.5"
+  version: 4.2.6
+  resolution: "browserify-sign@npm:4.2.6"
   dependencies:
-    bn.js: ^5.2.2
+    bn.js: ^5.2.3
     browserify-rsa: ^4.1.1
     create-hash: ^1.2.0
     create-hmac: ^1.1.7
@@ -8438,7 +8438,7 @@ __metadata:
     parse-asn1: ^5.1.9
     readable-stream: ^2.3.8
     safe-buffer: ^5.2.1
-  checksum: 1cea126a0539f4f26d2b55290fbe49934e72129ce8120b20b1f9c75ce070db0a69d8fe3a46927db3dcb73391967b1bf546b89f2835defe05a18b2da41afa14b1
+  checksum: e4e59babc32a12fe5cbb5cef24b02d981b7a434cc97d85194f8a20414aa5cead17555da494a49aee662e850cdeb2f0f8fbd67cad9e783ee6eab2028cffff7c45
   languageName: node
   linkType: hard
 
