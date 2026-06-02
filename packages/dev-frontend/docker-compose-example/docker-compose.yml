@@ -2,7 +2,7 @@ version: "2.1"
 
 services:
   swag:
-    image: linuxserver/swag@sha256:ef97e83fc0283f972406ed62f208482653b9a9233eb389b947718b28c8c99263
+    image: linuxserver/swag@sha256:4808ab43ab1424eafda25036b7417acd4960e6ed1ed3f39c69f2b7bf17e1d870
     container_name: swag
     cap_add:
       - NET_ADMIN
