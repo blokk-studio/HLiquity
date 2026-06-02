@@ -16986,16 +16986,16 @@ __metadata:
   linkType: hard
 
 "pbkdf2@npm:^3.1.3":
-  version: 3.1.5
-  resolution: "pbkdf2@npm:3.1.5"
+  version: 3.1.6
+  resolution: "pbkdf2@npm:3.1.6"
   dependencies:
     create-hash: ^1.2.0
     create-hmac: ^1.1.7
     ripemd160: ^2.0.3
     safe-buffer: ^5.2.1
     sha.js: ^2.4.12
-    to-buffer: ^1.2.1
-  checksum: 377dd4791ae6e439c98ca2a120d1cb28375884aab04af98ea1e51e5304d69c3102d0d8ed915fd1e9908cb93744807202eb22b64d99ba6496697db9b2c4ee64cc
+    to-buffer: ^1.2.2
+  checksum: 03667a6bae00c0ab41e597162561af584609efc697ce2662e8825f1e1d0a9e118f55c51ec926c6c9c198d828966bab41bd3430c4ab67785893988f1c41ce32cd
   languageName: node
   linkType: hard
 
