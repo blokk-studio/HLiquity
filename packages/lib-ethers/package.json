@@ -58,7 +58,7 @@
     "cross-env": "7.0.3",
     "dotenv": "16.6.1",
     "eslint": "7.32.0",
-    "eslint-plugin-tsdoc": "0.4.0",
+    "eslint-plugin-tsdoc": "0.5.2",
     "ethers": "5.7.2",
     "fs-extra": "11.3.5",
     "hardhat": "2.26.3",
