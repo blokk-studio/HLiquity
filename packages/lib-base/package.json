@@ -30,7 +30,7 @@
     "@typescript-eslint/eslint-plugin": "5.62.0",
     "@typescript-eslint/parser": "5.62.0",
     "eslint": "8.57.1",
-    "eslint-plugin-tsdoc": "0.4.0",
+    "eslint-plugin-tsdoc": "0.5.2",
     "fast-check": "3.23.2",
     "mocha": "10.8.2",
     "npm-run-all2": "6.2.6",
