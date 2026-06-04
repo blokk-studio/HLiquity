@@ -2371,7 +2371,7 @@ __metadata:
     rollup-plugin-polyfill-node: 0.13.0
     theme-ui: 0.17.4
     typescript: 5.4.2
-    vite: 6.4.2
+    vite: 6.4.3
     vite-plugin-node-polyfills: 0.22.0
     vite-plugin-svgr: ^4.5.0
     vitest: 4.1.8
