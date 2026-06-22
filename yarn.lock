@@ -1262,7 +1262,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@ethersproject/abi@npm:^5.8.0":
+"@ethersproject/abi@npm:5.8.0, @ethersproject/abi@npm:^5.8.0":
   version: 5.8.0
   resolution: "@ethersproject/abi@npm:5.8.0"
   dependencies:
@@ -2317,7 +2317,7 @@ __metadata:
   dependencies:
     "@emotion/react": 11.14.0
     "@esbuild-plugins/node-modules-polyfill": 0.2.2
-    "@ethersproject/abi": 5.7.0
+    "@ethersproject/abi": 5.8.0
     "@ethersproject/experimental": 5.7.0
     "@fortawesome/fontawesome-svg-core": 1.2.36
     "@fortawesome/free-brands-svg-icons": ^7.1.0
