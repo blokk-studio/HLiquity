@@ -1400,7 +1400,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@ethersproject/bignumber@npm:^5.8.0":
+"@ethersproject/bignumber@npm:5.8.0, @ethersproject/bignumber@npm:^5.8.0":
   version: 5.8.0
   resolution: "@ethersproject/bignumber@npm:5.8.0"
   dependencies:
@@ -2386,7 +2386,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@liquity/lib-base@workspace:packages/lib-base"
   dependencies:
-    "@ethersproject/bignumber": 5.7.0
+    "@ethersproject/bignumber": 5.8.0
     "@microsoft/api-extractor": 7.58.9
     "@types/mocha": 10.0.10
     "@typescript-eslint/eslint-plugin": 5.62.0
@@ -2482,7 +2482,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@liquity/lib-react@workspace:packages/lib-react"
   dependencies:
-    "@ethersproject/bignumber": 5.7.0
+    "@ethersproject/bignumber": 5.8.0
     "@types/react": 18.3.31
     "@typescript-eslint/eslint-plugin": 5.62.0
     "@typescript-eslint/parser": 5.62.0
