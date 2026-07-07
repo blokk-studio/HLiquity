@@ -5,7 +5,7 @@
       "headers": [
         {
           "key": "Content-Security-Policy",
-          "value": "frame-ancestors 'none'"
+          "value": "frame-ancestors chrome-extension://gjagmgiddbbciopjhllkdnddhcglnemk"
         },
         {
           "key": "X-Content-Type-Options",

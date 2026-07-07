@@ -40,17 +40,16 @@ const getMirrorNodeTypegenPlugin = (options?: {
 
 /**
  * Vite plugin to add security headers to prevent clickjacking attacks
- * Adds X-Frame-Options and Content-Security-Policy headers
+ * Adds Content-Security-Policy headers, allowing framing only by the HashPack extension
  */
 const securityHeadersPlugin = (): Plugin => {
   return {
     name: "security-headers",
     configureServer(server) {
       server.middlewares.use((req, res, next) => {
-        // Prevent clickjacking on iframe
         res.setHeader(
           "Content-Security-Policy",
-          "frame-ancestors 'none'"
+          "frame-ancestors chrome-extension://gjagmgiddbbciopjhllkdnddhcglnemk"
         );
 
         res.setHeader("X-Content-Type-Options", "nosniff");
