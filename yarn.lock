@@ -19030,14 +19030,14 @@ __metadata:
   linkType: hard
 
 "secp256k1@npm:^4.0.4":
-  version: 4.0.4
-  resolution: "secp256k1@npm:4.0.4"
+  version: 4.0.5
+  resolution: "secp256k1@npm:4.0.5"
   dependencies:
     elliptic: ^6.5.7
     node-addon-api: ^5.0.0
     node-gyp: latest
     node-gyp-build: ^4.2.0
-  checksum: 9314ddcd27506c5f8d9b21a2c131c62464762f597b82fe48ba89b50149ec95cd566d6ad2d4a922553dd0a8b4b14c1ccd83283f487229a941b6c7c02361ef5177
+  checksum: 7a140b57a1a32fc7a31ca96f79f3e504726ffc388f989266a229de2c7f24749177f33ae373b691f1759f19892c60b79cb6300bd365933187c3f0b29e849e48f0
   languageName: node
   linkType: hard
 
