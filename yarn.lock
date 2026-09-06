@@ -1218,12 +1218,12 @@ __metadata:
   linkType: hard
 
 "@eslint/plugin-kit@npm:^0.7.0":
-  version: 0.7.2
-  resolution: "@eslint/plugin-kit@npm:0.7.2"
+  version: 0.7.3
+  resolution: "@eslint/plugin-kit@npm:0.7.3"
   dependencies:
     "@eslint/core": ^1.2.1
     levn: ^0.4.1
-  checksum: 16fa97792c3f8e9723f5068abf854557cfa4da7c0b2eee691bff092fbb507d1dd2e1e86c027522c9165616954f4c1ae8d75911058813fb07c0b9ebda2cbfbae1
+  checksum: 8607a3067fde69ebd644e2f8af7d2f8a75c0bc16bac6697c524ff2d3fd5ee3cf99419d2ac40f3af26b5cca4c0a6e3e8419a741610d8eb16d3d253f7b315b6674
   languageName: node
   linkType: hard
 
