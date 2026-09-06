@@ -1944,10 +1944,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@fortawesome/fontawesome-common-types@npm:7.2.0":
-  version: 7.2.0
-  resolution: "@fortawesome/fontawesome-common-types@npm:7.2.0"
-  checksum: d8886411efb978c5a22374a1076b504b1815641bc4a6dc69b9e630c1e04be2297d8700369f839a95566aad234dd6a5068f9fb84add24122a9314db87073e5a90
+"@fortawesome/fontawesome-common-types@npm:7.3.1":
+  version: 7.3.1
+  resolution: "@fortawesome/fontawesome-common-types@npm:7.3.1"
+  checksum: 8ef4d8cff064fcbd6167d160f314b2f3c0e13c82b6fe7e149a4203df5f63297c47fb98a3b28b54528a9267d49c0e4475042531e95e2f86118a451ee2feb978be
   languageName: node
   linkType: hard
 
@@ -1968,11 +1968,11 @@ __metadata:
   linkType: hard
 
 "@fortawesome/free-brands-svg-icons@npm:^7.1.0":
-  version: 7.2.0
-  resolution: "@fortawesome/free-brands-svg-icons@npm:7.2.0"
+  version: 7.3.1
+  resolution: "@fortawesome/free-brands-svg-icons@npm:7.3.1"
   dependencies:
-    "@fortawesome/fontawesome-common-types": 7.2.0
-  checksum: d49e1b4eb4c5edb104d408cc91175b35e3931ebe15c62ea95ce093829537eefbd42fedcc04adc963db2045afdf5ec339fe6962271ec8c3a16c801721b9713bf6
+    "@fortawesome/fontawesome-common-types": 7.3.1
+  checksum: 04ccfefb244fbde6fe17d20e3ee2b0b3c92ea8c691c8030d8140d39252f80c7f327c79afc2d7c2f115b603bef52638e6480c7e753e379224ab99582d8d74274b
   languageName: node
   linkType: hard
 
