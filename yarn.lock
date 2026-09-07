@@ -2449,7 +2449,7 @@ __metadata:
     eslint-plugin-tsdoc: 0.5.2
     ethers: 5.7.2
     fs-extra: 11.4.0
-    hardhat: 2.28.6
+    hardhat: 2.29.1
     npm-run-all2: 6.2.6
     ts-node: 10.9.2
     typescript: 5.1.6
@@ -8997,7 +8997,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"chokidar@npm:^4.0.3":
+"chokidar@npm:^4.0.1, chokidar@npm:^4.0.3":
   version: 4.0.3
   resolution: "chokidar@npm:4.0.3"
   dependencies:
@@ -10237,6 +10237,13 @@ __metadata:
   version: 5.2.0
   resolution: "diff@npm:5.2.0"
   checksum: 12b63ca9c36c72bafa3effa77121f0581b4015df18bc16bac1f8e263597735649f1a173c26f7eba17fb4162b073fee61788abe49610e6c70a2641fe1895443fd
+  languageName: node
+  linkType: hard
+
+"diff@npm:^7.0.0":
+  version: 7.0.0
+  resolution: "diff@npm:7.0.0"
+  checksum: 5db0d339476b18dfbc8a08a7504fbcc74789eec626c8d20cf2cdd1871f1448962888128f4447c8f50a1e41a80decfe5e8489c375843b8cf1d42b7c2b611da4e1
   languageName: node
   linkType: hard
 
@@ -12698,9 +12705,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"hardhat@npm:2.28.6":
-  version: 2.28.6
-  resolution: "hardhat@npm:2.28.6"
+"hardhat@npm:2.29.1":
+  version: 2.29.1
+  resolution: "hardhat@npm:2.29.1"
   dependencies:
     "@ethereumjs/util": ^9.1.0
     "@ethersproject/abi": ^5.1.2
@@ -12727,7 +12734,7 @@ __metadata:
     lodash: ^4.17.11
     micro-eth-signer: ^0.14.0
     mnemonist: ^0.38.0
-    mocha: ^10.0.0
+    mocha: ^11.1.0
     p-map: ^4.0.0
     picocolors: ^1.1.0
     raw-body: ^2.4.1
@@ -12751,7 +12758,7 @@ __metadata:
       optional: true
   bin:
     hardhat: internal/cli/bootstrap.js
-  checksum: ebe705fd542535f6651b92d117054edd0ab6bbe5c0aab4603dbddb6db9472fac3c521566f469a9ca3e312f766f4fcd8c0f419b1104eb005e830fb056536cad44
+  checksum: 2f572707a3ab4aebb62ffb2fff50d353d2a2f8adeac9c0c740c6df1882244e8ebc0f75fed33e6d3c578b398d3572f3c423b10b2c0ff39831358cfb006443be95
   languageName: node
   linkType: hard
 
@@ -15723,34 +15730,35 @@ __metadata:
   languageName: node
   linkType: hard
 
-"mocha@npm:^10.0.0":
-  version: 10.7.3
-  resolution: "mocha@npm:10.7.3"
+"mocha@npm:^11.1.0":
+  version: 11.8.0
+  resolution: "mocha@npm:11.8.0"
   dependencies:
-    ansi-colors: ^4.1.3
     browser-stdout: ^1.3.1
-    chokidar: ^3.5.3
+    chokidar: ^4.0.1
     debug: ^4.3.5
-    diff: ^5.2.0
+    diff: ^7.0.0
     escape-string-regexp: ^4.0.0
     find-up: ^5.0.0
-    glob: ^8.1.0
+    glob: ^10.4.5
     he: ^1.2.0
+    is-path-inside: ^3.0.3
     js-yaml: ^4.1.0
     log-symbols: ^4.1.0
-    minimatch: ^5.1.6
+    minimatch: ^9.0.5
     ms: ^2.1.3
+    picocolors: ^1.1.1
     serialize-javascript: ^6.0.2
     strip-json-comments: ^3.1.1
     supports-color: ^8.1.1
-    workerpool: ^6.5.1
-    yargs: ^16.2.0
-    yargs-parser: ^20.2.9
+    workerpool: ^9.2.0
+    yargs: ^17.7.2
+    yargs-parser: ^21.1.1
     yargs-unparser: ^2.0.0
   bin:
     _mocha: bin/_mocha
     mocha: bin/mocha.js
-  checksum: 956376dd8c7cd3e4f496ab1b06b7c89673ade2fb7f78704d8fce32b491f6940550eb1e784b7eef617e37fa29257a728df8b5b2b5e34ed7e83a692652290fab3c
+  checksum: b4b662e1e8bc32db9170961eab7fea536b7d0c268adb8667621fb4f288c8596effeffdb5197b3274aa2314f7e5c15920dbd78312d7de9ef17a13224db683dea5
   languageName: node
   linkType: hard
 
@@ -22141,6 +22149,13 @@ __metadata:
   version: 6.5.1
   resolution: "workerpool@npm:6.5.1"
   checksum: f86d13f9139c3a57c5a5867e81905cd84134b499849405dec2ffe5b1acd30dabaa1809f6f6ee603a7c65e1e4325f21509db6b8398eaf202c8b8f5809e26a2e16
+  languageName: node
+  linkType: hard
+
+"workerpool@npm:^9.2.0":
+  version: 9.3.4
+  resolution: "workerpool@npm:9.3.4"
+  checksum: 309c08c10fed93623a2d8954b10277a35b3ffba2f7f33fe4be48fae5d00c9502809ef09ddc67fc8ae2cc19a2abe7d7233bfb2b23801bd010dc2b49842f5ea0de
   languageName: node
   linkType: hard
 
