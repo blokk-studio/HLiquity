@@ -2475,7 +2475,7 @@ __metadata:
     bignumber.js: 9.1.2
     emittery: ^1.0.3
     eslint: 9.39.5
-    prettier: 3.8.4
+    prettier: 3.9.6
     prettier-plugin-organize-imports: 4.3.0
     typescript: 5.4.5
     web3: ^4.8.0
@@ -2492,7 +2492,7 @@ __metadata:
     "@typescript-eslint/eslint-plugin": 7.18.0
     "@typescript-eslint/parser": 7.18.0
     eslint: 9.39.5
-    prettier: 3.8.4
+    prettier: 3.9.6
     prettier-plugin-organize-imports: 4.3.0
     typescript: 5.4.5
     web3: ^4.8.0
@@ -2527,7 +2527,7 @@ __metadata:
     "@typescript-eslint/eslint-plugin": 7.18.0
     "@typescript-eslint/parser": 7.18.0
     eslint: 9.39.5
-    prettier: 3.8.4
+    prettier: 3.9.6
     prettier-plugin-organize-imports: 4.3.0
     typescript: 5.4.5
   languageName: unknown
@@ -14818,7 +14818,7 @@ __metadata:
     "@microsoft/api-documenter": 7.30.13
     fs-extra: 11.4.0
     npm-run-all2: 6.2.6
-    prettier: 3.8.4
+    prettier: 3.9.6
     sass: 1.101.0
     semantic-release: 24.2.9
     semantic-release-monorepo: 8.0.2
@@ -17537,12 +17537,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"prettier@npm:3.8.4":
-  version: 3.8.4
-  resolution: "prettier@npm:3.8.4"
+"prettier@npm:3.9.6":
+  version: 3.9.6
+  resolution: "prettier@npm:3.9.6"
   bin:
     prettier: bin/prettier.cjs
-  checksum: ef9e00109d9eac7b4a34b2772fffd6a98d9bfeadb8496014a8bd228530052829690d2d74e9d73e135397fecdca5858a65f6acbdced3dcba2990322b44385aabf
+  checksum: 3fb6a3b6462b05afb825697a3fdcdd9bd1480c11d10d655b7ddbcaf2560beb695caffbe155b5020466005aa06bff74a61ba9c16e602bff849331b62f5db26cdf
   languageName: node
   linkType: hard
 
