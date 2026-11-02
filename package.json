@@ -125,7 +125,7 @@
     "semver": "^6.3.1",
     "ansi-regex": "^4.1.1",
     "@babel/runtime-corejs3": "^7.26.10",
-    "esbuild": "^0.25.0",
+    "esbuild": "^0.28.0",
     "undici": "^6.0.0",
     "nanoid": "^3.3.8",
     "@grpc/grpc-js": "^1.8.22",
